@@ -1,0 +1,48 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    "group:allNonMajor",
+    "schedule:weekly"
+  ],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "automerge": false,
+      "labels": ["dependencies", "breaking"]
+    },
+    {
+      "matchPackagePatterns": ["^@changesets/"],
+      "groupName": "changesets packages"
+    },
+    {
+      "matchPackagePatterns": ["^typescript$"],
+      "groupName": "typescript"
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "dev dependencies"
+    },
+    {
+      "matchPackageNames": ["node"],
+      "enabled": false
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "labels": ["security"],
+    "automerge": true
+  },
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 10,
+  "branchPrefix": "deps/",
+  "commitMessagePrefix": "chore(deps): "
+}

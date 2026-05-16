@@ -1,5 +1,5 @@
 /**
- * ConnectButton Web Component
+ * ConnectButton Web Component (i18n-enabled)
  *
  * Primary entry-point button for wallet connection. Shows connect prompt when
  * disconnected, and address + balance when connected.
@@ -7,7 +7,7 @@
  * Attributes:
  *   - variant: 'primary' | 'secondary' | 'ghost'
  *   - size: 'sm' | 'md' | 'lg'
- *   - label: text shown when disconnected
+ *   - label: text shown when disconnected (falls back to t('connect_wallet'))
  *   - show-balance: whether to display balance
  *   - show-avatar: whether to show avatar icon
  *   - show-network: whether to show network badge
@@ -27,13 +27,14 @@ import { html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseLitElement, OCXTheme } from '../foundation/base-element.js';
 import { animate } from '../foundation/animation-engine.js';
+import { t, isRTL, I18nMixin } from '../i18n/index.js';
 
 export type ConnectButtonVariant = 'primary' | 'secondary' | 'ghost';
 export type ConnectButtonSize = 'sm' | 'md' | 'lg';
 export type ConnectButtonState = 'disconnected' | 'connecting' | 'connected' | 'wrong_network' | 'error';
 
 @customElement('ocx-connect-button')
-export class ConnectButton extends BaseLitElement {
+export class ConnectButton extends I18nMixin(BaseLitElement) {
   static override get styles() {
     return [
       super.hostStyles,
@@ -178,13 +179,52 @@ export class ConnectButton extends BaseLitElement {
           border-top: 4px solid currentColor;
           margin-left: 2px;
         }
+
+        .dropdown {
+          position: absolute;
+          top: calc(100% + 4px);
+          right: 0;
+          min-width: 180px;
+          background: var(--ocx-color-bg-secondary, #111827);
+          border: 1px solid var(--ocx-color-border, #334155);
+          border-radius: var(--ocx-radius-lg, 0.75rem);
+          box-shadow: var(--ocx-shadow-lg, 0 10px 15px rgba(0,0,0,0.3));
+          z-index: var(--ocx-z-dropdown, 1000);
+          overflow: hidden;
+        }
+
+        :host([dir="rtl"]) .dropdown {
+          right: auto;
+          left: 0;
+        }
+
+        :host([dir="rtl"]) .dropdown-arrow {
+          margin-left: 0;
+          margin-right: 2px;
+        }
+
+        .dropdown button {
+          display: block;
+          width: 100%;
+          padding: var(--ocx-space-3, 0.75rem) var(--ocx-space-4, 1rem);
+          background: none;
+          border: none;
+          color: var(--ocx-color-error, #EF4444);
+          font-size: var(--ocx-font-size-sm, 0.875rem);
+          cursor: pointer;
+          text-align: inherit;
+        }
+
+        .dropdown button:hover {
+          background: var(--ocx-color-bg-card-hover, #334155);
+        }
       `,
     ];
   }
 
   @property({ reflect: true }) variant: ConnectButtonVariant = 'primary';
   @property({ reflect: true }) size: ConnectButtonSize = 'md';
-  @property({ reflect: true }) label = 'Connect Wallet';
+  @property({ reflect: true }) label = '';
   @property({ type: Boolean, attribute: 'show-balance' }) showBalance = false;
   @property({ type: Boolean, attribute: 'show-avatar' }) showAvatar = false;
   @property({ type: Boolean, attribute: 'show-network' }) showNetwork = false;
@@ -200,6 +240,7 @@ export class ConnectButton extends BaseLitElement {
     super.connectedCallback();
     this.addEventListener('click', this._onClick);
     this.addEventListener('keydown', this._onKeydown);
+    if (isRTL()) this.setAttribute('dir', 'rtl');
   }
 
   override disconnectedCallback() {
@@ -254,7 +295,7 @@ export class ConnectButton extends BaseLitElement {
   private _renderContent() {
     switch (this.state) {
       case 'connecting':
-        return html`<span class="spinner"></span> Connecting...`;
+        return html`<span class="spinner"></span> ${t('connecting')}`;
 
       case 'connected': {
         const truncated = this.formatAddress(this.address);
@@ -267,20 +308,20 @@ export class ConnectButton extends BaseLitElement {
       }
 
       case 'wrong_network':
-        return html`⚠️ Switch Network`;
+        return html`⚠️ ${t('wrong_network')}`;
 
       case 'error':
-        return html`❌ Error`;
+        return html`❌ ${t('error')}`;
 
       default:
-        return html`${this.label}`;
+        return html`${this.label || t('connect_wallet')}`;
     }
   }
 
   private _renderDropdown() {
     return html`
       <div class="dropdown" role="menu" aria-label="Account menu">
-        <button role="menuitem" @click=${this._handleDisconnect}>Disconnect</button>
+        <button role="menuitem" @click=${this._handleDisconnect}>${t('disconnect')}</button>
       </div>
     `;
   }
@@ -288,15 +329,15 @@ export class ConnectButton extends BaseLitElement {
   private _getAriaLabel(): string {
     switch (this.state) {
       case 'connected':
-        return `Connected as ${this.formatAddress(this.address)}`;
+        return `${t('connected')} ${this.formatAddress(this.address)}`;
       case 'connecting':
-        return 'Connecting to wallet';
+        return t('connecting');
       case 'wrong_network':
-        return 'Wrong network, click to switch';
+        return t('wrong_network');
       case 'error':
-        return 'Connection error';
+        return t('error');
       default:
-        return this.label;
+        return this.label || t('connect_wallet');
     }
   }
 }

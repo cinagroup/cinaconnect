@@ -1,5 +1,5 @@
 /**
- * AccountModal Web Component
+ * AccountModal Web Component (i18n-enabled)
  *
  * Modal for managing connected account — shows balance, copy address,
  * view explorer, switch account, and disconnect.
@@ -19,6 +19,7 @@
 import { html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseLitElement } from '../foundation/base-element.js';
+import { t, isRTL } from '../i18n/index.js';
 
 export interface AccountInfo {
   address: string;
@@ -229,6 +230,7 @@ export class AccountModal extends BaseLitElement {
   override connectedCallback() {
     super.connectedCallback();
     document.addEventListener('keydown', this._onKeydown);
+    if (isRTL()) this.setAttribute('dir', 'rtl');
   }
 
   override disconnectedCallback() {
@@ -269,10 +271,10 @@ export class AccountModal extends BaseLitElement {
 
     return html`
       <div class="overlay" @click=${(e: Event) => { if ((e.target as HTMLElement).classList.contains('overlay')) this._close(); }}>
-        <div class="modal" role="dialog" aria-modal="true" aria-label="Account">
+        <div class="modal" role="dialog" aria-modal="true" aria-label="${t('account')}">
           <div class="header">
             <span></span>
-            <button class="close-btn" @click=${this._close} aria-label="Close">✕</button>
+            <button class="close-btn" @click=${this._close} aria-label="${t('close')}">✕</button>
           </div>
 
           <div class="account-card">
@@ -280,15 +282,15 @@ export class AccountModal extends BaseLitElement {
             <div class="address">${this.formatAddress(this.address)}</div>
             <div class="balance">${this.balance} ${this.chainSymbol}</div>
             <div class="actions">
-              <button class="action-btn" @click=${this._copyAddress}>📋 Copy</button>
-              <button class="action-btn" @click=${this._viewExplorer}>↗ Explorer</button>
+              <button class="action-btn" @click=${this._copyAddress}>📋 ${t('copy_address')}</button>
+              <button class="action-btn" @click=${this._viewExplorer}>↗ ${t('view_explorer')}</button>
             </div>
           </div>
 
           ${this.allAccounts.length
             ? html`
                 <div class="section">
-                  <div class="section-title">Switch Account</div>
+                  <div class="section-title">${t('switch_account')}</div>
                   ${this.allAccounts.map(a => html`
                     <div class="switch-account-item" @click=${() => this._switchAccount(a.address)}>
                       <span class="addr">${this.formatAddress(a.address)}</span>
@@ -303,7 +305,7 @@ export class AccountModal extends BaseLitElement {
           ${this.connectedApps.length
             ? html`
                 <div class="section">
-                  <div class="section-title">Connected Apps</div>
+                  <div class="section-title">${t('connected_apps')}</div>
                   ${this.connectedApps.map(app => html`
                     <div class="connected-app-item">
                       <span>${app.name}</span>
@@ -315,7 +317,7 @@ export class AccountModal extends BaseLitElement {
             : nothing
           }
 
-          <button class="disconnect-btn" @click=${this._disconnect}>🔴 Disconnect</button>
+          <button class="disconnect-btn" @click=${this._disconnect}>🔴 ${t('disconnect')}</button>
         </div>
       </div>
     `;

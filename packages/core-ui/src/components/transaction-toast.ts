@@ -1,5 +1,5 @@
 /**
- * TransactionToast Web Component
+ * TransactionToast Web Component (i18n-enabled)
  *
  * Toast notification for transaction status updates.
  *
@@ -21,6 +21,7 @@
 import { html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseLitElement } from '../foundation/base-element.js';
+import { t, isRTL } from '../i18n/index.js';
 
 export type TxStatus = 'pending' | 'confirmed' | 'failed' | 'replaced';
 
@@ -142,6 +143,7 @@ export class TransactionToast extends BaseLitElement {
     if (this.autoDismiss > 0 && this.status !== 'pending') {
       this._dismissTimer = setTimeout(() => this._dismiss(), this.autoDismiss);
     }
+    if (isRTL()) this.setAttribute('dir', 'rtl');
   }
 
   override disconnectedCallback() {
@@ -195,11 +197,11 @@ export class TransactionToast extends BaseLitElement {
           <div class="title">${this._statusTitle}</div>
           <div class="subtitle">${this._statusMessage} — ${truncated}</div>
           <div class="actions">
-            ${this.explorerUrl ? html`<button class="action-link" @click=${this._viewExplorer}>↗ View</button>` : nothing}
-            ${this.status === 'failed' ? html`<button class="action-link" @click=${this._retry}>Retry</button>` : nothing}
+            ${this.explorerUrl ? html`<button class="action-link" @click=${this._viewExplorer}>↗ ${t('view')}</button>` : nothing}
+            ${this.status === 'failed' ? html`<button class="action-link" @click=${this._retry}>${t('retry')}</button>` : nothing}
           </div>
         </div>
-        <button class="close-btn" @click=${this._dismiss} aria-label="Dismiss">✕</button>
+        <button class="close-btn" @click=${this._dismiss} aria-label="${t('close')}">✕</button>
         ${this.status === 'pending' ? html`<div class="progress-bar" style="width:${this._progressWidth}%"></div>` : nothing}
       </div>
     `;
@@ -217,11 +219,11 @@ export class TransactionToast extends BaseLitElement {
 
   private get _statusTitle(): string {
     switch (this.status) {
-      case 'confirmed': return 'Transaction confirmed!';
-      case 'failed': return 'Transaction failed.';
-      case 'pending': return 'Transaction pending...';
-      case 'replaced': return 'Transaction replaced.';
-      default: return 'Transaction';
+      case 'confirmed': return t('transaction_confirmed');
+      case 'failed': return t('transaction_failed');
+      case 'pending': return t('transaction_pending');
+      case 'replaced': return t('transaction_replaced');
+      default: return t('transaction_pending');
     }
   }
 
@@ -235,6 +237,6 @@ export class TransactionToast extends BaseLitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'ocx-transaction-toast': TransactionToast;
+  'ocx-transaction-toast': TransactionToast;
   }
 }

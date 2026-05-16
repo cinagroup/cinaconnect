@@ -1,12 +1,11 @@
 /**
- * X25519 keypair generation for the Web Crypto API.
+ * X25519 keypair generation and Diffie-Hellman key exchange.
  *
- * Uses the Web Crypto API's ECDH with Curve25519 (X25519) for
- * Diffie-Hellman key exchange, compatible with WalletConnect v2.
- *
- * Note: Full X25519 support in Web Crypto is limited.
- * For production, use a library like @noble/curves.
+ * Uses @noble/curves for real X25519 (Curve25519) operations,
+ * compatible with WalletConnect v2.
  */
+
+import { x25519 } from '@noble/curves/ed25519.js';
 
 /**
  * Represents an X25519 keypair.
@@ -19,61 +18,27 @@ export interface X25519Keypair {
 }
 
 /**
- * Generate a new X25519 keypair.
- *
- * Uses @noble/curves for proper X25519 support since Web Crypto
- * doesn't natively expose Curve25519/X25519.
+ * Generate a new X25519 keypair using a cryptographically secure RNG.
  *
  * @returns A new keypair with 32-byte public and private keys.
  */
-export async function generateKeypair(): Promise<X25519Keypair> {
-  // In production, use: import { x25519 } from '@noble/curves/ed25519'
-  // For now, we use a crypto-random approach compatible with the Web Crypto API
-  // and note that full X25519 requires an external library.
-
-  const privateKey = new Uint8Array(32);
-  crypto.getRandomValues(privateKey);
-
-  // Clear the first 3 bits of the first byte, clear the last bit of the last byte,
-  // and set the second-to-last bit (X25519 clamping)
-  privateKey[0] &= 248;
-  privateKey[31] &= 127;
-  privateKey[31] |= 64;
-
-  // Derive public key from private key
-  // In production: const publicKey = x25519.getPublicKey(privateKey)
-  // For now, generate a placeholder — this MUST be replaced with @noble/curves
-  const publicKey = new Uint8Array(32);
-  crypto.getRandomValues(publicKey);
-
-  return { privateKey, publicKey };
+export function generateKeypair(): X25519Keypair {
+  const { secretKey, publicKey } = x25519.keygen();
+  return { privateKey: secretKey, publicKey };
 }
 
 /**
  * Perform X25519 Diffie-Hellman key exchange.
  *
- * @param myPrivateKey - Our private key.
- * @param theirPublicKey - Peer's public key.
+ * @param privateKey - Our private key (32 bytes).
+ * @param peerPublicKey - Peer's public key (32 bytes).
  * @returns 32-byte shared secret.
  */
-export async function sharedSecret(
-  myPrivateKey: Uint8Array,
-  theirPublicKey: Uint8Array,
-): Promise<Uint8Array> {
-  // In production, use: import { x25519 } from '@noble/curves/ed25519'
-  // const secret = x25519(myPrivateKey, theirPublicKey)
-  //
-  // This placeholder MUST be replaced with a proper X25519 implementation.
-  console.warn(
-    '[OnChainUX] X25519 key exchange is a placeholder. Install @noble/curves for production use.',
-  );
-
-  const secret = new Uint8Array(32);
-  // Simple XOR for demonstration — NOT secure
-  for (let i = 0; i < 32; i++) {
-    secret[i] = myPrivateKey[i] ^ theirPublicKey[i];
-  }
-  return secret;
+export function sharedSecret(
+  privateKey: Uint8Array,
+  peerPublicKey: Uint8Array,
+): Uint8Array {
+  return x25519.getSharedSecret(privateKey, peerPublicKey);
 }
 
 /**

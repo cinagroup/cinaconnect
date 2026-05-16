@@ -1,5 +1,5 @@
 /**
- * ConnectModal Web Component
+ * ConnectModal Web Component (i18n-enabled)
  *
  * Modal dialog for wallet connection. Supports wallet list, social login,
  * email login, and QR scan views.
@@ -21,6 +21,7 @@ import { html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseLitElement } from '../foundation/base-element.js';
 import { animate } from '../foundation/animation-engine.js';
+import { t, isRTL } from '../i18n/index.js';
 
 export interface WalletInfo {
   id: string;
@@ -187,6 +188,15 @@ export class ConnectModal extends BaseLitElement {
           color: var(--ocx-color-text-primary, #f8fafc);
           border-color: var(--ocx-color-accent-500, #3B82F6);
         }
+
+        .install-link {
+          color: var(--ocx-color-accent-500, #3B82F6);
+          text-decoration: none;
+          font-size: var(--ocx-font-size-xs, 0.75rem);
+        }
+        .install-link:hover {
+          text-decoration: underline;
+        }
       `,
     ];
   }
@@ -202,6 +212,7 @@ export class ConnectModal extends BaseLitElement {
     super.connectedCallback();
     this._currentView = this.defaultView;
     document.addEventListener('keydown', this._onKeydown);
+    if (isRTL()) this.setAttribute('dir', 'rtl');
   }
 
   override disconnectedCallback() {
@@ -234,53 +245,53 @@ export class ConnectModal extends BaseLitElement {
     if (!this.isOpen) return nothing;
 
     return html`
-      <div class="overlay" @click=${this._onOverlayClick} role="dialog" aria-modal="true" aria-label="Connect wallet">
+      <div class="overlay" @click=${this._onOverlayClick} role="dialog" aria-modal="true" aria-label="${t('connect_wallet')}">
         <div class="modal">
           <div class="header">
-            <h2>Connect Wallet</h2>
-            <button class="close-btn" @click=${this._close} aria-label="Close dialog">✕</button>
+            <h2>${t('connect_your_wallet')}</h2>
+            <button class="close-btn" @click=${this._close} aria-label="${t('close')}">✕</button>
           </div>
 
           <div class="content">
             <div class="view-tabs">
               <button class="view-tab ${this._currentView === 'wallets' ? 'active' : ''}"
                       @click=${() => { this._currentView = 'wallets'; }}>
-                Wallet
+                ${t('wallet')}
               </button>
               <button class="view-tab ${this._currentView === 'social' ? 'active' : ''}"
                       @click=${() => { this._currentView = 'social'; }}>
-                Social
+                ${t('social')}
               </button>
               <button class="view-tab ${this._currentView === 'email' ? 'active' : ''}"
                       @click=${() => { this._currentView = 'email'; }}>
-                Email
+                ${t('email')}
               </button>
               <button class="view-tab ${this._currentView === 'scan' ? 'active' : ''}"
                       @click=${() => { this._currentView = 'scan'; }}>
-                Scan
+                ${t('scan')}
               </button>
             </div>
 
             ${this._renderCurrentView()}
 
             ${this._currentView === 'wallets' ? html`
-              <div class="divider">or</div>
+              <div class="divider">${t('or')}</div>
               <div class="alt-actions">
                 <button class="alt-btn" @click=${() => { this._currentView = 'email'; }}>
-                  📧 Login with Email
+                  📧 ${t('login_with_email')}
                 </button>
                 <button class="alt-btn" @click=${() => { this._currentView = 'social'; }}>
-                  🔑 Social Login
+                  🔑 ${t('social_login')}
                 </button>
                 <button class="alt-btn" @click=${() => { this._currentView = 'scan'; }}>
-                  📱 Scan QR Code
+                  📱 ${t('scan_qr')}
                 </button>
               </div>
             ` : nothing}
           </div>
 
           <div class="footer">
-            Powered by OnChainUX
+            ${t('powered_by', { brand: 'OnChainUX' })}
           </div>
         </div>
       </div>
@@ -305,13 +316,13 @@ export class ConnectModal extends BaseLitElement {
         return html`
           <div class="alt-actions">
             <button class="alt-btn" @click=${() => this._selectWallet({ id: 'google', name: 'Google', icon: '' })}>
-              Continue with Google
+              ${t('continue_with_google')}
             </button>
             <button class="alt-btn" @click=${() => this._selectWallet({ id: 'apple', name: 'Apple', icon: '' })}>
-              Continue with Apple
+              ${t('continue_with_apple')}
             </button>
             <button class="alt-btn" @click=${() => this._selectWallet({ id: 'twitter', name: 'X / Twitter', icon: '' })}>
-              Continue with X
+              ${t('continue_with_x')}
             </button>
           </div>
         `;
@@ -320,18 +331,18 @@ export class ConnectModal extends BaseLitElement {
           <div class="alt-actions">
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder="${t('enter_email')}"
               style="width:100%;padding:var(--ocx-space-3, 0.75rem);background:var(--ocx-color-bg-input,#111827);border:1px solid var(--ocx-color-border,#334155);border-radius:var(--ocx-radius-lg,0.75rem);color:var(--ocx-color-text-primary,#f8fafc);font-size:var(--ocx-font-size-sm,0.875rem);"
             />
             <button class="alt-btn" @click=${() => this._selectWallet({ id: 'email', name: 'Email Wallet', icon: '' })}>
-              Continue with Email
+              ${t('continue_with_email')}
             </button>
           </div>
         `;
       case 'scan':
         return html`
           <div style="text-align:center;padding:var(--ocx-space-8,2rem) 0;color:var(--ocx-color-text-secondary,#94A3B8);">
-            <p style="font-size:var(--ocx-font-size-lg,1.125rem);margin-bottom:var(--ocx-space-4,1rem);">Scan with your wallet app</p>
+            <p style="font-size:var(--ocx-font-size-lg,1.125rem);margin-bottom:var(--ocx-space-4,1rem);">${t('scan_with_wallet')}</p>
             <div style="width:200px;height:200px;margin:0 auto;background:var(--ocx-color-bg-card,#1E293B);border-radius:var(--ocx-radius-lg,0.75rem);display:flex;align-items:center;justify-content:center;font-size:var(--ocx-font-size-2xl,1.5rem);">
               📱
             </div>
@@ -351,7 +362,7 @@ export class ConnectModal extends BaseLitElement {
           ${wallet.icon ? html`<img src="${wallet.icon}" alt="${wallet.name}" style="width:24px;height:24px;" />` : '🔗'}
         </div>
         <span>${wallet.name}</span>
-        ${isRecommended ? html`<span style="font-size:var(--ocx-font-size-xs,0.75rem);color:var(--ocx-color-accent-500,#3B82F6);">Recommended</span>` : nothing}
+        ${isRecommended ? html`<span style="font-size:var(--ocx-font-size-xs,0.75rem);color:var(--ocx-color-accent-500,#3B82F6);">${t('recommended')}</span>` : nothing}
       </button>
     `;
   }

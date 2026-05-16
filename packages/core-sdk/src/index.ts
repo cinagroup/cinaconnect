@@ -53,6 +53,25 @@ export type { QRTransportConfig } from './transports/qr';
 export { EvmAdapter } from './adapters/evm';
 export type { EthCallParams } from './adapters/evm';
 
+// Solana Adapter
+export {
+  SolanaChainAdapter,
+  SOLANA_CHAINS,
+  SOLANA_WALLETS,
+  isValidSolanaAddress,
+  base58Decode,
+} from './adapters/solana';
+export type { SolanaWalletInfo } from './adapters/solana';
+
+// Bitcoin Adapter
+export {
+  BitcoinChainAdapter,
+  BITCOIN_CHAINS,
+  BITCOIN_WALLETS,
+  validateBitcoinAddress,
+} from './adapters/bitcoin';
+export type { UTXO, AddressFormat, BitcoinWalletInfo } from './adapters/bitcoin';
+
 // Crypto
 export {
   generateKeypair,
@@ -64,7 +83,31 @@ export {
 } from './crypto/keypair';
 export type { X25519Keypair } from './crypto/keypair';
 
-export { encrypt, decrypt, deriveSymmetricKey, deriveTopic } from './crypto/encrypt';
+export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt';
+
+// SIWE Authentication
+export { SIWEAuth } from './auth/siwe';
+export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe';
+
+// Deep Linking
+export {
+  generateDeepLink,
+  registerWalletDeepLink,
+  getAppStoreUrl,
+  WALLET_DEEP_LINKS,
+  generateUniversalLink,
+  generateWalletConnectUniversalLink,
+  smartRedirect,
+  detectPlatform,
+} from './links';
+export type {
+  DeepLinkParams,
+  Platform as DeepLinkPlatform,
+  RedirectResult,
+  RedirectOptions,
+  WalletDeepLinkConfig,
+  UniversalLinkParams,
+} from './links';
 
 /**
  * SDK version.

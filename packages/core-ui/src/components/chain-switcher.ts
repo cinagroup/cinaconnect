@@ -1,5 +1,5 @@
 /**
- * ChainSwitcher Web Component
+ * ChainSwitcher Web Component (i18n-enabled)
  *
  * Dropdown for switching between blockchain networks.
  *
@@ -14,6 +14,7 @@
 import { html, css, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { BaseLitElement } from '../foundation/base-element.js';
+import { t, isRTL } from '../i18n/index.js';
 
 export interface ChainInfo {
   id: number;
@@ -101,6 +102,11 @@ export class ChainSwitcher extends BaseLitElement {
           overflow-y: auto;
         }
 
+        :host([dir="rtl"]) .dropdown {
+          left: auto;
+          right: 0;
+        }
+
         .dropdown-item {
           display: flex;
           align-items: center;
@@ -148,6 +154,7 @@ export class ChainSwitcher extends BaseLitElement {
   override connectedCallback() {
     super.connectedCallback();
     document.addEventListener('click', this._onOutsideClick);
+    if (isRTL()) this.setAttribute('dir', 'rtl');
   }
 
   override disconnectedCallback() {
@@ -186,14 +193,14 @@ export class ChainSwitcher extends BaseLitElement {
               @click=${this._toggle}
               aria-haspopup="listbox"
               aria-expanded=${this._open}
-              aria-label="Switch network">
+              aria-label="${t('switch_network')}">
         ${this._renderChainIcon(active)}
-        <span>${active ? active.name : 'Select Network'}</span>
+        <span>${active ? active.name : t('select_network')}</span>
         <span class="arrow ${this._open ? 'open' : ''}"></span>
       </button>
 
       ${this._open ? html`
-        <div class="dropdown" role="listbox" aria-label="Select network">
+        <div class="dropdown" role="listbox" aria-label="${t('select_network')}">
           ${this.chains.map(chain => html`
             <div class="dropdown-item ${chain.id === this.activeChainId ? 'active' : ''}"
                  role="option"
@@ -204,7 +211,7 @@ export class ChainSwitcher extends BaseLitElement {
               ${chain.id === this.activeChainId ? html`<span class="check">✓</span>` : html`<span class="check"></span>`}
               ${this._renderChainIcon(chain)}
               <span>${chain.name}</span>
-              ${chain.testnet ? html`<span class="testnet-badge">Testnet</span>` : nothing}
+              ${chain.testnet ? html`<span class="testnet-badge">${t('testnet')}</span>` : nothing}
             </div>
           `)}
         </div>

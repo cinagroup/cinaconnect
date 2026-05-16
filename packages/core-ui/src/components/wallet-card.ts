@@ -1,5 +1,5 @@
 /**
- * WalletCard Web Component
+ * WalletCard Web Component (i18n-enabled)
  *
  * Single wallet card shown in wallet lists or modal grids.
  *
@@ -12,9 +12,10 @@
  *   - ocx-wallet-select: fired on click
  */
 
-import { html, css } from 'lit';
+import { html, css, nothing } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { BaseLitElement } from '../foundation/base-element.js';
+import { t, isRTL } from '../i18n/index.js';
 
 export interface WalletInfo {
   id: string;
@@ -115,12 +116,17 @@ export class WalletCard extends BaseLitElement {
   @property({ type: Boolean }) installed = false;
   @property({ type: Boolean }) recommended = false;
 
+  override connectedCallback() {
+    super.connectedCallback();
+    if (isRTL()) this.setAttribute('dir', 'rtl');
+  }
+
   override render() {
     if (!this.wallet) return null;
 
     return html`
       <div class="card" role="button" tabindex="0"
-           aria-label="Connect with ${this.wallet.name}">
+           aria-label="${t('wallet')} ${this.wallet.name}">
         <div class="icon" style="background:${this.wallet.iconBackground || 'var(--ocx-color-bg-tertiary, #1F2937)'}">
           ${this.wallet.icon
             ? html`<img src="${this.wallet.icon}" alt="" loading="lazy" />`
@@ -132,9 +138,9 @@ export class WalletCard extends BaseLitElement {
           ${this.wallet.description ? html`<div class="desc">${this.wallet.description}</div>` : ''}
         </div>
         ${this.recommended
-          ? html`<span class="badge badge-recommended">Recommended</span>`
+          ? html`<span class="badge badge-recommended">${t('recommended')}</span>`
           : this.installed
-            ? html`<span class="badge badge-installed">Installed</span>`
+            ? html`<span class="badge badge-installed">${t('installed')}</span>`
             : ''
         }
       </div>

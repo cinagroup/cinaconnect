@@ -1,11 +1,11 @@
 /**
- * ConnectModal — Native React Native modal.
+ * ConnectModal — Native React Native modal with deep linking support.
  *
  * Uses native RN components (Modal, View, Text, TouchableOpacity, FlatList, ScrollView)
- * instead of Web Components.
+ * instead of Web Components. Integrates real deep linking via react-native Linking API.
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import {
   Modal,
   View,
@@ -15,6 +15,9 @@ import {
   ScrollView,
   TextInput,
   Image,
+  Linking,
+  Alert,
+  Platform,
 } from 'react-native';
 import { useOnChainUXContext } from './OnChainUXProvider';
 
@@ -27,6 +30,16 @@ export interface WalletInfo {
   description?: string;
   downloadUrl?: string;
   rdns?: string;
+  /** Deep link scheme for the wallet app (e.g., 'metamask://'). */
+  deepLink?: string;
+  /** Universal link domain for iOS/Android fallback. */
+  universalLink?: string;
+  /** App store URL if wallet is not installed. */
+  appStoreUrl?: string;
+  /** Play store URL for Android. */
+  playStoreUrl?: string;
+  /** Whether this wallet supports WalletConnect URI deep links. */
+  supportsWalletConnect?: boolean;
 }
 
 /** Props for the native ConnectModal. */
@@ -43,19 +56,44 @@ export interface ConnectModalProps {
   recommendedWalletIds?: string[];
   /** Custom wallet list. */
   wallets?: WalletInfo[];
+  /** WalletConnect URI to pass when opening wallets. */
+  wcUri?: string;
+  /** Timeout before falling back to universal link (ms). */
+  fallbackTimeoutMs?: number;
 }
 
 type ModalView = 'wallets' | 'social' | 'email' | 'scan';
 
 const DEFAULT_WALLETS: WalletInfo[] = [
-  { id: 'metamask', name: 'MetaMask', description: 'Browser extension' },
-  { id: 'walletconnect', name: 'WalletConnect', description: 'QR Code' },
-  { id: 'coinbase', name: 'Coinbase Wallet', description: 'Wallet' },
-  { id: 'rabby', name: 'Rabby', description: 'Multi-chain wallet' },
+  { id: 'metamask', name: 'MetaMask', description: 'Browser extension & mobile',
+    deepLink: 'metamask://', universalLink: 'https://metamask.app.link',
+    appStoreUrl: 'https://apps.apple.com/app/metamask/id1438668043',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=io.metamask',
+    supportsWalletConnect: true },
+  { id: 'walletconnect', name: 'WalletConnect', description: 'QR Code',
+    deepLink: 'wc://', universalLink: 'https://walletconnect.com',
+    supportsWalletConnect: true },
+  { id: 'coinbase', name: 'Coinbase Wallet', description: 'Wallet',
+    deepLink: 'cbwallet://', universalLink: 'https://go.cb-w.com',
+    appStoreUrl: 'https://apps.apple.com/app/coinbase-wallet/id1278383455',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=org.toshi',
+    supportsWalletConnect: true },
+  { id: 'rabby', name: 'Rabby', description: 'Multi-chain wallet',
+    deepLink: 'rabby://', supportsWalletConnect: false },
+  { id: 'rainbow', name: 'Rainbow', description: 'Ethereum wallet',
+    deepLink: 'rainbow://', universalLink: 'https://rnbwapp.com',
+    appStoreUrl: 'https://apps.apple.com/app/rainbow-ethereum-wallet/id1457119021',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=me.rainbow',
+    supportsWalletConnect: true },
+  { id: 'trust', name: 'Trust Wallet', description: 'Multi-chain wallet',
+    deepLink: 'trust://', universalLink: 'https://link.trustwallet.com',
+    appStoreUrl: 'https://apps.apple.com/app/trust-crypto-bitcoin-wallet/id1288339409',
+    playStoreUrl: 'https://play.google.com/store/apps/details?id=com.wallet.crypto.trustapp',
+    supportsWalletConnect: true },
 ];
 
 /**
- * Native ConnectModal for React Native.
+ * Native ConnectModal for React Native with real deep linking.
  */
 export function ConnectModal({
   visible,
@@ -63,18 +101,141 @@ export function ConnectModal({
   defaultView = 'wallets',
   recommendedWalletIds = [],
   wallets = DEFAULT_WALLETS,
+  wcUri,
+  fallbackTimeoutMs = 1500,
 }: ConnectModalProps): JSX.Element {
   const [currentView, setCurrentView] = useState<ModalView>(defaultView as ModalView);
   const { connect, themeColors } = useOnChainUXContext();
   const [email, setEmail] = useState('');
+  const [deepLinkStatus, setDeepLinkStatus] = useState<Record<string, 'loading' | 'error' | 'success'>>({});
+  const fallbackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
 
+  // Cleanup timers on unmount.
+  useEffect(() => {
+    return () => {
+      fallbackTimers.current.forEach(timer => clearTimeout(timer));
+      fallbackTimers.current.clear();
+    };
+  }, []);
+
+  /**
+   * Check if a wallet app is installed by attempting to open its deep link scheme.
+   */
+  const checkAppInstalled = useCallback(async (wallet: WalletInfo): Promise<boolean> => {
+    if (!wallet.deepLink) return false;
+    try {
+      return await Linking.canOpenURL(wallet.deepLink);
+    } catch {
+      return false;
+    }
+  }, []);
+
+  /**
+   * Build the deep link URL for a wallet.
+   */
+  const buildDeepLinkUrl = useCallback((wallet: WalletInfo): string => {
+    if (wallet.supportsWalletConnect && wcUri) {
+      // Use WalletConnect URI format.
+      if (wallet.deepLink) {
+        return `${wallet.deepLink}wc?uri=${encodeURIComponent(wcUri)}`;
+      }
+    }
+    // Fallback: use the deep link scheme with WC URI.
+    if (wallet.deepLink && wcUri) {
+      return `${wallet.deepLink}wc?uri=${encodeURIComponent(wcUri)}`;
+    }
+    return wallet.deepLink ?? wallet.universalLink ?? '';
+  }, [wcUri]);
+
+  /**
+   * Handle wallet selection with real deep linking.
+   * Tries deep link → timeout → universal link → app store.
+   */
   const handleWalletSelect = useCallback(
-    (wallet: WalletInfo) => {
-      connect(wallet.id)
-        .then(() => onClose())
-        .catch(() => {});
+    async (wallet: WalletInfo) => {
+      setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'loading' }));
+
+      // Clear any existing fallback timer.
+      const existingTimer = fallbackTimers.current.get(wallet.id);
+      if (existingTimer) {
+        clearTimeout(existingTimer);
+        fallbackTimers.current.delete(wallet.id);
+      }
+
+      // Build the deep link URL.
+      const deepLinkUrl = buildDeepLinkUrl(wallet);
+      const universalLinkUrl = wallet.universalLink
+        ? wallet.universalLink + (wcUri ? `/wc?uri=${encodeURIComponent(wcUri)}` : '')
+        : wallet.appStoreUrl;
+
+      if (!deepLinkUrl && !universalLinkUrl) {
+        // No deep link or universal link — try standard connect.
+        try {
+          await connect(wallet.id);
+          onClose();
+        } catch {
+          // Fall through to showing error.
+        }
+        setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
+        return;
+      }
+
+      // Step 1: Try to open the deep link.
+      try {
+        const canOpen = await Linking.canOpenURL(deepLinkUrl);
+        if (canOpen) {
+          await Linking.openURL(deepLinkUrl);
+          setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
+
+          // Also trigger standard connect to handle the session.
+          connect(wallet.id).then(() => onClose()).catch(() => {});
+          return;
+        }
+      } catch (err) {
+        // canOpenURL may fail on iOS 9+ without LSApplicationQueriesSchemes entry.
+        // Proceed with the open attempt anyway.
+      }
+
+      // Step 2: Attempt deep link open anyway (iOS may still handle it).
+      try {
+        await Linking.openURL(deepLinkUrl);
+
+        // Step 3: Set fallback timer for universal link / app store.
+        const timer = setTimeout(async () => {
+          if (universalLinkUrl) {
+            try {
+              await Linking.openURL(universalLinkUrl);
+              setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
+            } catch {
+              // If universal link also fails, suggest app store.
+              const storeUrl = Platform.OS === 'ios'
+                ? wallet.appStoreUrl
+                : wallet.playStoreUrl;
+              if (storeUrl) {
+                Alert.alert(
+                  'App Not Found',
+                  `${wallet.name} doesn't appear to be installed. Download it from the app store?`,
+                  [
+                    { text: 'Cancel', style: 'cancel' },
+                    { text: 'Download', onPress: () => Linking.openURL(storeUrl) },
+                  ]
+                );
+              }
+              setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
+            }
+          } else {
+            setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
+          }
+          fallbackTimers.current.delete(wallet.id);
+        }, fallbackTimeoutMs);
+
+        fallbackTimers.current.set(wallet.id, timer);
+      } catch (err) {
+        setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
+        Alert.alert('Error', `Could not open ${wallet.name}. Please install it and try again.`);
+      }
     },
-    [connect, onClose]
+    [connect, onClose, buildDeepLinkUrl, fallbackTimeoutMs],
   );
 
   const handleEmailSubmit = useCallback(() => {
@@ -97,10 +258,21 @@ export function ConnectModal({
   const views: ModalView[] = ['wallets', 'social', 'email', 'scan'];
   const availableViews = views.filter(v => true); // All views available by default
 
+  const getStatusBadge = (walletId: string) => {
+    const status = deepLinkStatus[walletId];
+    if (!status) return null;
+    switch (status) {
+      case 'loading': return <Text style={styles.statusLoading}>Opening...</Text>;
+      case 'success': return <Text style={styles.statusSuccess}>✓ Opened</Text>;
+      case 'error': return <Text style={styles.statusError}>✕ Failed</Text>;
+    }
+  };
+
   const renderWallets = () => (
     <View style={styles.walletGrid}>
       {wallets.map(wallet => {
         const isRecommended = recommendedWalletIds.includes(wallet.id);
+        const isInstalled = wallet.supportsWalletConnect; // Simplified check
         return (
           <TouchableOpacity
             key={wallet.id}
@@ -109,6 +281,7 @@ export function ConnectModal({
               { backgroundColor: themeColors.bgCard, borderColor: themeColors.border },
             ]}
             onPress={() => handleWalletSelect(wallet)}
+            disabled={deepLinkStatus[wallet.id] === 'loading'}
           >
             <View
               style={[
@@ -128,9 +301,15 @@ export function ConnectModal({
                 {wallet.description}
               </Text>
             ) : null}
+            {getStatusBadge(wallet.id)}
             {isRecommended && (
               <Text style={[styles.recommendedBadge, { color: themeColors.accent500 }]}>
                 Recommended
+              </Text>
+            )}
+            {isInstalled && wallet.deepLink && (
+              <Text style={[styles.installedBadge, { color: themeColors.textTertiary }]}>
+                Deep link ready
               </Text>
             )}
           </TouchableOpacity>
@@ -203,6 +382,11 @@ export function ConnectModal({
       >
         <Text style={{ fontSize: 48 }}>📱</Text>
       </View>
+      {wcUri && (
+        <Text style={[styles.wcUri, { color: themeColors.textTertiary }]}>
+          {wcUri.substring(0, 60)}...
+        </Text>
+      )}
     </View>
   );
 
@@ -420,5 +604,25 @@ const styles = StyleSheet.create({
   },
   footerText: {
     fontSize: 12,
+  },
+  wcUri: {
+    fontSize: 10,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+  statusLoading: {
+    fontSize: 11,
+    color: '#60a5fa',
+  },
+  statusSuccess: {
+    fontSize: 11,
+    color: '#34d399',
+  },
+  statusError: {
+    fontSize: 11,
+    color: '#f87171',
+  },
+  installedBadge: {
+    fontSize: 10,
   },
 });
