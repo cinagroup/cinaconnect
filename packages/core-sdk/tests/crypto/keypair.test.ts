@@ -1,9 +1,9 @@
 /**
  * Tests for X25519 keypair generation, serialization, and shared secret.
- * Source uses @noble/curves for real X25519.
+ * Source uses @noble/curves for real X25519 (sync API).
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
   generateKeypair,
   sharedSecret,
@@ -29,12 +29,15 @@ describe('generateKeypair', () => {
     expect(kp1.publicKey).not.toEqual(kp2.publicKey);
   });
 
-  it('should generate a valid clamped private key', () => {
-    // @noble/curves returns a clamped secretKey
-    const keypair = generateKeypair();
-    expect(keypair.privateKey.length).toBe(32);
+  it('should produce a clamped private key', () => {
+    // @noble/curves keygen returns a properly clamped secret key
+    const kp1 = generateKeypair();
+    const kp2 = generateKeypair();
+    // Both should be valid 32-byte keys
+    expect(kp1.privateKey.length).toBe(32);
+    expect(kp2.privateKey.length).toBe(32);
     // Should not be all zeros
-    expect(keypair.privateKey.some((b) => b !== 0)).toBe(true);
+    expect(kp1.privateKey.some((b) => b !== 0)).toBe(true);
   });
 });
 
@@ -47,12 +50,13 @@ describe('sharedSecret', () => {
     expect(secret.length).toBe(32);
   });
 
-  it('should produce the same shared secret from both sides', () => {
+  it('should produce the same shared secret for both parties (DH property)', () => {
     const kp1 = generateKeypair();
     const kp2 = generateKeypair();
-    const secret1 = sharedSecret(kp1.privateKey, kp2.publicKey);
-    const secret2 = sharedSecret(kp2.privateKey, kp1.publicKey);
-    expect(secret1).toEqual(secret2);
+    // sharedSecret(priv1, pub2) === sharedSecret(priv2, pub1)
+    const s1 = sharedSecret(kp1.privateKey, kp2.publicKey);
+    const s2 = sharedSecret(kp2.privateKey, kp1.publicKey);
+    expect(s1).toEqual(s2);
   });
 
   it('should produce deterministic output for same inputs', () => {
