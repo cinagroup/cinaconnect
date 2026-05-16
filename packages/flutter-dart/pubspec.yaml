@@ -1,0 +1,40 @@
+name: onchainux
+description: OnChainUX Flutter SDK — Self-hosted wallet connection toolkit. A complete replacement for Reown/WalletConnect infrastructure for Flutter apps.
+version: 0.1.0
+homepage: https://github.com/hainai/onchainux
+repository: https://github.com/hainai/onchainux
+issue_tracker: https://github.com/hainai/onchainux/issues
+documentation: https://docs.onchainux.dev/flutter
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+  flutter: '>=3.16.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  walletconnect_flutter_v2: ^2.2.0
+  crypto: ^3.0.3
+  http: ^1.2.0
+  web3dart: ^2.7.2
+  convert: ^3.1.1
+  shared_preferences: ^2.2.2
+  flutter_local_notifications: ^17.0.0
+  app_links: ^6.1.0
+  url_launcher: ^6.2.4
+  qr_flutter: ^4.1.0
+  web_socket_channel: ^2.4.0
+  pointycastle: ^3.7.4
+  uuid: ^4.3.3
+  device_info_plus: ^10.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+  mocktail: ^1.0.3
+
+flutter:
+  # Plugin registration if needed
+  # assets:
+  #   - assets/icons/

@@ -1,0 +1,16 @@
+name: onchainux_example
+description: Example app for OnChainUX Flutter SDK
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  onchainux:
+    path: ../
+
+flutter:
+  uses-material-design: true
