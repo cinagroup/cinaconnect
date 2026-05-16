@@ -12,11 +12,11 @@
 mod config;
 mod crypto;
 mod health;
+mod metrics;
 mod models;
 mod relay;
 
 use std::io;
-use std::sync::Arc;
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use actix_web::{web, App, HttpServer};
@@ -24,7 +24,7 @@ use redis::Client;
 use tracing::info;
 
 use crate::config::Config;
-use crate::health::{create_pairing, health, metrics, Metrics, UptimeTracker};
+use crate::health::{create_pairing, health, init as init_metrics, metrics, Metrics, UptimeTracker};
 use crate::relay::AppState;
 
 /// Get current time in milliseconds since Unix epoch.
@@ -46,6 +46,9 @@ async fn main() -> io::Result<()> {
         .with_target(true)
         .init();
 
+    // Initialize Prometheus metrics
+    init_metrics();
+
     let config = Config::from_env();
     info!(
         listen_addr = %config.listen_addr,
@@ -64,30 +67,39 @@ async fn main() -> io::Result<()> {
         .await
         .expect("failed to connect to Redis");
 
-    // Initialize shared state
-    let metrics = Metrics::new();
-    let uptime = web::Data::new(UptimeTracker::new());
+    // Initialize shared state with broadcast channel (capacity 1024).
+    let state = AppState::new(redis_conn, config.clone(), 1024);
 
-    // Create the AppState
-    let state = AppState {
-        redis: redis_conn,
-        subscriptions: Arc::new(tokio::sync::Mutex::new(std::collections::HashMap::new())),
-        client_counter: Arc::new(tokio::sync::Mutex::new(0u64)),
-    };
+    // Spawn Redis Pub/Sub subscriber to receive messages from other instances.
+    let redis_url = config.redis_url.clone();
+    let broadcast_tx = state.broadcast_tx.clone();
+    tokio::spawn(async move {
+        relay::redis_pubsub_subscriber(redis_url, broadcast_tx).await;
+    });
+    info!("Redis Pub/Sub subscriber task started");
+
+    // Initialize state for HTTP handlers
+    let metrics = web::Data::new(Metrics::new());
+    let uptime = web::Data::new(UptimeTracker::new());
+    let start_time = web::Data::new(std::time::Instant::now());
 
     let server = HttpServer::new({
         let state = state.clone();
+        let config = config.clone();
         let metrics = metrics.clone();
+        let uptime = uptime.clone();
+        let start_time = start_time.clone();
         let region = config.region.clone();
         let project_id = config.project_id.clone();
-        let uptime = uptime.clone();
 
         move || {
             App::new()
                 .app_data(web::Data::new(region.clone()))
                 .app_data(web::Data::new(project_id.clone()))
-                .app_data(web::Data::new(metrics.clone()))
+                .app_data(metrics.clone())
                 .app_data(uptime.clone())
+                .app_data(start_time.clone())
+                .app_data(web::Data::new(config.clone()))
                 .app_data(web::Data::new(state.clone()))
                 .service(health)
                 .service(metrics)

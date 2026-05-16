@@ -1,40 +1,163 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useOnChainUX, ChainSwitcher } from '@onchainux/react'
+import { ethers } from 'ethers'
+
+/**
+ * MultiChainDemo — Real multi-chain asset overview.
+ *
+ * Features:
+ * - Real balance fetching across multiple chains via JSON-RPC
+ * - Real chain switching through wallet provider
+ * - Cross-chain total balance estimation
+ */
+
+interface ChainConfig {
+  chainId: number
+  name: string
+  symbol: string
+  nativeCurrency: { name: string; symbol: string; decimals: number }
+  rpcUrl: string
+  icon: string
+  coingeckoId: string
+}
+
+const CHAINS: ChainConfig[] = [
+  {
+    chainId: 1,
+    name: 'Ethereum',
+    symbol: 'ETH',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrl: 'https://eth.llamarpc.com',
+    icon: '🔷',
+    coingeckoId: 'ethereum',
+  },
+  {
+    chainId: 137,
+    name: 'Polygon',
+    symbol: 'MATIC',
+    nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+    rpcUrl: 'https://polygon-rpc.com',
+    icon: '🟣',
+    coingeckoId: 'matic-network',
+  },
+  {
+    chainId: 42161,
+    name: 'Arbitrum',
+    symbol: 'ETH',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrl: 'https://arb1.arbitrum.io/rpc',
+    icon: '🔵',
+    coingeckoId: 'ethereum',
+  },
+]
 
 interface ChainBalance {
   chainId: number
   name: string
   symbol: string
   balance: string
-  usdValue: string
+  usdValue: string | null
   icon: string
 }
-
-const DEMO_BALANCES: ChainBalance[] = [
-  { chainId: 1, name: 'Ethereum', symbol: 'ETH', balance: '1.2345', usdValue: '$3,703.50', icon: '🔷' },
-  { chainId: 137, name: 'Polygon', symbol: 'MATIC', balance: '500.00', usdValue: '$450.00', icon: '🟣' },
-  { chainId: 42161, name: 'Arbitrum', symbol: 'ETH', balance: '0.5000', usdValue: '$1,500.00', icon: '🔵' },
-]
 
 export function MultiChainDemo() {
   const { account, chainId, switchChain } = useOnChainUX()
   const [selectedChain, setSelectedChain] = useState(1)
+  const [balances, setBalances] = useState<ChainBalance[]>([])
+  const [loading, setLoading] = useState(false)
+  const [prices, setPrices] = useState<Record<string, number>>({})
 
-  const chains = DEMO_BALANCES.map((c) => ({
+  const fetchBalances = useCallback(async () => {
+    if (!account) return
+    setLoading(true)
+
+    // Fetch prices in parallel
+    try {
+      const ids = [...new Set(CHAINS.map((c) => c.coingeckoId))]
+      const resp = await fetch(
+        `https://api.coingecko.com/api/v3/simple/price?ids=${ids.join(',')}&vs_currencies=usd`
+      )
+      const data = await resp.json()
+      const priceMap: Record<string, number> = {}
+      Object.entries(data).forEach(([key, val]: [string, any]) => {
+        priceMap[key] = val?.usd ?? 0
+      })
+      setPrices(priceMap)
+    } catch {
+      console.warn('Failed to fetch prices')
+    }
+
+    // Fetch balances across all chains in parallel
+    const results = await Promise.allSettled(
+      CHAINS.map(async (chain) => {
+        try {
+          const provider = new ethers.JsonRpcProvider(chain.rpcUrl)
+          const balanceWei = await provider.getBalance(account)
+          const balance = parseFloat(ethers.formatEther(balanceWei))
+          const usdValue = prices[chain.coingeckoId]
+            ? `$${(balance * prices[chain.coingeckoId]).toFixed(2)}`
+            : null
+
+          return {
+            chainId: chain.chainId,
+            name: chain.name,
+            symbol: chain.symbol,
+            balance: balance.toFixed(6),
+            usdValue,
+            icon: chain.icon,
+          }
+        } catch {
+          return {
+            chainId: chain.chainId,
+            name: chain.name,
+            symbol: chain.symbol,
+            balance: '—',
+            usdValue: null,
+            icon: chain.icon,
+          }
+        }
+      })
+    )
+
+    setBalances(
+      results
+        .filter((r): r is PromiseFulfilledResult<ChainBalance> => r.status === 'fulfilled')
+        .map((r) => r.value)
+    )
+    setLoading(false)
+  }, [account, prices])
+
+  useEffect(() => {
+    if (account) {
+      fetchBalances()
+    } else {
+      setBalances([])
+    }
+  }, [account, fetchBalances])
+
+  const chainsForSwitcher = CHAINS.map((c) => ({
     id: c.chainId,
     name: c.name,
-    nativeCurrency: { name: c.name, symbol: c.symbol, decimals: 18 },
-    rpcUrl: '',
+    nativeCurrency: c.nativeCurrency,
+    rpcUrl: c.rpcUrl,
   }))
 
-  const currentBalance = DEMO_BALANCES.find((c) => c.chainId === selectedChain)
+  const currentBalance = balances.find((b) => b.chainId === selectedChain)
+
+  // Calculate total USD value
+  const totalUsd = balances.reduce((sum, b) => {
+    if (b.usdValue) {
+      return sum + parseFloat(b.usdValue.replace('$', ''))
+    }
+    return sum
+  }, 0)
 
   return (
     <div className="multichain-demo">
       <div className="demo-card">
         <h3>ChainSwitcher</h3>
         <ChainSwitcher
-          chains={chains}
+          chains={chainsForSwitcher}
           activeChainId={selectedChain}
           onChainChange={(id) => {
             setSelectedChain(id)
@@ -44,15 +167,17 @@ export function MultiChainDemo() {
       </div>
 
       <div className="demo-card">
-        <h3>跨链资产总览</h3>
+        <h3>跨链资产总览 {loading && <span className="loading-indicator">⏳</span>}</h3>
         {account ? (
           <>
-            <div className="total-balance">
-              <span className="total-label">总资产估值</span>
-              <span className="total-value">$5,653.50</span>
-            </div>
+            {totalUsd > 0 && (
+              <div className="total-balance">
+                <span className="total-label">总资产估值</span>
+                <span className="total-value">${totalUsd.toFixed(2)}</span>
+              </div>
+            )}
             <div className="chain-balances">
-              {DEMO_BALANCES.map((chain) => (
+              {balances.map((chain) => (
                 <div
                   key={chain.chainId}
                   className={`chain-balance ${chain.chainId === selectedChain ? 'active' : ''}`}
@@ -68,7 +193,7 @@ export function MultiChainDemo() {
                       {chain.balance} {chain.symbol}
                     </div>
                   </div>
-                  <div className="chain-usd">{chain.usdValue}</div>
+                  <div className="chain-usd">{chain.usdValue || '—'}</div>
                 </div>
               ))}
             </div>
@@ -80,7 +205,7 @@ export function MultiChainDemo() {
 
       <div className="demo-card">
         <h3>网络信息</h3>
-        {currentBalance && (
+        {currentBalance ? (
           <div className="network-info">
             <div className="info-row">
               <span>当前网络</span>
@@ -99,10 +224,13 @@ export function MultiChainDemo() {
             <div className="info-row">
               <span>余额</span>
               <span>
-                {currentBalance.balance} {currentBalance.symbol} ({currentBalance.usdValue})
+                {currentBalance.balance} {currentBalance.symbol}
+                {currentBalance.usdValue && ` (${currentBalance.usdValue})`}
               </span>
             </div>
           </div>
+        ) : (
+          <p className="no-account">暂无数据</p>
         )}
       </div>
     </div>

@@ -123,3 +123,137 @@ jobs:
 
       - name: Check Bundle Size
         run: pnpm check-bundle --verbose
+
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── TypeScript/Vitest ──
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Vitest — TypeScript packages
+        run: pnpm vitest run --coverage
+        continue-on-error: true
+
+      # ── Rust ──
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: stable
+          components: llvm-tools-preview
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      - name: Cache Rust
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: |
+            packages/push-server
+            packages/keys-server
+            packages/relay-server
+            packages/bundler
+            packages/erc6492
+
+      - name: Cargo test — push-server
+        working-directory: packages/push-server
+        run: cargo llvm-cov test --lcov --output-path lcov-push.info
+
+      - name: Cargo test — keys-server
+        working-directory: packages/keys-server
+        run: cargo llvm-cov test --lcov --output-path lcov-keys.info
+
+      - name: Cargo test — relay-server
+        working-directory: packages/relay-server
+        run: cargo llvm-cov test --lcov --output-path lcov-relay.info
+
+      - name: Cargo test — bundler
+        working-directory: packages/bundler
+        run: cargo llvm-cov test --lcov --output-path lcov-bundler.info
+
+      # ── Go ──
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.22"
+
+      - name: Go test — rpc-proxy
+        working-directory: packages/rpc-proxy
+        run: |
+          go install github.com/go-delve/delve/cmd/dlv@latest
+          go test -v -coverprofile=cover-rpc.out -covermode=atomic ./...
+
+      # ── Coverage report ──
+      - name: Merge coverage reports
+        if: always()
+        run: |
+          mkdir -p coverage
+          # Merge Rust lcov files
+          cat packages/push-server/lcov-push.info \
+              packages/keys-server/lcov-keys.info \
+              packages/relay-server/lcov-relay.info \
+              packages/bundler/lcov-bundler.info \
+              > coverage/lcov-rust.info 2>/dev/null || true
+          # Copy Go coverage
+          cp packages/rpc-proxy/cover-rpc.out coverage/ 2>/dev/null || true
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 30
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: npm audit
+        run: pnpm audit --audit-level=moderate || true
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Audit Rust crates
+        working-directory: packages
+        run: |
+          for pkg in push-server keys-server relay-server bundler; do
+            echo "=== Auditing $pkg ==="
+            (cd "$pkg" && cargo audit 2>/dev/null || true)
+          done

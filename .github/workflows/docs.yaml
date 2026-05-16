@@ -1,0 +1,88 @@
+name: Deploy VitePress Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'packages/**/*.ts'
+      - 'package.json'
+      - '.github/workflows/docs.yaml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ── TypeDoc: generate API docs from source ─────────────────
+  typedoc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Generate TypeDoc
+        run: npx typedoc
+
+      - name: Upload typedoc output
+        uses: actions/upload-artifact@v4
+        with:
+          name: typedoc-output
+          path: docs/.vitepress/dist/api/typedoc/
+          retention-days: 1
+
+  # ── Build VitePress site ────────────────────────────────────
+  build:
+    needs: typedoc
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Restore TypeDoc output
+        uses: actions/download-artifact@v4
+        with:
+          name: typedoc-output
+          path: docs/public/api/typedoc/
+
+      - name: Build VitePress
+        run: npx vitepress build docs
+        env:
+          NODE_ENV: production
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/.vitepress/dist
+
+  # ── Deploy to GitHub Pages ──────────────────────────────────
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

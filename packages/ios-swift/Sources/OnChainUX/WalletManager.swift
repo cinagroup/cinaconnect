@@ -68,7 +68,17 @@ public final class WalletManager: ObservableObject {
     public func connect(connectorId: String) async throws -> ConnectResult {
         connectionStatus = .connecting
         
-        // Simulate wallet connection (in production, integrate with WalletConnect SDK or injected providers)
+        // Check if this is a WalletConnect v2 wallet
+        let isWcWallet = connectorId == "walletconnect" || connectorId == "metamask" ||
+                         connectorId == "rainbow" || connectorId == "trust" ||
+                         connectorId == "coinbase" || connectorId == "phantom" ||
+                         connectorId == "zerion"
+        
+        if isWcWallet {
+            return try await connectWithWalletConnect(connectorId: connectorId)
+        }
+        
+        // Non-WC wallets: use mock flow (email, social, etc.)
         try await Task.sleep(nanoseconds: 1_000_000_000)
         
         guard let config = config else {
@@ -78,7 +88,6 @@ public final class WalletManager: ObservableObject {
         let chainId = config.chains.first?.chainId ?? 1
         let symbol = config.chains.first?.nativeCurrency.symbol ?? "ETH"
         
-        // Simulated connection result
         let account = AccountInfo(
             address: "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
             balance: "1.234",
@@ -92,6 +101,104 @@ public final class WalletManager: ObservableObject {
         connectionStatus = .connected
         
         return ConnectResult(account: account, chainId: chainId, sessionId: newSessionId)
+    }
+    
+    /// Connect using the WalletConnect v2 client.
+    /// - Parameter connectorId: Wallet connector ID.
+    /// - Returns: Connection result.
+    private func connectWithWalletConnect(connectorId: String) async throws -> ConnectResult {
+        guard let config = config else {
+            throw OnChainUXError.notConfigured
+        }
+        
+        guard let relayUrl = config.projectId.map({ "wss://relay.onchainux.io/v1?projectId=\($0)" }) else {
+            // No relay configured — use mock
+            try await Task.sleep(nanoseconds: 500_000_000)
+            let chainId = config.chains.first?.chainId ?? 1
+            let account = AccountInfo(
+                address: "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+                balance: "1.234",
+                chainId: chainId,
+                chainSymbol: config.chains.first?.nativeCurrency.symbol ?? "ETH"
+            )
+            let newSessionId = UUID().uuidString
+            connectedAccount = account
+            sessionId = newSessionId
+            connectionStatus = .connected
+            return ConnectResult(account: account, chainId: chainId, sessionId: newSessionId)
+        }
+        
+        let wcClient = WCClient.shared
+        wcClient.configure(
+            relayUrl: relayUrl,
+            projectId: config.projectId ?? "",
+            metadata: config.metadata ?? .init(name: "", description: "", url: "", icons: []),
+            chains: config.chains.map { "eip155:\($0.chainId)" }
+        )
+        
+        // Create pairing and get URI
+        let uri = try await wcClient.createPairing()
+        
+        // Open wallet with deep link
+        if let deepLink = DeepLinkHandler.walletConfigs[connectorId] {
+            let deepLinkUrl = "\(deepLink.scheme)wc?uri=\(uri.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? uri)"
+            if let url = URL(string: deepLinkUrl), UIApplication.shared.canOpenURL(url) {
+                UIApplication.shared.open(url)
+            } else if let universalUrl = deepLink.universalDomain {
+                let universalLink = "https://\(universalUrl)/wc?uri=\(uri.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? uri)"
+                if let url = URL(string: universalLink) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
+        
+        // Wait for session (handled by event listener in OnChainUX)
+        return try await withCheckedThrowingContinuation { continuation in
+            let eventId = wcClient.onEvent { event in
+                switch event {
+                case .connected(let session):
+                    wcClient.unsubscribe(eventId)
+                    let chainId = session.accounts.first.flatMap { extractChainId(from: $0) } ?? config.chains.first?.chainId ?? 1
+                    let account = AccountInfo(
+                        address: session.accounts.first.flatMap { extractAddress(from: $0) } ?? "",
+                        balance: "0.00",
+                        chainId: chainId,
+                        chainSymbol: config.chains.first(where: { $0.chainId == chainId })?.nativeCurrency.symbol ?? "ETH"
+                    )
+                    self.connectedAccount = account
+                    self.sessionId = session.topic
+                    self.connectionStatus = .connected
+                    continuation.resume(returning: ConnectResult(account: account, chainId: chainId, sessionId: session.topic))
+                case .error(let error):
+                    wcClient.unsubscribe(eventId)
+                    self.connectionStatus = .error(error.localizedDescription)
+                    continuation.resume(throwing: OnChainUXError.connectionFailed(error.localizedDescription))
+                default:
+                    break
+                }
+            }
+            
+            // 5-minute timeout
+            Task {
+                try? await Task.sleep(nanoseconds: 300_000_000_000)
+                if self.connectionStatus == .connecting {
+                    wcClient.unsubscribe(eventId)
+                    continuation.resume(throwing: OnChainUXError.connectionFailed("Session establishment timed out"))
+                }
+            }
+        }
+    }
+    
+    /// Extract chain ID from a CAIP-2 chain string.
+    private func extractChainId(from caip2: String) -> Int? {
+        let parts = caip2.split(separator: ":")
+        return parts.count >= 2 ? Int(parts[1]) : nil
+    }
+    
+    /// Extract address from a CAIP-10 account string.
+    private func extractAddress(from caip10: String) -> String? {
+        let parts = caip10.split(separator: ":")
+        return parts.count >= 3 ? String(parts[2]) : nil
     }
     
     /// Disconnect from the current wallet.

@@ -80,7 +80,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Health & metrics
         .route("/v1/health", axum::routing::get(health))
         .route("/metrics", axum::routing::get(metrics_handler))
-        .layer(axum::middleware::from_fn(middleware::auth::auth_middleware))
+        .layer(axum::middleware::from_fn_with_state(
+            state.clone(),
+            middleware::auth::auth_middleware,
+        ))
         .with_state(state)
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive());

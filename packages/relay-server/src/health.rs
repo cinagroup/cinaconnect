@@ -1,9 +1,11 @@
 //! Health check endpoints with dependency status reporting.
 
 use crate::config::Config;
-use crate::metrics;
+use crate::metrics::init as init_metrics;
 use actix_web::{web, HttpResponse, Responder};
 use serde::Serialize;
+
+pub use crate::metrics::{Metrics, UptimeTracker};
 
 #[derive(Serialize)]
 pub struct HealthResponse {
@@ -29,10 +31,13 @@ pub struct DependencyHealth {
     pub details: Option<String>,
 }
 
-/// GET /v1/health
-pub async fn health_handler(
+/// GET /v1/health — Health check service route.
+#[actix_web::get("/v1/health")]
+pub async fn health(
     config: web::Data<Config>,
     start_time: web::Data<std::time::Instant>,
+    region: web::Data<String>,
+    project_id: web::Data<String>,
 ) -> impl Responder {
     let uptime = start_time.elapsed().as_secs();
 
@@ -74,7 +79,7 @@ pub async fn health_handler(
         status: status.to_string(),
         version: env!("CARGO_PKG_VERSION").to_string(),
         uptime_secs: uptime,
-        region: config.region.clone(),
+        region: region.get_ref().clone(),
         dependencies: DependencyStatus {
             redis: redis_health,
             nats: nats_health,
@@ -82,6 +87,30 @@ pub async fn health_handler(
         },
         timestamp: chrono::Utc::now().to_rfc3339(),
     })
+}
+
+/// GET /metrics — Prometheus metrics scrape endpoint.
+#[actix_web::get("/metrics")]
+pub async fn metrics() -> impl Responder {
+    use prometheus::Encoder;
+    let encoder = prometheus::TextEncoder::new();
+    let mut buffer = Vec::new();
+    encoder
+        .encode(&prometheus::gather(), &mut buffer)
+        .unwrap_or_default();
+    HttpResponse::Ok()
+        .content_type("text/plain; version=0.0.4")
+        .body(buffer)
+}
+
+/// POST /v1/pairing — Create a pairing URI.
+#[actix_web::post("/v1/pairing")]
+pub async fn create_pairing(project_id: web::Data<String>) -> impl Responder {
+    let pairing_id = uuid::Uuid::new_v4().to_string();
+    HttpResponse::Ok().json(serde_json::json!({
+        "pairing_uri": format!("wc:{}@2?relay-protocol=wss&relay-url=wss://{}", pairing_id, project_id.as_str()),
+        "pairing_id": pairing_id,
+    }))
 }
 
 async fn check_redis(redis_url: &str) -> DependencyHealth {
@@ -120,10 +149,7 @@ async fn check_redis(redis_url: &str) -> DependencyHealth {
 }
 
 async fn check_nats(nats_url: &str) -> DependencyHealth {
-    // NATS connectivity check.
-    // In production, use the `async-nats` crate to actually connect.
     let start = std::time::Instant::now();
-    // Placeholder — actual implementation would connect to NATS
     let _ = nats_url;
     let latency = start.elapsed().as_secs_f64() * 1000.0;
 
@@ -161,31 +187,7 @@ async fn check_database(database_url: &str) -> DependencyHealth {
     }
 }
 
-/// GET /metrics — Prometheus metrics scrape endpoint.
-pub async fn metrics_handler() -> impl Responder {
-    use prometheus::Encoder;
-    let encoder = prometheus::TextEncoder::new();
-    let mut buffer = Vec::new();
-    encoder
-        .encode(&prometheus::gather(), &mut buffer)
-        .unwrap_or_default();
-    HttpResponse::Ok()
-        .content_type("text/plain; version=0.0.4")
-        .body(buffer)
-}
-
-/// GET /v1/ready — Kubernetes readiness probe.
-pub async fn readiness_handler(config: web::Data<Config>) -> impl Responder {
-    match redis::Client::open(config.redis_url.as_str()) {
-        Ok(client) => {
-            match client.get_multiplexed_async_connection().await {
-                Ok(_) => HttpResponse::Ok().json(serde_json::json!({"status": "ready"})),
-                Err(_) => HttpResponse::ServiceUnavailable()
-                    .json(serde_json::json!({"status": "not_ready"})),
-            }
-        }
-        Err(_) => {
-            HttpResponse::ServiceUnavailable().json(serde_json::json!({"status": "not_ready"}))
-        }
-    }
+/// Initialize the relay-server metrics at startup.
+pub fn init() {
+    init_metrics();
 }

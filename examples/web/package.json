@@ -11,8 +11,11 @@
   "dependencies": {
     "@onchainux/core": "workspace:*",
     "@onchainux/react": "workspace:*",
+    "@onchainux/swap-sdk": "workspace:*",
+    "ethers": "^6.13.0",
     "react": "^18.3.0",
-    "react-dom": "^18.3.0"
+    "react-dom": "^18.3.0",
+    "siwe": "^2.3.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",

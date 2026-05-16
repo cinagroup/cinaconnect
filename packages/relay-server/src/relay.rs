@@ -3,7 +3,7 @@
 //! Each WebSocket connection is handled by an `ActixActor` that:
 //! 1. Receives messages from the client
 //! 2. Validates and routes them (subscribe/unsubscribe/publish)
-//! 3. Delivers published messages to subscribers via NATS or Redis Pub/Sub
+//! 3. Delivers published messages to subscribers via in-memory broadcast + Redis Pub/Sub
 //! 4. Maintains per-connection subscription state
 //! 5. Enforces message size limits, rate limiting, and topic expiration
 
@@ -12,11 +12,12 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use actix::prelude::*;
+use actix::fut::ActorFuture;
 use actix_web::web;
 use actix_web_actors::ws;
 use redis::aio::ConnectionManager;
 use serde_json::json;
-use tokio::sync::Mutex;
+use tokio::sync::{broadcast, Mutex};
 use tracing::{debug, error, info, warn};
 
 use crate::config::Config;
@@ -47,6 +48,16 @@ impl TopicMeta {
     }
 }
 
+/// A message published on a topic, sent via the in-memory broadcast channel.
+#[derive(Debug, Clone)]
+pub struct BroadcastMessage {
+    pub topic: String,
+    /// JSON-serialized `RelayMessage` ready to send to WebSocket clients.
+    pub json: String,
+    /// Client ID of the publisher (so we can skip echoing back).
+    pub publisher_id: String,
+}
+
 /// Shared state accessible by all WebSocket sessions.
 #[derive(Clone)]
 pub struct AppState {
@@ -62,9 +73,25 @@ pub struct AppState {
     pub rate_limiter: Arc<Mutex<HashMap<String, (u32, Instant)>>>,
     /// Server configuration.
     pub config: Config,
+    /// Broadcast channel for delivering published messages to local subscribers.
+    pub broadcast_tx: broadcast::Sender<BroadcastMessage>,
 }
 
 impl AppState {
+    /// Create a new AppState with a broadcast channel of the given capacity.
+    pub fn new(redis: ConnectionManager, config: Config, broadcast_capacity: usize) -> Self {
+        let (broadcast_tx, _) = broadcast::channel(broadcast_capacity);
+        Self {
+            redis,
+            subscriptions: Arc::new(Mutex::new(HashMap::new())),
+            topic_meta: Arc::new(Mutex::new(HashMap::new())),
+            client_counter: Arc::new(Mutex::new(0u64)),
+            rate_limiter: Arc::new(Mutex::new(HashMap::new())),
+            config,
+            broadcast_tx,
+        }
+    }
+
     /// Generate a unique client ID.
     pub async fn next_client_id(&self) -> String {
         let mut counter = self.client_counter.lock().await;
@@ -138,6 +165,96 @@ impl AppState {
     }
 }
 
+/// Background task: subscribe to Redis Pub/Sub and deliver messages to the broadcast channel.
+///
+/// This ensures that messages published by other relay-server instances (or
+/// cross-instance) are received locally and forwarded to subscribers.
+pub async fn redis_pubsub_subscriber(
+    redis_url: String,
+    broadcast_tx: broadcast::Sender<BroadcastMessage>,
+) {
+    use redis::Client;
+    use futures_util::StreamExt;
+
+    let client = match Client::open(redis_url.clone()) {
+        Ok(c) => c,
+        Err(e) => {
+            error!(error = %e, "redis pubsub subscriber: failed to create client");
+            return;
+        }
+    };
+
+    loop {
+        let pubsub_conn = match client.get_async_pubsub().await {
+            Ok(conn) => conn,
+            Err(e) => {
+                error!(error = %e, "redis pubsub subscriber: failed to connect, retrying in 5s");
+                tokio::time::sleep(Duration::from_secs(5)).await;
+                continue;
+            }
+        };
+
+        // Subscribe to all topic channels with a wildcard pattern.
+        let mut pubsub_conn = match pubsub_conn.psubscribe("topic:*").await {
+            Ok(_) => pubsub_conn,
+            Err(e) => {
+                error!(error = %e, "redis pubsub subscriber: failed to subscribe, retrying in 5s");
+                tokio::time::sleep(Duration::from_secs(5)).await;
+                continue;
+            }
+        };
+
+        info!("redis pubsub subscriber: subscribed to topic:*");
+
+        // Drain messages from the pubsub stream.
+        let mut on_message = pubsub_conn.on_message();
+        while let Some(msg) = on_message.next().await {
+            let channel = match msg.get_channel_name::<String>() {
+                Ok(ch) => ch,
+                Err(e) => {
+                    warn!(error = %e, "redis pubsub subscriber: failed to get channel name");
+                    continue;
+                }
+            };
+
+            let payload: String = match msg.get_payload() {
+                Ok(p) => p,
+                Err(e) => {
+                    warn!(error = %e, "redis pubsub subscriber: failed to get payload");
+                    continue;
+                }
+            };
+
+            // The channel name is like "topic:abc123...". Extract the topic.
+            let topic = match channel.strip_prefix("topic:") {
+                Some(t) => t.to_string(),
+                None => {
+                    warn!(channel, "redis pubsub subscriber: unexpected channel format");
+                    continue;
+                }
+            };
+
+            // Deliver to local subscribers via broadcast.
+            let bm = BroadcastMessage {
+                topic: topic.clone(),
+                json: payload.clone(),
+                publisher_id: String::new(), // cross-instance, deliver to all
+            };
+
+            if let Err(e) = broadcast_tx.send(bm) {
+                warn!(error = %e, topic, "redis pubsub subscriber: broadcast channel has no receivers");
+            }
+
+            metrics::RELAY_MESSAGES_PUBLISHED_TOTAL.inc();
+            debug!(topic, "redis pubsub subscriber: delivered message to broadcast");
+        }
+
+        // Stream ended, reconnect.
+        warn!("redis pubsub subscriber: stream ended, reconnecting in 2s");
+        tokio::time::sleep(Duration::from_secs(2)).await;
+    }
+}
+
 /// WebSocket session actor for a single client connection.
 pub struct RelaySession {
     /// Unique identifier for this connection.
@@ -148,6 +265,8 @@ pub struct RelaySession {
     pub state: AppState,
     /// Last heartbeat timestamp.
     pub hb: Instant,
+    /// Receiver for broadcast messages.
+    broadcast_rx: Option<broadcast::Receiver<BroadcastMessage>>,
 }
 
 impl RelaySession {
@@ -155,11 +274,16 @@ impl RelaySession {
     pub fn new(state: AppState, id: String) -> Self {
         metrics::RELAY_ACTIVE_CONNECTIONS.inc();
         metrics::RELAY_CONNECTIONS_TOTAL.inc();
+
+        // Subscribe to the broadcast channel.
+        let broadcast_rx = state.broadcast_tx.subscribe();
+
         Self {
             id,
             subscriptions: HashSet::new(),
             state,
             hb: Instant::now(),
+            broadcast_rx: Some(broadcast_rx),
         }
     }
 
@@ -173,6 +297,78 @@ impl RelaySession {
             }
             ctx.ping(b"");
         });
+    }
+
+    /// Start listening for broadcast messages from the in-memory channel.
+    /// This ensures the local session receives messages published on topics
+    /// it's subscribed to, even when the publisher is another local client.
+    fn start_broadcast_listener(&mut self, ctx: &mut <Self as Actor>::Context) {
+        let rx = match self.broadcast_rx.take() {
+            Some(rx) => rx,
+            None => return, // already started
+        };
+        Self::poll_broadcast(ctx, self.id.clone(), rx);
+    }
+
+    /// Recursively poll the broadcast receiver using ActorFuture.
+    /// Each time a message arrives, we deliver it to the client if the client
+    /// is subscribed to the topic and is not the publisher.
+    fn poll_broadcast(
+        ctx: &mut <Self as Actor>::Context,
+        client_id: String,
+        rx: broadcast::Receiver<BroadcastMessage>,
+    ) {
+        let fut = Self::recv_once(rx);
+
+        ctx.spawn(
+            Box::pin(fut)
+                .into_actor()
+                .map(move |result, act: &mut Self, ctx: &mut <Self as Actor>::Context| {
+                    if let Some((msg, new_rx)) = result {
+                        // Resubscribe for next message.
+                        Self::poll_broadcast(ctx, client_id.clone(), new_rx);
+
+                        // Skip lagged/empty messages.
+                        if msg.json.is_empty() {
+                            return;
+                        }
+
+                        // Deliver only if subscribed and not the publisher.
+                        if act.subscriptions.contains(&msg.topic)
+                            && act.id != msg.publisher_id
+                        {
+                            Self::send_text(ctx, msg.json);
+                            metrics::RELAY_MESSAGES_DELIVERED_TOTAL.inc();
+                            debug!(client_id = %act.id, topic = %msg.topic, "delivered broadcast message");
+                        }
+                    }
+                    // If None, channel closed — stop polling.
+                })
+                .wait(ctx),
+        );
+    }
+
+    /// Helper: receive one message from the broadcast channel.
+    fn recv_once(
+        mut rx: broadcast::Receiver<BroadcastMessage>,
+    ) -> impl Future<Output = Option<(BroadcastMessage, broadcast::Receiver<BroadcastMessage>)>> {
+        async move {
+            match rx.recv().await {
+                Ok(msg) => Some((msg, rx)),
+                Err(broadcast::error::RecvError::Closed) => None,
+                Err(broadcast::error::RecvError::Lagged(_)) => {
+                    // Receiver fell behind; skip this message and continue listening.
+                    Some((
+                        BroadcastMessage {
+                            topic: String::new(),
+                            json: String::new(),
+                            publisher_id: String::new(),
+                        },
+                        rx,
+                    ))
+                }
+            }
+        }
     }
 
     /// Send a text frame to the client.
@@ -237,8 +433,11 @@ impl RelaySession {
     }
 
     /// Handle publish: route a message to all topic subscribers.
+    ///
+    /// 1. Deliver locally via the broadcast channel (for same-instance subscribers).
+    /// 2. Publish to Redis Pub/Sub (for cross-instance subscribers).
     async fn do_publish(
-        redis: &ConnectionManager,
+        state: &AppState,
         shared_subs: &Arc<Mutex<HashMap<String, Vec<String>>>>,
         client_id: &str,
         topic: &str,
@@ -260,24 +459,39 @@ impl RelaySession {
         metrics::RELAY_MESSAGE_SIZE
             .observe(payload_size as f64);
 
-        // Log routing
-        {
-            let subs = shared_subs.lock().await;
-            if let Some(clients) = subs.get(topic) {
-                for sub_id in clients {
-                    if sub_id != client_id {
-                        debug!(topic, from = %client_id, to = %sub_id, "routing message");
-                        // In production: deliver via NATS.publish or direct ws.send
-                    }
-                }
+        // 1. Deliver locally via broadcast channel.
+        let bm = BroadcastMessage {
+            topic: topic.to_string(),
+            json: json_str.clone(),
+            publisher_id: client_id.to_string(),
+        };
+
+        match state.broadcast_tx.send(bm) {
+            Ok(receivers) => {
+                debug!(topic, from = %client_id, receivers, "broadcast delivery to local receivers");
+            }
+            Err(e) => {
+                debug!(topic, from = %client_id, error = %e, "no local receivers");
             }
         }
 
-        // Cross-instance delivery via Redis Pub/Sub
+        // 2. Cross-instance delivery via Redis Pub/Sub.
         let channel = format!("topic:{}", topic);
-        if let Err(e) = redis.publish(&channel, &json_str).await {
+        if let Err(e) = state.redis.publish(&channel, &json_str).await {
             warn!(error = %e, "failed to publish to redis");
             metrics::RELAY_PUBLISH_ERRORS_TOTAL.inc();
+        }
+
+        // Log delivery confirmations
+        {
+            let subs = shared_subs.lock().await;
+            let subscriber_count = subs.get(topic).map_or(0, |v| v.len());
+            info!(
+                topic,
+                from = %client_id,
+                local_subscribers = subscriber_count,
+                "message published with delivery confirmation"
+            );
         }
     }
 }
@@ -290,6 +504,7 @@ impl Actor for RelaySession {
         // Set max frame size from config
         ctx.set_max_frame_size(self.state.config.max_message_size_bytes);
         self.heartbeat(ctx);
+        self.start_broadcast_listener(ctx);
     }
 
     fn stopped(&mut self, _ctx: &mut Self::Context) {
@@ -459,7 +674,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RelaySession {
                             return;
                         }
 
-                        let redis = state.redis.clone();
+                        let state = state.clone();
                         let shared_subs = state.subscriptions.clone();
                         let client_id = id.clone();
                         let topic = relay_msg.topic.clone();
@@ -475,7 +690,7 @@ impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for RelaySession {
                         );
 
                         actix::spawn(async move {
-                            Self::do_publish(&redis, &shared_subs, &client_id, &topic, &payload)
+                            Self::do_publish(&state, &shared_subs, &client_id, &topic, &payload)
                                 .await;
                         });
                     }

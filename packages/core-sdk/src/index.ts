@@ -53,6 +53,59 @@ export type { QRTransportConfig } from './transports/qr.js';
 export { EvmAdapter } from './adapters/evm.js';
 export type { EthCallParams } from './adapters/evm.js';
 
+// viem Adapter
+export { ViemChainAdapter, createViemAdapter } from './adapters/viem.js';
+export type { ViemClient, ViemAccount, ViemChain, ViemTransport } from './adapters/viem.js';
+
+// wagmi Adapter
+export {
+  WagmiConnector,
+  MultiChainConnector,
+  createWagmiConnector,
+  createMultiChainConnector,
+} from './adapters/wagmi.js';
+export type {
+  WagmiConfig,
+  WagmiChain,
+  WagmiTransport,
+  WagmiConnectorInstance,
+  WagmiStorage,
+  CreateWagmiConfig,
+} from './adapters/wagmi.js';
+
+// ethers v5 Adapter
+export { Ethers5Adapter } from './adapters/ethers5.js';
+export type {
+  Ethers5Provider,
+  Ethers5Network,
+  Ethers5BigNumber,
+  Ethers5Signer,
+  Ethers5TransactionRequest,
+  Ethers5TransactionResponse,
+  Ethers5TransactionReceipt,
+  Ethers5Log,
+} from './adapters/ethers5.js';
+
+// ethers v6 Adapter
+export { Ethers6Adapter } from './adapters/ethers6.js';
+export type {
+  Ethers6Provider,
+  Ethers6Network,
+  Ethers6BigInt,
+  Ethers6Signer,
+  Ethers6TransactionRequest,
+  Ethers6TransactionResponse,
+  Ethers6TransactionReceipt,
+  Ethers6Log,
+} from './adapters/ethers6.js';
+
+// Adapter types
+export type {
+  ChainAdapter,
+  ChainAdapterMethods,
+  AdapterFactoryConfig,
+} from './adapters/types.js';
+
 // Solana Adapter
 export {
   SolanaChainAdapter,
@@ -88,6 +141,37 @@ export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from
 // SIWE Authentication
 export { SIWEAuth } from './auth/siwe.js';
 export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
+
+/**
+ * Create a ChainAdapter from factory config.
+ *
+ * @param config - Adapter factory configuration.
+ * @returns ChainAdapter instance.
+ */
+export async function createAdapter(
+  config: AdapterFactoryConfig,
+): Promise<import('./adapters/types.js').ChainAdapter> {
+  switch (config.type) {
+    case 'viem': {
+      const mod = await import('./adapters/viem.js');
+      return mod.createViemAdapter(config.client as any, config.connector);
+    }
+    case 'wagmi': {
+      const mod = await import('./adapters/wagmi.js');
+      return mod.createMultiChainConnector(config.client as any);
+    }
+    case 'ethers5': {
+      const mod = await import('./adapters/ethers5.js');
+      return new mod.Ethers5Adapter(config.client as any);
+    }
+    case 'ethers6': {
+      const mod = await import('./adapters/ethers6.js');
+      return new mod.Ethers6Adapter(config.client as any);
+    }
+    default:
+      throw new Error(`Unknown adapter type: ${(config as any).type}`);
+  }
+}
 
 // Deep Linking
 export {

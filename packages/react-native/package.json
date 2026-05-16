@@ -17,6 +17,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
+    "@onchainux/core": "workspace:*",
+    "@onchainux/walletconnect-v2": "workspace:*",
     "react": "^18.3.0",
     "react-native": "^0.76.0"
   },

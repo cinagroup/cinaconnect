@@ -1,3 +1,4 @@
+use jsonwebtoken::{EncodingKey, Header};
 use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
 
@@ -6,6 +7,8 @@ use crate::metrics::{record_push_failed, record_push_sent};
 use crate::types::PushResponse;
 
 /// Firebase Cloud Messaging HTTP v1 API client.
+///
+/// Uses OAuth2 service account flow with real JWT signing via `jsonwebtoken` + `ring`.
 pub struct FcmClient {
     config: Config,
     http_client: reqwest::Client,
@@ -19,6 +22,21 @@ struct FcmToken {
     expires_at: std::time::Instant,
 }
 
+/// Service account key structure for FCM OAuth2.
+#[derive(Debug, Deserialize)]
+struct ServiceAccountKey {
+    client_email: String,
+    private_key: String,
+}
+
+/// Google OAuth2 token response.
+#[derive(Debug, Deserialize)]
+struct GoogleTokenResponse {
+    access_token: String,
+    expires_in: u64,
+    token_type: String,
+}
+
 impl FcmClient {
     /// Create a new FCM client from config.
     pub fn new(config: &Config) -> Self {
@@ -30,6 +48,9 @@ impl FcmClient {
     }
 
     /// Get a valid OAuth2 access token, refreshing if expired.
+    ///
+    /// Reads the service account JSON, signs a JWT with the RSA private key,
+    /// and exchanges it for a short-lived access token from Google's OAuth2 endpoint.
     async fn get_access_token(&self) -> Result<String, String> {
         // Check if we have a cached token that's still valid.
         {
@@ -45,59 +66,59 @@ impl FcmClient {
         let sa_bytes = std::fs::read(&self.config.fcm_service_account_path)
             .map_err(|e| format!("Failed to read FCM service account: {}", e))?;
 
-        let service_account: ServiceAccountKey = serde_json::from_slice(&sa_bytes)
+        let sa: ServiceAccountKey = serde_json::from_slice(&sa_bytes)
             .map_err(|e| format!("Failed to parse FCM service account: {}", e))?;
 
-        // Build JWT assertion for OAuth2.
+        // Build JWT claim set.
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map_err(|e| e.to_string())?;
-
         let iat = now.as_secs() as i64;
         let exp = iat + 3600; // 1 hour
 
-        // Create the JWT claim set for service account auth.
-        let header = jwt_base64(
-            &serde_json::json!({ "alg": "RS256", "typ": "JWT" }),
-        );
-
-        let claim_set = serde_json::json!({
-            "iss": service_account.client_email,
+        let claims = serde_json::json!({
+            "iss": sa.client_email,
             "scope": "https://www.googleapis.com/auth/firebase.messaging",
             "aud": "https://oauth2.googleapis.com/token",
             "exp": exp,
             "iat": iat,
         });
-        let claim = jwt_base64(&claim_set);
 
-        // For a production implementation you would sign the JWT with the private key
-        // from the service account using ring::signature::RsaKeyPair.
-        // Here we use a placeholder — the actual signing requires the private_key field.
-        // In practice, use the `google-cloud-auth` or `yup-oauth2` crate for this flow.
-        let signature = jwt_base64(&serde_json::json!("placeholder"));
+        // Sign JWT with RSA-SHA256 using the service account private key.
+        let token = jsonwebtoken::encode(
+            &Header::new(jsonwebtoken::Algorithm::RS256),
+            &claims,
+            &EncodingKey::from_rsa_pem(sa.private_key.as_bytes())
+                .map_err(|e| format!("Failed to create encoding key: {}", e))?,
+        )
+        .map_err(|e| format!("Failed to sign JWT: {}", e))?;
 
-        // Fetch access token from Google OAuth2 endpoint.
-        let token_response = self
+        // Exchange JWT assertion for an access token.
+        let resp = self
             .http_client
             .post("https://oauth2.googleapis.com/token")
             .header(CONTENT_TYPE, "application/x-www-form-urlencoded")
             .form(&[
                 ("grant_type", "urn:ietf:params:oauth:grant-type:jwt-bearer"),
-                ("assertion", &format!("{}.{}.{}", header, claim, signature)),
+                ("assertion", &token),
             ])
             .send()
             .await
-            .map_err(|e| e.to_string())?;
+            .map_err(|e| format!("OAuth2 request failed: {}", e))?;
 
-        let token_body: GoogleTokenResponse = token_response
-            .json()
-            .await
-            .map_err(|e| e.to_string())?;
+        let status = resp.status();
+        let body: GoogleTokenResponse = resp.json().await.map_err(|e| {
+            format!("Failed to parse OAuth2 response (status {}): {}", status, e)
+        })?;
+
+        if body.access_token.is_empty() {
+            return Err("OAuth2 returned empty access token".into());
+        }
 
         let new_token = FcmToken {
-            access_token: token_body.access_token,
+            access_token: body.access_token,
             expires_at: std::time::Instant::now()
-                + std::time::Duration::from_secs(token_body.expires_in.saturating_sub(60) as u64),
+                + std::time::Duration::from_secs(body.expires_in.saturating_sub(60)),
         };
 
         {
@@ -109,15 +130,6 @@ impl FcmClient {
     }
 
     /// Send a push notification via FCM HTTP v1 API.
-    ///
-    /// # Arguments
-    /// * `registration_id` - The FCM registration token for the target device.
-    /// * `title` - Notification title.
-    /// * `body` - Notification body text.
-    /// * `data` - Custom payload key-value pairs.
-    /// * `ttl` - Time-to-live in seconds.
-    /// * `priority` - "high" or "normal".
-    /// * `collapse_key` - Key for collapsing messages.
     pub async fn send(
         &self,
         registration_id: &str,
@@ -179,7 +191,7 @@ impl FcmClient {
             Ok(resp) => {
                 let status = resp.status();
                 if status.is_success() {
-                    let body: FcmMessageResponse = match resp.json().await {
+                    let resp_body: FcmMessageResponse = match resp.json().await {
                         Ok(b) => b,
                         Err(e) => {
                             record_push_failed("fcm");
@@ -194,7 +206,7 @@ impl FcmClient {
                     record_push_sent("fcm");
                     PushResponse {
                         success: true,
-                        message_id: Some(body.name),
+                        message_id: Some(resp_body.name),
                         error: None,
                         platform: "fcm".to_string(),
                     }
@@ -222,21 +234,6 @@ impl FcmClient {
     }
 }
 
-/// Service account key structure for FCM.
-#[derive(Debug, Deserialize)]
-struct ServiceAccountKey {
-    client_email: String,
-    // private_key: String, // not used directly; signing handled by oauth2 lib
-}
-
-/// Google OAuth2 token response.
-#[derive(Debug, Deserialize)]
-struct GoogleTokenResponse {
-    access_token: String,
-    expires_in: u64,
-    token_type: String,
-}
-
 /// FCM v1 API message request body.
 #[derive(Debug, Serialize)]
 struct FcmMessageRequest {
@@ -253,11 +250,10 @@ impl FcmMessageRequest {
         priority: &str,
         collapse_key: Option<&str>,
     ) -> Self {
-        let mut notification = serde_json::Map::new();
-        if let Some(t) = title {
-            notification.insert("title".to_string(), serde_json::json!(t));
-        }
-        notification.insert("body".to_string(), serde_json::json!(body));
+        let notification = title.map(|t| FcmNotification {
+            title: t.to_string(),
+            body: body.to_string(),
+        });
 
         let mut android_config = serde_json::Map::new();
         android_config.insert("priority".to_string(), serde_json::json!(priority.to_lowercase()));
@@ -268,31 +264,33 @@ impl FcmMessageRequest {
             android_config.insert("collapse_key".to_string(), serde_json::json!(ck));
         }
 
-        let mut message = FcmMessage {
-            token: registration_id.to_string(),
-            notification: Some(notification),
-            data: if data.is_empty() {
-                None
-            } else {
-                Some(data.clone())
+        Self {
+            message: FcmMessage {
+                token: registration_id.to_string(),
+                notification,
+                data: if data.is_empty() {
+                    None
+                } else {
+                    Some(data.clone())
+                },
+                android: Some(android_config),
             },
-            android: Some(android_config),
-        };
-
-        // If no title, remove the notification to do data-only push.
-        if title.is_none() {
-            message.notification = None;
         }
-
-        Self { message }
     }
+}
+
+/// FCM notification payload (title + body).
+#[derive(Debug, Serialize)]
+struct FcmNotification {
+    title: String,
+    body: String,
 }
 
 #[derive(Debug, Serialize)]
 struct FcmMessage {
     token: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    notification: Option<serde_json::Map<String, serde_json::Value>>,
+    notification: Option<FcmNotification>,
     #[serde(skip_serializing_if = "Option::is_none")]
     data: Option<std::collections::HashMap<String, String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -303,11 +301,4 @@ struct FcmMessage {
 #[derive(Debug, Deserialize)]
 struct FcmMessageResponse {
     name: String,
-}
-
-/// Base64url-encode a JSON value (no padding).
-fn jwt_base64(value: &serde_json::Value) -> String {
-    use base64::Engine;
-    let engine = base64::engine::general_purpose::URL_SAFE_NO_PAD;
-    engine.encode(serde_json::to_vec(value).unwrap_or_default())
 }

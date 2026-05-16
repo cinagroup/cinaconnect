@@ -1,8 +1,9 @@
 /**
- * ConnectModal — Native React Native modal with deep linking support.
+ * ConnectModal — Native React Native modal with WalletConnect v2 deep linking support.
  *
  * Uses native RN components (Modal, View, Text, TouchableOpacity, FlatList, ScrollView)
- * instead of Web Components. Integrates real deep linking via react-native Linking API.
+ * instead of Web Components. Integrates real WC v2 pairing, deep linking via react-native
+ * Linking API, and the OnChainUX wallet registry.
  */
 
 import React, { useState, useCallback, useRef, useEffect } from 'react';
@@ -20,6 +21,7 @@ import {
   Platform,
 } from 'react-native';
 import { useOnChainUXContext } from './OnChainUXProvider';
+import { WALLET_REGISTRY, getWalletById, buildWalletDeepLink, buildWalletUniversalLink } from '@onchainux/walletconnect-v2';
 
 /** Wallet info for modal display. */
 export interface WalletInfo {
@@ -105,7 +107,7 @@ export function ConnectModal({
   fallbackTimeoutMs = 1500,
 }: ConnectModalProps): JSX.Element {
   const [currentView, setCurrentView] = useState<ModalView>(defaultView as ModalView);
-  const { connect, themeColors } = useOnChainUXContext();
+  const { connect, connectWithUri, createPairing, openWallet, themeColors, wcUri } = useOnChainUXContext();
   const [email, setEmail] = useState('');
   const [deepLinkStatus, setDeepLinkStatus] = useState<Record<string, 'loading' | 'error' | 'success'>>({});
   const fallbackTimers = useRef<Map<string, ReturnType<typeof setTimeout>>>(new Map());
@@ -148,8 +150,13 @@ export function ConnectModal({
   }, [wcUri]);
 
   /**
-   * Handle wallet selection with real deep linking.
-   * Tries deep link → timeout → universal link → app store.
+   * Handle wallet selection with real WC v2 deep linking.
+   *
+   * Flow:
+   * 1. Create pairing URI (if not already created)
+   * 2. Build deep link with WC URI for the selected wallet
+   * 3. Open wallet app via deep link / universal link
+   * 4. Wait for session establishment via relay
    */
   const handleWalletSelect = useCallback(
     async (wallet: WalletInfo) => {
@@ -162,80 +169,39 @@ export function ConnectModal({
         fallbackTimers.current.delete(wallet.id);
       }
 
-      // Build the deep link URL.
-      const deepLinkUrl = buildDeepLinkUrl(wallet);
-      const universalLinkUrl = wallet.universalLink
-        ? wallet.universalLink + (wcUri ? `/wc?uri=${encodeURIComponent(wcUri)}` : '')
-        : wallet.appStoreUrl;
-
-      if (!deepLinkUrl && !universalLinkUrl) {
-        // No deep link or universal link — try standard connect.
-        try {
-          await connect(wallet.id);
-          onClose();
-        } catch {
-          // Fall through to showing error.
-        }
-        setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
-        return;
-      }
-
-      // Step 1: Try to open the deep link.
       try {
-        const canOpen = await Linking.canOpenURL(deepLinkUrl);
-        if (canOpen) {
-          await Linking.openURL(deepLinkUrl);
+        // Step 1: Ensure we have a WC v2 pairing URI
+        let uri = wcUri;
+        if (!uri) {
+          uri = await createPairing();
+        }
+
+        // Step 2: Open wallet with real WC v2 deep link from registry
+        if (wallet.supportsWalletConnect) {
+          await openWallet(wallet.id, uri);
           setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
-
-          // Also trigger standard connect to handle the session.
-          connect(wallet.id).then(() => onClose()).catch(() => {});
-          return;
+        } else {
+          // Fallback: try standard connect for non-WC wallets
+          await connect(wallet.id);
+          setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
+          onClose();
         }
       } catch (err) {
-        // canOpenURL may fail on iOS 9+ without LSApplicationQueriesSchemes entry.
-        // Proceed with the open attempt anyway.
-      }
-
-      // Step 2: Attempt deep link open anyway (iOS may still handle it).
-      try {
-        await Linking.openURL(deepLinkUrl);
-
-        // Step 3: Set fallback timer for universal link / app store.
-        const timer = setTimeout(async () => {
-          if (universalLinkUrl) {
-            try {
-              await Linking.openURL(universalLinkUrl);
-              setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
-            } catch {
-              // If universal link also fails, suggest app store.
-              const storeUrl = Platform.OS === 'ios'
-                ? wallet.appStoreUrl
-                : wallet.playStoreUrl;
-              if (storeUrl) {
-                Alert.alert(
-                  'App Not Found',
-                  `${wallet.name} doesn't appear to be installed. Download it from the app store?`,
-                  [
-                    { text: 'Cancel', style: 'cancel' },
-                    { text: 'Download', onPress: () => Linking.openURL(storeUrl) },
-                  ]
-                );
-              }
-              setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
-            }
-          } else {
-            setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
-          }
-          fallbackTimers.current.delete(wallet.id);
-        }, fallbackTimeoutMs);
-
-        fallbackTimers.current.set(wallet.id, timer);
-      } catch (err) {
+        const storeUrl = Platform.OS === 'ios' ? wallet.appStoreUrl : wallet.playStoreUrl;
+        if (storeUrl) {
+          Alert.alert(
+            'App Not Found',
+            `${wallet.name} doesn't appear to be installed. Download it from the app store?`,
+            [
+              { text: 'Cancel', style: 'cancel' },
+              { text: 'Download', onPress: () => Linking.openURL(storeUrl) },
+            ]
+          );
+        }
         setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'error' }));
-        Alert.alert('Error', `Could not open ${wallet.name}. Please install it and try again.`);
       }
     },
-    [connect, onClose, buildDeepLinkUrl, fallbackTimeoutMs],
+    [connect, connectWithUri, createPairing, openWallet, onClose, wcUri],
   );
 
   const handleEmailSubmit = useCallback(() => {

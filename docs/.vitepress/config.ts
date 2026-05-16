@@ -1,9 +1,11 @@
 import { defineConfig } from 'vitepress'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 export default defineConfig({
   title: 'OnChainUX',
   description: '自有品牌链上 UX 工具包 — Self-hosted Wallet Connection Toolkit',
-  base: '/',
+  base: isProd ? '/onchainux/' : '/',
   lang: 'zh-CN',
   lastUpdated: true,
   cleanUrls: true,
@@ -19,6 +21,7 @@ export default defineConfig({
 
     nav: [
       { text: '指南', link: '/guide/quick-start' },
+      { text: '快速开始 (图文)', link: '/guide/quick-start-visual' },
       { text: 'API', link: '/api/core-sdk' },
       { text: '示例', link: '/examples/web' },
       { text: '安全', link: '/security/best-practices' },
@@ -31,6 +34,7 @@ export default defineConfig({
           text: '入门',
           items: [
             { text: '快速开始', link: '/guide/quick-start' },
+            { text: '快速开始 (图文指南)', link: '/guide/quick-start-visual' },
             { text: '安装', link: '/guide/installation' },
             { text: '配置', link: '/guide/configuration' },
           ],
@@ -44,6 +48,7 @@ export default defineConfig({
             { text: 'UI 组件', link: '/api/ui-components' },
             { text: 'SIWE 认证', link: '/api/siwe' },
             { text: 'Mobile SDK', link: '/api/mobile' },
+            { text: 'Auto-Generated API (TypeDoc)', link: '/api/typedoc/' },
           ],
         },
       ],

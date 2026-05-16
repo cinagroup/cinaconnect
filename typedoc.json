@@ -1,0 +1,31 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "packages/core-sdk/src/index.ts",
+    "packages/react/src/index.ts",
+    "packages/react-native/src/index.ts",
+    "packages/siwe/src/index.ts",
+    "packages/siwx/src/index.ts",
+    "packages/swap-sdk/src/index.ts",
+    "packages/session-keys/src/index.ts",
+    "packages/onramp-sdk/src/index.ts",
+    "packages/social-login/src/index.ts"
+  ],
+  "out": "docs/public/api/typedoc",
+  "plugin": ["typedoc-plugin-markdown"],
+  "theme": "markdown",
+  "markdown-out": "docs/api/typedoc",
+  "readme": "none",
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeInternal": true,
+  "skipErrorChecking": true,
+  "cleanOutputDir": true,
+  "sort": ["source-order"],
+  "categorizeByGroup": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  },
+  "entryDocument": "index.md"
+}

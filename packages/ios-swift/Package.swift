@@ -19,7 +19,21 @@ let package = Package(
         .target(
             name: "OnChainUX",
             dependencies: [],
-            path: "Sources/OnChainUX"),
+            path: "Sources/OnChainUX",
+            // Include WalletConnect v2 module files
+            sources: [
+                "OnChainUX.swift",
+                "WalletManager.swift",
+                "ConnectButton.swift",
+                "ConnectModal.swift",
+                "DeepLinkHandler.swift",
+                "PushNotificationHandler.swift",
+                "Auth/SIWE.swift",
+                "ChainAdapter/SolanaAdapter.swift",
+                "ChainAdapter/EVMAdapter.swift",
+                "WalletConnect/WCClient.swift",
+                "WalletConnect/WCUtils.swift",
+            ]),
         .testTarget(
             name: "OnChainUXTests",
             dependencies: ["OnChainUX"],

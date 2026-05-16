@@ -1,8 +1,10 @@
 # syntax=docker/dockerfile:1
 # ────────────────────────────────────────────────────────────────
 # Multi-stage Rust Dockerfile — Keys Server
+# Production-optimized: distroless final image, <50MB
 # ────────────────────────────────────────────────────────────────
 
+# ── Stage 1: Builder ────────────────────────────────────────────
 FROM rust:1.80-slim-bookworm AS builder
 
 WORKDIR /app
@@ -12,26 +14,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libssl-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Cache dependency compilation
 COPY Cargo.toml Cargo.lock* ./
 RUN mkdir src && echo "fn main() {}" > src/main.rs
 RUN cargo build --release --locked 2>/dev/null || true
 
+# Copy actual source and build
 COPY . .
 RUN cargo build --release --locked
 
-FROM debian:bookworm-slim AS runtime
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libssl3 \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/* \
-    && groupadd -r keys && useradd -r -g keys keys
+# ── Stage 2: Distroless Runtime ─────────────────────────────────
+FROM gcr.io/distroless/cc-debian12:nonroot AS runtime
 
 WORKDIR /app
-COPY --from=builder /app/target/release/keys-server .
 
-RUN chown keys:keys keys-server
-USER keys
+COPY --from=builder /app/target/release/keys-server .
 
 EXPOSE 3001
 
@@ -41,6 +38,6 @@ ENV RUST_LOG=info \
     KEYS_SHUTDOWN_TIMEOUT_SECS=30
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD ["curl", "-f", "http://localhost:3001/v1/health"] || exit 1
+    CMD ["/app/keys-server", "--health-check"]
 
-ENTRYPOINT ["./keys-server"]
+ENTRYPOINT ["/app/keys-server"]

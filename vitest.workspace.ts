@@ -33,4 +33,52 @@ export default defineWorkspace([
       globals: true,
     },
   },
+  {
+    test: {
+      name: 'react',
+      include: ['packages/react/**/*.test.ts'],
+      environment: 'jsdom',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'siwx',
+      include: ['packages/siwx/**/*.test.ts'],
+      environment: 'node',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'onramp-sdk',
+      include: ['packages/onramp-sdk/**/*.test.ts'],
+      environment: 'node',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'social-login',
+      include: ['packages/social-login/**/*.test.ts'],
+      environment: 'node',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'vue',
+      include: ['packages/vue/**/*.test.ts'],
+      environment: 'jsdom',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'react-native',
+      include: ['packages/react-native/**/*.test.ts'],
+      environment: 'node',
+      globals: true,
+    },
+  },
 ]);
