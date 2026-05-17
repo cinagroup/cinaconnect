@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wallet_getCapabilities implementation (EIP-5792).
  *

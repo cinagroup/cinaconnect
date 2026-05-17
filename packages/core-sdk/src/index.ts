@@ -160,19 +160,19 @@ export type {
 } from './adapters/tron.js';
 
 // Polkadot Adapter (optional)
-// export {
-//   PolkadotChainAdapter,
-//   POLKADOT_CHAINS,
-//   POLKADOT_WALLETS,
-//   decodeSS58,
-//   isValidSS58Address,
-// } from './adapters/polkadot.js';
-// export type {
-//   PolkadotTransaction,
-//   PolkadotAssetTransfer,
-//   SS58AddressInfo,
-//   PolkadotWalletInfo as PolkadotWalletInfoType,
-// } from './adapters/polkadot.js';
+export {
+  PolkadotChainAdapter,
+  POLKADOT_CHAINS,
+  POLKADOT_WALLETS,
+  decodeSS58,
+  isValidSS58Address,
+} from './adapters/polkadot.js';
+export type {
+  PolkadotTransaction,
+  PolkadotAssetTransfer,
+  SS58AddressInfo,
+  PolkadotWalletInfo as PolkadotWalletInfoType,
+} from './adapters/polkadot.js';
 
 // Crypto
 export {
@@ -248,7 +248,7 @@ export async function createAdapter(
  * Factory configuration for new chain adapters (TON, TRON, Polkadot).
  */
 export interface NewChainAdapterFactoryConfig {
-  type: 'ton' | 'tron' | 'polkadot';
+  type: 'ton' | 'tron' | 'polkadot' | 'solana';
   client?: unknown;
   connector?: import('./connector.js').Connector;
   chains?: import('./types.js').Chain[];

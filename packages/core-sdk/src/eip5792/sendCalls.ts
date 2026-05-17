@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wallet_sendCalls implementation (EIP-5792).
  *
@@ -44,7 +43,9 @@ export async function walletSendCalls(
   ];
 
   try {
-    const result = await client.request({
+    // viem WalletClient.request doesn't natively know about wallet_sendCalls,
+    // so we bypass its strict type checking with (client as any).
+    const result = await (client as any).request({
       method: 'wallet_sendCalls',
       params: requestParams,
     });

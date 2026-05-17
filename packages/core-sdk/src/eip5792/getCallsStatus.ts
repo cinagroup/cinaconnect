@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wallet_getCallsStatus implementation (EIP-5792).
  *
@@ -29,7 +28,7 @@ export async function walletGetCallsStatus(
       params: [batchId],
     });
 
-    return result as GetCallsStatusResult;
+    return result as unknown as GetCallsStatusResult;
   } catch (error: unknown) {
     const err = error as { code?: number; message?: string };
     if (err.code === -32601) {
