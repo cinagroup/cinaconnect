@@ -4,7 +4,7 @@
 
 CinaConnect is an open-source, all-in-one SDK for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
-> **🚧 Project Status:** 64 modules planned, 52 with source code written, 1 fully built & published (`@cinaconnect/core-sdk`). Active development — not all packages are production-ready. See [HONEST_AUDIT.md](./HONEST_AUDIT.md) for a detailed build status breakdown.
+> **🚧 Project Status:** 64 modules in the ecosystem. **1 package built & published** (`@cinaconnect/core-sdk`). Source code written for ~50 more packages, but **none have been successfully built yet**. Active development — see status breakdown below.
 
 ---
 
@@ -17,8 +17,9 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 - **Smart Accounts** (ERC-4337) — gasless transactions, session keys, batch calls
 
 ### 💳 Payments
-- **Swaps** — in-app token exchange via DEX aggregators ⚠️ *SDK layer; requires external DEX aggregator API key*
-- **On-Ramp** — fiat-to-crypto purchase (Meld, Coinbase Pay) ⚠️ *SDK layer with iframe embed; requires external provider API key*
+- **Swaps** — SDK interface for DEX aggregators ⚠️ *Requires your own DEX aggregator API key (e.g., 1inch, 0x); CinaConnect provides the integration layer only*
+- **On-Ramp** — SDK interface with iframe embed for Meld/Coinbase Pay ⚠️ *Requires your own provider API key; CinaConnect provides the integration layer only*
+- **Bridge** — cross-chain session synchronization layer ⚠️ *SDK sync layer only; no native cross-chain bridge implementation yet*
 - **Pay** — self-custodial wallet payments across 6 chains (USDC, USDT, SOL)
 
 ### 🔐 Authentication
@@ -109,26 +110,27 @@ function Main() {
 ## Package Index
 
 ### Status Legend
-- ✅ **Built & Published** — compiled, tested, ready to install
-- 📝 **Source Written** — source code exists, not yet built/published
-- ⬜ **Planned** — package.json scaffolding only, no source yet
-- 🔌 **SDK Only** — type definitions & SDK interfaces; requires external API/service
+- ✅ **Built & Published** — compiled, tested, published to npm, ready to install
+- 🚧 **In Development** — source written, actively being built/deployed (e.g., Cloudflare Workers)
+- 📝 **Source Written** — source code exists but **not yet built or published** to npm
+- ⬜ **Planned** — package.json scaffolding only, source not yet written
+- 🔌 **SDK Layer** — type definitions & integration interfaces only; **requires external API key or service** to function
 
 ### Core
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/core-sdk` | Core SDK — SignClient, Pairing API, Universal Provider | ✅ |
-| `@cinaconnect/walletconnect-v2` | WalletConnect v2 protocol integration | 📝 |
-| `@cinaconnect/chains` | Chain definition registry (300+ chains) | 📝 |
+| `@cinaconnect/core-sdk` | Core SDK — SignClient, Pairing API, Universal Provider | ✅ **The only package successfully built and published** |
+| `@cinaconnect/walletconnect-v2` | WalletConnect v2 protocol integration | 📝 Source written; adapter exports commented out in core-sdk |
+| `@cinaconnect/chains` | Chain definition registry (300+ chains) | 📝 Source written, not built |
 
 ### Adapters
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/adapter-ethereum` | EVM chain adapter (Wagmi / Ethers) | 📝 |
-| `@cinaconnect/adapter-solana` | Solana SVM chain adapter | 📝 |
-| `@cinaconnect/adapter-bitcoin` | Bitcoin BIP-122 chain adapter | 📝 |
-| `@cinaconnect/adapter-ton` | TON chain adapter | 📝 |
-| `@cinaconnect/adapter-tron` | TRON chain adapter | 📝 |
+| `@cinaconnect/adapter-ethereum` | EVM chain adapter (Wagmi / Ethers) | 📝 Source written, not built; export commented out in core-sdk |
+| `@cinaconnect/adapter-solana` | Solana SVM chain adapter | 📝 Source written, not built; export commented out in core-sdk |
+| `@cinaconnect/adapter-bitcoin` | Bitcoin BIP-122 chain adapter | 📝 Source written, not built |
+| `@cinaconnect/adapter-ton` | TON chain adapter | 📝 Source written, not built |
+| `@cinaconnect/adapter-tron` | TRON chain adapter | 📝 Source written, not built |
 
 ### UI & Frameworks
 | Package | Description | Status |
@@ -165,18 +167,19 @@ function Main() {
 ### Payments
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/swap-sdk` | Token swap via DEX aggregators — SDK interfaces, requires external DEX aggregator API key | 📝 🔌 |
-| `@cinaconnect/onramp-sdk` | Fiat-to-crypto on-ramp — SDK interfaces with iframe embed, requires external provider API key | 📝 🔌 |
-| `@cinaconnect/pay-ui` | Payment UI components | 📝 |
+| `@cinaconnect/swap-sdk` | Token swap via DEX aggregators | 📝 🔌 **SDK interface only — requires your own DEX aggregator API key** |
+| `@cinaconnect/onramp-sdk` | Fiat-to-crypto on-ramp | 📝 🔌 **SDK + iframe embed only — requires Meld/Coinbase Pay API key** |
+| `@cinaconnect/pay-ui` | Payment UI components | 📝 UI layer written, not built |
+| `@cinaconnect/bridge-sync` | Cross-chain session synchronization | 📝 **Sync layer only — no native cross-chain bridge yet** |
 
 ### Infrastructure
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/relay-server` | WebSocket relay server (Rust) | ⬜ |
-| `@cinaconnect/rpc-proxy` | RPC proxy server — deployed on Cloudflare Workers | 📝 |
-| `@cinaconnect/keys-server` | Key management server — deployed on Cloudflare Workers | 📝 |
-| `@cinaconnect/notify-server` | Notification server (Rust) | 📝 |
-| `@cinaconnect/push-server` | Push notification server (Rust) | ⬜ |
+| `@cinaconnect/relay-server` | WebSocket relay server (Rust) | ⬜ Source not yet written |
+| `@cinaconnect/rpc-proxy` | RPC proxy server | 🚧 Source written, **deployed & running on Cloudflare Workers** |
+| `@cinaconnect/keys-server` | Key management server | 🚧 Source written, **deployed & running on Cloudflare Workers** |
+| `@cinaconnect/notify-server` | Notification server | 📝 Source written, not deployed |
+| `@cinaconnect/push-server` | Push notification server (Rust) | ⬜ Source not yet written |
 | `@cinaconnect/cdn` | CDN asset delivery | 📝 |
 
 ### Developer Tools

@@ -147,13 +147,16 @@
 
 | Metric | Count | Percentage |
 |--------|-------|------------|
-| **Total planned modules** | 64 | 100% |
-| **Built & published** | 1 | ~1.5% |
+| **Total modules in ecosystem** | 64 | 100% |
+| **Built & published to npm** | 1 (core-sdk only) | ~1.5% |
 | **Source code written** | ~50 | ~78% |
-| **Scaffolding only (planned)** | ~11 | ~17% |
-| **Deployed (Cloudflare)** | 2 (RPC Proxy + Keys Server) | — |
+| **Scaffolding only (no source)** | ~11 | ~17% |
+| **Deployed & live (Cloudflare)** | 2 (RPC Proxy + Keys Server) | — |
+| **Demo app functional** | UI renders | All interactions are **mock** — no real wallet connections, swaps, or auth |
 
 **Comprehensive build status:** See [HONEST_AUDIT.md](./HONEST_AUDIT.md) for the full honest assessment of what's built vs. planned.
+
+**What this roadmap means:** Every item marked 📝 has source code that hasn't been built. 🚧 items are source-written and actively deployed. ⬜ items need source code to be written. Only ✅ items are installable via npm today.
 
 ---
 
