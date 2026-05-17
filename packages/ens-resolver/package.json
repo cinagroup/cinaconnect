@@ -1,0 +1,37 @@
+{
+  "name": "@onchainux/ens-resolver",
+  "version": "0.1.0",
+  "description": "ENS name resolution, reverse lookup, avatar retrieval, and record fetching for OnChainUX",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": ["ens", "ethereum", "resolver", "onchainux", "web3"],
+  "license": "MIT",
+  "dependencies": {
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "vitest": "^2.1.0",
+    "tsup": "^8.3.0",
+    "typescript": "^5.6.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/onchainux/onchainux.git",
+    "directory": "packages/ens-resolver"
+  }
+}

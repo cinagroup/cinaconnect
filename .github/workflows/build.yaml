@@ -342,6 +342,12 @@ jobs:
           - name: core-ui
             dockerfile: deploy/docker/core-ui/Dockerfile
             context: .
+          - name: push-server
+            dockerfile: deploy/docker/push-server/Dockerfile
+            context: .
+          - name: keys-server
+            dockerfile: deploy/docker/keys-server/Dockerfile
+            context: .
 
     steps:
       - uses: actions/checkout@v4
@@ -368,6 +374,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        id: build
         with:
           context: ${{ matrix.service.context }}
           file: ${{ matrix.service.dockerfile }}
@@ -377,3 +384,82 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           platforms: linux/amd64,linux/arm64
+
+      - name: Load image for Trivy scan
+        if: github.event_name == 'pull_request'
+        run: |
+          docker build -t ${{ matrix.service.name }}:test \
+            -f ${{ matrix.service.dockerfile }} ${{ matrix.service.context }}
+
+      - name: Run Trivy vulnerability scanner
+        if: github.event_name == 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ matrix.service.name }}:test
+          format: table
+          exit-code: "1"
+          severity: CRITICAL,HIGH
+          vuln-type: os,library
+
+      - name: Upload Trivy SARIF report
+        if: always() && github.event_name == 'pull_request'
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ matrix.service.name }}:test
+          format: sarif
+          output: trivy-results-${{ matrix.service.name }}.sarif
+
+      - name: Upload SARIF to GitHub
+        if: always() && github.event_name == 'pull_request'
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results-${{ matrix.service.name }}.sarif
+
+  # ── Security: npm audit + cargo audit ───────────────────────
+  security-scan:
+    name: Security Scan — npm audit + cargo audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # ── npm audit ──
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+          run_install: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: npm audit
+        run: pnpm audit --audit-level=moderate || true
+
+      # ── cargo audit ──
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install cargo-audit
+        run: cargo install cargo-audit
+
+      - name: Audit relay-server
+        working-directory: ./relay-server
+        run: cargo audit || true
+
+      - name: Audit bundler
+        working-directory: ./packages/bundler
+        run: cargo audit || true
+
+      - name: Audit push-server
+        working-directory: ./packages/push-server
+        run: cargo audit || true
+
+      - name: Audit keys-server
+        working-directory: ./packages/keys-server
+        run: cargo audit || true

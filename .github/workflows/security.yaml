@@ -126,6 +126,8 @@ jobs:
           - rpc-proxy
           - bundler
           - core-ui
+          - push-server
+          - keys-server
     steps:
       - uses: actions/checkout@v4
 

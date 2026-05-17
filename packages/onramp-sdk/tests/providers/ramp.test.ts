@@ -50,4 +50,24 @@ describe('RampProvider', () => {
     expect(quote.fiatCurrency).toBe('EUR');
     expect(quote.cryptoToken).toBe('USDC');
   });
+
+  it('should generate widget URL with different fiat currencies', () => {
+    const provider = new RampProvider(config);
+    const url = provider.getWidgetUrl({
+      destinationAddress: '0x1234567890123456789012345678901234567890',
+      defaultFiatAmount: 100,
+      defaultFiatCurrency: 'GBP',
+    });
+    expect(url).toContain('GBP');
+    expect(url).toContain('100');
+  });
+
+  it('should generate widget URL without optional params', () => {
+    const provider = new RampProvider(config);
+    const url = provider.getWidgetUrl({
+      destinationAddress: '0x1234567890123456789012345678901234567890',
+    });
+    expect(url).toContain('ramp.network');
+    expect(url).toContain('0x1234567890123456789012345678901234567890');
+  });
 });

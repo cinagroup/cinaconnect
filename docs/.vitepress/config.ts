@@ -7,6 +7,18 @@ export default defineConfig({
   description: '自有品牌链上 UX 工具包 — Self-hosted Wallet Connection Toolkit',
   base: isProd ? '/onchainux/' : '/',
   lang: 'zh-CN',
+  locales: {
+    root: {
+      label: '中文',
+      lang: 'zh-CN',
+    },
+    en: {
+      label: 'English',
+      lang: 'en',
+      link: '/en/',
+      description: 'Self-hosted Wallet Connection Toolkit',
+    },
+  },
   lastUpdated: true,
   cleanUrls: true,
 
@@ -69,6 +81,18 @@ export default defineConfig({
           ],
         },
         {
+          text: 'Account Abstraction',
+          items: [
+            { text: 'AA SDK (ERC-4337)', link: '/api/generated/aa-sdk' },
+          ],
+        },
+        {
+          text: 'Analytics',
+          items: [
+            { text: 'Analytics SDK', link: '/api/generated/analytics' },
+          ],
+        },
+        {
           text: '基础设施 API',
           items: [
             { text: 'Bundler (ERC-4337)', link: '/api/bundler' },
@@ -80,6 +104,14 @@ export default defineConfig({
           items: [
             { text: 'TypeDoc API 参考', link: '/api/typedoc/' },
             { text: '生成文档说明', link: '/api/generated/README' },
+            { text: 'Core SDK (自动)', link: '/api/generated/core-sdk' },
+            { text: 'Mobile SDK (自动)', link: '/api/generated/mobile' },
+            { text: 'Swap SDK (自动)', link: '/api/generated/swap-sdk' },
+            { text: 'On-Ramp SDK (自动)', link: '/api/generated/onramp-sdk' },
+            { text: 'Session Keys (自动)', link: '/api/generated/session-keys' },
+            { text: 'Analytics (自动)', link: '/api/generated/analytics' },
+            { text: 'AA SDK (自动)', link: '/api/generated/aa-sdk' },
+            { text: '基础设施概览', link: '/api/generated/infra' },
           ],
         },
       ],
@@ -136,7 +168,38 @@ export default defineConfig({
     },
 
     search: {
-      provider: 'local',
+      provider: 'algolia',
+      options: {
+        // Algolia 配置 — 替换为实际值
+        appId: 'YOUR_ALGOLIA_APP_ID',
+        apiKey: 'YOUR_ALGOLIA_API_KEY',
+        indexName: 'onchainux',
+        // placeholder: '搜索文档…',
+        // translations: {
+        //   button: {
+        //     buttonText: '搜索',
+        //     buttonAriaLabel: '搜索文档',
+        //   },
+        //   modal: {
+        //     searchBox: {
+        //       resetButtonTitle: '清除查询',
+        //       resetButtonAriaLabel: '清除查询',
+        //       cancelButtonText: '取消',
+        //       cancelButtonAriaLabel: '取消',
+        //     },
+        //     startScreen: {
+        //       recentSearchesTitle: '最近搜索',
+        //       noRecentSearchesText: '无最近搜索',
+        //       saveRecentSearchButtonTitle: '保存到此搜索',
+        //       removeRecentSearchButtonTitle: '从此历史中移除',
+        //     },
+        //     errorScreen: {
+        //       titleText: '无法获取结果',
+        //       helpText: '请检查网络连接并重试',
+        //     },
+        //   },
+        // },
+      },
     },
   },
 

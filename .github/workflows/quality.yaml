@@ -186,6 +186,10 @@ jobs:
         working-directory: packages/bundler
         run: cargo llvm-cov test --lcov --output-path lcov-bundler.info
 
+      - name: Cargo test — erc6492
+        working-directory: packages/erc6492
+        run: cargo llvm-cov test --lcov --output-path lcov-erc6492.info
+
       # ── Go ──
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -208,6 +212,7 @@ jobs:
               packages/keys-server/lcov-keys.info \
               packages/relay-server/lcov-relay.info \
               packages/bundler/lcov-bundler.info \
+              packages/erc6492/lcov-erc6492.info \
               > coverage/lcov-rust.info 2>/dev/null || true
           # Copy Go coverage
           cp packages/rpc-proxy/cover-rpc.out coverage/ 2>/dev/null || true
