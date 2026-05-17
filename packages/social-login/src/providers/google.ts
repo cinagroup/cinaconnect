@@ -7,7 +7,7 @@
  * Reference: https://developers.google.com/identity/protocols/oauth2
  */
 
-import type { GoogleLoginParams, SocialLoginResult, OAuth2TokenResponse, OAuth2UserProfile } from '../types';
+import type { GoogleLoginParams, SocialLoginResult, OAuth2TokenResponse, OAuth2UserProfile } from '../types.js';
 
 /** Google OAuth2 authorization endpoint. */
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';

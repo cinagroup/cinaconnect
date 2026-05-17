@@ -13,8 +13,8 @@
  * ```
  */
 
-import { getConfig, validateConfig } from "./config.js";
-import type { OnChainUXConfig } from "./config.js";
+import { getConfig, validateConfig } from "./config.js.js";
+import type { OnChainUXConfig } from "./config.js.js";
 
 export type ModalView = "connect" | "connecting" | "connected" | "networks";
 

@@ -71,7 +71,7 @@ export {
   coreDecrypt,
 } from './crypto.js';
 
-export type { X25519Keypair } from '@onchainux/core';
+export type { X25519Keypair } from '@onchainux/core-sdk';
 
 // Relay
 export { WcRelay } from './relay.js';

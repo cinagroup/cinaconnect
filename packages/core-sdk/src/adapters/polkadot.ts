@@ -6,8 +6,8 @@
  * queries and transaction broadcasting. Supports DOT transfers and asset transfers.
  */
 
-import type { Connector } from '../connector';
-import type { Chain, TransactionRequest } from '../types';
+import type { Connector } from '../connector.js';
+import type { Chain, TransactionRequest } from '../types.js';
 
 /* ------------------------------------------------------------------ */
 /*  Polkadot Address handling                                          */

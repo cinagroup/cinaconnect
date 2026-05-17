@@ -7,7 +7,7 @@
  * Reference: https://developer.twitter.com/en/docs/authentication/oauth-2-0
  */
 
-import type { TwitterLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types';
+import type { TwitterLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types.js';
 
 /** Twitter OAuth2 authorization endpoint. */
 const TWITTER_AUTH_URL = 'https://twitter.com/i/oauth2/authorize';

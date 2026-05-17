@@ -6,7 +6,7 @@
  */
 
 import { defineComponent, h, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { useOnChainUX } from './composables';
+import { useOnChainUX } from './composables.js';
 
 /**
  * ConnectButton — Vue wrapper for the OCX ConnectButton Web Component.

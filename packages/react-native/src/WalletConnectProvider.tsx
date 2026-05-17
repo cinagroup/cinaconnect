@@ -38,7 +38,7 @@ import {
   buildWalletUniversalLink,
   WC_METHODS,
 } from '@onchainux/walletconnect-v2';
-import type { AppMetadata } from '@onchainux/core';
+import type { AppMetadata } from '@onchainux/core-sdk';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 

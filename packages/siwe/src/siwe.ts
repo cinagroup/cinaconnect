@@ -7,9 +7,9 @@
  * Reference: https://eips.ethereum.org/EIPS/eip-4361
  */
 
-import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from './types';
-import { generateTimestamp, normalizeAddress } from './utils';
-import { validateSIWEParams, fullValidation } from './validator';
+import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from './types.js';
+import { generateTimestamp, normalizeAddress } from './utils.js';
+import { validateSIWEParams, fullValidation } from './validator.js';
 
 /**
  * Generate a SIWE message string from structured parameters.

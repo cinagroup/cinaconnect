@@ -10,9 +10,9 @@ import { spinner, warn } from '../utils/logger.js';
 /** Registry of available add-on packages. */
 const ADDONS: Record<string, { package: string; description: string; setup?: string }> = {
   // Core adapters
-  '@onchainux/evm': { package: '@onchainux/core', description: 'EVM chain adapter' },
-  '@onchainux/solana': { package: '@onchainux/core', description: 'Solana chain adapter' },
-  '@onchainux/bitcoin': { package: '@onchainux/core', description: 'Bitcoin chain adapter' },
+  '@onchainux/evm': { package: '@onchainux/core-sdk', description: 'EVM chain adapter' },
+  '@onchainux/solana': { package: '@onchainux/core-sdk', description: 'Solana chain adapter' },
+  '@onchainux/bitcoin': { package: '@onchainux/core-sdk', description: 'Bitcoin chain adapter' },
   // UI frameworks
   '@onchainux/react': { package: '@onchainux/react', description: 'React UI components' },
   '@onchainux/vue': { package: '@onchainux/vue', description: 'Vue UI components' },

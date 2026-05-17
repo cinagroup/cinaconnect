@@ -31,7 +31,7 @@ import {
   buildSendTransaction,
   buildPersonalSign,
 } from '@onchainux/walletconnect-v2';
-import type { TransactionRequest, AppMetadata } from '@onchainux/core';
+import type { TransactionRequest, AppMetadata } from '@onchainux/core-sdk';
 
 /** Supported theme modes. */
 export type ThemeMode = 'dark' | 'light' | 'minimal';

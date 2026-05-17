@@ -12,8 +12,8 @@ import {
   getExchangeRate,
   percentDiff,
   adjustSlippageForVolatility,
-} from '../src/slippage';
-import type { SwapQuote, PriceImpact } from '../src/types';
+} from '../src/slippage.js';
+import type { SwapQuote, PriceImpact } from '../src/types.js';
 
 describe('calculateMinimumReceived', () => {
   it('should calculate minimum received with 0% slippage', () => {

@@ -5,7 +5,7 @@
  * for cross-chain sign-in compatible with SIWX.
  */
 
-import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types';
+import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types.js';
 import { generateTimestamp } from '@onchainux/siwe';
 
 /**

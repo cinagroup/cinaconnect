@@ -10,10 +10,10 @@ import type {
   ChainFamily,
   LinkingProof,
   StateStorage,
-} from "./types.js";
-import { InMemoryStorage } from "./storage.js";
+} from "./types.js.js";
+import { InMemoryStorage } from "./storage.js.js";
 
-export { type UnifiedIdentity } from "./types.js";
+export { type UnifiedIdentity } from "./types.js.js";
 
 /**
  * Generate a deterministic identity hash from linked accounts.

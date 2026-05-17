@@ -5,8 +5,8 @@
  * Can be embedded in a web page via iframe or opened as a popup.
  */
 
-import type { OnRampResult, OnRampWidgetParams } from "./types.js";
-import type { OnRampAggregator } from "./aggregator.js";
+import type { OnRampResult, OnRampWidgetParams } from "./types.js.js";
+import type { OnRampAggregator } from "./aggregator.js.js";
 
 // ============================================================
 // Events emitted by the widget

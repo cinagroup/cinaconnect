@@ -6,8 +6,8 @@
  * balance queries and transaction broadcasting. Supports TRX and TRC-20 tokens.
  */
 
-import type { Connector } from '../connector';
-import type { Chain, TransactionRequest } from '../types';
+import type { Connector } from '../connector.js';
+import type { Chain, TransactionRequest } from '../types.js';
 
 /* ------------------------------------------------------------------ */
 /*  TRON Address handling                                              */

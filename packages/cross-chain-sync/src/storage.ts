@@ -4,7 +4,7 @@
  * Provides a pluggable storage backend for cross-chain state.
  */
 
-import type { StateStorage } from "./types.js";
+import type { StateStorage } from "./types.js.js";
 
 /**
  * In-memory storage implementation (for testing and server-side use).

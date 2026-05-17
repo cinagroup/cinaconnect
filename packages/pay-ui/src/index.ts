@@ -29,15 +29,15 @@
  */
 
 // React Components
-export { SwapWidget } from "./SwapWidget.js";
-export type { SwapWidgetProps } from "./types.js";
+export { SwapWidget } from "./SwapWidget.js.js";
+export type { SwapWidgetProps } from "./types.js.js";
 
-export { OnRampWidget } from "./OnRampWidget.js";
-export type { OnRampWidgetProps } from "./types.js";
+export { OnRampWidget } from "./OnRampWidget.js.js";
+export type { OnRampWidgetProps } from "./types.js.js";
 
 // Framework-agnostic core controllers
-export { SwapWidgetCore } from "./SwapWidgetCore.js";
-export { OnRampWidgetCore } from "./OnRampWidgetCore.js";
+export { SwapWidgetCore } from "./SwapWidgetCore.js.js";
+export { OnRampWidgetCore } from "./OnRampWidgetCore.js.js";
 
 // Types
 export type {
@@ -50,7 +50,7 @@ export type {
   OnRampWidgetState,
   OnRampWidgetCoreConfig,
   OnRampWidgetCoreState,
-} from "./types.js";
+} from "./types.js.js";
 
 // Styles
 export {
@@ -66,4 +66,4 @@ export {
   buttonStyles,
   inputStyles,
   cardStyles,
-} from "./styles.js";
+} from "./styles.js.js";

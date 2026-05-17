@@ -5,7 +5,7 @@
  */
 
 import { inject } from 'vue';
-import { ONCHAINUX_KEY, type OnChainUXContext } from './types';
+import { ONCHAINUX_KEY, type OnChainUXContext } from './types.js';
 
 /**
  * useOnChainUX — access the full OnChainUX context.

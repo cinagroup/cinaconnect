@@ -37,7 +37,7 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { useOnChainUXContext } from './OnChainUXProvider';
+import { useOnChainUXContext } from './OnChainUXProvider.js';
 
 /** Props for the QRScanner component. */
 export interface QRScannerProps {

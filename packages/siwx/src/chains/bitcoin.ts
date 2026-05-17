@@ -7,7 +7,7 @@
  * BIP-322 Reference: https://github.com/bitcoin/bips/blob/master/bip-0322.mediawiki
  */
 
-import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types';
+import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types.js';
 import { generateTimestamp } from '@onchainux/siwe';
 
 /**

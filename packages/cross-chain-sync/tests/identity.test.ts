@@ -5,8 +5,8 @@ import {
   createLinkingProof,
   CrossChainIdentityManager,
   InMemoryStorage,
-} from "../src/index.js";
-import type { ChainAccount, LinkingProof } from "../src/index.js";
+} from "../src/index.js.js";
+import type { ChainAccount, LinkingProof } from "../src/index.js.js";
 
 describe("Cross-Chain Identity", () => {
   it("generates a deterministic identity hash", () => {

@@ -8,7 +8,7 @@
  *
  * @example
  * ```ts
- * import { createWagmiConnector } from '@onchainux/core';
+ * import { createWagmiConnector } from '@onchainux/core-sdk';
  * import { http } from 'viem';
  * import { mainnet, polygon } from 'wagmi/chains';
  *

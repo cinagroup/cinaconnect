@@ -16,8 +16,8 @@ import {
   type ViewStyle,
   type TextStyle,
 } from 'react-native';
-import { useOnChainUXContext } from './OnChainUXProvider';
-import { useWalletConnect, type BalanceState } from './WalletConnectProvider';
+import { useOnChainUXContext } from './OnChainUXProvider.js';
+import { useWalletConnect, type BalanceState } from './WalletConnectProvider.js';
 
 /** Props for the native ConnectButton. */
 export interface ConnectButtonProps {

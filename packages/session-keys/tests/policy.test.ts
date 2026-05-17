@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SessionKeyPolicyManager } from '../src/policy';
-import type { SessionKeyPolicy } from '../src/types';
+import { SessionKeyPolicyManager } from '../src/policy.js';
+import type { SessionKeyPolicy } from '../src/types.js';
 
 describe('SessionKeyPolicyManager', () => {
   let manager: SessionKeyPolicyManager;

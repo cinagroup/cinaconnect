@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@onchainux/core": "workspace:*"
+    "@onchainux/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

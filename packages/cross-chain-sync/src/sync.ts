@@ -10,9 +10,9 @@ import type {
   SyncResult,
   StateStorage,
   SessionState,
-} from "./types.js";
-import type { UnifiedIdentity } from "./identity.js";
-import { InMemoryStorage } from "./storage.js";
+} from "./types.js.js";
+import type { UnifiedIdentity } from "./identity.js.js";
+import { InMemoryStorage } from "./storage.js.js";
 
 /**
  * StateSync — cross-chain state synchronization engine.

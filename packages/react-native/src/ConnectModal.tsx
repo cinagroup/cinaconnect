@@ -20,8 +20,8 @@ import {
   Alert,
   Platform,
 } from 'react-native';
-import { useOnChainUXContext } from './OnChainUXProvider';
-import { useWalletConnect, WALLET_DEEP_LINKS } from './WalletConnectProvider';
+import { useOnChainUXContext } from './OnChainUXProvider.js';
+import { useWalletConnect, WALLET_DEEP_LINKS } from './WalletConnectProvider.js';
 import { WALLET_REGISTRY, getWalletById, buildWalletDeepLink, buildWalletUniversalLink } from '@onchainux/walletconnect-v2';
 
 /** Wallet info for modal display. */

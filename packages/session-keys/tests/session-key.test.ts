@@ -3,8 +3,8 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from '../src/session-key';
-import type { SessionKey, SessionKeyPolicy } from '../src/types';
+import { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from '../src/session-key.js';
+import type { SessionKey, SessionKeyPolicy } from '../src/types.js';
 
 describe('SessionKeyManager', () => {
   let manager: SessionKeyManager;

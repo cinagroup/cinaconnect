@@ -16,7 +16,7 @@
  * 5. During the time lock, the original owner can cancel
  */
 
-import type { Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult } from "./types.js";
+import type { Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult } from "./types.js.js";
 import type { Address, Hex, ByteArray } from "viem";
 import { keccak256, stringToBytes, bytesToHex } from "viem";
 

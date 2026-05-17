@@ -3,9 +3,9 @@
  */
 
 import { describe, it, expect, vi } from 'vitest';
-import { generateMessage, parseMessage } from '../src/siwe';
-import { generateNonce, generateTimestamp, isValidEthereumAddress, isValidUri } from '../src/utils';
-import type { SIWEParams, ParsedSIWE } from '../src/types';
+import { generateMessage, parseMessage } from '../src/siwe.js';
+import { generateNonce, generateTimestamp, isValidEthereumAddress, isValidUri } from '../src/utils.js';
+import type { SIWEParams, ParsedSIWE } from '../src/types.js';
 
 // ============================================================
 // Helpers

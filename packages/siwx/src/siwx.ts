@@ -4,10 +4,10 @@
  * Unified interface for sign-in across EVM (EIP-4361), Solana, and Bitcoin (BIP-322).
  */
 
-import type { SIWXParams, SIWXResult, SIWXVerifyInput, ChainType } from './types';
-import { createEvmSignInMessage, verifyEvmSignature } from './chains/evm';
-import { createSolanaSignInMessage, verifySolanaSignature } from './chains/solana';
-import { createBitcoinSignInMessage, verifyBitcoinSignature } from './chains/bitcoin';
+import type { SIWXParams, SIWXResult, SIWXVerifyInput, ChainType } from './types.js';
+import { createEvmSignInMessage, verifyEvmSignature } from './chains/evm.js';
+import { createSolanaSignInMessage, verifySolanaSignature } from './chains/solana.js';
+import { createBitcoinSignInMessage, verifyBitcoinSignature } from './chains/bitcoin.js';
 import { generateTimestamp } from '@onchainux/siwe';
 import { randomBytes } from 'crypto';
 

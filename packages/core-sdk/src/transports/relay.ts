@@ -4,8 +4,8 @@
  * Implements the OnChainUX relay protocol (compatible with WalletConnect v2).
  */
 
-import type { EventHandler } from '../types';
-import { EventEmitter } from '../events';
+import type { EventHandler } from '../types.js';
+import { EventEmitter } from '../events.js';
 
 /** Relay transport configuration. */
 export interface RelayTransportConfig {

@@ -11,7 +11,7 @@
  * 4. System verifies and issues JWT + wallet address
  */
 
-import type { EmailLoginParams, SocialLoginResult, MagicLinkParams } from '../types';
+import type { EmailLoginParams, SocialLoginResult, MagicLinkParams } from '../types.js';
 import { randomBytes } from 'crypto';
 
 /**

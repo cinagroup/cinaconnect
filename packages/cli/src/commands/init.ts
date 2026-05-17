@@ -86,7 +86,7 @@ function generatePackageJson(name: string, pm: string) {
       typecheck: 'tsc --noEmit',
     },
     dependencies: {
-      '@onchainux/core': '^0.1.0',
+      '@onchainux/core-sdk': '^0.1.0',
       '@onchainux/react': '^0.1.0',
       '@onchainux/ui': '^0.1.0',
     },
@@ -119,7 +119,7 @@ function generateMainFile(template: string): string {
     return `import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { OnChainUXProvider } from '@onchainux/react';
-import App from './App';
+import App from './App.js';
 
 const config = {
   chains: [
@@ -147,7 +147,7 @@ root.render(
 `;
   }
 
-  return `import { OnChainUX } from '@onchainux/core';
+  return `import { OnChainUX } from '@onchainux/core-sdk';
 
 const onchainux = new OnChainUX({
   chains: [

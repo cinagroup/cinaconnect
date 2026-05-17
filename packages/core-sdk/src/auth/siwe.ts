@@ -6,7 +6,7 @@
  *
  * Usage:
  * ```ts
- * import { SIWEAuth } from '@onchainux/core';
+ * import { SIWEAuth } from '@onchainux/core-sdk';
  *
  * const siwe = new SIWEAuth(connector, {
  *   domain: 'https://myapp.com',
@@ -21,7 +21,7 @@
  * ```
  */
 
-import type { Connector } from '../connector';
+import type { Connector } from '../connector.js';
 import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from '@onchainux/siwe';
 import { generateMessage, parseMessage, verifyMessage, generateNonce, generateTimestamp } from '@onchainux/siwe';
 

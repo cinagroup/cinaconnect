@@ -50,7 +50,7 @@ vi.mock('@onchainux/walletconnect-v2', () => ({
 
 // ─── Mock core package ───────────────────────────────────────────────────────
 
-vi.mock('@onchainux/core', () => ({}));
+vi.mock('@onchainux/core-sdk', () => ({}));
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 

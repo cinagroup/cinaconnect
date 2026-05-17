@@ -4,7 +4,7 @@
  * Syncs state for Bitcoin accounts (including Taproot and legacy).
  */
 
-import type { ChainAccount, SessionState, StateStorage } from "./types.js";
+import type { ChainAccount, SessionState, StateStorage } from "./types.js.js";
 
 /** Bitcoin-specific account info */
 export interface BitcoinAccount extends ChainAccount {

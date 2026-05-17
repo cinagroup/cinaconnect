@@ -8,26 +8,26 @@
  */
 
 // Core SIWX functions
-export { createSignInMessage, verifySignIn, SIWXAdapter, SIWXRegistry, defaultRegistry } from './siwx';
+export { createSignInMessage, verifySignIn, SIWXAdapter, SIWXRegistry, defaultRegistry } from './siwx.js';
 
 // Chain adapters
 export {
   createEvmSignInMessage,
   verifyEvmSignature,
   parseEvmMessage,
-} from './chains/evm';
+} from './chains/evm.js';
 
 export {
   createSolanaSignInMessage,
   verifySolanaSignature,
   parseSolanaMessage,
-} from './chains/solana';
+} from './chains/solana.js';
 
 export {
   createBitcoinSignInMessage,
   verifyBitcoinSignature,
   parseBitcoinMessage,
-} from './chains/bitcoin';
+} from './chains/bitcoin.js';
 
 // Types
 export type {
@@ -36,4 +36,4 @@ export type {
   SIWXResult,
   SIWXFormatOptions,
   SIWXVerifyInput,
-} from './types';
+} from './types.js';

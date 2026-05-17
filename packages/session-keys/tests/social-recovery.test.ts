@@ -4,8 +4,8 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { SocialRecoveryManager } from '../src/social-recovery';
-import type { Guardian, RecoveryConfig, RecoveryRequest } from '../src/types';
+import { SocialRecoveryManager } from '../src/social-recovery.js';
+import type { Guardian, RecoveryConfig, RecoveryRequest } from '../src/types.js';
 
 describe('SocialRecoveryManager - Initialization', () => {
   let manager: SocialRecoveryManager;

@@ -7,7 +7,7 @@
  * Reference: https://developer.apple.com/sign-in-with-apple/
  */
 
-import type { AppleLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types';
+import type { AppleLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types.js';
 
 /** Apple OAuth2 authorization endpoint. */
 const APPLE_AUTH_URL = 'https://appleid.apple.com/auth/authorize';

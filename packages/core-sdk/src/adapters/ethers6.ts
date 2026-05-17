@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { Ethers6Adapter } from '@onchainux/core';
+ * import { Ethers6Adapter } from '@onchainux/core-sdk';
  * import { BrowserProvider } from 'ethers';
  *
  * const provider = new BrowserProvider(window.ethereum);

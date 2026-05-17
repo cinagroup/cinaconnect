@@ -8,10 +8,10 @@
  */
 
 // Social login core
-export { loginWithEmail, generateOTP, generateMagicLinkToken, buildMagicLink, validateMagicLinkToken, validateOTP } from './providers/email';
-export { buildGoogleAuthUrl, exchangeCodeForTokens, fetchGoogleUserProfile, loginWithGoogle } from './providers/google';
-export { buildAppleAuthUrl, exchangeAppleCode, decodeAppleIdToken, loginWithApple, verifyAppleToken, generateAppleClientSecret } from './providers/apple';
-export { buildTwitterAuthUrl, exchangeTwitterCode, fetchTwitterUserProfile, loginWithTwitter, generatePKCE } from './providers/twitter';
+export { loginWithEmail, generateOTP, generateMagicLinkToken, buildMagicLink, validateMagicLinkToken, validateOTP } from './providers/email.js';
+export { buildGoogleAuthUrl, exchangeCodeForTokens, fetchGoogleUserProfile, loginWithGoogle } from './providers/google.js';
+export { buildAppleAuthUrl, exchangeAppleCode, decodeAppleIdToken, loginWithApple, verifyAppleToken, generateAppleClientSecret } from './providers/apple.js';
+export { buildTwitterAuthUrl, exchangeTwitterCode, fetchTwitterUserProfile, loginWithTwitter, generatePKCE } from './providers/twitter.js';
 
 // Wallet derivation
 export {
@@ -20,7 +20,7 @@ export {
   deriveAddressFromEmail,
   deriveAddressFromProvider,
   generateRandomMnemonic,
-} from './wallet-derivation';
+} from './wallet-derivation.js';
 
 // Types
 export type {
@@ -34,4 +34,4 @@ export type {
   OAuth2TokenResponse,
   OAuth2UserProfile,
   MagicLinkParams,
-} from './types';
+} from './types.js';

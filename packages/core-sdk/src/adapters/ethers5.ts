@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { Ethers5Adapter } from '@onchainux/core';
+ * import { Ethers5Adapter } from '@onchainux/core-sdk';
  * import { Web3Provider } from '@ethersproject/providers';
  *
  * const adapter = new Ethers5Adapter(provider);

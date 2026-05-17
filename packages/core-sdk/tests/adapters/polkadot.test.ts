@@ -12,7 +12,7 @@ import {
   POLKADOT_WALLETS,
   decodeSS58,
   isValidSS58Address,
-} from '../../src/adapters/polkadot';
+} from '../../src/adapters/polkadot.js';
 
 /* ------------------------------------------------------------------ */
 /*  SS58 Address Validation                                            */

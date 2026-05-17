@@ -127,7 +127,7 @@ describe('buildCommand', () => {
       command: vi.fn().mockReturnThis(),
       description: vi.fn().mockReturnThis(),
       option: vi.fn().mockReturnThis(),
-      action: vi.fn((cb: (opts: any) => void) => cb({ scope: '@onchainux/core' })),
+      action: vi.fn((cb: (opts: any) => void) => cb({ scope: '@onchainux/core-sdk' })),
     };
     const mockCli = {
       command: vi.fn().mockReturnValue(mockCommand),

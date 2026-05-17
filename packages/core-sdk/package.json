@@ -1,5 +1,5 @@
 {
-  "name": "@onchainux/core",
+  "name": "@onchainux/core-sdk",
   "version": "0.1.0",
   "description": "OnChainUX Core SDK — Self-hosted wallet connection toolkit",
   "main": "dist/index.js",

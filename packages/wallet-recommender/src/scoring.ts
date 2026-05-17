@@ -5,7 +5,7 @@
  * and EIP-6963 installation boost.
  */
 
-import type { WalletEntry } from "./recommender.js";
+import type { WalletEntry } from "./recommender.js.js";
 
 /**
  * Recommendation context.

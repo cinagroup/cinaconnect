@@ -37,15 +37,15 @@ export type {
   SyncResult,
   LinkingProof,
   StateStorage,
-} from "./types.js";
+} from "./types.js.js";
 
-export type { UnifiedIdentity } from "./identity.js";
-export type { EvmAccount } from "./adapters/evm.js";
-export type { SolanaAccount } from "./adapters/solana.js";
-export type { BitcoinAccount } from "./adapters/bitcoin.js";
+export type { UnifiedIdentity } from "./identity.js.js";
+export type { EvmAccount } from "./adapters/evm.js.js";
+export type { SolanaAccount } from "./adapters/solana.js.js";
+export type { BitcoinAccount } from "./adapters/bitcoin.js.js";
 
 // Sync
-export { StateSync } from "./sync.js";
+export { StateSync } from "./sync.js.js";
 
 // Identity
 export {
@@ -53,12 +53,12 @@ export {
   generateIdentityHash,
   verifyLinkingProof,
   createLinkingProof,
-} from "./identity.js";
+} from "./identity.js.js";
 
 // Adapters
-export { syncEvmState, getEvmSession } from "./adapters/evm.js";
-export { syncSolanaState, getSolanaSession } from "./adapters/solana.js";
-export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js";
+export { syncEvmState, getEvmSession } from "./adapters/evm.js.js";
+export { syncSolanaState, getSolanaSession } from "./adapters/solana.js.js";
+export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js.js";
 
 // Storage
-export { InMemoryStorage, LocalStorage } from "./storage.js";
+export { InMemoryStorage, LocalStorage } from "./storage.js.js";

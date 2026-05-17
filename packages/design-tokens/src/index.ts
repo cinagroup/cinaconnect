@@ -13,12 +13,12 @@
 // Re-export resolved theme data
 // ---------------------------------------------------------------------------
 
-import defaultTheme from '../tokens/themes/default.json' with { type: 'json' };
-import lightTheme from '../tokens/themes/light.json' with { type: 'json' };
-import minimalTheme from '../tokens/themes/minimal.json' with { type: 'json' };
-import globalTokens from '../tokens/global.json' with { type: 'json' };
-import semanticTokens from '../tokens/semantic.json' with { type: 'json' };
-import componentTokens from '../tokens/components.json' with { type: 'json' };
+import defaultTheme from '../tokens/themes/default.json.js' with { type: 'json' };
+import lightTheme from '../tokens/themes/light.json.js' with { type: 'json' };
+import minimalTheme from '../tokens/themes/minimal.json.js' with { type: 'json' };
+import globalTokens from '../tokens/global.json.js' with { type: 'json' };
+import semanticTokens from '../tokens/semantic.json.js' with { type: 'json' };
+import componentTokens from '../tokens/components.json.js' with { type: 'json' };
 
 // ---------------------------------------------------------------------------
 // Types

@@ -13,7 +13,7 @@ import {
   isValidTRONAddress,
   base58ToHex,
   hexToBase58,
-} from '../../src/adapters/tron';
+} from '../../src/adapters/tron.js';
 
 /* ------------------------------------------------------------------ */
 /*  Address Validation                                                 */

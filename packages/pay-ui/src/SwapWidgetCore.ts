@@ -21,7 +21,7 @@ import type {
   SwapWidgetCoreState,
   SwapWidgetState,
   SlippageConfig,
-} from "./types.js";
+} from "./types.js.js";
 
 const DEFAULT_SLIPPAGE_BPS = 50;
 const DEFAULT_SLIPPAGE_PRESETS = [10, 25, 50, 100, 200]; // 0.1% – 2%

@@ -7,7 +7,7 @@
  *
  * @example
  * ```ts
- * import { createViemAdapter } from '@onchainux/core';
+ * import { createViemAdapter } from '@onchainux/core-sdk';
  *
  * const adapter = createViemAdapter({
  *   chain: mainnet,

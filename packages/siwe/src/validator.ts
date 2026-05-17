@@ -5,8 +5,8 @@
  * and structural integrity of SIWE messages.
  */
 
-import type { SIWEParams, ParsedSIWE, SIWEValidationError } from './types';
-import { isValidEthereumAddress, isValidUri, parseTimestamp } from './utils';
+import type { SIWEParams, ParsedSIWE, SIWEValidationError } from './types.js';
+import { isValidEthereumAddress, isValidUri, parseTimestamp } from './utils.js';
 
 /**
  * Validate SIWE parameters before message generation.

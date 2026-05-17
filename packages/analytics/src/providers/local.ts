@@ -4,7 +4,7 @@
  * Stores analytics events in browser localStorage (or memory fallback).
  */
 
-import type { AnalyticsEvent, AnalyticsProvider } from "./types.js";
+import type { AnalyticsEvent, AnalyticsProvider } from "./types.js.js";
 
 const STORAGE_KEY = "onchainux-analytics-events";
 const MAX_EVENTS = 1000;

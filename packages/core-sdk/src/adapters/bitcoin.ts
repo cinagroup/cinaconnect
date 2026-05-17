@@ -6,7 +6,7 @@
  * Compatible with Xverse, Leather, and Unisat wallets.
  */
 
-import type { Chain } from '../types';
+import type { Chain } from '../types.js';
 
 /* ------------------------------------------------------------------ */
 /*  Provider interfaces                                                */

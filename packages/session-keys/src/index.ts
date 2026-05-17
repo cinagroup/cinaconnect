@@ -41,14 +41,14 @@ export type {
   RecoveryConfig,
   RecoveryRequest,
   RecoveryResult,
-} from "./types.js";
+} from "./types.js.js";
 
 // Session Key Management
-export { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from "./session-key.js";
+export { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from "./session-key.js.js";
 
 // Policy Management
-export { SessionKeyPolicyManager } from "./policy.js";
-export type { PolicyParams } from "./policy.js";
+export { SessionKeyPolicyManager } from "./policy.js.js";
+export type { PolicyParams } from "./policy.js.js";
 
 // Social Recovery
-export { SocialRecoveryManager } from "./social-recovery.js";
+export { SocialRecoveryManager } from "./social-recovery.js.js";

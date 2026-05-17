@@ -3,7 +3,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { SwapWidgetCore } from "../src/SwapWidgetCore.js";
+import { SwapWidgetCore } from "../src/SwapWidgetCore.js.js";
 import type { TokenInfo, SwapQuote, SwapReceipt } from "@onchainux/swap-sdk";
 
 // ── Test Fixtures ──────────────────────────────────────────

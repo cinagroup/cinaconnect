@@ -12,22 +12,30 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
-  "keywords": ["ens", "ethereum", "resolver", "onchainux", "web3"],
+  "keywords": [
+    "ens",
+    "ethereum",
+    "resolver",
+    "onchainux",
+    "web3"
+  ],
   "license": "MIT",
   "dependencies": {
     "viem": "^2.21.0"
   },
   "devDependencies": {
-    "vitest": "^2.1.0",
     "tsup": "^8.3.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.9.3",
+    "vitest": "^2.1.9"
   },
   "repository": {
     "type": "git",

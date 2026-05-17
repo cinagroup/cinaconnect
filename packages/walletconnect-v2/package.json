@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@onchainux/core": "workspace:*",
+    "@onchainux/core-sdk": "workspace:*",
     "@noble/ciphers": "^2.2.0",
     "@noble/curves": "^2.2.0",
     "@noble/hashes": "^2.2.0",

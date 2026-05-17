@@ -6,7 +6,7 @@
  * and Solana namespaces.
  */
 
-import type { TransactionRequest } from '@onchainux/core';
+import type { TransactionRequest } from '@onchainux/core-sdk';
 import type { RequiredNamespace } from './types.js';
 
 // ============================================================

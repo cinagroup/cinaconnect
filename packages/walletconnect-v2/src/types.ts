@@ -6,7 +6,7 @@
  * protocol specification.
  */
 
-import type { AppMetadata, TransactionRequest, RequiredNamespace } from '@onchainux/core';
+import type { AppMetadata, TransactionRequest, RequiredNamespace } from '@onchainux/core-sdk';
 
 // ============================================================
 // WC v2 Error Codes (per WC v2 spec)

@@ -5,8 +5,8 @@
  * through viem's client API.
  */
 
-import type { Connector } from '../connector';
-import type { TransactionRequest, Chain } from '../types';
+import type { Connector } from '../connector.js';
+import type { TransactionRequest, Chain } from '../types.js';
 
 /** Minimal EIP-1193-like provider interface for internal use. */
 interface EIP1193Like {

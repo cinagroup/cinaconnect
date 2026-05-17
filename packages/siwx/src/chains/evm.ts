@@ -5,7 +5,7 @@
  * and verification for the EVM chain family.
  */
 
-import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types';
+import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types.js';
 import { generateMessage as generateSIWEMessage, parseMessage, verifyMessage } from '@onchainux/siwe';
 
 /**

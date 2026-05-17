@@ -8,7 +8,7 @@
  * provides a Promise-based API and auto-subscription management.
  */
 
-import { EventEmitter } from '@onchainux/core';
+import { EventEmitter } from '@onchainux/core-sdk';
 import type { RelayConfig, RelayMessage } from './types.js';
 
 /** Relay client state. */

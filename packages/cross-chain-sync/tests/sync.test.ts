@@ -5,8 +5,8 @@ import {
   syncEvmState,
   syncSolanaState,
   syncBitcoinState,
-} from "../src/index.js";
-import type { ChainAccount } from "../src/index.js";
+} from "../src/index.js.js";
+import type { ChainAccount } from "../src/index.js.js";
 
 describe("StateSync", () => {
   it("creates a StateSync instance", () => {

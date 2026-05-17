@@ -7,7 +7,7 @@
  */
 
 // Core SIWE functions
-export { generateMessage, parseMessage, verifyMessage } from './siwe';
+export { generateMessage, parseMessage, verifyMessage } from './siwe.js';
 
 // Types
 export type {
@@ -15,7 +15,7 @@ export type {
   ParsedSIWE,
   SIWEVerificationResult,
   SIWEValidationError,
-} from './types';
+} from './types.js';
 
 // Utilities
 export {
@@ -26,7 +26,7 @@ export {
   isValidUri,
   normalizeAddress,
   getOrigin,
-} from './utils';
+} from './utils.js';
 
 // Validation
 export {
@@ -34,4 +34,4 @@ export {
   validateTemporalConstraints,
   validateDomainMatch,
   fullValidation,
-} from './validator';
+} from './validator.js';

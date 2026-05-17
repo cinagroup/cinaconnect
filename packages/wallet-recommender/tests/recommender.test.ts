@@ -4,8 +4,8 @@ import {
   scoreWallet,
   getChainCompatibleWallets,
   DEFAULT_WEIGHTS,
-} from "../src/index.js";
-import type { WalletEntry } from "../src/index.js";
+} from "../src/index.js.js";
+import type { WalletEntry } from "../src/index.js.js";
 
 const sampleWallets: WalletEntry[] = [
   {

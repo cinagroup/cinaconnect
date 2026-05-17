@@ -3,10 +3,10 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SwapRouter } from '../src/router';
-import { SwapQuoter } from '../src/quoter';
-import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from '../src/types';
-import type { SwapExecutor } from '../src/router';
+import { SwapRouter } from '../src/router.js';
+import { SwapQuoter } from '../src/quoter.js';
+import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from '../src/types.js';
+import type { SwapExecutor } from '../src/router.js';
 
 function createMockExecutor(
   name: string,

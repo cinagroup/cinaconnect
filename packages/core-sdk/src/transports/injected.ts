@@ -6,8 +6,8 @@
  * injected wallet providers.
  */
 
-import { Connector } from '../connector';
-import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types';
+import { Connector } from '../connector.js';
+import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types.js';
 
 /**
  * InjectedProvider wraps a browser-injected EIP-1193 provider.

@@ -5,8 +5,8 @@
  * and Backpack wallet adapters. EIP-1193 compatible adapter layer.
  */
 
-import type { Connector } from '../connector';
-import type { Chain, TransactionRequest } from '../types';
+import type { Connector } from '../connector.js';
+import type { Chain, TransactionRequest } from '../types.js';
 
 /* ------------------------------------------------------------------ */
 /*  Minimal @solana/web3.js type declarations for environments where   */

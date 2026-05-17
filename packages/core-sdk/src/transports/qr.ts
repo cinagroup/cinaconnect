@@ -5,9 +5,9 @@
  * manages the connection lifecycle for wallet scanning.
  */
 
-import { Connector } from '../connector';
-import { EventEmitter } from '../events';
-import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types';
+import { Connector } from '../connector.js';
+import { EventEmitter } from '../events.js';
+import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types.js';
 import { RelayTransport } from './relay.js';
 
 /** QR transport configuration. */

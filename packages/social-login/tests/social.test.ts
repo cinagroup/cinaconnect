@@ -9,7 +9,7 @@ import {
   exchangeCodeForTokens,
   fetchGoogleUserProfile,
   loginWithGoogle,
-} from '../../src/providers/google';
+} from '../../src/providers/google.js';
 import {
   loginWithEmail,
   generateOTP,
@@ -17,8 +17,8 @@ import {
   buildMagicLink,
   validateMagicLinkToken,
   validateOTP,
-} from '../../src/providers/email';
-import type { GoogleLoginParams, MagicLinkParams } from '../../src/types';
+} from '../../src/providers/email.js';
+import type { GoogleLoginParams, MagicLinkParams } from '../../src/types.js';
 
 // ─── Google Provider Tests ─────────────────────────────────────────
 

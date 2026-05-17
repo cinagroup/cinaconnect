@@ -9,8 +9,8 @@ import {
   validateTemporalConstraints,
   validateDomainMatch,
   fullValidation,
-} from '../src/validator';
-import type { SIWEParams, ParsedSIWE } from '../src/types';
+} from '../src/validator.js';
+import type { SIWEParams, ParsedSIWE } from '../src/types.js';
 
 // ============================================================
 // Helpers

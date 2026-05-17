@@ -5,8 +5,8 @@
  * Documentation: https://dev.moonpay.com/
  */
 
-import type { OnRampProviderAdapter } from "../aggregator.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
+import type { OnRampProviderAdapter } from "../aggregator.js.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
 
 const MOONPAY_API_BASE = "https://api.moonpay.com";
 const MOONPAY_WIDGET_BASE = "https://buy.moonpay.com";

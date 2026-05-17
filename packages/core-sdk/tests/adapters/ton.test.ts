@@ -14,7 +14,7 @@ import {
   parseTONAddress,
   hexToBase64url,
   base64urlToHex,
-} from '../../src/adapters/ton';
+} from '../../src/adapters/ton.js';
 
 /* ------------------------------------------------------------------ */
 /*  Address Validation                                                 */
