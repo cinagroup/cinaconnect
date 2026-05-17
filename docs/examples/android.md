@@ -1,13 +1,13 @@
 # Android 示例
 
-> Android 原生 Kotlin 示例，展示 OnChainUX Android SDK 集成。
+> Android 原生 Kotlin 示例，展示 CinaConnect Android SDK 集成。
 
 ## 目录结构
 
 ```
 examples/android/
 ├── app/src/main/
-│   ├── java/com/onchainux/example/
+│   ├── java/com/cinaconnect/example/
 │   │   └── MainActivity.kt         # 主 Activity
 │   └── res/layout/
 │       ├── activity_main.xml       # 主布局
@@ -55,11 +55,11 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ## Android SDK 使用
 
 ```kotlin
-import com.onchainux.core.OnChainUX
-import com.onchainux.core.config.OnChainUXConfig
+import com.cinaconnect.core.CinaConnect
+import com.cinaconnect.core.config.CinaConnectConfig
 
 // 初始化
-val config = OnChainUXConfig(
+val config = CinaConnectConfig(
     projectId = "your-project-id",
     relayUrl = "wss://relay.yourdomain.com/v1",
     chains = listOf(
@@ -68,11 +68,11 @@ val config = OnChainUXConfig(
     )
 )
 
-val onchainux = OnChainUX(config, applicationContext)
+val cinaconnect = CinaConnect(config, applicationContext)
 
 // 连接
 lifecycleScope.launch {
-    val result = onchainux.connect(walletId = "metamask")
+    val result = cinaconnect.connect(walletId = "metamask")
     result.fold(
         onSuccess = { connection ->
             Toast.makeText(this@MainActivity, "Connected: ${connection.address}", Toast.LENGTH_SHORT).show()
@@ -84,8 +84,8 @@ lifecycleScope.launch {
 }
 
 // 监听状态
-onchainux.onAccountChange { address ->
-    Log.d("OnChainUX", "Account changed: $address")
+cinaconnect.onAccountChange { address ->
+    Log.d("CinaConnect", "Account changed: $address")
 }
 ```
 
@@ -99,7 +99,7 @@ onchainux.onAccountChange { address ->
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="onchainux-example" />
+        <data android:scheme="cinaconnect-example" />
     </intent-filter>
 </activity>
 ```
@@ -108,8 +108,8 @@ onchainux.onAccountChange { address ->
 
 ```gradle
 dependencies {
-    implementation "com.onchainux:core:0.1.0"
-    implementation "com.onchainux:android:0.1.0"
+    implementation "com.cinaconnect:core:0.1.0"
+    implementation "com.cinaconnect:android:0.1.0"
     
     // 可选：扫码功能
     implementation "com.google.mlkit:barcode-scanning:17.2.0"

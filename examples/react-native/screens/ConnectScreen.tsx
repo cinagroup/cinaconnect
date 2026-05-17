@@ -8,10 +8,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native'
-import { useOnChainUX, ConnectButton, ConnectModal } from '@onchainux/react-native'
+import { useCinaConnect, ConnectButton, ConnectModal } from '@cinaconnect/react-native'
 import { WalletList } from '../components/WalletList'
 import { defaultWallets } from '../utils/walletConfig'
-import { QRScanner } from '@onchainux/react-native'
+import { QRScanner } from '@cinaconnect/react-native'
 import { ethers } from 'ethers'
 
 /**
@@ -28,7 +28,7 @@ const RPC_ENDPOINTS: Record<number, string> = {
 }
 
 export function ConnectScreen() {
-  const { account, status, connectors, disconnect, chainId } = useOnChainUX()
+  const { account, status, connectors, disconnect, chainId } = useCinaConnect()
   const [showModal, setShowModal] = useState(false)
   const [showQRScanner, setShowQRScanner] = useState(false)
   const [balance, setBalance] = useState<string | null>(null)

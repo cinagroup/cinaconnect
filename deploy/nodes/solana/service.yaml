@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: solana-validator
-  namespace: onchainux
+  namespace: cinaconnect
   labels:
     app: solana-validator
     chain: solana

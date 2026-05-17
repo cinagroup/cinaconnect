@@ -1,6 +1,6 @@
-# Contributing to OnChainUX
+# Contributing to CinaConnect
 
-Thank you for your interest in contributing to OnChainUX! We welcome contributions from everyone.
+Thank you for your interest in contributing to CinaConnect! We welcome contributions from everyone.
 
 ## Code of Conduct
 
@@ -10,7 +10,7 @@ This project follows our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it b
 
 ### Reporting Bugs
 
-1. Check the [issue tracker](https://github.com/onchainux/onchainux/issues) to see if the bug has already been reported.
+1. Check the [issue tracker](https://github.com/cinaconnect/cinaconnect/issues) to see if the bug has already been reported.
 2. Open a new issue with:
    - A clear, descriptive title
    - Steps to reproduce the issue
@@ -60,7 +60,7 @@ chore: update dependencies
 ### Workspace Structure
 
 ```
-onchainux/
+cinaconnect/
 ├── packages/
 │   ├── core-sdk/          # Core TypeScript SDK
 │   ├── relay-server/      # Rust relay server

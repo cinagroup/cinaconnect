@@ -1,23 +1,23 @@
 # Core SDK API
 
-> `@onchainux/core` — OnChainUX 核心 SDK 参考。
+> `@cinaconnect/core` — CinaConnect 核心 SDK 参考。
 
-## OnChainUX
+## CinaConnect
 
 主入口类，管理钱包连接、链切换、会话等核心功能。
 
 ### 构造函数
 
 ```typescript
-import { OnChainUX } from '@onchainux/core'
+import { CinaConnect } from '@cinaconnect/core'
 
-const onchainux = new OnChainUX(config: OnChainUXConfig)
+const cinaconnect = new CinaConnect(config: CinaConnectConfig)
 ```
 
-### OnChainUXConfig
+### CinaConnectConfig
 
 ```typescript
-interface OnChainUXConfig {
+interface CinaConnectConfig {
   /** 项目唯一标识 */
   projectId: string
   /** Relay WebSocket URL */
@@ -38,9 +38,9 @@ interface OnChainUXConfig {
 注册链适配器（EVM、Solana 等）。
 
 ```typescript
-import { EvmAdapter } from '@onchainux/adapter-evm'
+import { EvmAdapter } from '@cinaconnect/adapter-evm'
 
-onchainux.registerAdapter(new EvmAdapter())
+cinaconnect.registerAdapter(new EvmAdapter())
 ```
 
 #### `registerTransport(transport: Transport)`
@@ -48,9 +48,9 @@ onchainux.registerAdapter(new EvmAdapter())
 注册传输层（Relay WebSocket、QR 码等）。
 
 ```typescript
-import { RelayTransport } from '@onchainux/transport-relay'
+import { RelayTransport } from '@cinaconnect/transport-relay'
 
-onchainux.registerTransport(new RelayTransport({
+cinaconnect.registerTransport(new RelayTransport({
   url: 'wss://relay.yourdomain.com/v1',
 }))
 ```
@@ -60,7 +60,7 @@ onchainux.registerTransport(new RelayTransport({
 获取所有已注册的连接器。
 
 ```typescript
-const connectors = onchainux.getConnectors()
+const connectors = cinaconnect.getConnectors()
 // [{ id: 'metamask', name: 'MetaMask', ... }, ...]
 ```
 
@@ -69,8 +69,8 @@ const connectors = onchainux.getConnectors()
 连接指定钱包。
 
 ```typescript
-const [connector] = onchainux.getConnectors()
-const result = await onchainux.connect(connector)
+const [connector] = cinaconnect.getConnectors()
+const result = await cinaconnect.connect(connector)
 
 console.log(result.accounts)  // ['0x1a2b...3c4d']
 console.log(result.chainId)   // 1
@@ -81,7 +81,7 @@ console.log(result.chainId)   // 1
 断开当前连接。
 
 ```typescript
-await onchainux.disconnect()
+await cinaconnect.disconnect()
 ```
 
 #### `switchChain(chainId: number): Promise<void>`
@@ -89,7 +89,7 @@ await onchainux.disconnect()
 切换区块链网络。
 
 ```typescript
-await onchainux.switchChain(137)  // 切换到 Polygon
+await cinaconnect.switchChain(137)  // 切换到 Polygon
 ```
 
 #### `signMessage(message: string): Promise<string>`
@@ -97,7 +97,7 @@ await onchainux.switchChain(137)  // 切换到 Polygon
 签名消息（EIP-191）。
 
 ```typescript
-const signature = await onchainux.signMessage('Hello, OnChainUX!')
+const signature = await cinaconnect.signMessage('Hello, CinaConnect!')
 ```
 
 #### `signTransaction(tx: TransactionRequest): Promise<string>`
@@ -105,7 +105,7 @@ const signature = await onchainux.signMessage('Hello, OnChainUX!')
 签名交易。
 
 ```typescript
-const txHash = await onchainux.signTransaction({
+const txHash = await cinaconnect.signTransaction({
   to: '0x...',
   value: 1000000000000000000n,  // 1 ETH
   data: '0x...',
@@ -117,15 +117,15 @@ const txHash = await onchainux.signTransaction({
 监听事件。
 
 ```typescript
-onchainux.on('accountChanged', (accounts: string[]) => {
+cinaconnect.on('accountChanged', (accounts: string[]) => {
   console.log('Account changed:', accounts)
 })
 
-onchainux.on('chainChanged', (chainId: number) => {
+cinaconnect.on('chainChanged', (chainId: number) => {
   console.log('Chain changed:', chainId)
 })
 
-onchainux.on('disconnect', () => {
+cinaconnect.on('disconnect', () => {
   console.log('Disconnected')
 })
 ```
@@ -135,7 +135,7 @@ onchainux.on('disconnect', () => {
 移除事件监听器。
 
 ```typescript
-onchainux.off('accountChanged', handler)
+cinaconnect.off('accountChanged', handler)
 ```
 
 #### `getAccounts(): Promise<string[]>`
@@ -143,7 +143,7 @@ onchainux.off('accountChanged', handler)
 获取当前账户列表。
 
 ```typescript
-const accounts = await onchainux.getAccounts()
+const accounts = await cinaconnect.getAccounts()
 // ['0x1a2b...3c4d']
 ```
 
@@ -152,7 +152,7 @@ const accounts = await onchainux.getAccounts()
 获取当前链 ID。
 
 ```typescript
-const chainId = await onchainux.getChainId()
+const chainId = await cinaconnect.getChainId()
 // 1
 ```
 
@@ -213,7 +213,7 @@ interface ChainAdapter {
 ## EIP-6963 钱包发现
 
 ```typescript
-import { discoverWallets } from '@onchainux/core'
+import { discoverWallets } from '@cinaconnect/core'
 
 const wallets = await discoverWallets()
 // [
@@ -229,7 +229,7 @@ const wallets = await discoverWallets()
 通过自建 Relay 进行 WebSocket 通信。
 
 ```typescript
-import { RelayTransport } from '@onchainux/transport-relay'
+import { RelayTransport } from '@cinaconnect/transport-relay'
 
 const transport = new RelayTransport({
   url: 'wss://relay.yourdomain.com/v1',
@@ -243,7 +243,7 @@ const transport = new RelayTransport({
 通过注入的 EIP-1193 Provider 通信。
 
 ```typescript
-import { InjectedTransport } from '@onchainux/transport-injected'
+import { InjectedTransport } from '@cinaconnect/transport-injected'
 
 const transport = new InjectedTransport(window.ethereum!)
 ```
@@ -253,7 +253,7 @@ const transport = new InjectedTransport(window.ethereum!)
 通过扫码连接。
 
 ```typescript
-import { QRCodeTransport } from '@onchainux/transport-qrcode'
+import { QRCodeTransport } from '@cinaconnect/transport-qrcode'
 
 const transport = new QRCodeTransport({
   relayUrl: 'wss://relay.yourdomain.com/v1',
@@ -266,7 +266,7 @@ const uri = await transport.getUri()
 ## 会话管理
 
 ```typescript
-import { SessionManager } from '@onchainux/core'
+import { SessionManager } from '@cinaconnect/core'
 
 const sessionManager = new SessionManager({
   storage: localStorage,

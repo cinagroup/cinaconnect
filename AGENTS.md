@@ -1,10 +1,10 @@
-# AGENTS.md — OnChainUX AI Agent Instructions
+# AGENTS.md — CinaConnect AI Agent Instructions
 
-This file contains instructions for AI agents working on the OnChainUX project.
+This file contains instructions for AI agents working on the CinaConnect project.
 
 ## Project Overview
 
-OnChainUX is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It provides:
+CinaConnect is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It provides:
 
 - **Core SDK** (`packages/core-sdk/`) — TypeScript client library for WalletConnect-compatible wallet connections
 - **Relay Server** (`packages/relay-server/`) — Rust WebSocket relay with E2E encryption

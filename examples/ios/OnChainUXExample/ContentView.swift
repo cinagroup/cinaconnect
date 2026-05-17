@@ -1,10 +1,10 @@
-// OnChainUXExample/ContentView.swift
+// CinaConnectExample/ContentView.swift
 // 主视图 — 使用 TabView 组织各功能页面
 
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject var onchainux = OnChainUX.shared
+    @StateObject var cinaconnect = CinaConnect.shared
 
     var body: some View {
         TabView {
@@ -35,7 +35,7 @@ struct ContentView: View {
         .tint(Color.blue)
         .onOpenURL { url in
             // 处理 Deep Link（钱包回调）
-            OnChainUX.shared.handleDeepLink(url)
+            CinaConnect.shared.handleDeepLink(url)
         }
     }
 }

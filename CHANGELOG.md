@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to OnChainUX will be documented in this file.
+All notable changes to CinaConnect will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -34,7 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2024-XX-XX
 
 ### Added
-- Initial release of OnChainUX Core SDK
+- Initial release of CinaConnect Core SDK
 - WebSocket relay server in Rust
 - X25519 key exchange (placeholder implementation)
 - ChaCha20-Poly1305 encryption (AES-GCM fallback)
@@ -44,5 +44,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - EVM chain adapter
 - Transport layer (Relay, Injected, QR)
 
-[Unreleased]: https://github.com/onchainux/onchainux/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/onchainux/onchainux/releases/tag/v0.1.0
+[Unreleased]: https://github.com/cinaconnect/cinaconnect/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/cinaconnect/cinaconnect/releases/tag/v0.1.0

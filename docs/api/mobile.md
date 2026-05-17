@@ -1,15 +1,15 @@
 # Mobile SDK API
 
-> `@onchainux/react-native` — React Native 移动端 SDK 参考。
+> `@cinaconnect/react-native` — React Native 移动端 SDK 参考。
 
 ## 概述
 
-OnChainUX React Native SDK 提供原生的移动端钱包连接体验，使用 React Native 原生组件而非 Web 包装。
+CinaConnect React Native SDK 提供原生的移动端钱包连接体验，使用 React Native 原生组件而非 Web 包装。
 
 ## 安装
 
 ```bash
-npm install @onchainux/core @onchainux/react-native
+npm install @cinaconnect/core @cinaconnect/react-native
 
 # iOS
 cd ios && pod install && cd ..
@@ -19,14 +19,14 @@ npm install react-native-camera
 # 或 react-native-vision-camera (推荐)
 ```
 
-## OnChainUXProvider
+## CinaConnectProvider
 
 ```tsx
-import { OnChainUXProvider } from '@onchainux/react-native'
+import { CinaConnectProvider } from '@cinaconnect/react-native'
 
 function App() {
   return (
-    <OnChainUXProvider
+    <CinaConnectProvider
       config={{
         projectId: 'your-project-id',
         relayUrl: 'wss://relay.yourdomain.com/v1',
@@ -40,7 +40,7 @@ function App() {
       }}
     >
       <Navigation />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   )
 }
 ```
@@ -54,7 +54,7 @@ function App() {
 移动端连接按钮。
 
 ```tsx
-import { ConnectButton } from '@onchainux/react-native'
+import { ConnectButton } from '@cinaconnect/react-native'
 
 <ConnectButton
   onPress={() => setShowModal(true)}
@@ -81,7 +81,7 @@ import { ConnectButton } from '@onchainux/react-native'
 移动端连接弹窗。
 
 ```tsx
-import { ConnectModal } from '@onchainux/react-native'
+import { ConnectModal } from '@cinaconnect/react-native'
 
 <ConnectModal
   visible={showModal}
@@ -129,7 +129,7 @@ function handleWalletSelect(wallet: WalletInfo) {
 钱包列表组件。
 
 ```tsx
-import { WalletList } from '@onchainux/react-native'
+import { WalletList } from '@cinaconnect/react-native'
 
 <WalletList
   wallets={wallets}
@@ -143,7 +143,7 @@ import { WalletList } from '@onchainux/react-native'
 移动端链切换器。
 
 ```tsx
-import { ChainSwitcher } from '@onchainux/react-native'
+import { ChainSwitcher } from '@cinaconnect/react-native'
 
 <ChainSwitcher
   chains={chains}
@@ -152,10 +152,10 @@ import { ChainSwitcher } from '@onchainux/react-native'
 />
 ```
 
-## useOnChainUX Hook
+## useCinaConnect Hook
 
 ```tsx
-import { useOnChainUX } from '@onchainux/react-native'
+import { useCinaConnect } from '@cinaconnect/react-native'
 
 function MobileComponent() {
   const {
@@ -168,7 +168,7 @@ function MobileComponent() {
     switchChain,
     signMessage,
     balance,
-  } = useOnChainUX()
+  } = useCinaConnect()
 
   // ...
 }
@@ -178,10 +178,10 @@ function MobileComponent() {
 
 ```tsx
 import { Linking } from 'react-native'
-import { useOnChainUX } from '@onchainux/react-native'
+import { useCinaConnect } from '@cinaconnect/react-native'
 
 function App() {
-  const { handleDeepLink } = useOnChainUX()
+  const { handleDeepLink } = useCinaConnect()
 
   useEffect(() => {
     // 处理 URL（钱包回调）
@@ -206,7 +206,7 @@ function App() {
 ## Push 通知
 
 ```tsx
-import { setupPushNotifications } from '@onchainux/react-native'
+import { setupPushNotifications } from '@cinaconnect/react-native'
 
 // 注册 Push Token
 async function registerPush() {

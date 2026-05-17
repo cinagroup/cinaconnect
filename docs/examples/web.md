@@ -1,6 +1,6 @@
 # Web 示例
 
-> 完整的 Web dApp 示例，展示 OnChainUX 核心功能。
+> 完整的 Web dApp 示例，展示 CinaConnect 核心功能。
 
 本示例包含：钱包连接、Swap 演示、多链切换、SIWE 认证等完整功能。
 
@@ -73,7 +73,7 @@ npm run dev
 // src/main.tsx — 入口点
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 import { ConnectDemo } from './components/ConnectDemo'
 import { SwapDemo } from './components/SwapDemo'
 import { MultiChainDemo } from './components/MultiChainDemo'
@@ -81,30 +81,30 @@ import { AuthDemo } from './components/AuthDemo'
 
 const config = {
   projectId: import.meta.env.VITE_PROJECT_ID || 'demo-project-id',
-  relayUrl: import.meta.env.VITE_RELAY_URL || 'wss://relay.onchainux.com/v1',
+  relayUrl: import.meta.env.VITE_RELAY_URL || 'wss://relay.cinaconnect.com/v1',
   chains: [
     {
       id: 1,
       name: 'Ethereum',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://rpc.onchainux.com/eth',
+      rpcUrl: 'https://rpc.cinaconnect.com/eth',
     },
     {
       id: 137,
       name: 'Polygon',
       nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-      rpcUrl: 'https://rpc.onchainux.com/polygon',
+      rpcUrl: 'https://rpc.cinaconnect.com/polygon',
     },
     {
       id: 42161,
       name: 'Arbitrum',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://rpc.onchainux.com/arbitrum',
+      rpcUrl: 'https://rpc.cinaconnect.com/arbitrum',
     },
   ],
   metadata: {
-    name: 'OnChainUX Demo',
-    description: 'OnChainUX Web Example',
+    name: 'CinaConnect Demo',
+    description: 'CinaConnect Web Example',
     url: window.location.origin,
     icons: [],
   },
@@ -112,9 +112,9 @@ const config = {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <OnChainUXProvider config={config}>
+    <CinaConnectProvider config={config}>
       <div style={{ maxWidth: 800, margin: '0 auto', padding: 24 }}>
-        <h1>OnChainUX Web Demo</h1>
+        <h1>CinaConnect Web Demo</h1>
 
         <section>
           <h2>1. Wallet Connection</h2>
@@ -136,7 +136,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <AuthDemo />
         </section>
       </div>
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   </React.StrictMode>,
 )
 ```

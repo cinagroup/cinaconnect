@@ -25,31 +25,31 @@ interface PackageThreshold {
 
 const THRESHOLDS: PackageThreshold[] = [
   {
-    name: '@onchainux/core-sdk',
+    name: '@cinaconnect/core-sdk',
     path: 'packages/core-sdk/dist',
     maxMain: 50_000,   // 50 KB
     maxTotal: 150_000,  // 150 KB
   },
   {
-    name: '@onchainux/core-ui',
+    name: '@cinaconnect/core-ui',
     path: 'packages/core-ui/dist',
     maxMain: 80_000,
     maxTotal: 250_000,
   },
   {
-    name: '@onchainux/react',
+    name: '@cinaconnect/react',
     path: 'packages/react/dist',
     maxMain: 40_000,
     maxTotal: 120_000,
   },
   {
-    name: '@onchainux/vue',
+    name: '@cinaconnect/vue',
     path: 'packages/vue/dist',
     maxMain: 40_000,
     maxTotal: 120_000,
   },
   {
-    name: '@onchainux/swap-sdk',
+    name: '@cinaconnect/swap-sdk',
     path: 'packages/swap-sdk/dist',
     maxMain: 30_000,
     maxTotal: 80_000,
@@ -135,7 +135,7 @@ function checkBundle(info: BundleInfo, threshold: PackageThreshold): { pass: boo
 // ─── Main ───────────────────────────────────────────────────────────
 
 function main() {
-  console.log('📦 OnChainUX Bundle Size Check\n');
+  console.log('📦 CinaConnect Bundle Size Check\n');
 
   let allPassed = true;
   const results: { name: string; pass: boolean; warnings: string[]; info?: BundleInfo }[] = [];

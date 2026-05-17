@@ -1,6 +1,6 @@
 # Core SDK — Generated API Overview
 
-> Auto-generated reference for `@onchainux/core`. For the hand-written guide, see [Core SDK API](../../api/core-sdk.md).
+> Auto-generated reference for `@cinaconnect/core`. For the hand-written guide, see [Core SDK API](../../api/core-sdk.md).
 
 ## Entry Point
 
@@ -10,8 +10,8 @@
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `OnChainUX` | Class | Main SDK entry point |
-| `OnChainUXConfig` | Interface | Configuration options |
+| `CinaConnect` | Class | Main SDK entry point |
+| `CinaConnectConfig` | Interface | Configuration options |
 | `Connector` | Interface | Wallet connector interface |
 | `ConnectionResult` | Interface | Connection result type |
 | `ChainAdapter` | Interface | Chain adapter interface |
@@ -23,15 +23,15 @@
 
 ```typescript
 import {
-  OnChainUX,
-  OnChainUXConfig,
+  CinaConnect,
+  CinaConnectConfig,
   Connector,
   ConnectionResult,
   ChainAdapter,
   SessionManager,
   SessionState,
   discoverWallets,
-} from '@onchainux/core'
+} from '@cinaconnect/core'
 ```
 
 ## See Also

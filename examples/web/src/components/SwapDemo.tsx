@@ -1,12 +1,12 @@
 import { useState } from 'react'
-import { useOnChainUX } from '@onchainux/react'
+import { useCinaConnect } from '@cinaconnect/react'
 import {
   SwapQuoter,
   SwapRouter,
   UniswapExecutor,
   OneInchExecutor,
   ZeroxExecutor,
-} from '@onchainux/swap-sdk'
+} from '@cinaconnect/swap-sdk'
 
 interface TokenInfo {
   address: string
@@ -57,7 +57,7 @@ const ETH_RPC = 'https://eth.llamarpc.com'
  * - Transaction hash display and Etherscan link
  */
 export function SwapDemo() {
-  const { account, signTransaction, chainId, getProvider } = useOnChainUX()
+  const { account, signTransaction, chainId, getProvider } = useCinaConnect()
   const [fromToken, setFromToken] = useState<TokenInfo>(SUPPORTED_TOKENS[0])
   const [toToken, setToToken] = useState<TokenInfo>(SUPPORTED_TOKENS[1])
   const [fromAmount, setFromAmount] = useState('')

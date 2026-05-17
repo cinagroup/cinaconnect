@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: erigon-ethereum
-  namespace: onchainux
+  namespace: cinaconnect
   labels:
     app: erigon-ethereum
     chain: ethereum

@@ -1,8 +1,8 @@
 {
-  "name": "onchainux",
+  "name": "cinaconnect",
   "private": true,
   "version": "0.1.0",
-  "description": "OnChainUX — Self-hosted wallet connection toolkit",
+  "description": "CinaConnect — Self-hosted wallet connection toolkit",
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --concurrency 20",

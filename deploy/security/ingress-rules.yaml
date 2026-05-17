@@ -1,10 +1,10 @@
-# OnChainUX — Ingress Security Rules
+# CinaConnect — Ingress Security Rules
 # Nginx Ingress Controller configuration with security hardening
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: onchainux-ingress
-  namespace: onchainux
+  name: cinaconnect-ingress
+  namespace: cinaconnect
   annotations:
     # SSL/TLS
     cert-manager.io/cluster-issuer: letsencrypt-prod
@@ -24,7 +24,7 @@ metadata:
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
     # CORS (if needed for public APIs)
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://onchainux.com"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "https://cinaconnect.com"
     nginx.ingress.kubernetes.io/enable-cors: "true"
     nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, OPTIONS"
     # IP allowlist for admin endpoints
@@ -43,12 +43,12 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - relay.onchainux.com
-        - rpc.onchainux.com
-        - api.onchainux.com
-      secretName: onchainux-tls
+        - relay.cinaconnect.com
+        - rpc.cinaconnect.com
+        - api.cinaconnect.com
+      secretName: cinaconnect-tls
   rules:
-    - host: relay.onchainux.com
+    - host: relay.cinaconnect.com
       http:
         paths:
           - path: /
@@ -58,7 +58,7 @@ spec:
                 name: relay-server
                 port:
                   number: 8080
-    - host: rpc.onchainux.com
+    - host: rpc.cinaconnect.com
       http:
         paths:
           - path: /
@@ -68,7 +68,7 @@ spec:
                 name: rpc-proxy
                 port:
                   number: 8545
-    - host: api.onchainux.com
+    - host: api.cinaconnect.com
       http:
         paths:
           - path: /

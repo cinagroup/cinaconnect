@@ -1,20 +1,20 @@
-# Migration Guide: Reown/WalletConnect → OnChainUX
+# Migration Guide: Reown/WalletConnect → CinaConnect
 
-> Complete guide for migrating from Reown (WalletConnect) ecosystem to OnChainUX.
+> Complete guide for migrating from Reown (WalletConnect) ecosystem to CinaConnect.
 
 ## Overview
 
-OnChainUX is a fully self-hosted alternative to the Reown/WalletConnect stack. This guide covers:
+CinaConnect is a fully self-hosted alternative to the Reown/WalletConnect stack. This guide covers:
 
-- **WalletConnect v2** → **OnChainUX Relay**
-- **Web3Modal** → **OnChainUX UI Components**
-- **AppKit SDK** → **OnChainUX SDK**
+- **WalletConnect v2** → **CinaConnect Relay**
+- **Web3Modal** → **CinaConnect UI Components**
+- **AppKit SDK** → **CinaConnect SDK**
 - Infrastructure migration
 - Automated CLI migration tool
 
 ## Why Migrate?
 
-| Factor | Reown/WalletConnect | OnChainUX |
+| Factor | Reown/WalletConnect | CinaConnect |
 |--------|-------------------|-----------|
 | Monthly cost | $500–$5,000+ | $0 (self-hosted infrastructure costs only) |
 | MAU limit | 500 (free), unlimited (paid) | Unlimited |
@@ -25,7 +25,7 @@ OnChainUX is a fully self-hosted alternative to the Reown/WalletConnect stack. T
 
 ---
 
-## 1. WalletConnect v2 → OnChainUX Relay
+## 1. WalletConnect v2 → CinaConnect Relay
 
 ### Before (WalletConnect v2)
 
@@ -43,21 +43,21 @@ const provider = await WalletConnectProvider.init({
 await provider.enable()
 ```
 
-### After (OnChainUX)
+### After (CinaConnect)
 
 ```typescript
-import { OnChainUX } from '@onchainux/core'
-import { RelayTransport } from '@onchainux/transport-relay'
+import { CinaConnect } from '@cinaconnect/core'
+import { RelayTransport } from '@cinaconnect/transport-relay'
 
-const onchainux = new OnChainUX({
-  projectId: 'your-onchainux-project-id',
+const cinaconnect = new CinaConnect({
+  projectId: 'your-cinaconnect-project-id',
   relayUrl: 'wss://relay.yourdomain.com/v1',
   chains: [mainnet, polygon],
 })
 
 // Connect via injected wallet
-const connectors = onchainux.getConnectors()
-const result = await onchainux.connect(connectors[0])
+const connectors = cinaconnect.getConnectors()
+const result = await cinaconnect.connect(connectors[0])
 
 // Or via QR code (equivalent to WalletConnect)
 const qrTransport = new QRCodeTransport({
@@ -69,17 +69,17 @@ const uri = await qrTransport.getUri()
 
 ### Key Differences
 
-| Feature | WalletConnect | OnChainUX |
+| Feature | WalletConnect | CinaConnect |
 |---------|--------------|-----------|
 | Project ID | Reown Dashboard | Your own config |
 | Relay | Reown-hosted | Your Relay Server |
 | QR Modal | Built-in `showQrModal` | Use `ConnectModal` component |
-| Provider init | `WalletConnectProvider.init()` | `new OnChainUX(config)` |
-| Connection | `provider.enable()` | `onchainux.connect(connector)` |
+| Provider init | `WalletConnectProvider.init()` | `new CinaConnect(config)` |
+| Connection | `provider.enable()` | `cinaconnect.connect(connector)` |
 
 ---
 
-## 2. Web3Modal → OnChainUX UI Components
+## 2. Web3Modal → CinaConnect UI Components
 
 ### Before (Web3Modal / AppKit)
 
@@ -111,10 +111,10 @@ import { w3m-button } from '@web3modal/wagmi'
 <w3m-button />
 ```
 
-### After (OnChainUX React)
+### After (CinaConnect React)
 
 ```typescript
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 
 const config = {
   projectId: 'your-project-id',
@@ -125,16 +125,16 @@ const config = {
 
 function App() {
   return (
-    <OnChainUXProvider config={config}>
+    <CinaConnectProvider config={config}>
       <YourApp />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   )
 }
 ```
 
 ```tsx
 // In your component
-import { ConnectButton, ConnectModal } from '@onchainux/react'
+import { ConnectButton, ConnectModal } from '@cinaconnect/react'
 
 // Option 1: Simple connect button (equivalent to w3m-button)
 <ConnectButton
@@ -158,7 +158,7 @@ import { ConnectButton, ConnectModal } from '@onchainux/react'
 
 ### Component Mapping
 
-| Web3Modal Component | OnChainUX Equivalent |
+| Web3Modal Component | CinaConnect Equivalent |
 |--------------------|---------------------|
 | `<w3m-button />` | `<ConnectButton />` |
 | `<w3m-network-button />` | `<ChainSwitcher />` |
@@ -170,7 +170,7 @@ import { ConnectButton, ConnectModal } from '@onchainux/react'
 
 ---
 
-## 3. AppKit SDK → OnChainUX SDK
+## 3. AppKit SDK → CinaConnect SDK
 
 ### Before (AppKit)
 
@@ -190,10 +190,10 @@ function Component() {
 }
 ```
 
-### After (OnChainUX React)
+### After (CinaConnect React)
 
 ```typescript
-import { useOnChainUX, ConnectButton } from '@onchainux/react'
+import { useCinaConnect, ConnectButton } from '@cinaconnect/react'
 
 function Component() {
   const {
@@ -208,7 +208,7 @@ function Component() {
     balance,
     ensName,
     ensAvatar,
-  } = useOnChainUX()
+  } = useCinaConnect()
 
   const isConnected = status === 'connected'
 
@@ -222,15 +222,15 @@ function Component() {
 
 ### Hook Mapping
 
-| AppKit Hook | OnChainUX Hook |
+| AppKit Hook | CinaConnect Hook |
 |------------|----------------|
 | `useAppKit()` | Use `ConnectButton` or `ConnectModal` directly |
-| `useAppKitAccount()` | `useOnChainUX()` → `account`, `status`, `balance` |
-| `useAppKitProvider('eip155')` | `useOnChainUX()` → `connectors`, `connect()` |
-| `useAppKitState()` | `useOnChainUX()` → `status`, `chainId` |
-| `useDisconnect()` | `useOnChainUX()` → `disconnect()` |
-| `useSwitchChain()` | `useOnChainUX()` → `switchChain()` |
-| `useWalletInfo()` | `useOnChainUX()` → `connectors` |
+| `useAppKitAccount()` | `useCinaConnect()` → `account`, `status`, `balance` |
+| `useAppKitProvider('eip155')` | `useCinaConnect()` → `connectors`, `connect()` |
+| `useAppKitState()` | `useCinaConnect()` → `status`, `chainId` |
+| `useDisconnect()` | `useCinaConnect()` → `disconnect()` |
+| `useSwitchChain()` | `useCinaConnect()` → `switchChain()` |
+| `useWalletInfo()` | `useCinaConnect()` → `connectors` |
 
 ---
 
@@ -238,7 +238,7 @@ function Component() {
 
 ### Relay Server
 
-| Component | WalletConnect | OnChainUX |
+| Component | WalletConnect | CinaConnect |
 |-----------|--------------|-----------|
 | Relay | Reown Cloud | Your Rust Relay Server |
 | Protocol | WAMP over WebSocket | Custom protocol over WebSocket |
@@ -254,7 +254,7 @@ cargo build --release
 
 ### RPC Proxy
 
-| Component | WalletConnect | OnChainUX |
+| Component | WalletConnect | CinaConnect |
 |-----------|--------------|-----------|
 | RPC | Reown RPC | Your Go/Rust RPC Proxy |
 | Multi-Provider | No | Yes (intelligent routing) |
@@ -271,11 +271,11 @@ cargo build --release
 ### Helm Deployment
 
 ```bash
-# Deploy full OnChainUX infrastructure
-helm install onchainux ./deploy/helm/onchainux \
-  --namespace onchainux \
+# Deploy full CinaConnect infrastructure
+helm install cinaconnect ./deploy/helm/cinaconnect \
+  --namespace cinaconnect \
   --create-namespace \
-  --values ./deploy/helm/onchainux/values.yaml
+  --values ./deploy/helm/cinaconnect/values.yaml
 ```
 
 ---
@@ -284,12 +284,12 @@ helm install onchainux ./deploy/helm/onchainux \
 
 ### API Changes
 
-| WalletConnect/AppKit | OnChainUX | Notes |
+| WalletConnect/AppKit | CinaConnect | Notes |
 |---------------------|-----------|-------|
 | `projectId` from Reown Dashboard | Self-configured | Your own project ID |
-| `WalletConnectProvider.init()` | `new OnChainUX(config)` | Constructor pattern |
+| `WalletConnectProvider.init()` | `new CinaConnect(config)` | Constructor pattern |
 | `web3Modal.open()` | `ConnectModal` component / `connect()` | Component-based |
-| `provider.request({ method: '...' })` | `onchainux.signMessage()`, `signTransaction()` | Typed methods |
+| `provider.request({ method: '...' })` | `cinaconnect.signMessage()`, `signTransaction()` | Typed methods |
 | `eth_chainId` events | `chainChanged` event | Event naming |
 | `accountsChanged` callback | `accountChanged` event | Event naming |
 | `pairing` concept | Direct connection | No pairing layer |
@@ -297,7 +297,7 @@ helm install onchainux ./deploy/helm/onchainux \
 
 ### Behavioral Changes
 
-1. **No pairing layer** — OnChainUX connects directly without the WalletConnect pairing concept
+1. **No pairing layer** — CinaConnect connects directly without the WalletConnect pairing concept
 2. **Self-hosted relay** — You control the relay infrastructure
 3. **No cloud dependency** — Everything runs on your servers
 4. **Custom event system** — Different event names but equivalent functionality
@@ -307,24 +307,24 @@ helm install onchainux ./deploy/helm/onchainux \
 
 ## 6. Automated Migration CLI
 
-OnChainUX provides a CLI tool to automate parts of the migration.
+CinaConnect provides a CLI tool to automate parts of the migration.
 
 ### Install
 
 ```bash
-npm install -g @onchainux/cli
+npm install -g @cinaconnect/cli
 # or
-npx @onchainux/cli
+npx @cinaconnect/cli
 ```
 
 ### Migrate
 
 ```bash
 # Scan and migrate a project directory
-onchainux migrate ./my-dapp-project
+cinaconnect migrate ./my-dapp-project
 
 # Options:
-onchainux migrate ./my-dapp-project \
+cinaconnect migrate ./my-dapp-project \
   --framework react \
   --relay-url wss://relay.yourdomain.com/v1 \
   --output-dir ./migrated \
@@ -334,7 +334,7 @@ onchainux migrate ./my-dapp-project \
 ### What the CLI does:
 
 1. **Scan** — Finds `@walletconnect`, `@web3modal`, `@reown/appkit` imports
-2. **Transform** — Replaces imports with OnChainUX equivalents
+2. **Transform** — Replaces imports with CinaConnect equivalents
 3. **Generate** — Creates new component wrappers
 4. **Report** — Shows a diff of all changes
 
@@ -349,9 +349,9 @@ Files modified: 12
 Files unchanged: 35
 
 Changes:
-  ✅ @walletconnect/ethereum-provider → @onchainux/core (3 files)
-  ✅ @web3modal/wagmi → @onchainux/react (5 files)
-  ✅ @reown/appkit/react → @onchainux/react (4 files)
+  ✅ @walletconnect/ethereum-provider → @cinaconnect/core (3 files)
+  ✅ @web3modal/wagmi → @cinaconnect/react (5 files)
+  ✅ @reown/appkit/react → @cinaconnect/react (4 files)
   ⚠️  Manual review needed: custom provider logic (2 files)
   ⚠️  Manual review needed: session event handlers (1 file)
 
@@ -368,16 +368,16 @@ Next steps:
 
 ### Pre-Migration
 
-- [ ] Set up OnChainUX Relay Server
-- [ ] Set up OnChainUX RPC Proxy
+- [ ] Set up CinaConnect Relay Server
+- [ ] Set up CinaConnect RPC Proxy
 - [ ] Deploy to staging environment
 - [ ] Configure chains and wallet registry
 - [ ] Set up monitoring and alerting
 
 ### Code Migration
 
-- [ ] Replace `@walletconnect` imports with `@onchainux/core`
-- [ ] Replace `@web3modal` / `@reown/appkit` with `@onchainux/react`
+- [ ] Replace `@walletconnect` imports with `@cinaconnect/core`
+- [ ] Replace `@web3modal` / `@reown/appkit` with `@cinaconnect/react`
 - [ ] Update connection flow logic
 - [ ] Update event handlers
 - [ ] Update theme/styling configuration
@@ -409,17 +409,17 @@ Next steps:
 
 If issues arise during migration:
 
-1. **Keep WalletConnect dependencies** — Install OnChainUX alongside (not replacing)
+1. **Keep WalletConnect dependencies** — Install CinaConnect alongside (not replacing)
 2. **Feature flag** — Use a feature flag to switch between providers
 3. **Gradual rollout** — Migrate a percentage of users first
 
 ```typescript
 // Feature flag approach
-const useOnChainUX = process.env.USE_ONCHAINUX === 'true'
+const useCinaConnect = process.env.USE_ONCHAINUX === 'true'
 
 function ConnectButton() {
-  if (useOnChainUX) {
-    return <OnChainUXConnectButton />
+  if (useCinaConnect) {
+    return <CinaConnectConnectButton />
   }
   return <Web3ModalButton />
 }

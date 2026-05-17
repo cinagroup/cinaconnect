@@ -1,6 +1,6 @@
 # Environment Variables Reference
 
-> Complete environment variable documentation for all OnChainUX services.
+> Complete environment variable documentation for all CinaConnect services.
 
 ## Table of Contents
 

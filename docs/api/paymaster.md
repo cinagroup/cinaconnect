@@ -1,10 +1,10 @@
 # Paymaster Contract
 
-> `@onchainux/paymaster` — ERC-4337 Paymaster contracts for gas sponsorship.
+> `@cinaconnect/paymaster` — ERC-4337 Paymaster contracts for gas sponsorship.
 
 ## Overview
 
-OnChainUX Paymaster contracts allow dApps to sponsor gas fees for their users, enabling gasless transactions. Users interact with smart accounts without holding native tokens — the Paymaster covers the gas cost through various business models.
+CinaConnect Paymaster contracts allow dApps to sponsor gas fees for their users, enabling gasless transactions. Users interact with smart accounts without holding native tokens — the Paymaster covers the gas cost through various business models.
 
 ## Architecture
 
@@ -32,7 +32,7 @@ OnChainUX Paymaster contracts allow dApps to sponsor gas fees for their users, e
 
 ## Contract Types
 
-### OnChainUXPaymaster (Base)
+### CinaConnectPaymaster (Base)
 
 The core Paymaster contract implementing `IPaymaster` from the ERC-4337 spec.
 
@@ -75,7 +75,7 @@ cast send $ENTRY_POINT "depositTo(address)" $PAYMASTER --value 1ether
 Uses an off-chain signer to authorize gas sponsorship. The dApp backend signs a hash of the UserOp, and the Paymaster verifies the signature on-chain.
 
 ```solidity
-contract VerifyingPaymaster is OnChainUXPaymaster {
+contract VerifyingPaymaster is CinaConnectPaymaster {
     address public verifyingSigner;
 
     function setSigner(address newSigner) external onlyOwner {
@@ -124,7 +124,7 @@ userOp.paymasterData = abi.encode(signature, abi.encode(validUntil))
 Allows users to pay gas fees in ERC-20 tokens instead of native tokens.
 
 ```solidity
-contract TokenPaymaster is OnChainUXPaymaster {
+contract TokenPaymaster is CinaConnectPaymaster {
     IERC20 public immutable token;
     uint256 public priceDenominator;
     mapping(address => uint256) public userBalances;
@@ -163,7 +163,7 @@ A UUPS-upgradeable version of the Paymaster for safe contract upgrades.
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 
 contract UpgradeablePaymaster is
-    OnChainUXPaymaster,
+    CinaConnectPaymaster,
     UUPSUpgradeable
 {
     function initialize(address _owner, address _entryPoint) external initializer {
@@ -245,7 +245,7 @@ dApps subscribe to the Paymaster service and pay a flat monthly fee.
 ## SDK Usage
 
 ```typescript
-import { UserOperationBuilder } from '@onchainux/core'
+import { UserOperationBuilder } from '@cinaconnect/core'
 
 const userOp = new UserOperationBuilder()
   .sender(smartAccountAddress)
@@ -273,7 +273,7 @@ const hash = await bundler.sendUserOperation(userOp)
 cd packages/paymaster
 
 # Deploy base Paymaster
-forge create contracts/OnChainUXPaymaster.sol:OnChainUXPaymaster \
+forge create contracts/CinaConnectPaymaster.sol:CinaConnectPaymaster \
   --rpc-url $RPC_URL \
   --private-key $DEPLOYER_KEY \
   --constructor-args $ENTRY_POINT

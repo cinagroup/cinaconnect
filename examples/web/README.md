@@ -1,6 +1,6 @@
-# OnChainUX Web Example
+# CinaConnect Web Example
 
-> 完整的 Web dApp 示例，展示 OnChainUX 核心功能。
+> 完整的 Web dApp 示例，展示 CinaConnect 核心功能。
 
 ## 功能
 
@@ -22,4 +22,4 @@ npm run dev
 
 - React 18 + TypeScript
 - Vite
-- OnChainUX Core SDK + React Adapter
+- CinaConnect Core SDK + React Adapter

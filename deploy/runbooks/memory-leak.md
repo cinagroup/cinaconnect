@@ -20,8 +20,8 @@
 ### Step 1: Check Pod Events for OOMKill
 
 ```bash
-kubectl get events -n onchainux --field-selector reason=OOMKilling
-kubectl describe pod -l app=relay-server -n onchainux | grep -A5 "Last State"
+kubectl get events -n cinaconnect --field-selector reason=OOMKilling
+kubectl describe pod -l app=relay-server -n cinaconnect | grep -A5 "Last State"
 ```
 
 ### Step 2: Check Memory Usage Trend
@@ -35,10 +35,10 @@ In Grafana:
 
 ```bash
 # Get the pod name
-POD=$(kubectl get pods -n onchainux -l app=relay-server -o jsonpath='{.items[0].metadata.name}')
+POD=$(kubectl get pods -n cinaconnect -l app=relay-server -o jsonpath='{.items[0].metadata.name}')
 
 # Collect heap profile via debug endpoint
-kubectl exec -it $POD -n onchainux -- curl http://localhost:9090/debug/pprof/heap > heap.prof
+kubectl exec -it $POD -n cinaconnect -- curl http://localhost:9090/debug/pprof/heap > heap.prof
 
 # Analyze with go tool pprof (or equivalent for Rust)
 go tool pprof -top heap.prof
@@ -47,14 +47,14 @@ go tool pprof -top heap.prof
 ### Step 4: Check Go Memory Stats (RPC Proxy)
 
 ```bash
-POD=$(kubectl get pods -n onchainux -l app=rpc-proxy -o jsonpath='{.items[0].metadata.name}')
-kubectl exec -it $POD -n onchainux -- curl http://localhost:9090/debug/pprof/heap > rpc-heap.prof
+POD=$(kubectl get pods -n cinaconnect -l app=rpc-proxy -o jsonpath='{.items[0].metadata.name}')
+kubectl exec -it $POD -n cinaconnect -- curl http://localhost:9090/debug/pprof/heap > rpc-heap.prof
 ```
 
 ### Step 5: Check System Memory
 
 ```bash
-kubectl top pods -n onchainux
+kubectl top pods -n cinaconnect
 kubectl top nodes
 ```
 
@@ -66,15 +66,15 @@ kubectl top nodes
 
 ```bash
 # Restart affected pods
-kubectl rollout restart deployment relay-server -n onchainux
-kubectl rollout restart deployment rpc-proxy -n onchainux
+kubectl rollout restart deployment relay-server -n cinaconnect
+kubectl rollout restart deployment rpc-proxy -n cinaconnect
 ```
 
 ### Short-term:
 
 1. Increase memory limits temporarily:
 ```bash
-kubectl patch deployment relay-server -n onchainux -p '{"spec":{"template":{"spec":{"containers":[{"name":"relay","resources":{"limits":{"memory":"3Gi"}}}]}}}}'
+kubectl patch deployment relay-server -n cinaconnect -p '{"spec":{"template":{"spec":{"containers":[{"name":"relay","resources":{"limits":{"memory":"3Gi"}}}]}}}}'
 ```
 
 2. Reduce connection limits if under load:

@@ -1,18 +1,18 @@
-# OnChainUX — Error Budget Tracking Configuration
+# CinaConnect — Error Budget Tracking Configuration
 # Integrates with Prometheus/Grafana for real-time error budget monitoring
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: onchainux-error-budget
+  name: cinaconnect-error-budget
   namespace: monitoring
   labels:
-    project: onchainux
+    project: cinaconnect
     component: error-budget
 data:
   error-budget-rules.yaml: |
     groups:
-      - name: onchainux-error-budget
+      - name: cinaconnect-error-budget
         rules:
           # ── Relay Server Error Budget ──────────────────────────
           - record: relay_error_budget_remaining
@@ -75,7 +75,7 @@ data:
                 sum(rate(keys_requests_total[30d]))
               ) / (1 - 0.9999)
 
-      - name: onchainux-error-budget-alerts
+      - name: cinaconnect-error-budget-alerts
         rules:
           # Fast burn alerts (critical)
           - alert: RelayErrorBudgetFastBurn
@@ -86,7 +86,7 @@ data:
             for: 2m
             labels:
               severity: critical
-              team: onchainux
+              team: cinaconnect
               budget: relay
             annotations:
               summary: "Relay server error budget fast burn"
@@ -100,7 +100,7 @@ data:
             for: 2m
             labels:
               severity: critical
-              team: onchainux
+              team: cinaconnect
               budget: rpc-proxy
             annotations:
               summary: "RPC proxy error budget fast burn"
@@ -115,7 +115,7 @@ data:
             for: 15m
             labels:
               severity: warning
-              team: onchainux
+              team: cinaconnect
               budget: relay
             annotations:
               summary: "Relay server error budget slow burn"
@@ -130,7 +130,7 @@ data:
             for: 5m
             labels:
               severity: warning
-              team: onchainux
+              team: cinaconnect
             annotations:
               summary: "Error budget below 25%"
               description: "{{ $labels.budget }} error budget has less than 25% remaining."

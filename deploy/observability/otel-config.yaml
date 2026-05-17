@@ -1,5 +1,5 @@
 # OpenTelemetry Collector Configuration
-# Collects traces from all OnChainUX services → Jaeger
+# Collects traces from all CinaConnect services → Jaeger
 # Collects logs → Loki
 # Collects metrics → Prometheus
 
@@ -27,7 +27,7 @@ processors:
   attributes:
     actions:
       - key: service.namespace
-        value: onchainux
+        value: cinaconnect
         action: upsert
       - key: deployment.environment
         value: production
@@ -41,7 +41,7 @@ exporters:
 
   prometheus:
     endpoint: 0.0.0.0:8889
-    namespace: onchainux
+    namespace: cinaconnect
 
   loki:
     endpoint: http://loki:3100/loki/api/v1/push

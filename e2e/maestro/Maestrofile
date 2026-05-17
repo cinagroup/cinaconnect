@@ -1,4 +1,4 @@
-appId: com.onchainux.demo
+appId: com.cinaconnect.demo
 flows:
   - flows/connect_wallet.yaml
   - flows/send_transaction.yaml

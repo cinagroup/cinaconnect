@@ -1,4 +1,4 @@
-// OnChainUXExample/SwapView.swift
+// CinaConnectExample/SwapView.swift
 // Swap 交易视图
 
 import SwiftUI

@@ -1,13 +1,13 @@
 # iOS 示例
 
-> iOS 原生 Swift 示例，展示 OnChainUX iOS SDK 集成。
+> iOS 原生 Swift 示例，展示 CinaConnect iOS SDK 集成。
 
 ## 目录结构
 
 ```
 examples/ios/
-├── OnChainUXExample.xcodeproj/     # Xcode 项目
-├── OnChainUXExample/
+├── CinaConnectExample.xcodeproj/     # Xcode 项目
+├── CinaConnectExample/
 │   ├── ContentView.swift           # 主视图
 │   ├── ConnectView.swift           # 连接视图
 │   └── SwapView.swift              # Swap 视图
@@ -16,7 +16,7 @@ examples/ios/
 
 ## 运行示例
 
-1. 用 Xcode 打开 `OnChainUXExample.xcodeproj`
+1. 用 Xcode 打开 `CinaConnectExample.xcodeproj`
 2. 选择目标设备（模拟器或真机）
 3. 点击 Run (⌘R)
 
@@ -57,10 +57,10 @@ Swap 操作界面：
 ## iOS SDK 使用
 
 ```swift
-import OnChainUX
+import CinaConnect
 
 // 初始化
-let config = OnChainUXConfig(
+let config = CinaConnectConfig(
     projectId: "your-project-id",
     relayUrl: "wss://relay.yourdomain.com/v1",
     chains: [
@@ -69,10 +69,10 @@ let config = OnChainUXConfig(
     ]
 )
 
-let onchainux = OnChainUX(config: config)
+let cinaconnect = CinaConnect(config: config)
 
 // 连接
-onchainux.connect(walletId: "metamask") { result in
+cinaconnect.connect(walletId: "metamask") { result in
     switch result {
     case .success(let connection):
         print("Connected: \(connection.address)")
@@ -82,7 +82,7 @@ onchainux.connect(walletId: "metamask") { result in
 }
 
 // 监听状态
-onchainux.onAccountChange { address in
+cinaconnect.onAccountChange { address in
     print("Account changed: \(address)")
 }
 ```
@@ -96,10 +96,10 @@ onchainux.onAccountChange { address in
 <array>
     <dict>
         <key>CFBundleURLName</key>
-        <string>com.onchainux.example</string>
+        <string>com.cinaconnect.example</string>
         <key>CFBundleURLSchemes</key>
         <array>
-            <string>onchainux-example</string>
+            <string>cinaconnect-example</string>
         </array>
     </dict>
 </array>

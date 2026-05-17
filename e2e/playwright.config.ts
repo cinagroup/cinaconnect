@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright E2E configuration for OnChainUX.
+ * Playwright E2E configuration for CinaConnect.
  *
  * Usage:
  *   npx playwright test              — run all tests

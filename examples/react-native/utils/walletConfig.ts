@@ -1,5 +1,5 @@
 /**
- * OnChainUX 钱包配置
+ * CinaConnect 钱包配置
  *
  * 预置的钱包列表，包含图标、RDNS、下载链接等信息。
  */

@@ -1,4 +1,4 @@
-# Monthly Ops Checklist — OnChainUX
+# Monthly Ops Checklist — CinaConnect
 
 ---
 

@@ -1,4 +1,4 @@
-# OnChainUX — SSL/TLS Configuration
+# CinaConnect — SSL/TLS Configuration
 # Production-grade TLS settings for all ingress points
 ---
 apiVersion: cert-manager.io/v1
@@ -8,7 +8,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: ops@onchainux.com
+    email: ops@cinaconnect.com
     privateKeySecretRef:
       name: letsencrypt-prod-private-key
     solvers:
@@ -23,7 +23,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: ops@onchainux.com
+    email: ops@cinaconnect.com
     privateKeySecretRef:
       name: letsencrypt-staging-private-key
     solvers:
@@ -35,17 +35,17 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: onchainux-wildcard
-  namespace: onchainux
+  name: cinaconnect-wildcard
+  namespace: cinaconnect
 spec:
-  secretName: onchainux-tls
+  secretName: cinaconnect-tls
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
-  commonName: "*.onchainux.com"
+  commonName: "*.cinaconnect.com"
   dnsNames:
-    - onchainux.com
-    - "*.onchainux.com"
+    - cinaconnect.com
+    - "*.cinaconnect.com"
   renewBefore: 720h
   privateKey:
     algorithm: ECDSA
@@ -58,17 +58,17 @@ spec:
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: onchainux-internal
-  namespace: onchainux
+  name: cinaconnect-internal
+  namespace: cinaconnect
 spec:
-  secretName: onchainux-internal-tls
+  secretName: cinaconnect-internal-tls
   issuerRef:
-    name: onchainux-ca
+    name: cinaconnect-ca
     kind: ClusterIssuer
-  commonName: "*.onchainux.svc.cluster.local"
+  commonName: "*.cinaconnect.svc.cluster.local"
   dnsNames:
-    - "*.onchainux.svc.cluster.local"
-    - "*.onchainux.svc"
+    - "*.cinaconnect.svc.cluster.local"
+    - "*.cinaconnect.svc"
   renewBefore: 720h
   privateKey:
     algorithm: ECDSA

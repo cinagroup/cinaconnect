@@ -2,7 +2,7 @@
 
 > **目标**: 实现 ERC-4337 智能账户、Bundler、Paymaster 以及 Swap/On-Ramp 支付能力  
 > **时间**: M4-M5  
-> **产出物**: `bundler`, `paymaster`, `@onchainux/pay`, `@onchainux/swap`
+> **产出物**: `bundler`, `paymaster`, `@cinaconnect/pay`, `@cinaconnect/swap`
 
 ---
 
@@ -225,7 +225,7 @@ import "@account-abstraction/contracts/interfaces/IPaymaster.sol";
 import "@account-abstraction/contracts/interfaces/IEntryPoint.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract OnChainUXPaymaster is IPaymaster, Ownable {
+contract CinaConnectPaymaster is IPaymaster, Ownable {
     IEntryPoint public immutable entryPoint;
     
     // 赞助模式

@@ -51,8 +51,8 @@ Changeset files are located in `.changeset/*.md`. Each file describes a change t
 
 ```markdown
 ---
-"@onchainux/core-sdk": patch
-"@onchainux/core-ui": minor
+"@cinaconnect/core-sdk": patch
+"@cinaconnect/core-ui": minor
 ---
 
 Add Solana chain adapter support

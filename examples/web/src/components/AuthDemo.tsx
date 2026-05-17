@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useOnChainUX } from '@onchainux/react'
+import { useCinaConnect } from '@cinaconnect/react'
 import { SiweMessage } from 'siwe'
 
 /**
@@ -22,7 +22,7 @@ interface Session {
 }
 
 export function AuthDemo() {
-  const { account, signMessage, chainId } = useOnChainUX()
+  const { account, signMessage, chainId } = useCinaConnect()
   const [authStatus, setAuthStatus] = useState<
     'idle' | 'signing' | 'verifying' | 'success' | 'error'
   >('idle')
@@ -40,7 +40,7 @@ export function AuthDemo() {
     const message = new SiweMessage({
       domain,
       address: account || '',
-      statement: 'Sign in to OnChainUX Demo',
+      statement: 'Sign in to CinaConnect Demo',
       uri: window.location.origin,
       version: '1',
       chainId: chainId || 1,
@@ -95,7 +95,7 @@ export function AuthDemo() {
       }
 
       // Store session
-      localStorage.setItem('onchainux_session', JSON.stringify(sessionData))
+      localStorage.setItem('cinaconnect_session', JSON.stringify(sessionData))
       setSession(sessionData)
       setAuthStatus('success')
     } catch (error) {
@@ -106,7 +106,7 @@ export function AuthDemo() {
   }
 
   const handleSignOut = () => {
-    localStorage.removeItem('onchainux_session')
+    localStorage.removeItem('cinaconnect_session')
     setSession(null)
     setAuthStatus('idle')
     setAuthResult(null)
@@ -115,7 +115,7 @@ export function AuthDemo() {
 
   // Restore session on mount
   useState(() => {
-    const saved = localStorage.getItem('onchainux_session')
+    const saved = localStorage.getItem('cinaconnect_session')
     if (saved) {
       try {
         const s = JSON.parse(saved)
@@ -124,7 +124,7 @@ export function AuthDemo() {
           setAuthStatus('success')
         }
       } catch {
-        localStorage.removeItem('onchainux_session')
+        localStorage.removeItem('cinaconnect_session')
       }
     }
   })

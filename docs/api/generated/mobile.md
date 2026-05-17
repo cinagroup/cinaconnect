@@ -1,30 +1,30 @@
 # Mobile SDK — Generated API Overview
 
-> Auto-generated reference for `@onchainux/react-native` and `@onchainux/core`. For the hand-written guide, see [Mobile SDK API](../../api/mobile.md).
+> Auto-generated reference for `@cinaconnect/react-native` and `@cinaconnect/core`. For the hand-written guide, see [Mobile SDK API](../../api/mobile.md).
 
 ## Entry Points
 
 | Package | Entry |
 |---------|-------|
-| `@onchainux/react-native` | `packages/react-native/src/index.ts` |
-| `@onchainux/core` | `packages/core-sdk/src/index.ts` |
+| `@cinaconnect/react-native` | `packages/react-native/src/index.ts` |
+| `@cinaconnect/core` | `packages/core-sdk/src/index.ts` |
 
 ## Key Exports (React Native)
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `OnChainUXProvider` | Component | Top-level provider for RN apps |
+| `CinaConnectProvider` | Component | Top-level provider for RN apps |
 | `ConnectButton` | Component | Mobile connect button |
 | `ConnectModal` | Component | Mobile wallet selection modal |
 | `WalletList` | Component | Wallet list component |
 | `ChainSwitcher` | Component | Chain switcher component |
-| `useOnChainUX` | Hook | React hook for OnChainUX context |
+| `useCinaConnect` | Hook | React hook for CinaConnect context |
 
 ## Key Exports (Core — shared with mobile)
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `OnChainUX` | Class | Main SDK entry point |
+| `CinaConnect` | Class | Main SDK entry point |
 | `SessionManager` | Class | Session persistence (AsyncStorage) |
 | `discoverWallets` | Function | EIP-6963 discovery |
 

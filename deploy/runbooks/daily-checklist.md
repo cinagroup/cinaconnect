@@ -1,4 +1,4 @@
-# Daily Ops Checklist — OnChainUX
+# Daily Ops Checklist — CinaConnect
 
 ---
 
@@ -40,7 +40,7 @@
 - [ ] Search for ERROR-level logs in last 24h
 ```bash
 # In Loki/Grafana Explore
-{namespace="onchainux"} |= "ERROR"
+{namespace="cinaconnect"} |= "ERROR"
 ```
 
 ---

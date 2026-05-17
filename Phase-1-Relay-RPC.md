@@ -158,7 +158,7 @@ impl RelayServer {
 
 ```yaml
 # WebSocket 端点
-ws://relay.onchainux.com/v1
+ws://relay.cinaconnect.com/v1
 
 # HTTP 端点
 POST /v1/pairing          # 创建 pairing (返回 URI)
@@ -224,7 +224,7 @@ spec:
     spec:
       containers:
       - name: relay
-        image: onchainux/relay-server:latest
+        image: cinaconnect/relay-server:latest
         ports:
         - containerPort: 8080  # WebSocket
         - containerPort: 8081  # HTTP Admin
@@ -493,7 +493,7 @@ rate_limit:
 ### 3.1 SDK 架构
 
 ```
-@onchainux/core
+@cinaconnect/core
 ├── packages/
 │   ├── core/            # 核心抽象层
 │   │   ├── connector.ts      # 连接器基类
@@ -636,12 +636,12 @@ interface SessionManager {
 ### 3.5 SDK 使用示例
 
 ```typescript
-import { OnChainUX } from '@onchainux/core';
-import { EvmAdapter } from '@onchainux/adapter-evm';
-import { RelayTransport } from '@onchainux/transport-relay';
+import { CinaConnect } from '@cinaconnect/core';
+import { EvmAdapter } from '@cinaconnect/adapter-evm';
+import { RelayTransport } from '@cinaconnect/transport-relay';
 
 // 初始化
-const onchainux = new OnChainUX({
+const cinaconnect = new CinaConnect({
   relayUrl: 'wss://relay.yourdomain.com/v1',
   projectId: 'your-project-id',
   chains: [
@@ -652,23 +652,23 @@ const onchainux = new OnChainUX({
 });
 
 // 注册适配器
-onchainux.registerAdapter(new EvmAdapter());
+cinaconnect.registerAdapter(new EvmAdapter());
 
 // 注册传输层
-onchainux.registerTransport(new RelayTransport({
+cinaconnect.registerTransport(new RelayTransport({
   url: 'wss://relay.yourdomain.com/v1',
 }));
 
 // 连接钱包
-const connectors = onchainux.getConnectors();
-const [selected] = await onchainux.connect(connectors[0]);
+const connectors = cinaconnect.getConnectors();
+const [selected] = await cinaconnect.connect(connectors[0]);
 
 // 状态监听
-onchainux.on('accountChanged', (accounts) => {
+cinaconnect.on('accountChanged', (accounts) => {
   console.log('Account changed:', accounts);
 });
 
-onchainux.on('chainChanged', (chainId) => {
+cinaconnect.on('chainChanged', (chainId) => {
   console.log('Chain changed:', chainId);
 });
 ```

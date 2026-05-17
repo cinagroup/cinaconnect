@@ -1,10 +1,10 @@
-// OnChainUXExample/ConnectView.swift
+// CinaConnectExample/ConnectView.swift
 // 钱包连接视图
 
 import SwiftUI
 
 struct ConnectView: View {
-    @ObservedObject var onchainux = OnChainUX.shared
+    @ObservedObject var cinaconnect = CinaConnect.shared
     @State private var showWalletSheet = false
 
     let wallets: [WalletInfo] = [
@@ -32,7 +32,7 @@ struct ConnectView: View {
                     HStack {
                         Text("地址")
                         Spacer()
-                        Text(onchainux.account.map { truncated($0) } ?? "未连接")
+                        Text(cinaconnect.account.map { truncated($0) } ?? "未连接")
                             .font(.system(.body, design: .monospaced))
                             .foregroundColor(.secondary)
                     }
@@ -45,7 +45,7 @@ struct ConnectView: View {
                 Button(action: { showWalletSheet = true }) {
                     HStack {
                         Image(systemName: "link")
-                        Text(onchainux.isConnected ? "更换钱包" : "连接钱包")
+                        Text(cinaconnect.isConnected ? "更换钱包" : "连接钱包")
                             .fontWeight(.semibold)
                     }
                     .frame(maxWidth: .infinity)
@@ -56,9 +56,9 @@ struct ConnectView: View {
                 }
 
                 // 断开连接
-                if onchainux.isConnected {
+                if cinaconnect.isConnected {
                     Button(action: {
-                        Task { await onchainux.disconnect() }
+                        Task { await cinaconnect.disconnect() }
                     }) {
                         Text("断开连接")
                             .frame(maxWidth: .infinity)
@@ -80,7 +80,7 @@ struct ConnectView: View {
                             WalletRow(wallet: wallet)
                                 .onTapGesture {
                                     showWalletSheet = false
-                                    Task { await onchainux.connect(walletId: wallet.id) }
+                                    Task { await cinaconnect.connect(walletId: wallet.id) }
                                 }
                         }
                     }
@@ -95,9 +95,9 @@ struct ConnectView: View {
     private var statusBadge: some View {
         HStack {
             Circle()
-                .fill(onchainux.isConnected ? Color.green : Color.gray)
+                .fill(cinaconnect.isConnected ? Color.green : Color.gray)
                 .frame(width: 8, height: 8)
-            Text(onchainux.isConnected ? "已连接" : "未连接")
+            Text(cinaconnect.isConnected ? "已连接" : "未连接")
                 .foregroundColor(.secondary)
         }
     }

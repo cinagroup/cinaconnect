@@ -1,34 +1,34 @@
 # 03 — Mobile & Multi-Platform SDK Gap Analysis
 
-> **CinaAuth/OnChainUX vs Reown (ex-WalletConnect)**
+> **CinaAuth/CinaConnect vs Reown (ex-WalletConnect)**
 > Generated: 2026-05-16 | Part of the competitive analysis series
 
 ---
 
 ## Executive Summary
 
-Reown has invested years into building **six distinct native/mobile SDKs** covering the full spectrum of mobile and game development platforms. CinaAuth/OnChainUX currently has **one mobile adapter** — a React Native wrapper built with stub/mock connection logic.
+Reown has invested years into building **six distinct native/mobile SDKs** covering the full spectrum of mobile and game development platforms. CinaAuth/CinaConnect currently has **one mobile adapter** — a React Native wrapper built with stub/mock connection logic.
 
-The gap is **structural, not cosmetic**. OnChainUX's RN package (v0.1.0, 5 source files) provides UI component scaffolding only — the actual wallet connection layer (`connect()`, `disconnect()`, `switchChain()`) is mocked with `setTimeout`. There is no WalletConnect protocol integration, no injected wallet detection, no deep linking, and no push notification support.
+The gap is **structural, not cosmetic**. CinaConnect's RN package (v0.1.0, 5 source files) provides UI component scaffolding only — the actual wallet connection layer (`connect()`, `disconnect()`, `switchChain()`) is mocked with `setTimeout`. There is no WalletConnect protocol integration, no injected wallet detection, no deep linking, and no push notification support.
 
-**Verdict**: OnChainUX's mobile story is "UI skin without a wallet engine." Building production mobile support requires 3–6 months of foundational protocol work across multiple platforms.
+**Verdict**: CinaConnect's mobile story is "UI skin without a wallet engine." Building production mobile support requires 3–6 months of foundational protocol work across multiple platforms.
 
 ---
 
 ## 1. Platform Coverage Matrix
 
-| Platform | Reown SDK | CinaAuth/OnChainUX | Gap |
+| Platform | Reown SDK | CinaAuth/CinaConnect | Gap |
 |---|---|---|---|
 | **iOS (Swift)** | reown-swift (108★, 105 forks) | ❌ None | **Critical** |
 | **Android (Kotlin)** | reown-kotlin (56★, 29 forks) | ❌ None | **Critical** |
-| **React Native** | appkit-react-native (123★, 40 forks) | ✅ @onchainux/react-native v0.1.0 | **Major** (stub logic) |
+| **React Native** | appkit-react-native (123★, 40 forks) | ✅ @cinaconnect/react-native v0.1.0 | **Major** (stub logic) |
 | **Flutter** | reown_flutter (59★, 65 forks) | ❌ None | **Critical** |
 | **Unity / .NET** | reown-dotnet (36★, 13 forks) | ❌ None | **Major** |
 | **Rust (native lib)** | reown-rust (41★, 17 forks) | ❌ None | **Major** |
-| **Web (JS)** | appkit (appkit.js) | ✅ @onchainux/react, @onchainux/vue | Moderate |
-| **Web (WC)** | appkit-web | ⚠️ @onchainux/core-ui (planned) | Moderate |
+| **Web (JS)** | appkit (appkit.js) | ✅ @cinaconnect/react, @cinaconnect/vue | Moderate |
+| **Web (WC)** | appkit-web | ⚠️ @cinaconnect/core-ui (planned) | Moderate |
 
-**Score**: Reown covers 8 platform targets. OnChainUX covers 3 (RN, React, Vue), with only web targets being functional.
+**Score**: Reown covers 8 platform targets. CinaConnect covers 3 (RN, React, Vue), with only web targets being functional.
 
 ---
 
@@ -36,7 +36,7 @@ The gap is **structural, not cosmetic**. OnChainUX's RN package (v0.1.0, 5 sourc
 
 ### 2.1 React Native — The Only Overlap
 
-| Feature | Reown appkit-react-native | OnChainUX react-native | Gap |
+| Feature | Reown appkit-react-native | CinaConnect react-native | Gap |
 |---|---|---|---|
 | Package version | Published, stable | v0.1.0 (dev) | Major |
 | ConnectButton | Full state management | ✅ UI only, mock state | Major |
@@ -57,11 +57,11 @@ The gap is **structural, not cosmetic**. OnChainUX's RN package (v0.1.0, 5 sourc
 | Multichain | Simultaneous multi-chain sessions | ❌ | Critical |
 | Session persistence | Secure storage | ❌ In-memory only | Major |
 
-**Bottom line**: OnChainUX's RN package has the **shape** of a mobile SDK (components, props, types, themes) but none of the **substance** (protocol, networking, cryptography).
+**Bottom line**: CinaConnect's RN package has the **shape** of a mobile SDK (components, props, types, themes) but none of the **substance** (protocol, networking, cryptography).
 
 ### 2.2 Source File Comparison
 
-| Metric | Reown appkit-react-native | OnChainUX react-native |
+| Metric | Reown appkit-react-native | CinaConnect react-native |
 |---|---|---|
 | Total source files | ~50+ (estimated from repo size 17MB) | **5 files** |
 | Lines of code | ~5,000+ | **~500** |
@@ -70,7 +70,7 @@ The gap is **structural, not cosmetic**. OnChainUX's RN package (v0.1.0, 5 sourc
 | Documentation | Reown docs site | ❌ None beyond JSDoc |
 | CI/CD | Full pipeline | Basic tsc build |
 
-### 2.3 OnChainUX RN Package Structure
+### 2.3 CinaConnect RN Package Structure
 
 ```
 packages/react-native/
@@ -78,7 +78,7 @@ packages/react-native/
 ├── tsconfig.json
 └── src/
     ├── index.ts           # 4 exports
-    ├── OnChainUXProvider.tsx  # Context + mock connect/disconnect/switchChain
+    ├── CinaConnectProvider.tsx  # Context + mock connect/disconnect/switchChain
     ├── ConnectButton.tsx       # TouchableOpacity-based button
     ├── ConnectModal.tsx        # Modal with wallet/social/email/scan tabs
     └── QRScanner.tsx           # Placeholder with simulated scan button
@@ -103,7 +103,7 @@ No dependencies on WalletConnect libraries, no crypto, no networking, no native 
 - Native QR code generation for WalletConnect URI display
 - Multi-chain support (EVM, Solana, Bitcoin, Polkadot, etc.)
 
-### 3.2 What OnChainUX Would Need to Build
+### 3.2 What CinaConnect Would Need to Build
 
 Building native iOS and Android SDKs requires:
 
@@ -132,7 +132,7 @@ Building native iOS and Android SDKs requires:
 
 ### 3.3 Strategic Question: Build Native vs. Use Reown's SDK?
 
-Since OnChainUX's core connects *through* WalletConnect v2 (the protocol is open), the choice is:
+Since CinaConnect's core connects *through* WalletConnect v2 (the protocol is open), the choice is:
 
 | Approach | Pros | Cons |
 |---|---|---|
@@ -154,7 +154,7 @@ Reown's Flutter SDK provides:
 - Integration with popular Flutter web3 libraries
 - Push notification support via flutter_local_notifications
 
-**OnChainUX gap**: No Flutter SDK exists. The Phase 2 design doc mentions Web Components (Lit) as the core rendering layer — these **do not work in Flutter** without a WebView wrapper, which is inadequate for wallet connection UX.
+**CinaConnect gap**: No Flutter SDK exists. The Phase 2 design doc mentions Web Components (Lit) as the core rendering layer — these **do not work in Flutter** without a WebView wrapper, which is inadequate for wallet connection UX.
 
 ### 4.2 Unity / .NET (reown-dotnet: 36★, 13 forks)
 
@@ -164,7 +164,7 @@ Reown's .NET SDK targets:
 - Full WalletConnect v2 protocol in C#
 - QR code generation and scanning via ZXing
 
-**OnChainUX gap**: No game engine support whatsoever. This is a massive addressable market — web3 gaming is one of the fastest-growing sectors.
+**CinaConnect gap**: No game engine support whatsoever. This is a massive addressable market — web3 gaming is one of the fastest-growing sectors.
 
 ### 4.3 Rust (reown-rust: 41★, 17 forks)
 
@@ -173,13 +173,13 @@ Reown's Rust SDK provides:
 - Used as a base layer by other SDKs (Kotlin/Swift may compile via FFI)
 - High-performance cryptographic operations
 
-**OnChainUX gap**: No Rust layer. Building Rust SDKs for crypto is complex (FFI bindings, platform-specific crypto), but it would serve as a foundation for Swift/Kotlin via FFI.
+**CinaConnect gap**: No Rust layer. Building Rust SDKs for crypto is complex (FFI bindings, platform-specific crypto), but it would serve as a foundation for Swift/Kotlin via FFI.
 
 ---
 
 ## 5. Chain Adapter Availability Per Platform
 
-| Chain | Reown (all platforms) | OnChainUX RN |
+| Chain | Reown (all platforms) | CinaConnect RN |
 |---|---|---|
 | Ethereum Mainnet | ✅ All SDKs | ⚠️ Configurable, unused |
 | Polygon | ✅ All SDKs | ⚠️ Configurable, unused |
@@ -192,13 +192,13 @@ Reown's Rust SDK provides:
 | Polkadot | ✅ Select SDKs | ❌ |
 | Cosmos | ✅ Select SDKs | ❌ |
 
-OnChainUX's `ChainConfig` interface is well-designed but only exists as TypeScript types. No actual RPC communication or chain-specific adapters exist.
+CinaConnect's `ChainConfig` interface is well-designed but only exists as TypeScript types. No actual RPC communication or chain-specific adapters exist.
 
 ---
 
 ## 6. Push Notification Support
 
-| Feature | Reown | OnChainUX |
+| Feature | Reown | CinaConnect |
 |---|---|---|
 | FCM (Android) | ✅ Via Relay push | ❌ None |
 | APNS (iOS) | ✅ Via Relay push | ❌ None |
@@ -208,7 +208,7 @@ OnChainUX's `ChainConfig` interface is well-designed but only exists as TypeScri
 
 Reown's push notification infrastructure is a core advantage — it allows wallets to receive connection requests and signing requests even when the app is backgrounded, via the Reown Relay service.
 
-**For OnChainUX**: Building push notification support requires either:
+**For CinaConnect**: Building push notification support requires either:
 - Running your own Relay-compatible WebSocket server (see `relay-server` package), OR
 - Implementing FCM/APNS directly with your own pairing endpoint
 
@@ -216,7 +216,7 @@ Reown's push notification infrastructure is a core advantage — it allows walle
 
 ## 7. Wallet Integration Per Platform
 
-| Feature | Reown | OnChainUX RN |
+| Feature | Reown | CinaConnect RN |
 |---|---|---|
 | WalletConnect v2 pairing | ✅ Full protocol | ❌ Mock |
 | WalletConnect v2 session management | ✅ Full lifecycle | ❌ Mock |
@@ -231,7 +231,7 @@ Reown's push notification infrastructure is a core advantage — it allows walle
 
 ## 8. Developer Experience Comparison
 
-| Aspect | Reown | OnChainUX |
+| Aspect | Reown | CinaConnect |
 |---|---|---|
 | Package manager | npm/cocoapods/maven/nuget/pub.dev/crates.io | npm only |
 | Getting started docs | Full docs site with guides | JSDoc comments only |
@@ -279,7 +279,7 @@ The RN package should be the **first priority** because:
 
 **Action plan**:
 1. Add `@walletconnect/react-native-compat` and `@walletconnect/ethereum-provider` as dependencies
-2. Rewrite `OnChainUXProvider.connect()` to establish real WalletConnect v2 sessions
+2. Rewrite `CinaConnectProvider.connect()` to establish real WalletConnect v2 sessions
 3. Implement deep linking in `ConnectModal` wallet selection
 4. Replace QRScanner's simulated scan with real camera integration
 5. Add session persistence layer
@@ -308,21 +308,21 @@ After RN is production-ready:
 Instead of scattering protocol code across each platform SDK, build a **protocol abstraction layer**:
 
 ```
-@onchainux/protocol-core     # TypeScript/WCv2 protocol (shared logic)
-├── @onchainux/react-native   # Uses protocol-core + RN UI
-├── @onchainux/ios            # Swift bindings to protocol-core (via RN bridge or FFI)
-├── @onchainux/android        # Kotlin bindings to protocol-core
-└── @onchainux/flutter        # Platform channels to protocol-core
+@cinaconnect/protocol-core     # TypeScript/WCv2 protocol (shared logic)
+├── @cinaconnect/react-native   # Uses protocol-core + RN UI
+├── @cinaconnect/ios            # Swift bindings to protocol-core (via RN bridge or FFI)
+├── @cinaconnect/android        # Kotlin bindings to protocol-core
+└── @cinaconnect/flutter        # Platform channels to protocol-core
 ```
 
 Or, if choosing Rust:
 
 ```
-onchainux-rust-core          # Rust WalletConnect v2 implementation
-├── onchainux-swift          # Swift SDK (FFI to rust-core)
-├── onchainux-kotlin         # Kotlin SDK (JNI to rust-core)
-├── onchainux-react-native   # JS SDK (NAPI to rust-core)
-└── onchainux-flutter        # Flutter SDK (FFI to rust-core)
+cinaconnect-rust-core          # Rust WalletConnect v2 implementation
+├── cinaconnect-swift          # Swift SDK (FFI to rust-core)
+├── cinaconnect-kotlin         # Kotlin SDK (JNI to rust-core)
+├── cinaconnect-react-native   # JS SDK (NAPI to rust-core)
+└── cinaconnect-flutter        # Flutter SDK (FFI to rust-core)
 ```
 
 This mirrors Reown's approach (reown-rust as the foundation) and dramatically reduces per-platform development effort.

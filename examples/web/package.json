@@ -1,5 +1,5 @@
 {
-  "name": "onchainux-web-example",
+  "name": "cinaconnect-web-example",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@onchainux/core": "workspace:*",
-    "@onchainux/react": "workspace:*",
-    "@onchainux/swap-sdk": "workspace:*",
+    "@cinaconnect/core": "workspace:*",
+    "@cinaconnect/react": "workspace:*",
+    "@cinaconnect/swap-sdk": "workspace:*",
     "ethers": "^6.13.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

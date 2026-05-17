@@ -1,23 +1,23 @@
 # 快速开始 — 图文指南 / Quick Start Visual Guide
 
-> 🎯 本文档提供 OnChainUX 的快速上手指南，包含分步截图说明和常见问题排查。
+> 🎯 本文档提供 CinaConnect 的快速上手指南，包含分步截图说明和常见问题排查。
 
 ## 📸 连接流程概览
 
-### Step 1: 安装 OnChainUX
+### Step 1: 安装 CinaConnect
 
 ```bash
-npm install @onchainux/core @onchainux/react
+npm install @cinaconnect/core @cinaconnect/react
 # 或
-pnpm add @onchainux/core @onchainux/react
+pnpm add @cinaconnect/core @cinaconnect/react
 ```
 
 ### Step 2: 配置 Provider
 
-在你的 React 应用中包裹 `OnChainUXProvider`：
+在你的 React 应用中包裹 `CinaConnectProvider`：
 
 ```tsx
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 
 function App() {
   const config = {
@@ -32,16 +32,16 @@ function App() {
     ],
     metadata: {
       name: 'My dApp',
-      description: 'My OnChainUX powered dApp',
+      description: 'My CinaConnect powered dApp',
       url: 'https://mydapp.com',
       icons: [],
     },
   }
 
   return (
-    <OnChainUXProvider config={config}>
+    <CinaConnectProvider config={config}>
       <YourApp />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   )
 }
 ```
@@ -49,10 +49,10 @@ function App() {
 ### Step 3: 添加连接按钮
 
 ```tsx
-import { ConnectButton, useOnChainUX } from '@onchainux/react'
+import { ConnectButton, useCinaConnect } from '@cinaconnect/react'
 
 function MyComponent() {
-  const { account, status } = useOnChainUX()
+  const { account, status } = useCinaConnect()
 
   return (
     <div>
@@ -117,7 +117,7 @@ onConnected 事件触发
 
 ### 2. Swap 交易 (SwapDemo)
 
-- 通过 `@onchainux/swap-sdk` 获取真实报价
+- 通过 `@cinaconnect/swap-sdk` 获取真实报价
 - 支持 Uniswap / 1inch / 0x 多源聚合
 - 实时签名并提交链上交易
 
@@ -239,15 +239,15 @@ git push origin main
 ### Docker
 
 ```bash
-docker build -f deploy/docker/core-ui/Dockerfile -t onchainux:demo .
-docker run -p 3000:80 onchainux:demo
+docker build -f deploy/docker/core-ui/Dockerfile -t cinaconnect:demo .
+docker run -p 3000:80 cinaconnect:demo
 ```
 
 ---
 
 ## 📞 获取帮助
 
-- 📖 完整文档: [docs.onchainux.com](https://onchainux.github.io/onchainux/)
-- 💬 社区讨论: [GitHub Discussions](https://github.com/onchainux/onchainux/discussions)
-- 🐛 报告 Bug: [GitHub Issues](https://github.com/onchainux/onchainux/issues)
-- 📧 联系团队: <support@onchainux.com>
+- 📖 完整文档: [docs.cinaconnect.com](https://cinaconnect.github.io/cinaconnect/)
+- 💬 社区讨论: [GitHub Discussions](https://github.com/cinaconnect/cinaconnect/discussions)
+- 🐛 报告 Bug: [GitHub Issues](https://github.com/cinaconnect/cinaconnect/issues)
+- 📧 联系团队: <support@cinaconnect.com>

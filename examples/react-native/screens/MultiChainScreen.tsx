@@ -6,7 +6,7 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native'
-import { useOnChainUX } from '@onchainux/react-native'
+import { useCinaConnect } from '@cinaconnect/react-native'
 
 const CHAIN_BALANCES = [
   { chainId: 1, name: 'Ethereum', symbol: 'ETH', balance: '1.2345', usdValue: '$3,703.50', icon: '🔷' },
@@ -15,7 +15,7 @@ const CHAIN_BALANCES = [
 ]
 
 export function MultiChainScreen() {
-  const { account, chainId, switchChain } = useOnChainUX()
+  const { account, chainId, switchChain } = useCinaConnect()
   const [selectedChain, setSelectedChain] = useState(1)
 
   if (!account) {

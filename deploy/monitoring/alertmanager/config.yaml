@@ -23,12 +23,12 @@ route:
 receivers:
   - name: default-receiver
     slack_configs:
-      - channel: "#onchainux-alerts"
+      - channel: "#cinaconnect-alerts"
         send_resolved: true
 
   - name: slack
     slack_configs:
-      - channel: "#onchainux-alerts"
+      - channel: "#cinaconnect-alerts"
         send_resolved: true
 
   - name: pagerduty

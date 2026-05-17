@@ -1,17 +1,17 @@
 # 配置
 
-> OnChainUX 完整配置选项参考。
+> CinaConnect 完整配置选项参考。
 
-## OnChainUXProvider 配置
+## CinaConnectProvider 配置
 
-`OnChainUXProvider` 接受一个 `config` 对象：
+`CinaConnectProvider` 接受一个 `config` 对象：
 
 ```tsx
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 
-<OnChainUXProvider config={config}>
+<CinaConnectProvider config={config}>
   <App />
-</OnChainUXProvider>
+</CinaConnectProvider>
 ```
 
 ### 配置字段
@@ -87,12 +87,12 @@ interface ThemeConfig {
 ## 完整示例
 
 ```tsx
-import { mainnet, polygon, arbitrum } from '@onchainux/core/chains'
-import { OnChainUXProvider } from '@onchainux/react'
+import { mainnet, polygon, arbitrum } from '@cinaconnect/core/chains'
+import { CinaConnectProvider } from '@cinaconnect/react'
 
 const config = {
   projectId: 'my-project-123',
-  relayUrl: 'wss://relay.onchainux.com/v1',
+  relayUrl: 'wss://relay.cinaconnect.com/v1',
   chains: [mainnet, polygon, arbitrum],
   metadata: {
     name: 'MyDeFi App',
@@ -112,9 +112,9 @@ const config = {
 
 function App() {
   return (
-    <OnChainUXProvider config={config}>
+    <CinaConnectProvider config={config}>
       <Router />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   )
 }
 ```
@@ -143,17 +143,17 @@ const config = {
 const configs = {
   development: {
     projectId: 'dev-123',
-    relayUrl: 'wss://relay-dev.onchainux.com/v1',
+    relayUrl: 'wss://relay-dev.cinaconnect.com/v1',
     debug: true,
   },
   staging: {
     projectId: 'staging-123',
-    relayUrl: 'wss://relay-staging.onchainux.com/v1',
+    relayUrl: 'wss://relay-staging.cinaconnect.com/v1',
     debug: false,
   },
   production: {
     projectId: 'prod-123',
-    relayUrl: 'wss://relay.onchainux.com/v1',
+    relayUrl: 'wss://relay.cinaconnect.com/v1',
     debug: false,
   },
 }

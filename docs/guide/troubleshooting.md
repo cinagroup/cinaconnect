@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-> Common issues and solutions for OnChainUX development, deployment, and production.
+> Common issues and solutions for CinaConnect development, deployment, and production.
 
 ---
 
@@ -22,13 +22,13 @@
    wscat -c wss://relay.yourdomain.com/v1
    ```
    - If connection fails, check:
-     - Relay Server is running: `kubectl get pods -n onchainux | grep relay`
+     - Relay Server is running: `kubectl get pods -n cinaconnect | grep relay`
      - Ingress/LoadBalancer is properly configured
      - SSL certificate is valid
      - Firewall rules allow WebSocket (port 443)
 
 3. **Wallet doesn't support the relay protocol**
-   - OnChainUX uses the Iridium relay protocol, compatible with WalletConnect v2
+   - CinaConnect uses the Iridium relay protocol, compatible with WalletConnect v2
    - Check wallet's supported relay protocols in their documentation
 
 4. **QR code expired**
@@ -45,7 +45,7 @@
    - Verify the wallet's URL scheme in your redirect config:
    ```typescript
    // React Native
-   <OnChainUXProvider config={{
+   <CinaConnectProvider config={{
      // ...
      redirect: {
        native: 'myapp://',      // Your app's URL scheme
@@ -177,8 +177,8 @@
    - Relay sessions have a separate TTL
    - Implement session refresh logic:
    ```typescript
-   onchainux.on('sessionExpired', async () => {
-     await onchainux.reconnect()
+   cinaconnect.on('sessionExpired', async () => {
+     await cinaconnect.reconnect()
    })
    ```
 
@@ -188,7 +188,7 @@
 
 ### TypeScript Errors
 
-#### `Cannot find module '@onchainux/core'`
+#### `Cannot find module '@cinaconnect/core'`
 
 **Solution**: Ensure the package is built and linked correctly.
 
@@ -204,19 +204,19 @@ pnpm build
 
 #### `Property 'X' does not exist on type 'Y'`
 
-**Solution**: Check your `@onchainux` package version. Newer APIs may require updating:
+**Solution**: Check your `@cinaconnect` package version. Newer APIs may require updating:
 
 ```bash
 # Check installed version
-npm ls @onchainux/core
+npm ls @cinaconnect/core
 
 # Update to latest
-npm update @onchainux/core
+npm update @cinaconnect/core
 ```
 
 #### Type mismatch with viem/ethers
 
-**Solution**: OnChainUX uses `viem` internally. If you're using `ethers`, convert types:
+**Solution**: CinaConnect uses `viem` internally. If you're using `ethers`, convert types:
 
 ```typescript
 import { getAddress } from 'viem'
@@ -233,25 +233,25 @@ const viemAddress = getAddress(ethersAddress) as `0x${string}`
 
 ```bash
 # Core SDK
-npm install @onchainux/core viem
+npm install @cinaconnect/core viem
 
 # React integration
-npm install @onchainux/react react react-dom
+npm install @cinaconnect/react react react-dom
 
 # React Native
-npm install @onchainux/react-native react-native
+npm install @cinaconnect/react-native react-native
 
 # SIWE
-npm install @onchainux/siwe
+npm install @cinaconnect/siwe
 
 # Swap SDK
-npm install @onchainux/swap-sdk viem
+npm install @cinaconnect/swap-sdk viem
 
 # On-Ramp SDK
-npm install @onchainux/onramp-sdk
+npm install @cinaconnect/onramp-sdk
 
 # Session Keys
-npm install @onchainux/session-keys viem
+npm install @cinaconnect/session-keys viem
 ```
 
 ### Monorepo Build Errors
@@ -278,23 +278,23 @@ pnpm turbo run build
 
 1. **Namespace doesn't exist**
    ```bash
-   kubectl create namespace onchainux
+   kubectl create namespace cinaconnect
    # Or use --create-namespace
-   helm install onchainux ./deploy/helm/onchainux \
-     --namespace onchainux --create-namespace
+   helm install cinaconnect ./deploy/helm/cinaconnect \
+     --namespace cinaconnect --create-namespace
    ```
 
 2. **Missing values**
    - Check required values in `values.yaml`:
    ```bash
-   helm lint ./deploy/helm/onchainux
-   helm template ./deploy/helm/onchainux \
-     --values ./deploy/helm/onchainux/values.yaml
+   helm lint ./deploy/helm/cinaconnect
+   helm template ./deploy/helm/cinaconnect \
+     --values ./deploy/helm/cinaconnect/values.yaml
    ```
 
 3. **Resource quotas exceeded**
    ```bash
-   kubectl describe quota -n onchainux
+   kubectl describe quota -n cinaconnect
    # Adjust resource requests in values.yaml
    ```
 
@@ -306,16 +306,16 @@ pnpm turbo run build
 
 ```bash
 # Check pod status
-kubectl get pods -n onchainux
+kubectl get pods -n cinaconnect
 
 # Check events
-kubectl describe pod <pod-name> -n onchainux
+kubectl describe pod <pod-name> -n cinaconnect
 
 # Check logs
-kubectl logs <pod-name> -n onchainux
+kubectl logs <pod-name> -n cinaconnect
 
 # Check previous pod logs (for crash loops)
-kubectl logs <pod-name> -n onchainux --previous
+kubectl logs <pod-name> -n cinaconnect --previous
 ```
 
 **Common causes**:
@@ -333,18 +333,18 @@ kubectl logs <pod-name> -n onchainux --previous
 
 ```bash
 # Check relay-specific logs
-kubectl logs -l app=relay -n onchainux --tail=100
+kubectl logs -l app=relay -n cinaconnect --tail=100
 
 # Common issues:
 # 1. NATS not reachable
-kubectl get pods -l app=nats -n onchainux
+kubectl get pods -l app=nats -n cinaconnect
 
 # 2. Invalid config
 # Check ConfigMap
-kubectl get configmap relay-config -n onchainux -o yaml
+kubectl get configmap relay-config -n cinaconnect -o yaml
 
 # 3. Port conflict
-kubectl get svc -n onchainux
+kubectl get svc -n cinaconnect
 ```
 
 ---
@@ -406,7 +406,7 @@ kubectl get svc -n onchainux
 1. **Cache not working**
    - Check Redis connectivity:
    ```bash
-   kubectl exec -it <redis-pod> -n onchainux -- redis-cli ping
+   kubectl exec -it <redis-pod> -n cinaconnect -- redis-cli ping
    ```
 
 2. **Provider routing suboptimal**
@@ -416,7 +416,7 @@ kubectl get svc -n onchainux
 3. **Too many concurrent requests**
    - Scale RPC Proxy horizontally:
    ```bash
-   helm upgrade onchainux ./deploy/helm/onchainux \
+   helm upgrade cinaconnect ./deploy/helm/cinaconnect \
      --set rpcProxy.replicas=5
    ```
 
@@ -490,11 +490,11 @@ If you're still stuck after checking this guide:
 1. **Check the logs** — Most issues leave traces in logs
 2. **Search GitHub Issues** — Someone may have reported the same problem
 3. **Enable debug mode** — Set `debug: true` in your config for verbose logging
-4. **Community** — Join the OnChainUX community channels for help
+4. **Community** — Join the CinaConnect community channels for help
 
 ```typescript
 // Enable debug logging
-const onchainux = new OnChainUX({
+const cinaconnect = new CinaConnect({
   // ...
   debug: true,  // Verbose console output
 })

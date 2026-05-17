@@ -1,10 +1,10 @@
-# CLAUDE.md — Claude Code Configuration for OnChainUX
+# CLAUDE.md — Claude Code Configuration for CinaConnect
 
-This file provides context and instructions for Claude Code working on the OnChainUX repository.
+This file provides context and instructions for Claude Code working on the CinaConnect repository.
 
 ## Project Overview
 
-OnChainUX is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It's a monorepo with:
+CinaConnect is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It's a monorepo with:
 
 - **packages/core-sdk/** — TypeScript SDK (EVM, Solana, Bitcoin adapters)
 - **packages/relay-server/** — Rust WebSocket relay server

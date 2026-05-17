@@ -1,12 +1,12 @@
-# OnChainUX iOS Example
+# CinaConnect iOS Example
 
-> iOS 原生 Swift 示例，展示 OnChainUX iOS SDK 集成。
+> iOS 原生 Swift 示例，展示 CinaConnect iOS SDK 集成。
 
 ## 目录结构
 
 ```
-OnChainUXExample.xcodeproj/    # Xcode 项目文件
-OnChainUXExample/
+CinaConnectExample.xcodeproj/    # Xcode 项目文件
+CinaConnectExample/
 ├── ContentView.swift          # 主视图 (TabView)
 ├── ConnectView.swift          # 连接视图
 ├── SwapView.swift             # Swap 视图
@@ -15,7 +15,7 @@ OnChainUXExample/
 
 ## 运行
 
-1. 用 **Xcode 15+** 打开 `OnChainUXExample.xcodeproj`
+1. 用 **Xcode 15+** 打开 `CinaConnectExample.xcodeproj`
 2. 选择目标设备（模拟器或真机）
 3. 点击 **Run** (⌘R)
 
@@ -35,10 +35,10 @@ OnChainUXExample/
 ## 快速集成
 
 ```swift
-import OnChainUX
+import CinaConnect
 
 // 初始化
-let config = OnChainUXConfig(
+let config = CinaConnectConfig(
     projectId: "your-project-id",
     relayUrl: "wss://relay.yourdomain.com/v1",
     chains: [
@@ -47,5 +47,5 @@ let config = OnChainUXConfig(
     ]
 )
 
-OnChainUX.shared.configure(with: config)
+CinaConnect.shared.configure(with: config)
 ```

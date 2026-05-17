@@ -1,10 +1,10 @@
-# OnChainUX — 自有品牌链上 UX 工具包
+# CinaConnect — 自有品牌链上 UX 工具包
 
 > **完全独立于 Reown/WalletConnect**，构建自有品牌的链上连接与交互工具包。
 
-## 为什么选择 OnChainUX？
+## 为什么选择 CinaConnect？
 
-| 痛点 | OnChainUX 解决方案 |
+| 痛点 | CinaConnect 解决方案 |
 |------|-------------------|
 | Reown 商业授权费 $500-5,000/月 | 零授权费，完全自建 |
 | MAU 500 上限 | 无限制 |
@@ -43,17 +43,17 @@
 ┌─────────────────────────────────────────────────────────┐
 │                    用户 dApp                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐  │
-│  │ @onchainux/  │  │ @onchainux/  │  │ @onchainux/  │  │
+│  │ @cinaconnect/  │  │ @cinaconnect/  │  │ @cinaconnect/  │  │
 │  │   react      │  │   vue        │  │ react-native │  │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘  │
 │         └─────────────────┼─────────────────┘           │
 │                           │                             │
 │              ┌────────────┴────────────┐                │
-│              │  @onchainux/core-sdk    │                │
-│              │  @onchainux/core-ui     │                │
-│              │  @onchainux/siwe        │                │
-│              │  @onchainux/swap-sdk    │                │
-│              │  @onchainux/paymaster   │                │
+│              │  @cinaconnect/core-sdk    │                │
+│              │  @cinaconnect/core-ui     │                │
+│              │  @cinaconnect/siwe        │                │
+│              │  @cinaconnect/swap-sdk    │                │
+│              │  @cinaconnect/paymaster   │                │
 │              └──────┬──────────┬──────┘                │
 │                     │          │                        │
 └─────────────────────┼──────────┼────────────────────────┘
@@ -73,19 +73,19 @@
 
 ```bash
 # 安装 Core SDK
-npm install @onchainux/core
+npm install @cinaconnect/core
 
 # 安装 React 适配器
-npm install @onchainux/react
+npm install @cinaconnect/react
 ```
 
 ```tsx
-import { OnChainUX } from '@onchainux/core';
-import { OnChainUXProvider, ConnectButton } from '@onchainux/react';
+import { CinaConnect } from '@cinaconnect/core';
+import { CinaConnectProvider, ConnectButton } from '@cinaconnect/react';
 
 function App() {
   return (
-    <OnChainUXProvider
+    <CinaConnectProvider
       config={{
         projectId: 'your-project-id',
         chains: [mainnet, polygon],
@@ -93,7 +93,7 @@ function App() {
       }}
     >
       <ConnectButton />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   );
 }
 ```

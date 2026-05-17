@@ -1,24 +1,24 @@
 # UI 组件 API
 
-> `@onchainux/react` / `@onchainux/vue` — UI 组件参考。
+> `@cinaconnect/react` / `@cinaconnect/vue` — UI 组件参考。
 
-## OnChainUXProvider
+## CinaConnectProvider
 
-顶层 Provider，为应用注入 OnChainUX 上下文。
+顶层 Provider，为应用注入 CinaConnect 上下文。
 
 ```tsx
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 
-<OnChainUXProvider config={config}>
+<CinaConnectProvider config={config}>
   <App />
-</OnChainUXProvider>
+</CinaConnectProvider>
 ```
 
 ### Props
 
 | 属性 | 类型 | 必填 | 说明 |
 |------|------|------|------|
-| `config` | `OnChainUXConfig` | ✅ | 配置对象，见 [配置文档](/guide/configuration) |
+| `config` | `CinaConnectConfig` | ✅ | 配置对象，见 [配置文档](/guide/configuration) |
 | `children` | `ReactNode` | ✅ | 子组件 |
 
 ## ConnectButton
@@ -26,7 +26,7 @@ import { OnChainUXProvider } from '@onchainux/react'
 主连接按钮，显示连接状态和账户信息。
 
 ```tsx
-import { ConnectButton } from '@onchainux/react'
+import { ConnectButton } from '@cinaconnect/react'
 
 <ConnectButton
   label="连接钱包"
@@ -71,7 +71,7 @@ Connected:    ┌─────────────────────
 钱包连接弹窗。
 
 ```tsx
-import { ConnectModal } from '@onchainux/react'
+import { ConnectModal } from '@cinaconnect/react'
 
 <ConnectModal
   isOpen={isOpen}
@@ -98,7 +98,7 @@ import { ConnectModal } from '@onchainux/react'
 链切换下拉菜单。
 
 ```tsx
-import { ChainSwitcher } from '@onchainux/react'
+import { ChainSwitcher } from '@cinaconnect/react'
 
 <ChainSwitcher
   chains={chains}
@@ -120,7 +120,7 @@ import { ChainSwitcher } from '@onchainux/react'
 账户管理弹窗。
 
 ```tsx
-import { AccountModal } from '@onchainux/react'
+import { AccountModal } from '@cinaconnect/react'
 
 <AccountModal
   address={account}
@@ -136,7 +136,7 @@ import { AccountModal } from '@onchainux/react'
 交易通知组件。
 
 ```tsx
-import { TransactionToast } from '@onchainux/react'
+import { TransactionToast } from '@cinaconnect/react'
 
 <TransactionToast
   hash="0xabc123..."
@@ -165,17 +165,17 @@ import { TransactionToast } from '@onchainux/react'
 网络标记组件。
 
 ```tsx
-import { NetworkBadge } from '@onchainux/react'
+import { NetworkBadge } from '@cinaconnect/react'
 
 <NetworkBadge chainId={1} size="sm" />
 ```
 
-## useOnChainUX Hook
+## useCinaConnect Hook
 
-React Hook，提供 OnChainUX 上下文。
+React Hook，提供 CinaConnect 上下文。
 
 ```tsx
-import { useOnChainUX } from '@onchainux/react'
+import { useCinaConnect } from '@cinaconnect/react'
 
 function Component() {
   const {
@@ -190,7 +190,7 @@ function Component() {
     balance,        // 当前账户余额 (格式化)
     ensName,        // ENS 名称
     ensAvatar,      // ENS 头像 URL
-  } = useOnChainUX()
+  } = useCinaConnect()
 
   // ...
 }

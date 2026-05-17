@@ -15,25 +15,25 @@
 npm create vite@latest my-dapp -- --template react-ts
 cd my-dapp
 
-# 安装 OnChainUX
-npm install @onchainux/core @onchainux/react
+# 安装 CinaConnect
+npm install @cinaconnect/core @cinaconnect/react
 ```
 
 ## 第二步：初始化
 
-在应用入口创建 `OnChainUX` 实例：
+在应用入口创建 `CinaConnect` 实例：
 
 ```tsx
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { OnChainUXProvider } from '@onchainux/react'
+import { CinaConnectProvider } from '@cinaconnect/react'
 import App from './App'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <OnChainUXProvider
+    <CinaConnectProvider
       config={{
         // 项目标识（用于 analytics 和会话管理）
         projectId: 'your-project-id',
@@ -64,7 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </OnChainUXProvider>
+    </CinaConnectProvider>
   </React.StrictMode>,
 )
 ```
@@ -73,7 +73,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // src/App.tsx
-import { ConnectButton } from '@onchainux/react'
+import { ConnectButton } from '@cinaconnect/react'
 
 function App() {
   return (
@@ -98,10 +98,10 @@ npm run dev
 ## 使用 Hook 获取状态
 
 ```tsx
-import { useOnChainUX } from '@onchainux/react'
+import { useCinaConnect } from '@cinaconnect/react'
 
 function WalletInfo() {
-  const { account, chainId, status, connectors, connect, disconnect } = useOnChainUX()
+  const { account, chainId, status, connectors, connect, disconnect } = useCinaConnect()
 
   if (status === 'disconnected') {
     return <p>未连接</p>

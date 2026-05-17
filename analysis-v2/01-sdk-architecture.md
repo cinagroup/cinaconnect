@@ -1,6 +1,6 @@
 # 01 — SDK Architecture & Core Package Comparison
 
-> **CinaAuth/OnChainUX** vs **Reown AppKit** — deep dive into SDK architecture, package structure, code quality, and feature parity.
+> **CinaAuth/CinaConnect** vs **Reown AppKit** — deep dive into SDK architecture, package structure, code quality, and feature parity.
 >
 > Date: 2026-05-17 | Scope: Packages, source files, adapters, server-side components, test coverage
 
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-| Dimension | Reown AppKit | CinaAuth OnChainUX | Assessment |
+| Dimension | Reown AppKit | CinaAuth CinaConnect | Assessment |
 |---|---|---|---|
 | **Core SDK packages** | 20 packages + 8 adapters | 34 packages | CinaAuth is 1.7x larger in scope |
 | **Languages** | TypeScript (mono-repo) | TS + Rust + Go + Kotlin + Swift + Dart + C# + Solidity | CinaAuth is multi-language |
@@ -19,7 +19,7 @@
 | **Test coverage** | ~19k+ test lines (est.) | ~31k+ test lines across 57 test files | CinaAuth has more tests |
 | **Source volume** | ~50-60k lines (est.) | ~40k+ lines across all packages | Comparable depth |
 
-**Bottom line:** CinaAuth OnChainUX is structurally more ambitious — it targets a full replacement of Reown's SaaS infrastructure with self-hosted server components, while also expanding into mobile and gaming platforms that Reown does not cover natively.
+**Bottom line:** CinaAuth CinaConnect is structurally more ambitious — it targets a full replacement of Reown's SaaS infrastructure with self-hosted server components, while also expanding into mobile and gaming platforms that Reown does not cover natively.
 
 ---
 
@@ -52,7 +52,7 @@
 | Reown Package | CinaAuth Equivalent | Gap Assessment |
 |---|---|---|
 | `packages/cdn` | None | Reown provides CDN distribution. CinaAuth packages are npm/workspace only. **Low priority** — can add CDN build later. |
-| `packages/cli` (codemod) | `cli` + `codemod` (missing) | CinaAuth has a CLI (`@onchainux/cli`) but no codemod for migration from WalletConnect/Reown. **Medium gap** — useful for onboarding. |
+| `packages/cli` (codemod) | `cli` + `codemod` (missing) | CinaAuth has a CLI (`@cinaconnect/cli`) but no codemod for migration from WalletConnect/Reown. **Medium gap** — useful for onboarding. |
 | `packages/universal-connector` | None | Reown's abstraction for non-EVM connectors. CinaAuth handles this via `core-sdk` adapter pattern. **Low gap** — functionally covered. |
 | `packages/experimental` | None | Reown's bleeding-edge features. CinaAuth has no experimental bucket. **None** — expected at v0.1.0. |
 | `apps/gallery` | None | Reown has component gallery. CinaAuth has no visual demo app. **Low gap** — useful for DX. |
@@ -264,7 +264,7 @@ Best-tested packages:
 
 ```
 ┌──────────────────────────────────────────────┐
-│           OnChainUX (consumer)               │
+│           CinaConnect (consumer)               │
 │  ┌──────────┐  ┌──────────┐  ┌────────────┐ │
 │  │ core-ui  │  │ core-sdk │  │ adapters   │ │
 │  │ (Lit WC) │  │ (8k LOC) │  │ (8 chains) │ │
@@ -342,8 +342,8 @@ Best-tested packages:
 
 | # | Gap | Priority | Effort |
 |---|---|---|---|
-| 1 | **`pay` UI component** — Onramp SDK exists but no `@onchainux/pay` UI package like Reown's `packages/pay` | High | 2-3 weeks |
-| 2 | **Codemod** — Migration tool from Reown/WC → OnChainUX | High | 1-2 weeks |
+| 1 | **`pay` UI component** — Onramp SDK exists but no `@cinaconnect/pay` UI package like Reown's `packages/pay` | High | 2-3 weeks |
+| 2 | **Codemod** — Migration tool from Reown/WC → CinaConnect | High | 1-2 weeks |
 
 ### 6.2 Important Gaps
 
@@ -367,7 +367,7 @@ Best-tested packages:
 
 ## 7. Verdict
 
-**CinaAuth OnChainUX is structurally superior to Reown AppKit in scope and ambition.**
+**CinaAuth CinaConnect is structurally superior to Reown AppKit in scope and ambition.**
 
 - **34 packages** vs Reown's 20+8 = 70% more packages
 - **Multi-language** (TS + Rust + Go + Kotlin + Swift + Dart + C# + Solidity) vs Reown's TypeScript-only
