@@ -1,39 +1,28 @@
-# Dependencies
+# Node.js
 node_modules/
-package-lock.json
+**/node_modules/
+*.local
+.env
 
-# Build artifacts
-target/
+# Build output
 dist/
-out/
-build/
+**/dist/
+.next/
+.turbo/
 
 # OS
 .DS_Store
 Thumbs.db
 
 # IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# Env
-.env
-.env.local
-.env.*.local
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 
 # Logs
 *.log
-logs/
+npm-debug.log*
 
 # Coverage
 coverage/
-.nyc_output/
-
-# Foundry
-cache/
-out/
-
-# Docker registry
-.docker/
+**/coverage/

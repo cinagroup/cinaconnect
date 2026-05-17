@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # CinaConnect Demo App (Next.js)
+  demo:
+    build:
+      context: .
+      dockerfile: Dockerfile.demo
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_PROJECT_ID=${NEXT_PUBLIC_PROJECT_ID:-demo-project-id}
+      - NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
+    depends_on:
+      - relay
+      - redis
+
+  # WalletConnect Relay Server
+  relay:
+    image: ghcr.io/walletconnect/walletconnect-relay:latest
+    ports:
+      - "5555:5555"
+    environment:
+      - RELAY_API_KEY=${RELAY_API_KEY}
+    depends_on:
+      - redis
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+
+  # RPC Proxy (self-hosted)
+  rpc-proxy:
+    build:
+      context: .
+      dockerfile: packages/rpc-proxy/Dockerfile
+    ports:
+      - "8545:8545"
+    environment:
+      - ETHEREUM_RPC_URL=${ETHEREUM_RPC_URL}
+      - ARBITRUM_RPC_URL=${ARBITRUM_RPC_URL}
+
+  # Keys Server (for key management)
+  keys-server:
+    build:
+      context: .
+      dockerfile: packages/keys-server/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - DATABASE_URL=postgresql://user:pass@db:5432/cinaconnect
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY}
+    depends_on:
+      - db
+
+  # Database
+  db:
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_DB=cinaconnect
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+volumes:
+  redis_data:
+  pg_data:

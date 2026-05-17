@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "styled-components.vscode-styled-components",
+    "christian-kohler.npm-intellisense",
+    "unifiedjs.vscode-mdx",
+    "GitHub.vscode-github-actions"
+  ]
+}
