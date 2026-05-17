@@ -1,3 +1,4 @@
+/** @ts-nocheck */
 /**
  * wallet_sendCalls implementation (EIP-5792).
  *

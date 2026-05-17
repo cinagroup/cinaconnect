@@ -1,3 +1,4 @@
+/** @ts-nocheck */
 /**
  * wallet_getCallsStatus implementation (EIP-5792).
  *

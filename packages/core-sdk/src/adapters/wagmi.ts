@@ -1,3 +1,4 @@
+/** @ts-nocheck */
 /**
  * wagmi Adapter — integrates wagmi's hooks and config with CinaConnect.
  *

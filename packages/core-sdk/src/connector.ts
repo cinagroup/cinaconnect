@@ -4,8 +4,8 @@
 
 import type { ConnectParams, ConnectionResult, EventHandler, TransactionRequest } from './types.js';
 import { EventEmitter } from './events.js';
-import { generateDeepLink, smartRedirect, detectPlatform } from './links.js';
-import type { DeepLinkParams, RedirectResult, Platform } from './links.js';
+import { generateDeepLink, smartRedirect, detectPlatform } from './links/index.js';
+import type { DeepLinkParams, RedirectResult, Platform } from './links/index.js';
 
 /**
  * Handles platform detection and redirect logic for deep links.

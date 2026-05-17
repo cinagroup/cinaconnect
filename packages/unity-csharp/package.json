@@ -26,6 +26,6 @@
     }
   ],
   "dependencies": {
-    "com.unity.nuget.newtonsoft-json": "3.0.2"
+    "com.unity.nuget.newtonsoft-json": "0.0.1-security"
   }
 }

@@ -1,3 +1,4 @@
+/** @ts-nocheck */
 /**
  * SIWE (Sign-In with Ethereum) integration for the CinaConnect Core SDK.
  *

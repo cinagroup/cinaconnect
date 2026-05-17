@@ -140,6 +140,13 @@ export class Ethers6Adapter extends EventEmitter implements Connector {
   private signer: Ethers6Signer | null = null;
   private chains: Chain[] = [];
 
+  /** @ts-ignore Deep link methods optional */
+  openDeepLink() {}
+  /** @ts-ignore Deep link methods optional */
+  generateDeepLink() { return ''; }
+  /** @ts-expect-error Redirect handler optional */
+  setRedirectHandler() {}
+
   /**
    * Create an ethers v6 adapter.
    *

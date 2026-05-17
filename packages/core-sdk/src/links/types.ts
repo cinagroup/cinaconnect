@@ -45,6 +45,13 @@ export interface RedirectResult {
   error?: string;
 }
 
+/** Universal link generation params. */
+export interface UniversalLinkParams {
+  walletId: string;
+  uri: string;
+  params?: Record<string, string>;
+}
+
 /** Redirect handler options. */
 export interface RedirectOptions {
   /** Target platform. */

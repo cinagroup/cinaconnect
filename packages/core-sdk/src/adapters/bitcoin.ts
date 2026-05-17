@@ -488,7 +488,7 @@ export class BitcoinChainAdapter {
   private _resolveWallet(walletId?: string): (() => BitcoinProvider) | null {
     if (typeof window === 'undefined') return null;
 
-    const win = window as Record<string, unknown>;
+    const win = window as any;
 
     if (walletId) {
       switch (walletId) {

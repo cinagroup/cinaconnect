@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cinaconnect/core": "workspace:*",
+    "@cinaconnect/core-sdk": "workspace:*",
     "@cinaconnect/react": "workspace:*",
     "@cinaconnect/swap-sdk": "workspace:*",
     "ethers": "^6.13.0",

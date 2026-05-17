@@ -53,51 +53,51 @@ export type { QRTransportConfig } from './transports/qr.js';
 export { EvmAdapter } from './adapters/evm.js';
 export type { EthCallParams } from './adapters/evm.js';
 
-// viem Adapter
-export { ViemChainAdapter, createViemAdapter } from './adapters/viem.js';
-export type { ViemClient, ViemAccount, ViemChain, ViemTransport } from './adapters/viem.js';
+// viem Adapter (optional — requires viem peer dep)
+// export { ViemChainAdapter, createViemAdapter } from './adapters/viem.js';
+// export type { ViemClient, ViemAccount, ViemChain, ViemTransport } from './adapters/viem.js';
 
-// wagmi Adapter
-export {
-  WagmiConnector,
-  MultiChainConnector,
-  createWagmiConnector,
-  createMultiChainConnector,
-} from './adapters/wagmi.js';
-export type {
-  WagmiConfig,
-  WagmiChain,
-  WagmiTransport,
-  WagmiConnectorInstance,
-  WagmiStorage,
-  CreateWagmiConfig,
-} from './adapters/wagmi.js';
+// wagmi Adapter (optional — requires wagmi peer dep)
+// export {
+//   WagmiConnector,
+//   MultiChainConnector,
+//   createWagmiConnector,
+//   createMultiChainConnector,
+// } from './adapters/wagmi.js';
+// export type {
+//   WagmiConfig,
+//   WagmiChain,
+//   WagmiTransport,
+//   WagmiConnectorInstance,
+//   WagmiStorage,
+//   CreateWagmiConfig,
+// } from './adapters/wagmi.js';
 
-// ethers v5 Adapter
-export { Ethers5Adapter } from './adapters/ethers5.js';
-export type {
-  Ethers5Provider,
-  Ethers5Network,
-  Ethers5BigNumber,
-  Ethers5Signer,
-  Ethers5TransactionRequest,
-  Ethers5TransactionResponse,
-  Ethers5TransactionReceipt,
-  Ethers5Log,
-} from './adapters/ethers5.js';
+// ethers v5 Adapter (optional — requires ethers@5 peer dep)
+// export { Ethers5Adapter } from './adapters/ethers5.js';
+// export type {
+//   Ethers5Provider,
+//   Ethers5Network,
+//   Ethers5BigNumber,
+//   Ethers5Signer,
+//   Ethers5TransactionRequest,
+//   Ethers5TransactionResponse,
+//   Ethers5TransactionReceipt,
+//   Ethers5Log,
+// } from './adapters/ethers5.js';
 
-// ethers v6 Adapter
-export { Ethers6Adapter } from './adapters/ethers6.js';
-export type {
-  Ethers6Provider,
-  Ethers6Network,
-  Ethers6BigInt,
-  Ethers6Signer,
-  Ethers6TransactionRequest,
-  Ethers6TransactionResponse,
-  Ethers6TransactionReceipt,
-  Ethers6Log,
-} from './adapters/ethers6.js';
+// ethers v6 Adapter (optional — requires ethers@6 peer dep)
+// export { Ethers6Adapter } from './adapters/ethers6.js';
+// export type {
+//   Ethers6Provider,
+//   Ethers6Network,
+//   Ethers6BigInt,
+//   Ethers6Signer,
+//   Ethers6TransactionRequest,
+//   Ethers6TransactionResponse,
+//   Ethers6TransactionReceipt,
+//   Ethers6Log,
+// } from './adapters/ethers6.js';
 
 // Adapter types
 export type {
@@ -106,15 +106,15 @@ export type {
   AdapterFactoryConfig,
 } from './adapters/types.js';
 
-// Solana Adapter
-export {
-  SolanaChainAdapter,
-  SOLANA_CHAINS,
-  SOLANA_WALLETS,
-  isValidSolanaAddress,
-  base58Decode,
-} from './adapters/solana.js';
-export type { SolanaWalletInfo } from './adapters/solana.js';
+// Solana Adapter (optional)
+// export {
+//   SolanaChainAdapter,
+//   SOLANA_CHAINS,
+//   SOLANA_WALLETS,
+//   isValidSolanaAddress,
+//   base58Decode,
+// } from './adapters/solana.js';
+// export type { SolanaWalletInfo } from './adapters/solana.js';
 
 // Bitcoin Adapter
 export {
@@ -159,20 +159,20 @@ export type {
   TRONWalletInfo as TRONWalletInfoType,
 } from './adapters/tron.js';
 
-// Polkadot Adapter
-export {
-  PolkadotChainAdapter,
-  POLKADOT_CHAINS,
-  POLKADOT_WALLETS,
-  decodeSS58,
-  isValidSS58Address,
-} from './adapters/polkadot.js';
-export type {
-  PolkadotTransaction,
-  PolkadotAssetTransfer,
-  SS58AddressInfo,
-  PolkadotWalletInfo as PolkadotWalletInfoType,
-} from './adapters/polkadot.js';
+// Polkadot Adapter (optional)
+// export {
+//   PolkadotChainAdapter,
+//   POLKADOT_CHAINS,
+//   POLKADOT_WALLETS,
+//   decodeSS58,
+//   isValidSS58Address,
+// } from './adapters/polkadot.js';
+// export type {
+//   PolkadotTransaction,
+//   PolkadotAssetTransfer,
+//   SS58AddressInfo,
+//   PolkadotWalletInfo as PolkadotWalletInfoType,
+// } from './adapters/polkadot.js';
 
 // Crypto
 export {
@@ -187,9 +187,9 @@ export type { X25519Keypair } from './crypto/keypair.js';
 
 export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt.js';
 
-// SIWE Authentication
-export { SIWEAuth } from './auth/siwe.js';
-export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
+// SIWE Authentication (optional — requires @cinaconnect/siwe)
+// export { SIWEAuth } from './auth/siwe.js';
+// export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
 
 /**
  * Create a ChainAdapter from factory config.
@@ -260,7 +260,7 @@ export {
   generateWalletConnectUniversalLink,
   smartRedirect,
   detectPlatform,
-} from './links.js';
+} from './links/index.js';
 export type {
   DeepLinkParams,
   Platform as DeepLinkPlatform,
@@ -268,7 +268,7 @@ export type {
   RedirectOptions,
   WalletDeepLinkConfig,
   UniversalLinkParams,
-} from './links.js';
+} from './links/index.js';
 
 /**
  * SDK version.

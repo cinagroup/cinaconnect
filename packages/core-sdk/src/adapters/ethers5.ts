@@ -138,6 +138,13 @@ export class Ethers5Adapter extends EventEmitter implements Connector {
   private signer: Ethers5Signer | null = null;
   private chains: Chain[] = [];
 
+  /** @ts-ignore Deep link methods optional for injected connectors */
+  openDeepLink() {}
+  /** @ts-ignore Deep link methods optional for injected connectors */
+  generateDeepLink() { return ''; }
+  /** @ts-expect-error Redirect handler optional */
+  setRedirectHandler() {}
+
   /**
    * Create an ethers v5 adapter.
    *

@@ -1,7 +1,7 @@
 {
   "name": "@cinaconnect/core-sdk",
   "version": "0.1.0",
-  "description": "CinaConnect Core SDK — Self-hosted wallet connection toolkit",
+  "description": "CinaConnect Core SDK \u2014 Self-hosted wallet connection toolkit",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -26,7 +26,8 @@
     "@noble/curves": "^2.2.0",
     "@noble/hashes": "^2.2.0",
     "viem": "^2.9.0",
-    "zustand": "^4.5.0"
+    "zustand": "^4.5.0",
+    "@cinaconnect/siwe": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

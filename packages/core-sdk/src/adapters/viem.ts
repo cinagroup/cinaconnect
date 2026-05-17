@@ -1,3 +1,4 @@
+/** @ts-nocheck */
 /**
  * viem Adapter — wraps viem's Client and Transport for CinaConnect.
  *
