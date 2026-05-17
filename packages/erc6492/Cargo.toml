@@ -1,15 +1,9 @@
 [package]
-name = "erc6492"
+name = "cinaconnect-erc6492"
 version = "0.1.0"
 edition = "2021"
-description = "ERC-6492 signature verification for pre-deployed contract accounts"
-license = "MIT"
+description = "ERC-6492 signature verification for CinaConnect"
 
 [dependencies]
-alloy = { version = "0.5", features = ["contract", "signers", "providers"] }
-tokio = { version = "1", features = ["full"] }
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-thiserror = "1"
-tracing = "0.1"
-hex = "0.4"
+alloy-primitives = "0.8"
+k256 = "0.13"
