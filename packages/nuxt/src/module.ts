@@ -95,10 +95,7 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
     addTemplate({
       filename: 'cinaconnect-theme.css',
       getContents: () => {
-        const vars: string[] = []
-
-        // Base theme palette
-        const palette = {
+        const palette: Record<string, string> = {
           '--cinaconnect-color-accent': '#4F46E5',
           '--cinaconnect-color-accent-hover': '#4338CA',
           '--cinaconnect-color-bg': '#ffffff',
@@ -111,25 +108,32 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
           '--cinaconnect-radius': '12px',
         }
 
-        for (const [key, value] of Object.entries(palette)) {
-          vars.push(`  ${key}: ${options.themeVariables[key] ?? value};`)
+        const darkPalette: Record<string, string> = {
+          '--cinaconnect-color-bg': '#111827',
+          '--cinaconnect-color-bg-secondary': '#1f2937',
+          '--cinaconnect-color-text': '#f9fafb',
+          '--cinaconnect-color-text-secondary': '#9ca3af',
+          '--cinaconnect-color-border': '#374151',
         }
 
-        // Theme mode helper
-        const mode = options.themeMode ?? 'auto'
-        const baseBlock = mode === 'light'
-          ? ''
-          : mode === 'dark'
-            ? `\n  --cinaconnect-color-bg: ${options.themeVariables['--cinaconnect-color-bg'] ?? '#111827'};\n  --cinaconnect-color-bg-secondary: ${options.themeVariables['--cinaconnect-color-bg-secondary'] ?? '#1f2937'};\n  --cinaconnect-color-text: ${options.themeVariables['--cinaconnect-color-text'] ?? '#f9fafb'};\n  --cinaconnect-color-text-secondary: ${options.themeVariables['--cinaconnect-color-text-secondary'] ?? '#9ca3af'};\n  --cinaconnect-color-border: ${options.themeVariables['--cinaconnect-color-border'] ?? '#374151'};`
-            : ''
+        const resolve = (vars: Record<string, string>) =>
+          Object.entries(vars)
+            .map(([k, v]) => `  ${k}: ${options.themeVariables?.[k] ?? v};`)
+            .join('\n')
 
-        return [
-          `:root {`,
-          ...vars,
-          `}`,
-          ...(mode === 'dark' ? [`.dark {`, ...vars.filter(v => !v.includes('--cinaconnect-color-accent')), baseBlock, `}`] : []),
-          ...(mode === 'auto' ? [`@media (prefers-color-scheme: dark) {\n  :root {\n    --cinaconnect-color-bg: ${options.themeVariables['--cinaconnect-color-bg'] ?? '#111827'};\n    --cinaconnect-color-bg-secondary: ${options.themeVariables['--cinaconnect-color-bg-secondary'] ?? '#1f2937'};\n    --cinaconnect-color-text: ${options.themeVariables['--cinaconnect-color-text'] ?? '#f9fafb'};\n    --cinaconnect-color-text-secondary: ${options.themeVariables['--cinaconnect-color-text-secondary'] ?? '#9ca3af'};\n    --cinaconnect-color-border: ${options.themeVariables['--cinaconnect-color-border'] ?? '#374151'};\n  }\n}`] : []),
-        ].join('\n')
+        const rootVars = resolve(palette)
+        const darkVars = resolve(darkPalette)
+        const mode = options.themeMode ?? 'auto'
+
+        let css = `:root {\n${rootVars}\n}`
+
+        if (mode === 'dark') {
+          css += `\n:root {\n${darkVars}\n}`
+        } else if (mode === 'auto') {
+          css += `\n@media (prefers-color-scheme: dark) {\n  :root {\n${darkVars}\n  }\n}`
+        }
+
+        return css
       },
       write: true,
     })

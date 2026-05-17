@@ -1,0 +1,86 @@
+{
+  "metaMask": {
+    "name": "MetaMask",
+    "type": "injected",
+    "isMetaMask": true,
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "MetaMask",
+    "iconUrl": "/wallets/metamask.svg",
+    "rdns": "io.metamask",
+    "supportedChains": [1, 5, 11155111, 10, 137, 42161, 8453],
+    "capabilities": ["eth_sign", "personal_sign", "eth_signTypedData_v4"]
+  },
+  "walletConnect": {
+    "name": "WalletConnect",
+    "type": "walletconnect",
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "WalletConnect",
+    "iconUrl": "/wallets/walletconnect.svg",
+    "rdns": "com.walletconnect",
+    "supportedChains": [1, 5, 11155111, 10, 137, 42161, 8453, 56, 43114],
+    "capabilities": ["eth_sendTransaction", "personal_sign", "eth_signTypedData_v4"],
+    "version": "2.0",
+    "projectId": "mock-project-id"
+  },
+  "coinbase": {
+    "name": "Coinbase Wallet",
+    "type": "injected",
+    "isCoinbaseWallet": true,
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "Coinbase",
+    "iconUrl": "/wallets/coinbase.svg",
+    "rdns": "com.coinbase.wallet",
+    "supportedChains": [1, 5, 11155111, 10, 137, 42161, 8453],
+    "capabilities": ["eth_sendTransaction", "personal_sign", "eth_signTypedData_v4"]
+  },
+  "rabby": {
+    "name": "Rabby Wallet",
+    "type": "injected",
+    "isRabby": true,
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "Rabby",
+    "iconUrl": "/wallets/rabby.svg",
+    "rdns": "io.rabby",
+    "supportedChains": [1, 5, 11155111, 10, 137, 42161, 8453, 56, 43114],
+    "capabilities": ["eth_sendTransaction", "personal_sign", "eth_signTypedData_v4"]
+  },
+  "phantom": {
+    "name": "Phantom",
+    "type": "injected",
+    "isPhantom": true,
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "Phantom",
+    "iconUrl": "/wallets/phantom.svg",
+    "rdns": "app.phantom",
+    "supportedChains": [1, 137, 10, 42161, 8453],
+    "capabilities": ["eth_sendTransaction", "personal_sign", "eth_signTypedData_v4"]
+  },
+  "injected": {
+    "name": "Browser Wallet",
+    "type": "injected",
+    "chainId": 1,
+    "accounts": [
+      "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18"
+    ],
+    "shortName": "Browser",
+    "iconUrl": "/wallets/injected.svg",
+    "rdns": "injected",
+    "supportedChains": [1, 5, 11155111],
+    "capabilities": ["eth_sendTransaction", "personal_sign"]
+  }
+}

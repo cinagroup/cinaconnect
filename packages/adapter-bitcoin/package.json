@@ -1,0 +1,26 @@
+{
+  "name": "@cinaconnect/adapter-bitcoin",
+  "version": "0.1.0",
+  "description": "Native Bitcoin wallet connectors for CinaConnect — Unisat, Leather, OKX, SatsConnect, Xverse, Wallet Standard",
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --dts",
+    "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
+  },
+  "peerDependencies": {
+    "@cinaconnect/core-sdk": "workspace:*"
+  },
+  "dependencies": {
+    "@sats-connect/core": "^0.2.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.7.0"
+  },
+  "license": "MIT",
+  "publishConfig": { "access": "public" }
+}

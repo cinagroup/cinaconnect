@@ -1,0 +1,136 @@
+{
+  "simpleTransfer": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "value": "1000000000000000000",
+    "valueFormatted": "1.0",
+    "gas": "21000",
+    "gasPrice": "30000000000",
+    "chainId": 1,
+    "type": "transfer",
+    "token": "ETH"
+  },
+  "erc20Transfer": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "value": "0",
+    "gas": "65000",
+    "gasPrice": "30000000000",
+    "chainId": 1,
+    "type": "erc20_transfer",
+    "token": "USDC",
+    "tokenAddress": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    "tokenAmount": "1000000000",
+    "tokenAmountFormatted": "1000",
+    "data": "0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa96045000000000000000000000000000000000000000000000000000000003b9aca00"
+  },
+  "swapTransaction": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+    "value": "1000000000000000000",
+    "valueFormatted": "1.0",
+    "gas": "180000",
+    "gasPrice": "35000000000",
+    "chainId": 1,
+    "type": "swap",
+    "protocol": "Uniswap V3",
+    "fromToken": "ETH",
+    "toToken": "USDC",
+    "fromAmount": "1000000000000000000",
+    "toAmount": "3500000000",
+    "toAmountFormatted": "3500",
+    "priceImpact": "0.12",
+    "slippage": "0.5",
+    "route": [
+      {
+        "protocol": "Uniswap V3",
+        "fromToken": "ETH",
+        "toToken": "USDC",
+        "percentage": 100
+      }
+    ]
+  },
+  "batchTransaction": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0xSmartAccountEntryPoint",
+    "value": "0",
+    "gas": "350000",
+    "gasPrice": "30000000000",
+    "chainId": 1,
+    "type": "batch",
+    "accountType": "smart",
+    "actions": [
+      {
+        "to": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+        "value": "500000000000000000",
+        "data": "0x",
+        "description": "Send 0.5 ETH to Vitalik"
+      },
+      {
+        "to": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+        "value": "0",
+        "data": "0xa9059cbb000000000000000000000000d8da6bf26964af9d7eed9e03e53415d37aa960450000000000000000000000000000000000000000000000000000000005f5e100",
+        "description": "Send 100 USDC to Vitalik"
+      },
+      {
+        "to": "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+        "value": "500000000000000000",
+        "data": "0x...",
+        "description": "Swap 0.5 ETH for USDC on Uniswap"
+      }
+    ],
+    "totalGasEstimate": "350000",
+    "paymasterSupported": true,
+    "paymasterActive": false
+  },
+  "failedTransaction": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0x68b3465833fb72A70ecDF485E0e4C7bD8665Fc45",
+    "value": "100000000000000000000",
+    "valueFormatted": "100",
+    "gas": "180000",
+    "gasPrice": "35000000000",
+    "chainId": 1,
+    "type": "swap",
+    "protocol": "Uniswap V3",
+    "fromToken": "ETH",
+    "toToken": "USDC",
+    "error": {
+      "code": -32000,
+      "message": "execution reverted: INSUFFICIENT_OUTPUT_AMOUNT"
+    }
+  },
+  "paymasterSponsoredTransaction": {
+    "from": "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
+    "to": "0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045",
+    "value": "1000000000000000000",
+    "valueFormatted": "1.0",
+    "gas": "150000",
+    "gasPrice": "0",
+    "chainId": 1,
+    "type": "transfer",
+    "token": "ETH",
+    "accountType": "smart",
+    "paymaster": {
+      "address": "0xPaymaster1234567890abcdef1234567890abcdef12",
+      "sponsorName": "CinaConnect Paymaster",
+      "sponsored": true,
+      "userGasCost": "0",
+      "actualGasCost": "5250000000000000"
+    }
+  },
+  "networkSwitchTransaction": {
+    "currentChain": {
+      "chainId": 1,
+      "name": "Ethereum Mainnet",
+      "currency": "ETH",
+      "rpcUrl": "https://eth-mainnet.public.blastapi.io"
+    },
+    "targetChain": {
+      "chainId": 137,
+      "name": "Polygon",
+      "currency": "MATIC",
+      "rpcUrl": "https://polygon-rpc.com"
+    }
+  }
+}
