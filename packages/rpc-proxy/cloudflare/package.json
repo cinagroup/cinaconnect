@@ -1,0 +1,15 @@
+{
+  "name": "cinaconnect-rpc-proxy",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CinaConnect RPC Proxy — Cloudflare Worker",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0",
+    "typescript": "^5.0.0"
+  }
+}
