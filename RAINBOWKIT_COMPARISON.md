@@ -1,12 +1,14 @@
 # RainbowKit vs CinaConnect — 详细对比
 
+> **⚠️ Current Status (2026-05-17):** CinaConnect has source code for ~50 of 64 planned modules, but only 1 package (`@cinaconnect/core-sdk`) has been successfully built and published. Features listed below represent **architecture & code written**, not production-ready releases. See [HONEST_AUDIT.md](./HONEST_AUDIT.md) for detailed build status.
+
 ## 📊 核心数据对比
 
 | 指标 | RainbowKit | CinaConnect |
 |------|-----------|-------------|
 | **GitHub** | [rainbow-me/rainbowkit](https://github.com/rainbow-me/rainbowkit) | [cinagroup/cinaconnect](https://github.com/cinagroup/cinaconnect) |
-| **核心包数** | **3** (rainbowkit, rainbow-button, create-rainbowkit) | **64** (完整全栈) |
-| **源码文件** | ~248 个 TS/TSX 文件 | ~700+ 个 TS/TSX/JS/Dart 文件 |
+| **核心包数** | **3** (rainbowkit, rainbow-button, create-rainbowkit) | **64 modules planned** (52 with source code, 1 built & published) |
+| **源码文件** | ~248 个 TS/TSX 文件 | ~700+ 个 TS/TSX/JS/Dart 文件 (written, not all built) |
 | **框架支持** | **React 独占** (wagmi 生态) | **11 框架**: React, Vue, Svelte, Angular, Next, Nuxt, React Native, Flutter, Android, iOS, Unity |
 | **依赖链** | wagmi → viem → 强耦合 | 自研 core-sdk → 零外部依赖 |
 
@@ -30,7 +32,7 @@
 | **XRPL** | ❌ | ✅ Xaman |
 | **跨链桥** | ❌ 无 | ✅ 内置 Bridge |
 
-**关键差异**: RainbowKit **仅支持 EVM 链**（约 35 条），CinaConnect 支持 **16 条跨链协议**（EVM + Solana + Bitcoin + L2s）。
+**关键差异**: RainbowKit **仅支持 EVM 链**（约 35 条），CinaConnect 架构设计覆盖 **16 条跨链协议**（EVM + Solana + Bitcoin + L2s）— adapter source code written, not yet built or tested.
 
 ---
 
@@ -46,7 +48,7 @@
 | **TON 钱包** | ❌ | ✅ |
 | **移动端 Deep Link** | ⚠️ 仅 WalletConnect | ✅ 8 钱包深度链接 |
 
-**关键差异**: RainbowKit 钱包数量多但**仅限 EVM**。CinaConnect 钱包数量较少但**跨所有链协议**。
+**关键差异**: RainbowKit 钱包数量多但**仅限 EVM**。CinaConnect 架构覆盖**所有链协议** — source code for 30+ wallet connectors written, not yet built or connection-tested.
 
 ---
 
@@ -54,7 +56,7 @@
 
 | 维度 | RainbowKit | CinaConnect |
 |------|-----------|-------------|
-| **定位** | React 钱包连接 UI 组件库 | **全栈钱包连接基础设施** |
+| **定位** | React 钱包连接 UI 组件库 | **全栈钱包连接基础设施架构** (开发中) |
 | **核心依赖** | wagmi + viem + react-query | 自研 core-sdk (零外部依赖) |
 | **自托管** | ❌ 依赖 Rainbow 增强 RPC | ✅ **完全自托管** |
 | **RPC** | 使用 enhanced-provider.rainbow.me | ✅ 自建 RPC Proxy |
@@ -63,7 +65,7 @@
 | **CDN 分发** | npm only | npm + CDN bundle |
 | **部署方式** | npm 包 → 前端引入 | Cloudflare Workers + Pages + Docker |
 
-**关键差异**: RainbowKit 只是一个 **前端 UI 组件库**，依赖 wagmi + viem + Rainbow RPC。CinaConnect 是**完整基础设施栈**，包括 RPC 代理、密钥管理、通知系统、CDN 分发。
+**关键差异**: RainbowKit 只是一个 **前端 UI 组件库**，依赖 wagmi + viem + Rainbow RPC。CinaConnect 是**完整基础设施栈架构** — RPC Proxy & Keys Server deployed on Cloudflare Workers, Relay Server and remaining infrastructure source written but not built.
 
 ---
 
@@ -82,27 +84,27 @@
 
 ## 📦 功能对比
 
-| 功能 | RainbowKit | CinaConnect |
-|------|-----------|-------------|
-| **钱包连接 UI** | ✅ 精美 Modal | ✅ 精美 Modal |
-| **钱包按钮组件** | ✅ ConnectButton | ✅ + WalletButtons 独立包 |
-| **链切换** | ✅ | ✅ |
-| **余额显示** | ✅ | ✅ |
-| **Swap (DEX)** | ❌ | ✅ 内置 Swap SDK + DEX 聚合 |
-| **Onramp (法币入金)** | ❌ | ✅ 内置 Onramp SDK |
-| **跨链桥** | ❌ | ✅ |
-| **智能账户 (AA)** | ❌ | ✅ ERC-4337, Bundler, Paymaster |
-| **Gas 赞助** | ❌ | ✅ Gas Sponsorship 包 |
-| **KYC/AML** | ❌ | ✅ KYC 合规筛查 |
-| **多钱包管理** | ❌ | ✅ Multiwallet 包 |
-| **区块链浏览器** | ❌ | ✅ Explorer 包 |
-| **Blockchain API** | ❌ | ✅ REST API |
-| **CLI 工具** | ✅ create-rainbowkit | ✅ cinaconnect CLI |
-| **迁移工具** | ❌ | ✅ codemod (从 RainbowKit/ConnectKit/Privy 迁移) |
-| **Gas 估算器** | ❌ | ✅ |
-| **Token 列表** | ❌ | ✅ |
-| **推荐引擎** | ❌ | ✅ 钱包推荐 |
-| **分析** | ❌ | ✅ GDPR 合规分析 |
+| 功能 | RainbowKit | CinaConnect | 构建状态 |
+|------|-----------|-------------|----------|
+| **钱包连接 UI** | ✅ 精美 Modal | ✅ 精美 Modal | 📝 源码已写 |
+| **钱包按钮组件** | ✅ ConnectButton | ✅ + WalletButtons 独立包 | 📝 源码已写 |
+| **链切换** | ✅ | ✅ | 📝 源码已写 |
+| **余额显示** | ✅ | ✅ | 📝 源码已写 |
+| **Swap (DEX)** | ❌ | ✅ 内置 Swap SDK + DEX 聚合 | 📝 SDK 层，需外部 DEX 聚合器 API Key |
+| **Onramp (法币入金)** | ❌ | ✅ 内置 Onramp SDK | 📝 SDK + iframe 嵌入，需外部提供商 API Key |
+| **跨链桥** | ❌ | ✅ | ⚠️ 仅同步层，无真实跨链桥 |
+| **智能账户 (AA)** | ❌ | ✅ ERC-4337, Bundler, Paymaster | 📝 AA SDK 源码已写 / ⬜ Bundler & Paymaster 仅 scaffolding |
+| **Gas 赞助** | ❌ | ✅ Gas Sponsorship 包 | 📝 源码已写 |
+| **KYC/AML** | ❌ | ✅ KYC 合规筛查 | 📝 源码已写 |
+| **多钱包管理** | ❌ | ✅ Multiwallet 包 | 📝 源码已写 |
+| **区块链浏览器** | ❌ | ✅ Explorer 包 | 📝 源码已写 |
+| **Blockchain API** | ❌ | ✅ REST API | 📝 源码已写 |
+| **CLI 工具** | ✅ create-rainbowkit | ✅ cinaconnect CLI | 📝 源码已写 |
+| **迁移工具** | ❌ | ✅ codemod (从 RainbowKit/ConnectKit/Privy 迁移) | 📝 源码已写 |
+| **Gas 估算器** | ❌ | ✅ | 📝 源码已写 |
+| **Token 列表** | ❌ | ✅ | 📝 源码已写 |
+| **推荐引擎** | ❌ | ✅ 钱包推荐 | 📝 源码已写 |
+| **分析** | ❌ | ✅ GDPR 合规分析 | 📝 源码已写 |
 | **社交通知** | ❌ | ✅ Notify + Push Server |
 
 ---
@@ -129,8 +131,8 @@
 | 维度 | RainbowKit | CinaConnect |
 |------|-----------|-------------|
 | **核心库** | ✅ 免费 (MIT) | ✅ 免费 (MIT) |
-| **RPC 服务** | ⚠️ 依赖 Rainbow RPC (有速率限制) | ✅ 自建无限制 |
-| **高级功能** | ❌ 无高级功能 | ✅ 全部免费 |
+| **RPC 服务** | ⚠️ 依赖 Rainbow RPC (有速率限制) | ✅ 自建无限制 (RPC Proxy 已部署, 其他服务开发中) |
+| **高级功能** | ❌ 无高级功能 | ✅ 全部免费 (源码已写, 构建中) |
 | **自托管** | ❌ 不可自托管 | ✅ 完全自托管 |
 | **云服务费用** | 无 (纯前端) | **$0/月** (Cloudflare 免费额度) |
 | **商业使用** | ✅ MIT | ✅ MIT |
@@ -143,7 +145,7 @@
 | 维度 | RainbowKit | CinaConnect |
 |------|-----------|-------------|
 | **部署方式** | npm → 前端构建 | Cloudflare Workers + Pages |
-| **后端依赖** | 无 | ✅ 可选后端 (可自托管) |
+| **后端依赖** | 无 | ✅ 可选后端 (RPC Proxy + Keys Server 已部署, Relay/Notify/Push 开发中) |
 | **全球 CDN** | npm CDN | ✅ Cloudflare 300+ PoPs |
 | **DDoS 防护** | 无 | ✅ Cloudflare 内置 |
 | **SSL/TLS** | 由部署方负责 | ✅ 自动 |
@@ -163,13 +165,13 @@
 
 ### CinaConnect 优势
 
-- 🔗 **跨链协议支持**（EVM + Solana + Bitcoin + TON + TRON + Cosmos + Sui + Starknet + NEAR + Hedera + XRPL）
-- 🏗️ **完整基础设施栈**（RPC Proxy + Relay + Keys + Notify + CDN）
-- 📱 **11 个框架支持**（React/Vue/Svelte/Angular/Next/Nuxt/RN/Flutter/Android/iOS/Unity）
-- 🔐 **认证系统更强**（SIWX + Social Login + Passkey + Email）
-- 🧩 **功能更全面**（Swap + Onramp + Bridge + AA + Gas + KYC + Explorer + Analytics）
+- 🔗 **跨链协议支持**（EVM + Solana + Bitcoin + TON + TRON + Cosmos + Sui + Starknet + NEAR + Hedera + XRPL）⚠️ *adapter source code written, not yet built*
+- 🏗️ **完整基础设施栈架构**（RPC Proxy ✅ deployed + Relay + Keys ✅ deployed + Notify + CDN）
+- 📱 **11 个框架支持**（React/Vue/Svelte/Angular/Next/Nuxt/RN/Flutter/Android/iOS/Unity）⚠️ *mobile SDKs: type definitions only, native implementation needed*
+- 🔐 **认证系统**（SIWX + Social Login + Passkey + Email）⚠️ *source written, not yet built*
+- 🧩 **功能架构**（Swap + Onramp + Bridge + AA + Gas + KYC + Explorer + Analytics）⚠️ *Swap/Onramp: SDK interfaces requiring external API keys; Bridge: sync layer only; most: source written, not built*
 - 🏠 **完全自托管**（无供应商锁定，$0 成本运行）
-- 🔄 **迁移工具**（从 RainbowKit/ConnectKit/Privy 一键迁移）
+- 🔄 **迁移工具**（从 RainbowKit/ConnectKit/Privy 一键迁移）⚠️ *source written, not built*
 - 🚀 **CI/CD + Storybook + E2E**（企业级开发流程）
 - 🌐 **Cloudflare 全球部署**（300+ PoPs，DDoS 防护）
 

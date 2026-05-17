@@ -33,7 +33,7 @@ export declare function useChainId(): number | null;
  */
 export declare function useConnect(): {
     connect: (connectorId: string) => Promise<void>;
-    status: import("vue").Ref<"error" | "connecting" | "connected" | "disconnected", "error" | "connecting" | "connected" | "disconnected">;
+    status: import("vue").Ref<"connected" | "connecting" | "error" | "disconnected", "connected" | "connecting" | "error" | "disconnected">;
     isSwitchingChain: import("vue").Ref<boolean, boolean>;
 };
 /**

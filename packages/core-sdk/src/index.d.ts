@@ -22,7 +22,17 @@ export { QRTransport } from './transports/qr.js';
 export type { QRTransportConfig } from './transports/qr.js';
 export { EvmAdapter } from './adapters/evm.js';
 export type { EthCallParams } from './adapters/evm.js';
+export { ViemChainAdapter, createViemAdapter } from './adapters/viem.js';
+export type { ViemClient, ViemAccount, ViemChain, ViemTransport } from './adapters/viem.js';
+export { WagmiConnector, MultiChainConnector, createWagmiConnector, createMultiChainConnector, } from './adapters/wagmi.js';
+export type { WagmiConfig, WagmiChain, WagmiTransport, WagmiConnectorInstance, WagmiStorage, CreateWagmiConfig, } from './adapters/wagmi.js';
+export { Ethers5Adapter } from './adapters/ethers5.js';
+export type { Ethers5Provider, Ethers5Network, Ethers5BigNumber, Ethers5Signer, Ethers5TransactionRequest, Ethers5TransactionResponse, Ethers5TransactionReceipt, Ethers5Log, } from './adapters/ethers5.js';
+export { Ethers6Adapter } from './adapters/ethers6.js';
+export type { Ethers6Provider, Ethers6Network, Ethers6BigInt, Ethers6Signer, Ethers6TransactionRequest, Ethers6TransactionResponse, Ethers6TransactionReceipt, Ethers6Log, } from './adapters/ethers6.js';
 export type { ChainAdapter, ChainAdapterMethods, AdapterFactoryConfig, } from './adapters/types.js';
+export { SolanaChainAdapter, SOLANA_CHAINS, SOLANA_WALLETS, isValidSolanaAddress, base58Decode, } from './adapters/solana.js';
+export type { SolanaWalletInfo } from './adapters/solana.js';
 export { BitcoinChainAdapter, BITCOIN_CHAINS, BITCOIN_WALLETS, validateBitcoinAddress, } from './adapters/bitcoin.js';
 export type { UTXO, AddressFormat, BitcoinWalletInfo } from './adapters/bitcoin.js';
 export { TONChainAdapter, TON_CHAINS, TON_WALLETS, isValidTONAddress, parseTONAddress, hexToBase64url, base64urlToHex, } from './adapters/ton.js';
@@ -32,6 +42,8 @@ export type { TRONTransaction, TRC20Transfer, TRONTransactionRaw, TRONWalletInfo
 export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, } from './crypto/keypair.js';
 export type { X25519Keypair } from './crypto/keypair.js';
 export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt.js';
+export { SIWEAuth } from './auth/siwe.js';
+export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
 /**
  * Create a ChainAdapter from factory config.
  *

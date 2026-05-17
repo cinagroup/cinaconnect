@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * Solana Chain Adapter — provides Solana-specific operations.
  *

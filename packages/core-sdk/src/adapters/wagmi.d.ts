@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wagmi Adapter — integrates wagmi's hooks and config with CinaConnect.
  *
@@ -22,8 +21,9 @@
  * });
  * ```
  */
-import type { Connector } from '../connector.js';
+import type { Connector, RedirectHandler } from '../connector.js';
 import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types.js';
+import type { DeepLinkParams, RedirectResult } from '../links/index.js';
 import { EventEmitter } from '../events.js';
 /** Minimal wagmi Config shape. */
 export interface WagmiConfig {
@@ -127,6 +127,9 @@ export declare class WagmiConnector extends EventEmitter implements Connector {
     getWagmiConfig(): WagmiConfig;
     /** Get the underlying wagmi connector instance. */
     getWagmiConnectorInstance(): WagmiConnectorInstance | null;
+    openDeepLink(_walletId: string, _uri: string, _params?: Partial<DeepLinkParams>): Promise<RedirectResult>;
+    generateDeepLink(_walletId: string, _uri: string, _queryParams?: Record<string, string>): string;
+    setRedirectHandler(_handler?: RedirectHandler): void;
 }
 /**
  * MultiChainConnector wraps a full wagmi config with multiple connector
@@ -158,6 +161,9 @@ export declare class MultiChainConnector extends EventEmitter implements Connect
     signMessage(message: string): Promise<string>;
     signTransaction(tx: TransactionRequest): Promise<string>;
     getProvider(): unknown;
+    openDeepLink(_walletId: string, _uri: string, _params?: Partial<DeepLinkParams>): Promise<RedirectResult>;
+    generateDeepLink(_walletId: string, _uri: string, _queryParams?: Record<string, string>): string;
+    setRedirectHandler(_handler?: RedirectHandler): void;
 }
 /**
  * Create a WagmiConnector from a wagmi connector instance and config.

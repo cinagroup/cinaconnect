@@ -15,8 +15,9 @@
  * ```
  */
 
-import type { Connector } from '../connector.js';
+import type { Connector, RedirectHandler } from '../connector.js';
 import type { ConnectParams, ConnectionResult, TransactionRequest, Chain } from '../types.js';
+import type { DeepLinkParams, RedirectResult } from '../links/index.js';
 import { EventEmitter } from '../events.js';
 
 // ---------------------------------------------------------------------------
@@ -140,12 +141,25 @@ export class Ethers6Adapter extends EventEmitter implements Connector {
   private signer: Ethers6Signer | null = null;
   private chains: Chain[] = [];
 
-  /** @ts-ignore Deep link methods optional */
-  openDeepLink() {}
-  /** @ts-ignore Deep link methods optional */
-  generateDeepLink() { return ''; }
-  /** @ts-expect-error Redirect handler optional */
-  setRedirectHandler() {}
+  // Deep link stubs — injected connectors typically don't need these,
+  // but the Connector interface requires them.
+  async openDeepLink(
+    _walletId: string,
+    _uri: string,
+    _params?: Partial<DeepLinkParams>,
+  ): Promise<RedirectResult> {
+    return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+  }
+  generateDeepLink(
+    _walletId: string,
+    _uri: string,
+    _queryParams?: Record<string, string>,
+  ): string {
+    return '';
+  }
+  setRedirectHandler(_handler?: RedirectHandler): void {
+    // no-op for injected connectors
+  }
 
   /**
    * Create an ethers v6 adapter.

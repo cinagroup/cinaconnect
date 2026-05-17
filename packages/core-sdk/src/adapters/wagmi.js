@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wagmi Adapter — integrates wagmi's hooks and config with CinaConnect.
  *
@@ -153,6 +152,16 @@ export class WagmiConnector extends EventEmitter {
     getWagmiConnectorInstance() {
         return this.wagmiConnector;
     }
+    // Deep link stubs — wagmi connectors handle their own linking
+    async openDeepLink(_walletId, _uri, _params) {
+        return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+    }
+    generateDeepLink(_walletId, _uri, _queryParams) {
+        return '';
+    }
+    setRedirectHandler(_handler) {
+        // no-op for wagmi connectors
+    }
 }
 // ---------------------------------------------------------------------------
 // MultiChainConnector — supports multiple wagmi connectors
@@ -272,6 +281,16 @@ export class MultiChainConnector extends EventEmitter {
         if (typeof first === 'function')
             return first();
         return null;
+    }
+    // Deep link stubs
+    async openDeepLink(_walletId, _uri, _params) {
+        return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+    }
+    generateDeepLink(_walletId, _uri, _queryParams) {
+        return '';
+    }
+    setRedirectHandler(_handler) {
+        // no-op for multi-chain connector
     }
 }
 // ---------------------------------------------------------------------------

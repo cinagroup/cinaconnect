@@ -25,12 +25,17 @@ import { EventEmitter } from '../events.js';
  * and JsonRpcSigner.
  */
 export class Ethers6Adapter extends EventEmitter {
-    /** @ts-ignore Deep link methods optional */
-    openDeepLink() { }
-    /** @ts-ignore Deep link methods optional */
-    generateDeepLink() { return ''; }
-    /** @ts-expect-error Redirect handler optional */
-    setRedirectHandler() { }
+    // Deep link stubs — injected connectors typically don't need these,
+    // but the Connector interface requires them.
+    async openDeepLink(_walletId, _uri, _params) {
+        return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+    }
+    generateDeepLink(_walletId, _uri, _queryParams) {
+        return '';
+    }
+    setRedirectHandler(_handler) {
+        // no-op for injected connectors
+    }
     /**
      * Create an ethers v6 adapter.
      *

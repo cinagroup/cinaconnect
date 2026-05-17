@@ -1,15 +1,22 @@
-# Safe Decoder CLI
+# @cinaconnect/safe-decoder
 
-Decode and analyze Safe Core multisig transactions.
+Safe{Core} transaction decoder for CinaConnect.
 
-## Commands
-- `decode` - Decode Safe transaction data
-- `info` - Show Safe wallet configuration
-- `simulate` - Simulate Safe transaction execution
+## Installation
+
+This is a Rust binary package. Clone the repo and build:
+
+```bash
+cd packages/safe-decoder
+cargo build --release
+```
 
 ## Usage
+
 ```bash
-safe-decoder decode --tx 0x... --chain 1
-safe-decoder info --address 0x... --chain 1
-safe-decoder simulate --safe 0x... --data 0x...
+./target/release/safe-decoder <encoded-data>
 ```
+
+## Description
+
+Decodes Safe multi-signature transaction calldata for human-readable inspection.

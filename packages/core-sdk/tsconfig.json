@@ -28,28 +28,12 @@
     "isolatedModules": true
   },
   "include": [
-    "src/**/*.ts",
-    "!src/adapters/ethers5.ts",
-    "!src/adapters/ethers6.ts",
-    "!src/adapters/wagmi.ts",
-    "!src/adapters/solana.ts",
-    "!src/adapters/polkadot.ts",
-    "!src/adapters/viem.ts",
-    "!src/auth/siwe.ts",
-    "!src/eip5792"
+    "src/**/*.ts"
   ],
   "exclude": [
     "node_modules",
     "dist",
     "tests",
-    "benchmarks",
-    "src/adapters/ethers5.ts",
-    "src/adapters/ethers6.ts",
-    "src/adapters/wagmi.ts",
-    "src/adapters/solana.ts",
-    "src/adapters/polkadot.ts",
-    "src/adapters/viem.ts",
-    "src/auth/siwe.ts",
-    "src/eip5792"
+    "benchmarks"
   ]
 }

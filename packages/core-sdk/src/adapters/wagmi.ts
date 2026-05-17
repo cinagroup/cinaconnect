@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * wagmi Adapter — integrates wagmi's hooks and config with CinaConnect.
  *
@@ -23,9 +22,15 @@
  * ```
  */
 
-import type { Connector } from '../connector.js';
+import type { Connector, RedirectHandler } from '../connector.js';
 import type { ConnectParams, ConnectionResult, TransactionRequest } from '../types.js';
+import type { DeepLinkParams, RedirectResult } from '../links/index.js';
 import { EventEmitter } from '../events.js';
+
+/** Minimal EIP-1193 provider shape used by wagmi transports. */
+interface Eip1193Provider {
+  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
+}
 
 // ---------------------------------------------------------------------------
 // wagmi type stubs — consumers install `wagmi` alongside this package.
@@ -198,7 +203,7 @@ export class WagmiConnector extends EventEmitter implements Connector {
     }
 
     const data = message.startsWith('0x') ? message : stringToHex(message);
-    return (await provider.request({
+    return (await (provider as Eip1193Provider).request({
       method: 'personal_sign',
       params: [data, accounts[0]],
     })) as string;
@@ -210,7 +215,7 @@ export class WagmiConnector extends EventEmitter implements Connector {
       throw new Error('No provider available');
     }
 
-    return (await provider.request({
+    return (await (provider as Eip1193Provider).request({
       method: 'eth_signTransaction',
       params: [formatTx(tx)],
     })) as string;
@@ -242,6 +247,25 @@ export class WagmiConnector extends EventEmitter implements Connector {
   /** Get the underlying wagmi connector instance. */
   getWagmiConnectorInstance(): WagmiConnectorInstance | null {
     return this.wagmiConnector;
+  }
+
+  // Deep link stubs — wagmi connectors handle their own linking
+  async openDeepLink(
+    _walletId: string,
+    _uri: string,
+    _params?: Partial<DeepLinkParams>,
+  ): Promise<RedirectResult> {
+    return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+  }
+  generateDeepLink(
+    _walletId: string,
+    _uri: string,
+    _queryParams?: Record<string, string>,
+  ): string {
+    return '';
+  }
+  setRedirectHandler(_handler?: RedirectHandler): void {
+    // no-op for wagmi connectors
   }
 }
 
@@ -346,7 +370,7 @@ export class MultiChainConnector extends EventEmitter implements Connector {
     if (accounts.length === 0) throw new Error('No account');
 
     const data = message.startsWith('0x') ? message : stringToHex(message);
-    return (await provider.request({
+    return (await (provider as Eip1193Provider).request({
       method: 'personal_sign',
       params: [data, accounts[0]],
     })) as string;
@@ -355,7 +379,7 @@ export class MultiChainConnector extends EventEmitter implements Connector {
   async signTransaction(tx: TransactionRequest): Promise<string> {
     const provider = this.getProvider();
     if (!provider) throw new Error('No provider');
-    return (await provider.request({
+    return (await (provider as Eip1193Provider).request({
       method: 'eth_signTransaction',
       params: [formatTx(tx)],
     })) as string;
@@ -371,6 +395,25 @@ export class MultiChainConnector extends EventEmitter implements Connector {
     if (first?.value) return first.value;
     if (typeof first === 'function') return first();
     return null;
+  }
+
+  // Deep link stubs
+  async openDeepLink(
+    _walletId: string,
+    _uri: string,
+    _params?: Partial<DeepLinkParams>,
+  ): Promise<RedirectResult> {
+    return { success: false, method: 'qr-code', url: '', fallbackUsed: false };
+  }
+  generateDeepLink(
+    _walletId: string,
+    _uri: string,
+    _queryParams?: Record<string, string>,
+  ): string {
+    return '';
+  }
+  setRedirectHandler(_handler?: RedirectHandler): void {
+    // no-op for multi-chain connector
   }
 }
 
@@ -410,7 +453,7 @@ export function createMultiChainConnector(config: WagmiConfig): MultiChainConnec
 
 function stringToHex(str: string): `0x${string}` {
   const bytes = new TextEncoder().encode(str);
-  return '0x' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return ('0x' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')) as `0x${string}`;
 }
 
 function formatTx(tx: TransactionRequest): Record<string, unknown> {

@@ -1,4 +1,3 @@
-/** @ts-nocheck */
 /**
  * viem Adapter — wraps viem's Client and Transport for CinaConnect.
  *
@@ -266,5 +265,5 @@ export function createViemAdapter(
 /** Convert a UTF-8 string to hex (0x-prefixed). */
 function stringToHex(str: string): `0x${string}` {
   const bytes = new TextEncoder().encode(str);
-  return '0x' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
+  return ('0x' + Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')) as `0x${string}`;
 }

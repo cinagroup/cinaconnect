@@ -44,10 +44,7 @@ export async function walletSendCalls(
   ];
 
   try {
-    const result = await client.request<{
-      method: 'wallet_sendCalls';
-      params: [Omit<SendCallsParams, 'from'> & { from: Address }];
-    }>({
+    const result = await client.request({
       method: 'wallet_sendCalls',
       params: requestParams,
     });

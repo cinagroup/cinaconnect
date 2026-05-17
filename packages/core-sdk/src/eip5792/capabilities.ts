@@ -30,10 +30,7 @@ export async function walletGetCapabilities(
   const params: GetCapabilitiesParams = { address: accountParam as Address };
 
   try {
-    const result = await client.request<{
-      method: 'wallet_getCapabilities';
-      params: [Address];
-    }>({
+    const result = await client.request({
       method: 'wallet_getCapabilities',
       params: [params.address],
     });

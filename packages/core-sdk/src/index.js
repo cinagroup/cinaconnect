@@ -22,15 +22,16 @@ export { InjectedProvider } from './transports/injected.js';
 export { QRTransport } from './transports/qr.js';
 // EVM Adapter
 export { EvmAdapter } from './adapters/evm.js';
+// viem Adapter (optional — requires viem peer dep)
+export { ViemChainAdapter, createViemAdapter } from './adapters/viem.js';
+// wagmi Adapter (optional — requires wagmi peer dep)
+export { WagmiConnector, MultiChainConnector, createWagmiConnector, createMultiChainConnector, } from './adapters/wagmi.js';
+// ethers v5 Adapter (optional — requires ethers@5 peer dep)
+export { Ethers5Adapter } from './adapters/ethers5.js';
+// ethers v6 Adapter (optional — requires ethers@6 peer dep)
+export { Ethers6Adapter } from './adapters/ethers6.js';
 // Solana Adapter (optional)
-// export {
-//   SolanaChainAdapter,
-//   SOLANA_CHAINS,
-//   SOLANA_WALLETS,
-//   isValidSolanaAddress,
-//   base58Decode,
-// } from './adapters/solana.js';
-// export type { SolanaWalletInfo } from './adapters/solana.js';
+export { SolanaChainAdapter, SOLANA_CHAINS, SOLANA_WALLETS, isValidSolanaAddress, base58Decode, } from './adapters/solana.js';
 // Bitcoin Adapter
 export { BitcoinChainAdapter, BITCOIN_CHAINS, BITCOIN_WALLETS, validateBitcoinAddress, } from './adapters/bitcoin.js';
 // TON Adapter
@@ -55,8 +56,7 @@ export { TRONChainAdapter, TRON_CHAINS, TRON_WALLETS, isValidTRONAddress, base58
 export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, } from './crypto/keypair.js';
 export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt.js';
 // SIWE Authentication (optional — requires @cinaconnect/siwe)
-// export { SIWEAuth } from './auth/siwe.js';
-// export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
+export { SIWEAuth } from './auth/siwe.js';
 /**
  * Create a ChainAdapter from factory config.
  *
@@ -101,6 +101,10 @@ export async function createAdapter(config) {
             if (config.chains)
                 adapter.registerChains(config.chains);
             return adapter;
+        }
+        case 'solana': {
+            const mod = await import('./adapters/solana.js');
+            return new mod.SolanaChainAdapter();
         }
         default:
             throw new Error(`Unknown adapter type: ${config.type}`);

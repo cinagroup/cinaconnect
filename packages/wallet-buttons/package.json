@@ -32,7 +32,7 @@
     "walletconnect",
     "coinbase"
   ],
-  "author": "Hainai Group",
+  "author": "CinaGroup",
   "license": "MIT",
   "peerDependencies": {
     "react": ">=18.0.0",

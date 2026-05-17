@@ -24,10 +24,7 @@ export async function walletGetCallsStatus(
   batchId: string,
 ): Promise<GetCallsStatusResult> {
   try {
-    const result = await client.request<{
-      method: 'wallet_getCallsStatus';
-      params: [string];
-    }>({
+    const result = await client.request({
       method: 'wallet_getCallsStatus',
       params: [batchId],
     });

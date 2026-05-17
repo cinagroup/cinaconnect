@@ -14,8 +14,9 @@
  * await adapter.connect();
  * ```
  */
-import type { Connector } from '../connector.js';
+import type { Connector, RedirectHandler } from '../connector.js';
 import type { ConnectParams, ConnectionResult, TransactionRequest, Chain } from '../types.js';
+import type { DeepLinkParams, RedirectResult } from '../links/index.js';
 import { EventEmitter } from '../events.js';
 /** ethers v6 Provider. */
 export interface Ethers6Provider {
@@ -120,12 +121,9 @@ export declare class Ethers6Adapter extends EventEmitter implements Connector {
     private provider;
     private signer;
     private chains;
-    /** @ts-ignore Deep link methods optional */
-    openDeepLink(): void;
-    /** @ts-ignore Deep link methods optional */
-    generateDeepLink(): string;
-    /** @ts-expect-error Redirect handler optional */
-    setRedirectHandler(): void;
+    openDeepLink(_walletId: string, _uri: string, _params?: Partial<DeepLinkParams>): Promise<RedirectResult>;
+    generateDeepLink(_walletId: string, _uri: string, _queryParams?: Record<string, string>): string;
+    setRedirectHandler(_handler?: RedirectHandler): void;
     /**
      * Create an ethers v6 adapter.
      *

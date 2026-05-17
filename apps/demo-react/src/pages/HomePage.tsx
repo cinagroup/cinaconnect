@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import WalletModal from '../components/WalletModal'
+import { useWallet, formatAddress } from '../contexts/WalletContext'
 
 interface Chain {
   name: string
@@ -43,20 +44,15 @@ const FEATURES: Feature[] = [
 ]
 
 const HomePage: React.FC = () => {
+  const { connected, address, disconnect } = useWallet()
   const [walletModalOpen, setWalletModalOpen] = useState(false)
-  const [connected, setConnected] = useState(false)
   const [selectedChain, setSelectedChain] = useState('Ethereum')
-
-  const handleConnect = (wallet: string) => {
-    setConnected(true)
-  }
 
   return (
     <div className="min-h-screen bg-gray-950">
       <WalletModal
         isOpen={walletModalOpen}
         onClose={() => setWalletModalOpen(false)}
-        onConnect={handleConnect}
       />
 
       {/* Nav */}
@@ -77,7 +73,13 @@ const HomePage: React.FC = () => {
                 <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
                   ● Connected
                 </span>
-                <span className="text-sm font-mono text-gray-300">0x7a3...8f2d</span>
+                <span className="text-sm font-mono text-gray-300">{formatAddress(address)}</span>
+                <button
+                  onClick={disconnect}
+                  className="text-xs px-2 py-1 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors"
+                >
+                  Disconnect
+                </button>
               </div>
             ) : (
               <button
@@ -141,8 +143,8 @@ const HomePage: React.FC = () => {
                   👤
                 </div>
                 <div>
-                  <p className="font-semibold">0x7a3bC...8f2d</p>
-                  <p className="text-sm text-gray-400">1.234 ETH • Ethereum</p>
+                  <p className="font-mono font-semibold">{formatAddress(address)}</p>
+                  <p className="text-sm text-gray-400">Ethereum Mainnet</p>
                 </div>
               </div>
               <div className="flex items-center gap-3">
@@ -156,6 +158,12 @@ const HomePage: React.FC = () => {
                     <option key={c.name} value={c.name}>{c.emoji} {c.name}</option>
                   ))}
                 </select>
+                <button
+                  onClick={disconnect}
+                  className="px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-sm"
+                >
+                  Disconnect
+                </button>
               </div>
             </div>
           </div>
@@ -248,7 +256,7 @@ const HomePage: React.FC = () => {
               <a href="#" className="text-gray-500 hover:text-white text-sm transition-colors">Twitter</a>
             </div>
             <p className="text-gray-600 text-sm">
-              © 2024 Hainai Group. Open source under MIT.
+              © 2026 CinaGroup. Open source under MIT.
             </p>
           </div>
         </div>
