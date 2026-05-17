@@ -1,0 +1,65 @@
+/** @license MIT */
+
+@keyframes cc-wb-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cc-wallet-button {
+  --cc-wb-border: #e2e8f0;
+  --cc-wb-border-hover: #94a3b8;
+  --cc-wb-bg: #ffffff;
+  --cc-wb-text: #1e293b;
+  --cc-wb-bg-dark: #0f172a;
+}
+
+.cc-wallet-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.cc-wallet-button:active {
+  transform: translateY(0);
+}
+
+.cc-wallet-button--brand:hover {
+  filter: brightness(1.08);
+}
+
+.cc-wallet-button--minimal:hover span {
+  text-decoration-thickness: 2px;
+}
+
+.cc-wallet-button:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.cc-wallet-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Grid layout for WalletButtonGroup */
+.cc-wallet-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.cc-wallet-button-group--grid {
+  display: grid;
+  gap: 12px;
+}
+
+.cc-wallet-button-group--list {
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cc-wallet-button-group--list .cc-wallet-button {
+  width: 100%;
+  justify-content: flex-start;
+}

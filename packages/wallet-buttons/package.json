@@ -1,0 +1,56 @@
+{
+  "name": "@cinaconnect/wallet-buttons",
+  "version": "0.1.0",
+  "description": "Direct wallet connection buttons — no modal, no bloat. Connect wallets individually with beautiful, customizable buttons.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "wallet",
+    "web3",
+    "ethereum",
+    "react",
+    "connect-wallet",
+    "metamask",
+    "walletconnect",
+    "coinbase"
+  ],
+  "author": "Hainai Group",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "@cinaconnect/core-sdk": "^0.1.0",
+    "@cinaconnect/explorer": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hainai-group/cinaconnect.git",
+    "directory": "packages/wallet-buttons"
+  }
+}

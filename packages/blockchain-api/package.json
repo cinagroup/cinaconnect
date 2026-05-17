@@ -1,0 +1,46 @@
+{
+  "name": "@cinaconnect/blockchain-api",
+  "version": "0.1.0",
+  "description": "Managed Blockchain API (ENS, balance history, tx lookup) for CinaConnect",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "import": "./dist/server/index.mjs",
+      "require": "./dist/server/index.js"
+    },
+    "./hooks": {
+      "types": "./dist/hooks/index.d.ts",
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts src/server/index.ts src/hooks/index.ts --format cjs,esm --dts",
+    "dev": "tsup src/index.ts src/server/index.ts src/hooks/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src/",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cinaconnect/core-sdk": "workspace:*",
+    "viem": "^2.21.0"
+  },
+  "devDependencies": {
+    "next": "^14.0.0",
+    "react": "^18.2.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.4.0"
+  },
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0"
+  },
+  "license": "MIT"
+}

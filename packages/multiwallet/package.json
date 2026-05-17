@@ -1,0 +1,26 @@
+{
+  "name": "@cinaconnect/multiwallet",
+  "version": "0.1.0",
+  "description": "Multi-wallet linking: manage multiple wallet connections simultaneously across namespaces.",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc --build",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "dependencies": {
+    "@cinaconnect/core-sdk": "^0.1.0"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cinaconnect/onux.git",
+    "directory": "packages/multiwallet"
+  }
+}
