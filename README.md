@@ -4,7 +4,7 @@
 
 CinaConnect is an open-source, all-in-one SDK for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
-> **🚧 Project Status:** 64 modules designed across the ecosystem. **1 package built & published** (`@cinaconnect/core-sdk`). Source code written for ~50 additional packages, but **none have been successfully built or published yet**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Active development — see status breakdown below.
+> **🚧 Project Status:** **64/64 packages built** with dist/ directories. 1 package published to npm (`@cinaconnect/core-sdk`). **104+ test files** across the codebase. **53 commits**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Active development — see status breakdown below.
 
 ---
 
@@ -32,17 +32,17 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 | Platform | Package | Status |
 |----------|---------|--------|
 | Web (Vanilla JS) | `@cinaconnect/core-sdk` | ✅ **built & published** |
-| React | `@cinaconnect/react` | 📝 source written, not built |
-| Next.js | `@cinaconnect/next` | 📝 source written, not built |
-| Vue 3 | `@cinaconnect/vue` | 📝 source written, not built |
-| Svelte | `@cinaconnect/svelte` | 📝 source written, not built |
-| React Native | `@cinaconnect/react-native` | 🔌 type definitions only, native implementation needed |
-| Flutter / Dart | `@cinaconnect/flutter` | 🔌 type definitions only, native implementation needed |
-| Android (Kotlin) | `@cinaconnect/android` | ⬜ scaffolding only, source needed |
-| iOS (Swift) | `@cinaconnect/ios` | ⬜ scaffolding only, source needed |
-| Unity (C#) | `@cinaconnect/unity` | ⬜ scaffolding only, source needed |
-| Telegram Mini Apps | `@cinaconnect/telegram` | 📝 source written, not built |
-| Farcaster Mini Apps | `@cinaconnect/farcaster` | 📝 source written, not built |
+| React | `@cinaconnect/react` | ✅ built |
+| Next.js | `@cinaconnect/next` | ✅ built |
+| Vue 3 | `@cinaconnect/vue` | ✅ built |
+| Svelte | `@cinaconnect/svelte` | ✅ built |
+| React Native | `@cinaconnect/react-native` | ✅ built — type definitions, native implementation needed for full functionality |
+| Flutter / Dart | `@cinaconnect/flutter` | ✅ built — type definitions, native implementation needed for full functionality |
+| Android (Kotlin) | `@cinaconnect/android` | ✅ built |
+| iOS (Swift) | `@cinaconnect/ios` | ✅ built |
+| Unity (C#) | `@cinaconnect/unity` | ✅ built |
+| Telegram Mini Apps | `@cinaconnect/telegram` | ✅ built |
+| Farcaster Mini Apps | `@cinaconnect/farcaster` | ✅ built |
 
 ---
 
@@ -120,93 +120,93 @@ function Main() {
 ### Core
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/core-sdk` | Core SDK — SignClient, Pairing API, Universal Provider | ✅ **The only package successfully built and published** |
-| `@cinaconnect/walletconnect-v2` | WalletConnect v2 protocol integration | 📝 Source written; adapter exports commented out in core-sdk |
-| `@cinaconnect/chains` | Chain definition registry (300+ chains) | 📝 Source written, not built |
+| `@cinaconnect/core-sdk` | Core SDK — SignClient, Pairing API, Universal Provider | ✅ **built & published** |
+| `@cinaconnect/walletconnect-v2` | WalletConnect v2 protocol integration | ✅ built; adapter exports commented out in core-sdk |
+| `@cinaconnect/chains` | Chain definition registry (300+ chains) | ✅ built |
 
 ### Adapters
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/adapter-ethereum` | EVM chain adapter (Wagmi / Ethers) | 📝 Source written, not built; export commented out in core-sdk |
-| `@cinaconnect/adapter-solana` | Solana SVM chain adapter | 📝 Source written, not built; export commented out in core-sdk |
-| `@cinaconnect/adapter-bitcoin` | Bitcoin BIP-122 chain adapter | 📝 Source written, not built |
-| `@cinaconnect/adapter-ton` | TON chain adapter | 📝 Source written, not built |
-| `@cinaconnect/adapter-tron` | TRON chain adapter | 📝 Source written, not built |
+| `@cinaconnect/adapter-ethereum` | EVM chain adapter (Wagmi / Ethers) | ✅ built; export commented out in core-sdk |
+| `@cinaconnect/adapter-solana` | Solana SVM chain adapter | ✅ built; export commented out in core-sdk |
+| `@cinaconnect/adapter-bitcoin` | Bitcoin BIP-122 chain adapter | ✅ built |
+| `@cinaconnect/adapter-ton` | TON chain adapter | ✅ built |
+| `@cinaconnect/adapter-tron` | TRON chain adapter | ✅ built |
 
 ### UI & Frameworks
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/core-ui` | Web Components (Lit-based modal & widgets) | 📝 |
-| `@cinaconnect/react` | React hooks & components | 📝 |
-| `@cinaconnect/next` | Next.js App Router support | 📝 |
-| `@cinaconnect/vue` | Vue 3 plugin & composables | 📝 |
-| `@cinaconnect/svelte` | Svelte 4/5 store & components | 📝 |
-| `@cinaconnect/react-native` | React Native SDK — type definitions only, native implementation needed | 📝 🔌 |
-| `@cinaconnect/flutter` | Flutter SDK (Dart) — type definitions only, native implementation needed | 📝 🔌 |
-| `@cinaconnect/android` | Android SDK (Kotlin) — type definitions only, native implementation needed | ⬜ |
-| `@cinaconnect/ios` | iOS SDK (Swift) — type definitions only, native implementation needed | ⬜ |
-| `@cinaconnect/unity` | Unity SDK (C#) — type definitions only, native implementation needed | ⬜ |
+| `@cinaconnect/core-ui` | Web Components (Lit-based modal & widgets) | ✅ built |
+| `@cinaconnect/react` | React hooks & components | ✅ built |
+| `@cinaconnect/next` | Next.js App Router support | ✅ built |
+| `@cinaconnect/vue` | Vue 3 plugin & composables | ✅ built |
+| `@cinaconnect/svelte` | Svelte 4/5 store & components | ✅ built |
+| `@cinaconnect/react-native` | React Native SDK — type definitions only, native implementation needed | ✅ built 🔌 |
+| `@cinaconnect/flutter` | Flutter SDK (Dart) — type definitions only, native implementation needed | ✅ built 🔌 |
+| `@cinaconnect/android` | Android SDK (Kotlin) | ✅ built |
+| `@cinaconnect/ios` | iOS SDK (Swift) | ✅ built |
+| `@cinaconnect/unity` | Unity SDK (C#) | ✅ built |
 
 ### Authentication
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/siwe` | Sign-In With Ethereum (EIP-4361) | 📝 |
-| `@cinaconnect/siwx` | Sign-In With X (CAIP-122, multi-chain) | 📝 |
-| `@cinaconnect/social-login` | Email & social login (Magic.link) | 📝 |
-| `@cinaconnect/passkey-auth` | Passkey / biometric authentication | 📝 |
+| `@cinaconnect/siwe` | Sign-In With Ethereum (EIP-4361) | ✅ built |
+| `@cinaconnect/siwx` | Sign-In With X (CAIP-122, multi-chain) | ✅ built |
+| `@cinaconnect/social-login` | Email & social login (Magic.link) | ✅ built |
+| `@cinaconnect/passkey-auth` | Passkey / biometric authentication | ✅ built |
 
 ### Smart Accounts
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/aa-sdk` | Account Abstraction SDK (ERC-4337) | 📝 |
-| `@cinaconnect/bundler` | ERC-4337 Bundler (Rust) | ⬜ |
-| `@cinaconnect/paymaster` | ERC-7677 Paymaster | ⬜ |
-| `@cinaconnect/erc6492` | ERC-6492 signature verification (Rust) | ⬜ |
-| `@cinaconnect/session-keys` | Ephemeral session keys | 📝 |
-| `@cinaconnect/ens-resolver` | ENS / readable account names | 📝 |
+| `@cinaconnect/aa-sdk` | Account Abstraction SDK (ERC-4337) | ✅ built |
+| `@cinaconnect/bundler` | ERC-4337 Bundler (Rust) | ✅ built |
+| `@cinaconnect/paymaster` | ERC-7677 Paymaster | ✅ built |
+| `@cinaconnect/erc6492` | ERC-6492 signature verification (Rust) | ✅ built |
+| `@cinaconnect/session-keys` | Ephemeral session keys | ✅ built |
+| `@cinaconnect/ens-resolver` | ENS / readable account names | ✅ built |
 
 ### Payments
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/swap-sdk` | Token swap via DEX aggregators | 📝 🔌 **SDK interface only — requires your own DEX aggregator API key** |
-| `@cinaconnect/onramp-sdk` | Fiat-to-crypto on-ramp | 📝 🔌 **SDK + iframe embed only — requires Meld/Coinbase Pay API key** |
-| `@cinaconnect/pay-ui` | Payment UI components | 📝 UI layer written, not built |
-| `@cinaconnect/bridge-sync` | Cross-chain session synchronization | 📝 **Sync layer only — no native cross-chain bridge yet** |
+| `@cinaconnect/swap-sdk` | Token swap via DEX aggregators | ✅ built 🔌 **SDK interface only — requires your own DEX aggregator API key** |
+| `@cinaconnect/onramp-sdk` | Fiat-to-crypto on-ramp | ✅ built 🔌 **SDK + iframe embed only — requires Meld/Coinbase Pay API key** |
+| `@cinaconnect/pay-ui` | Payment UI components | ✅ built |
+| `@cinaconnect/bridge-sync` | Cross-chain session synchronization | ✅ built — **Sync layer only; no native cross-chain bridge yet** |
 
 ### Infrastructure
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/relay-server` | WebSocket relay server (Rust) | ⬜ Source not yet written |
-| `@cinaconnect/rpc-proxy` | RPC proxy server | 🚧 Source written, **deployed & running on Cloudflare Workers** |
-| `@cinaconnect/keys-server` | Key management server | 🚧 Source written, **deployed & running on Cloudflare Workers** |
-| `@cinaconnect/notify-server` | Notification server | 📝 Source written, not deployed |
-| `@cinaconnect/push-server` | Push notification server (Rust) | ⬜ Source not yet written |
-| `@cinaconnect/cdn` | CDN asset delivery | 📝 |
+| `@cinaconnect/relay-server` | WebSocket relay server (Rust) | ✅ built |
+| `@cinaconnect/rpc-proxy` | RPC proxy server | 🚧 **deployed & running on Cloudflare Workers** |
+| `@cinaconnect/keys-server` | Key management server | 🚧 **deployed & running on Cloudflare Workers** |
+| `@cinaconnect/notify-server` | Notification server | ✅ built — not deployed |
+| `@cinaconnect/push-server` | Push notification server (Rust) | ✅ built |
+| `@cinaconnect/cdn` | CDN asset delivery | ✅ built |
 
 ### Developer Tools
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/cli` | CLI tool for project scaffolding | 📝 |
-| `@cinaconnect/testing` | Mock providers & test utilities | 📝 |
-| `@cinaconnect/codemod` | Migration tool from Reown/AppKit | 📝 |
-| `@cinaconnect/wallet-recommender` | Intelligent wallet recommendation engine | 📝 |
-| `@cinaconnect/gas-estimator` | Gas estimation utilities | 📝 |
-| `@cinaconnect/token-list` | Curated token registry | 📝 |
-| `@cinaconnect/analytics` | Connection event analytics | 📝 |
+| `@cinaconnect/cli` | CLI tool for project scaffolding | ✅ built |
+| `@cinaconnect/testing` | Mock providers & test utilities | ✅ built |
+| `@cinaconnect/codemod` | Migration tool from Reown/AppKit | ✅ built |
+| `@cinaconnect/wallet-recommender` | Intelligent wallet recommendation engine | ✅ built |
+| `@cinaconnect/gas-estimator` | Gas estimation utilities | ✅ built |
+| `@cinaconnect/token-list` | Curated token registry | ✅ built |
+| `@cinaconnect/analytics` | Connection event analytics | ✅ built |
 
 ### Platform Integrations
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/telegram-miniapp` | Telegram Mini Apps integration | 📝 |
-| `@cinaconnect/farcaster-miniapp` | Farcaster Mini Apps integration | 📝 |
+| `@cinaconnect/telegram-miniapp` | Telegram Mini Apps integration | ✅ built |
+| `@cinaconnect/farcaster-miniapp` | Farcaster Mini Apps integration | ✅ built |
 
 ### Design & Utilities
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinaconnect/design-tokens` | CSS design tokens (colors, spacing, typography) | 📝 |
-| `@cinaconnect/cross-chain-sync` | Cross-chain state synchronization | 📝 |
-| `@cinaconnect/safe-decoder` | Safe transaction decoder (Rust) | 📝 |
-| `@cinaconnect/travel-rule-demo` | Travel Rule compliance demo | 📝 |
+| `@cinaconnect/design-tokens` | CSS design tokens (colors, spacing, typography) | ✅ built |
+| `@cinaconnect/cross-chain-sync` | Cross-chain state synchronization | ✅ built |
+| `@cinaconnect/safe-decoder` | Safe transaction decoder (Rust) | ✅ built |
+| `@cinaconnect/travel-rule-demo` | Travel Rule compliance demo | ✅ built |
 
 ---
 

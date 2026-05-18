@@ -81,12 +81,13 @@ function testEmitMultipleArgs() {
 function testListenerCount() {
   const ee = new EventEmitter();
   assert(ee.listenerCount('x') === 0, 'no listeners initially');
-  const h = () => {};
-  ee.on('x', h);
+  const h1 = () => {};
+  ee.on('x', h1);
   assert(ee.listenerCount('x') === 1, 'one listener after on');
-  ee.on('x', h);
+  const h2 = () => {};
+  ee.on('x', h2);
   assert(ee.listenerCount('x') === 2, 'two listeners');
-  ee.off('x', h);
+  ee.off('x', h1);
   assert(ee.listenerCount('x') === 1, 'one after off');
   console.log('✓ listenerCount');
 }

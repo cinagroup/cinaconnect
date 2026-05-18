@@ -1,20 +1,14 @@
 #!/usr/bin/env bash
 # run-tests.sh — Run all CinaConnect package tests from workspace root.
 # Usage: bash run-tests.sh   (from onux/ directory)
+#
+# Auto-detects all packages with a tests/ directory.
 set -euo pipefail
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
-
-PACKAGES=(
-  "core-sdk"
-  "swap-sdk"
-  "siwe"
-  "aa-sdk"
-  "config"
-)
 
 TOTAL_PASS=0
 TOTAL_FAIL=0
@@ -25,12 +19,12 @@ echo "  CinaConnect Package Test Runner"
 echo "========================================"
 echo ""
 
-for pkg in "${PACKAGES[@]}"; do
-  DIR="packages/${pkg}"
-  TESTS_DIR="${DIR}/tests"
+# Auto-detect packages with tests/ directories
+for dir in packages/*/; do
+  pkg=$(basename "$dir")
+  TESTS_DIR="${dir}tests"
 
   if [ ! -d "$TESTS_DIR" ]; then
-    echo -e "${YELLOW}⊘ ${pkg}: no tests/ directory${NC}"
     continue
   fi
 
@@ -40,12 +34,18 @@ for pkg in "${PACKAGES[@]}"; do
   FILE_COUNT=$(find "$TESTS_DIR" -name '*.test.ts' -type f | wc -l | tr -d ' ')
   TOTAL_FILES=$((TOTAL_FILES + FILE_COUNT))
 
+  if [ "$FILE_COUNT" -eq 0 ]; then
+    echo -e "  ${YELLOW}(no .test.ts files)${NC}"
+    continue
+  fi
+
   for test_file in "${TESTS_DIR}"/*.test.ts; do
     [ -f "$test_file" ] || continue
     TEST_NAME=$(basename "$test_file" .test.ts)
     echo -n "  ${TEST_NAME}: "
 
-    if npx tsx "$test_file" 2>&1; then
+    # Run with tsx, suppress output so we only see our pass/fail
+    if npx tsx "$test_file" > /dev/null 2>&1; then
       echo -e "${GREEN}✓${NC}"
       TOTAL_PASS=$((TOTAL_PASS + 1))
     else

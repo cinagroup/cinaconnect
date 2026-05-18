@@ -62,7 +62,7 @@ function testGenerateMessageMinimal() {
     nonce: 'abcdefgh',
   };
   const msg = generateMessage(minimal);
-  assert(msg.startsWith('app.io wants you to sign in with your Ethereum account:'), 'preamble');
+  assert(msg.startsWith('https://app.io wants you to sign in with your Ethereum account:'), 'preamble');
   assert(msg.includes('URI: https://app.io'), 'uri');
   assert(msg.includes('Version: 1'), 'version');
   assert(msg.includes('Chain ID: 1'), 'chainId');

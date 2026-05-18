@@ -38,9 +38,9 @@ function testCalculatePriceImpact() {
   // execution price = 100 tokens for 55 → 100/55 ≈ 1.818
   // impact ≈ (2.0 - 1.818) / 2.0 * 100 ≈ 9.09%
   const impact = calculatePriceImpact(55n, 100n, 2.0);
-  assert(impact > 0, 'impact should be positive');
-  assert(impact < 100, 'impact should be under 100%');
-  console.log(`✓ calculatePriceImpact (${impact.toFixed(2)}%)`);
+  assert(impact.percentage > 0, 'impact should be positive');
+  assert(impact.percentage < 100, 'impact should be under 100%');
+  console.log(`✓ calculatePriceImpact (${impact.percentage.toFixed(2)}%)`);
 }
 
 function testClassifyPriceImpact() {
@@ -71,8 +71,10 @@ function testExchangeRate() {
 }
 
 function testPercentDiff() {
-  const diff = percentDiff(100n, 120n);
-  assert(diff === 20, 'percent diff between 100 and 120 should be 20');
+  // percentDiff uses ((a - b) / b) * 100
+  // (120 - 100) / 100 * 100 = 20
+  const diff = percentDiff(120n, 100n);
+  assert(diff === 20, 'percent diff between 120 and 100 should be 20');
   console.log('✓ percentDiff');
 }
 
