@@ -4,7 +4,7 @@
 
 CinaConnect is an open-source, all-in-one SDK for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
-> **🚧 Project Status:** 64 modules in the ecosystem. **1 package built & published** (`@cinaconnect/core-sdk`). Source code written for ~50 more packages, but **none have been successfully built yet**. Active development — see status breakdown below.
+> **🚧 Project Status:** 64 modules designed across the ecosystem. **1 package built & published** (`@cinaconnect/core-sdk`). Source code written for ~50 additional packages, but **none have been successfully built or published yet**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Active development — see status breakdown below.
 
 ---
 
@@ -17,9 +17,9 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 - **Smart Accounts** (ERC-4337) — gasless transactions, session keys, batch calls
 
 ### 💳 Payments
-- **Swaps** — SDK interface for DEX aggregators ⚠️ *Requires your own DEX aggregator API key (e.g., 1inch, 0x); CinaConnect provides the integration layer only*
-- **On-Ramp** — SDK interface with iframe embed for Meld/Coinbase Pay ⚠️ *Requires your own provider API key; CinaConnect provides the integration layer only*
-- **Bridge** — cross-chain session synchronization layer ⚠️ *SDK sync layer only; no native cross-chain bridge implementation yet*
+- **Swaps** — SDK interface for DEX aggregators 🔌 *Requires your own DEX aggregator API key (e.g., 1inch, 0x); CinaConnect provides the integration layer only*
+- **On-Ramp** — SDK interface with iframe embed for Meld/Coinbase Pay 🔌 *Requires your own provider API key; CinaConnect provides the integration layer only*
+- **Bridge** — cross-chain session synchronization layer 🔌 *SDK sync layer only; no native cross-chain bridge implementation yet*
 - **Pay** — self-custodial wallet payments across 6 chains (USDC, USDT, SOL)
 
 ### 🔐 Authentication
@@ -31,17 +31,18 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 
 | Platform | Package | Status |
 |----------|---------|--------|
-| Web (Vanilla JS) | `@cinaconnect/core-sdk` | 📝 source written |
-| React / Next.js | `@cinaconnect/react`, `@cinaconnect/next` | 📝 source written |
-| Vue 3 / Nuxt | `@cinaconnect/vue` | 📝 source written |
-| Svelte / SvelteKit | `@cinaconnect/svelte` | 📝 source written |
-| React Native | `@cinaconnect/react-native` | 📝 type definitions only, native impl. needed |
-| Flutter / Dart | `@cinaconnect/flutter` | 📝 type definitions only, native impl. needed |
-| Android (Kotlin) | `@cinaconnect/android` | ⬜ planned |
-| iOS (Swift) | `@cinaconnect/ios` | ⬜ planned |
-| Unity (C#) | `@cinaconnect/unity` | ⬜ planned |
-| Telegram Mini Apps | `@cinaconnect/telegram` | 📝 source written |
-| Farcaster Mini Apps | `@cinaconnect/farcaster` | 📝 source written |
+| Web (Vanilla JS) | `@cinaconnect/core-sdk` | ✅ **built & published** |
+| React | `@cinaconnect/react` | 📝 source written, not built |
+| Next.js | `@cinaconnect/next` | 📝 source written, not built |
+| Vue 3 | `@cinaconnect/vue` | 📝 source written, not built |
+| Svelte | `@cinaconnect/svelte` | 📝 source written, not built |
+| React Native | `@cinaconnect/react-native` | 🔌 type definitions only, native implementation needed |
+| Flutter / Dart | `@cinaconnect/flutter` | 🔌 type definitions only, native implementation needed |
+| Android (Kotlin) | `@cinaconnect/android` | ⬜ scaffolding only, source needed |
+| iOS (Swift) | `@cinaconnect/ios` | ⬜ scaffolding only, source needed |
+| Unity (C#) | `@cinaconnect/unity` | ⬜ scaffolding only, source needed |
+| Telegram Mini Apps | `@cinaconnect/telegram` | 📝 source written, not built |
+| Farcaster Mini Apps | `@cinaconnect/farcaster` | 📝 source written, not built |
 
 ---
 

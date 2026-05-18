@@ -4,47 +4,47 @@
 
 ## 📊 核心数据对比
 
-| 指标 | RainbowKit | CinaConnect |
-|------|-----------|-------------|
-| **GitHub** | [rainbow-me/rainbowkit](https://github.com/rainbow-me/rainbowkit) | [cinagroup/cinaconnect](https://github.com/cinagroup/cinaconnect) |
-| **核心包数** | **3** (rainbowkit, rainbow-button, create-rainbowkit) | **64 modules in the ecosystem** (50+ with source code, **1 built & published**, 11 are scaffolding-only) |
-| **源码文件** | ~248 个 TS/TSX 文件 | ~700+ 个 TS/TSX/JS/Dart 文件 (written, not all built) |
-| **框架支持** | **React 独占** (wagmi 生态) | **11 框架**: React, Vue, Svelte, Angular, Next, Nuxt, React Native, Flutter, Android, iOS, Unity |
-| **依赖链** | wagmi → viem → 强耦合 | 自研 core-sdk → 零外部依赖 |
+| 指标 | RainbowKit | CinaConnect | 构建状态 |
+|------|-----------|-------------|----------|
+| **GitHub** | [rainbow-me/rainbowkit](https://github.com/rainbow-me/rainbowkit) | [cinagroup/cinaconnect](https://github.com/cinagroup/cinaconnect) | — |
+| **核心包数** | **3** (rainbowkit, rainbow-button, create-rainbowkit) | **64 模块规划** (50+ 有源码，**1 个已构建发布**，11 个 scaffolding) | 仅 1/64 已发布到 npm |
+| **源码文件** | ~248 个 TS/TSX 文件 | ~700+ 个 TS/TSX/JS/Dart 文件 (已写入，未全部构建) | 核心适配器 exports 被注释 |
+| **框架支持** | **React 独占** (wagmi 生态) | **11 框架设计**: React/Vue/Svelte/Next/Nuxt/RN/Flutter/Android/iOS/Unity/Angular | React/Vue/Svelte/Next 源码未构建；RN/Flutter 仅类型定义；Android/iOS/Unity 仅 scaffolding |
+| **依赖链** | wagmi → viem → 强耦合 | 自研 core-sdk → 零外部依赖 | 零依赖 ✅ |
 
 ---
 
 ## 🔗 链支持对比
 
-| 指标 | RainbowKit | CinaConnect |
-|------|-----------|-------------|
-| **链数量** | ~35 条 (EVM only) | **16 条 designed** (7 adapter source files written, **0 built or tested**, chain adapters commented out in core-sdk exports) |
-| **EVM 链** | ✅ 全部 (ETH, Polygon, Arbitrum, Base, Optimism, BSC, Avalanche, zkSync, Linea, Scroll, Blast, etc.) | ✅ 全部 (ETH, Polygon, Arbitrum, Base, Optimism, BSC) |
-| **Solana** | ❌ | ✅ Phantom, Solflare, Backpack |
-| **Bitcoin** | ❌ | ✅ Unisat, Leather, Xverse, OKX |
-| **TON** | ❌ | ✅ Tonkeeper, OpenMask |
-| **TRON** | ❌ | ✅ TronLink, TronPay |
-| **Cosmos** | ❌ | ✅ Keplr, Leap |
-| **Sui** | ❌ | ✅ Sui Wallet, Ethos, Suiet |
-| **Starknet** | ❌ | ✅ Argent X, Braavos |
-| **NEAR** | ❌ | ✅ NEAR Wallet, Here Wallet |
-| **Hedera** | ❌ | ✅ HashPack, Blade |
-| **XRPL** | ❌ | ✅ Xaman |
-| **跨链桥** | ❌ 无 | ✅ 内置 Bridge |
+| 指标 | RainbowKit | CinaConnect | 构建状态 |
+|------|-----------|-------------|----------|
+| **链数量** | ~35 条 (EVM only) | **16 条链架构设计** (7 个 adapter 有源码，**0 个已构建或测试**，链适配器在 core-sdk exports 中被注释) | 仅 EVM 基础可用 |
+| **EVM 链** | ✅ 全部 | 📝 设计支持 ETH, Polygon, Arbitrum, Base, Optimism, BSC | 未构建，未测试 |
+| **Solana** | ❌ | 📝 设计支持 Phantom, Solflare, Backpack | 源码未构建 |
+| **Bitcoin** | ❌ | 📝 设计支持 Unisat, Leather, Xverse, OKX | 源码未构建 |
+| **TON** | ❌ | 📝 设计支持 Tonkeeper, OpenMask | 源码未构建 |
+| **TRON** | ❌ | 📝 设计支持 TronLink, TronPay | 源码未构建 |
+| **Cosmos** | ❌ | 📝 设计支持 Keplr, Leap | 源码未构建 |
+| **Sui** | ❌ | 📝 设计支持 Sui Wallet, Ethos, Suiet | 源码未构建 |
+| **Starknet** | ❌ | 📝 设计支持 Argent X, Braavos | 源码未构建 |
+| **NEAR** | ❌ | 📝 设计支持 NEAR Wallet, Here Wallet | 源码未构建 |
+| **Hedera** | ❌ | 📝 设计支持 HashPack, Blade | 源码未构建 |
+| **XRPL** | ❌ | 📝 设计支持 Xaman | 源码未构建 |
+| **跨链桥** | ❌ | ⚠️ 仅 session sync 层，无真实跨链桥 | 无实现 |
 
-**关键差异**: RainbowKit **仅支持 EVM 链**（约 35 条），CinaConnect 架构设计覆盖 **16 条跨链协议**（EVM + Solana + Bitcoin + L2s）。但请注意：adapter source code 已写入但 **0 个已构建或测试**，链适配器在 core-sdk 中被注释掉，当前实际可用的只有 core-sdk 内置的 EVM 基础支持。
+**关键差异**: RainbowKit **仅支持 EVM 链**（约 35 条，全部已构建测试）。CinaConnect **架构设计覆盖 16 条跨链协议**（EVM + Solana + Bitcoin + TON + TRON + Cosmos + Sui + Starknet + NEAR + Hedera + XRPL），7 个 adapter 有源码但 **0 个已构建或测试**，链适配器在 core-sdk 中被注释掉，当前实际可用的只有 core-sdk 内置的 EVM 基础支持。
 
 ---
 
 ## 💰 钱包支持对比
 
-| 指标 | RainbowKit | CinaConnect |
-|------|-----------|-------------|
-| **钱包数量** | **75+** (实际连接可用) | **30+** (代码中声明，**未实际连接测试**) |
-| **内置钱包连接器** | MetaMask, WalletConnect, Coinbase, Rainbow, Safe, Phantom, Ledger, Trust, OKX, Brave, Frame, Zerion 等 75+ | MetaMask, WalletConnect, Coinbase, Rainbow, Phantom, Trust, Ledger, Xverse, Tonkeeper, TronLink, Keplr, Argent X 等 30+ |
-| **EIP-6963** | ✅ | ✅ |
-| **Bitcoin 钱包** | ❌ | ✅ 6 个原生连接器 |
-| **Solana 钱包** | ❌ (仅 EVM) | ✅ 4 个原生连接器 |
+| 指标 | RainbowKit | CinaConnect | 构建状态 |
+|------|-----------|-------------|----------|
+| **钱包数量** | **75+** (实际连接可用) | **30+** (代码中声明，**未实际连接测试**) | 0 个已构建或连接测试 |
+| **内置钱包连接器** | MetaMask, WalletConnect, Coinbase, Rainbow, Safe, Phantom, Ledger, Trust, OKX, Brave, Frame, Zerion 等 75+ | MetaMask, WalletConnect, Coinbase, Rainbow, Phantom, Trust, Ledger, Xverse, Tonkeeper, TronLink, Keplr, Argent X 等 30+ | 📝 源码已写，未构建 |
+| **EIP-6963** | ✅ | ✅ | 📝 源码已写，未构建 |
+| **Bitcoin 钱包** | ❌ | 📝 设计 6 个原生连接器 | 源码未构建 |
+| **Solana 钱包** | ❌ (仅 EVM) | 📝 设计 4 个原生连接器 | 源码未构建 |
 | **TON 钱包** | ❌ | ✅ |
 | **移动端 Deep Link** | ⚠️ 仅 WalletConnect | ✅ 8 钱包深度链接 |
 
@@ -90,10 +90,10 @@
 | **钱包按钮组件** | ✅ ConnectButton | ✅ + WalletButtons 独立包 | 📝 源码已写 |
 | **链切换** | ✅ | ✅ | 📝 源码已写 |
 | **余额显示** | ✅ | ✅ | 📝 源码已写 |
-| **Swap (DEX)** | ❌ | 📝 Swap SDK + DEX 聚合封装 | 📝 🔌 **仅 SDK 封装层 — 需要开发者自备 DEX 聚合器 API Key（如 1inch、0x）**，Demo 中为 mock 计算 |
-| **Onramp (法币入金)** | ❌ | 📝 Onramp SDK + iframe 嵌入 | 📝 🔌 **仅 SDK 封装 + iframe 层 — 需要 Meld 或 Coinbase Pay API Key**，Demo 中不存在真实 Onramp 页面 |
-| **跨链桥** | ❌ | 📝 Cross-chain session sync | 📝 ⚠️ **仅有 session-keys 中的同步层代码，无真实跨链桥实现** |
-| **智能账户 (AA)** | ❌ | 📝 ERC-4337 SDK / ⬜ Bundler & Paymaster | 📝 AA SDK 源码已写但**未构建**；Bundler (Rust)、Paymaster、ERC-6492 仅有 package.json scaffolding，源码为 0 |
+| **Swap (DEX)** | ❌ | 📝 Swap SDK + DEX 聚合封装 | 🔌 **仅 SDK 封装层 — 需要开发者自备 DEX 聚合器 API Key（如 1inch、0x）**，未构建，Demo 中为 mock 计算 |
+| **Onramp (法币入金)** | ❌ | 📝 Onramp SDK + iframe 嵌入 | 🔌 **仅 SDK 封装 + iframe 层 — 需要 Meld 或 Coinbase Pay API Key**，未构建，Demo 中不存在真实 Onramp 页面 |
+| **跨链桥** | ❌ | 📝 Cross-chain session sync | ⚠️ **仅有 session sync 层代码，无真实跨链桥实现**，未构建 |
+| **智能账户 (AA)** | ❌ | 📝 ERC-4337 SDK / ⬜ Bundler & Paymaster | AA SDK 源码未构建；Bundler (Rust)、Paymaster、ERC-6492 仅有 scaffolding，源码为 0 |
 | **Gas 赞助** | ❌ | ✅ Gas Sponsorship 包 | 📝 源码已写 |
 | **KYC/AML** | ❌ | ✅ KYC 合规筛查 | 📝 源码已写 |
 | **多钱包管理** | ❌ | ✅ Multiwallet 包 | 📝 源码已写 |
@@ -158,7 +158,7 @@
 ### RainbowKit 优势
 
 - 🌈 **更成熟的钱包 UI 组件**（更精美的设计）
-- 🦊 **钱包数量更多**（75+ vs 30+）
+- 🦊 **钱包数量更多**（75+ 实际可用 vs 30+ 源码声明）
 - 📚 **社区更大**（Rainbow 生态，wagmi/viem 生态）
 - 🔧 **与 wagmi 深度集成**（类型安全更好）
 - 🎨 **主题定制更精细**（vanilla-extract CSS）
@@ -173,18 +173,18 @@
 - 🏠 **完全自托管架构**（无供应商锁定，$0 Cloudflare 免费额度运行）
 - 🔄 **迁移工具架构**（从 RainbowKit/ConnectKit/Privy）⚠️ *源码已写但未构建*
 - 🎯 **诚实总结：综合完成度约 25-30%**（1/64 包已构建发布，50+ 包源码已写但未构建，Demo 全部 mock，RPC Proxy + Keys Server 真实部署可用）
-- 🚀 **CI/CD + Storybook + E2E**（企业级开发流程）
-- 🌐 **Cloudflare 全球部署**（300+ PoPs，DDoS 防护）
+- 🚀 **CI/CD + Storybook + E2E**（企业级开发流程，源码未构建）
+- 🌐 **Cloudflare 全球部署**（300+ PoPs，DDoS 防护；RPC Proxy + Keys Server 真实可用，其余服务开发中）
 
 ### 选择建议
 
 | 场景 | 推荐 |
 |------|------|
-| 纯 React/EVM dApp，追求精美 UI | RainbowKit |
-| 多链应用（非 EVM） | **CinaConnect** |
-| 需要社交登录/Passkey | **CinaConnect** |
-| 需要自托管基础设施 | **CinaConnect** |
-| 企业级全栈方案 | **CinaConnect** |
+| 纯 React/EVM dApp，追求精美 UI + 快速上线 | RainbowKit |
+| 多链架构（非 EVM 需求） | CinaConnect（架构设计完成，构建中） |
+| 需要社交登录/Passkey | CinaConnect（源码已写，构建中） |
+| 需要自托管基础设施 | CinaConnect（RPC + Keys 已部署，其余开发中） |
+| 企业级全栈方案 | CinaConnect（架构完整，约 25-30% 实际可用） |
 | 追求最小依赖/最快上手 | RainbowKit |
-| 成本敏感（需要 $0 运行） | **CinaConnect** |
-| 从其他钱包 SDK 迁移 | **CinaConnect** |
+| 成本敏感（需要 $0 运行） | CinaConnect（Cloudflare 免费额度，但仍在开发中） |
+| 从其他钱包 SDK 迁移 | CinaConnect（迁移工具源码已写，未构建） |
