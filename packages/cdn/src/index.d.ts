@@ -4,14 +4,14 @@
  * CDN bundle entry point.
  * Exposes global window.CinaConnect namespace for script-tag usage.
  */
-import { getConfig, validateConfig } from "./config.js.js";
-import type { CinaConnectConfig } from "./config.js.js";
-import { renderConnectButton, getConnectButtonState, disconnect } from "./connect.js.js";
-import type { ConnectButtonOptions } from "./connect.js.js";
-import { renderConnectModal, showModal, hideModal, toggleModal, getCurrentView } from "./modal.js.js";
-import type { ConnectModalOptions } from "./modal.js.js";
-import { loadModule, isLoaded, getModule, clearCache, preloadModules } from "./loader.js.js";
-import type { LoadState, LoadResult } from "./loader.js.js";
+import { getConfig, validateConfig } from "./config.js";
+import type { CinaConnectConfig } from "./config.js";
+import { renderConnectButton, getConnectButtonState, disconnect } from "./connect.js";
+import type { ConnectButtonOptions } from "./connect.js";
+import { renderConnectModal, showModal, hideModal, toggleModal, getCurrentView } from "./modal.js";
+import type { ConnectModalOptions } from "./modal.js";
+import { loadModule, isLoaded, getModule, clearCache, preloadModules } from "./loader.js";
+import type { LoadState, LoadResult } from "./loader.js";
 export interface CinaConnectAPI {
     config: () => CinaConnectConfig;
     validate: () => string[];

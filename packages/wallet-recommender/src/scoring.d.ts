@@ -4,7 +4,7 @@
  * Scores wallets based on chain compatibility, platform match, user behavior,
  * and EIP-6963 installation boost.
  */
-import type { WalletEntry } from "./recommender.js.js";
+import type { WalletEntry } from "./recommender.js";
 /**
  * Recommendation context.
  */

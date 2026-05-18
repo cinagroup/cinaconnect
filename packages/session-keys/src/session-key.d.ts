@@ -8,7 +8,7 @@
  * enabling gasless interactions and delegated actions without
  * exposing the main account key.
  */
-import type { SessionKey, SessionKeyPolicy } from "./types.js.js";
+import type { SessionKey, SessionKeyPolicy } from "./types.js";
 import { type Address, type Hex } from "viem";
 export declare class SessionKeyManager {
     private keys;

@@ -5,7 +5,7 @@
  * transaction, with atomic execution and policy enforcement per operation.
  */
 import type { Address, Hex } from "viem";
-import type { SessionKey, SessionKeyPolicy } from "./types.js.js";
+import type { SessionKey, SessionKeyPolicy } from "./types.js";
 /**
  * A single operation within a batch.
  */

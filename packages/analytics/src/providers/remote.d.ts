@@ -3,7 +3,7 @@
  *
  * Sends analytics events to a remote endpoint.
  */
-import type { AnalyticsEvent, AnalyticsProvider } from "./types.js.js";
+import type { AnalyticsEvent, AnalyticsProvider } from "./types.js";
 export interface RemoteProviderConfig {
     /** Remote endpoint URL */
     endpoint: string;

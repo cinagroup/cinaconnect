@@ -4,8 +4,8 @@
  * Provides a unified widget interface for all supported on-ramp providers.
  * Can be embedded in a web page via iframe or opened as a popup.
  */
-import type { OnRampResult, OnRampWidgetParams } from "./types.js.js";
-import type { OnRampAggregator } from "./aggregator.js.js";
+import type { OnRampResult, OnRampWidgetParams } from "./types.js";
+import type { OnRampAggregator } from "./aggregator.js";
 export type OnRampWidgetEvent = {
     type: "open";
 } | {

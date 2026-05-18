@@ -15,7 +15,7 @@
  * 4. After the time lock expires, anyone can execute the recovery
  * 5. During the time lock, the original owner can cancel
  */
-import type { Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult } from "./types.js.js";
+import type { Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult } from "./types.js";
 import type { Address, Hex } from "viem";
 export declare class SocialRecoveryManager {
     private recoveryConfig;

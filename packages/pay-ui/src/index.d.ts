@@ -27,12 +27,12 @@
  * />
  * ```
  */
-export { SwapWidget } from "./SwapWidget.js.js";
-export type { SwapWidgetProps } from "./types.js.js";
-export { OnRampWidget } from "./OnRampWidget.js.js";
-export type { OnRampWidgetProps } from "./types.js.js";
-export { SwapWidgetCore } from "./SwapWidgetCore.js.js";
-export { OnRampWidgetCore } from "./OnRampWidgetCore.js.js";
-export type { SwapWidgetState, SwapWidgetCoreConfig, SwapWidgetCoreState, SlippageConfig, OnRampWidgetState, OnRampWidgetCoreConfig, OnRampWidgetCoreState, } from "./types.js.js";
-export { colors, spacing, borderRadius, fontSize, fontWeight, shadows, transitions, zIndices, getWidgetStyles, buttonStyles, inputStyles, cardStyles, } from "./styles.js.js";
+export { SwapWidget } from "./SwapWidget.js";
+export type { SwapWidgetProps } from "./types.js";
+export { OnRampWidget } from "./OnRampWidget.js";
+export type { OnRampWidgetProps } from "./types.js";
+export { SwapWidgetCore } from "./SwapWidgetCore.js";
+export { OnRampWidgetCore } from "./OnRampWidgetCore.js";
+export type { SwapWidgetState, SwapWidgetCoreConfig, SwapWidgetCoreState, SlippageConfig, OnRampWidgetState, OnRampWidgetCoreConfig, OnRampWidgetCoreState, } from "./types.js";
+export { colors, spacing, borderRadius, fontSize, fontWeight, shadows, transitions, zIndices, getWidgetStyles, buttonStyles, inputStyles, cardStyles, } from "./styles.js";
 //# sourceMappingURL=index.d.ts.map

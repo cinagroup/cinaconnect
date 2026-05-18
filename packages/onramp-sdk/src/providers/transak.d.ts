@@ -4,8 +4,8 @@
  * Integration with Transak's on-ramp API and widget.
  * Documentation: https://docs.transak.com/
  */
-import type { OnRampProviderAdapter } from "../aggregator.js.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
+import type { OnRampProviderAdapter } from "../aggregator.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
 export interface TransakConfig {
     /** Transak API key */
     apiKey: string;

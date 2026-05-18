@@ -27,12 +27,12 @@ import type {
   CacheEntry,
   ENSContracts,
   ENSErrorCode,
-} from "./types.js.js";
+} from "./types.js";
 import {
   ENS_CHAIN_CONFIG,
   ENS_ERRORS,
   ENSResolverError,
-} from "./types.js.js";
+} from "./types.js";
 
 // ---------------------------------------------------------------------------
 // Constants

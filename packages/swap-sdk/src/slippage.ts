@@ -6,7 +6,7 @@
  * swap parameters.
  */
 
-import type { PriceImpact, SwapQuote } from "./types.js.js";
+import type { PriceImpact, SwapQuote } from "./types.js";
 
 // ============================================================
 // Constants

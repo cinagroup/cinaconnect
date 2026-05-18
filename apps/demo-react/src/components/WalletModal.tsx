@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useWallet, formatAddress } from '../contexts/WalletContext'
+import { useWallet, formatAddress } from '../hooks/useWallet'
 
 interface WalletOption {
   id: string
@@ -7,13 +7,11 @@ interface WalletOption {
   emoji: string
   color: string
   popular: boolean
-  detected?: boolean
-  qr?: boolean
 }
 
 const WALLETS: WalletOption[] = [
   { id: 'metamask', name: 'MetaMask', emoji: '🦊', color: '#F6851B', popular: true },
-  { id: 'walletconnect', name: 'WalletConnect', emoji: '🔗', color: '#3B99FC', popular: true, qr: true },
+  { id: 'walletconnect', name: 'WalletConnect', emoji: '🔗', color: '#3B99FC', popular: true },
   { id: 'coinbase', name: 'Coinbase Wallet', emoji: '🔵', color: '#0052FF', popular: true },
   { id: 'rainbow', name: 'Rainbow', emoji: '🌈', color: '#8B5CF6', popular: true },
   { id: 'phantom', name: 'Phantom', emoji: '👻', color: '#AB9FF2', popular: true },
@@ -36,77 +34,114 @@ declare global {
 }
 
 const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
-  const { connected, address, walletId, connecting, error, connectMetaMask, connectWalletConnect, clearError } = useWallet()
+  const { isConnected, address, connect, disconnect } = useWallet()
 
   const [modalState, setModalState] = useState<ModalState>(isOpen ? 'open' : 'closed')
   const [selectedWallet, setSelectedWallet] = useState<WalletOption | null>(null)
   const [activeTab, setActiveTab] = useState<'popular' | 'all'>('popular')
+  const [error, setError] = useState<string | null>(null)
 
   // Detect installed wallets
   const isMetaMaskInstalled = typeof window !== 'undefined' && !!window.ethereum?.isMetaMask
   const isCoinbaseInstalled = typeof window !== 'undefined' && !!window.ethereum?.isCoinbaseWallet
-  const hasAnyProvider = typeof window !== 'undefined' && !!window.ethereum
 
   useEffect(() => {
     if (isOpen) {
       setModalState('open')
       setSelectedWallet(null)
-      clearError()
+      setError(null)
     }
-  }, [isOpen, clearError])
+  }, [isOpen])
 
   // If already connected from outside the modal, close
   useEffect(() => {
-    if (connected && modalState !== 'success') {
+    if (isConnected && modalState !== 'success') {
       setModalState('success')
     }
-  }, [connected, modalState])
+  }, [isConnected, modalState])
 
   const handleSelectWallet = useCallback(async (wallet: WalletOption) => {
     setSelectedWallet(wallet)
-    clearError()
+    setError(null)
 
     if (wallet.id === 'metamask') {
       setModalState('connecting')
-      await connectMetaMask()
-    } else if (wallet.id === 'walletconnect') {
-      setModalState('connecting')
-      await connectWalletConnect()
+      try {
+        await connect()
+        // connect() already sets isConnected → true, useEffect above handles success
+      } catch (err: any) {
+        let message = 'Failed to connect wallet'
+        if (err.code === 4001 || err.message?.includes('rejected')) {
+          message = 'User rejected the connection request'
+        } else if (err.message) {
+          message = err.message
+        }
+        setError(message)
+        setModalState('error')
+      }
     } else if (wallet.id === 'coinbase' && isCoinbaseInstalled) {
-      // Use same injected provider path for Coinbase
       setModalState('connecting')
-      await connectMetaMask() // shares the injected provider
+      try {
+        await connect()
+      } catch (err: any) {
+        let message = 'Failed to connect wallet'
+        if (err.code === 4001 || err.message?.includes('rejected')) {
+          message = 'User rejected the connection request'
+        } else if (err.message) {
+          message = err.message
+        }
+        setError(message)
+        setModalState('error')
+      }
+    } else if (wallet.id === 'walletconnect') {
+      // WalletConnect not available via injected provider — show info
+      setModalState('no-wallet')
     } else {
       // Wallet not installed — show "no wallet" state
       setModalState('no-wallet')
     }
-  }, [clearError, connectMetaMask, connectWalletConnect, isCoinbaseInstalled])
+  }, [connect, isCoinbaseInstalled])
 
   const handleClose = useCallback(() => {
     setModalState('closed')
     setSelectedWallet(null)
+    setError(null)
+    // Don't disconnect on close — user may still be connected
     onClose()
   }, [onClose])
 
   const handleBack = useCallback(() => {
     setModalState('open')
     setSelectedWallet(null)
-    clearError()
-  }, [clearError])
+    setError(null)
+  }, [])
 
   const handleRetry = useCallback(async () => {
     if (!selectedWallet) return
-    clearError()
+    setError(null)
     setModalState('connecting')
-    if (selectedWallet.id === 'metamask') {
-      await connectMetaMask()
-    } else if (selectedWallet.id === 'walletconnect') {
-      await connectWalletConnect()
+    try {
+      await connect()
+    } catch (err: any) {
+      let message = 'Failed to connect wallet'
+      if (err.code === 4001 || err.message?.includes('rejected')) {
+        message = 'User rejected the connection request'
+      } else if (err.message) {
+        message = err.message
+      }
+      setError(message)
+      setModalState('error')
     }
-  }, [selectedWallet, clearError, connectMetaMask, connectWalletConnect])
+  }, [selectedWallet, connect])
+
+  const handleDisconnect = useCallback(() => {
+    disconnect()
+    setModalState('closed')
+    onClose()
+  }, [disconnect, onClose])
 
   // Show success if connected
-  const displayAddress = connected ? formatAddress(address) : ''
+  const displayAddress = address ? formatAddress(address) : ''
 
   if (modalState === 'closed') return null
 
@@ -192,8 +227,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                           <button
                             key={wallet.id}
                             onClick={() => handleSelectWallet(wallet)}
-                            disabled={connecting}
-                            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all group"
                             style={{ animationDelay: `${i * 0.05}s` }}
                           >
                             <div
@@ -207,11 +241,6 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                               <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
                                 Detected
                               </span>
-                            )}
-                            {wallet.qr && (
-                              <svg className="w-5 h-5 text-gray-500 group-hover:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
-                              </svg>
                             )}
                             <svg className="w-5 h-5 text-gray-600 group-hover:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -228,8 +257,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                         <button
                           key={wallet.id}
                           onClick={() => handleSelectWallet(wallet)}
-                          disabled={connecting}
-                          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-white/5 transition-all group"
                           style={{ animationDelay: `${i * 0.05}s` }}
                         >
                           <div
@@ -269,9 +297,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                   Opening {selectedWallet.name}...
                 </p>
                 <p className="text-gray-500 text-xs">
-                  {selectedWallet.id === 'walletconnect'
-                    ? 'Scan the QR code in your wallet app'
-                    : 'Confirm connection in your wallet popup'}
+                  Confirm connection in your wallet popup
                 </p>
               </div>
             )}
@@ -286,7 +312,7 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                 </div>
                 <h3 className="text-xl font-semibold mb-2">Wallet Connected</h3>
                 <p className="text-gray-400 text-sm mb-2">
-                  Connected via {walletId === 'metamask' ? 'MetaMask' : walletId === 'walletconnect' ? 'WalletConnect' : walletId}
+                  Connected via injected provider
                 </p>
                 {address && (
                   <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-white/5 text-sm text-gray-300 font-mono">
@@ -302,6 +328,12 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                     </button>
                   </div>
                 )}
+                <button
+                  onClick={handleDisconnect}
+                  className="mt-4 px-4 py-2 rounded-lg bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-colors text-sm"
+                >
+                  Disconnect
+                </button>
               </div>
             )}
 
@@ -332,9 +364,15 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                 <div className="w-20 h-20 rounded-full bg-amber-500/20 flex items-center justify-center mb-6 animate-bounce-in">
                   <div className="text-4xl">{selectedWallet.emoji}</div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{selectedWallet.name} Not Installed</h3>
+                <h3 className="text-xl font-semibold mb-2">
+                  {selectedWallet.id === 'walletconnect'
+                    ? 'WalletConnect — QR Code Not Available'
+                    : `${selectedWallet.name} Not Installed`}
+                </h3>
                 <p className="text-gray-400 text-sm mb-6 text-center max-w-xs">
-                  You don't have {selectedWallet.name} installed. Install it to connect your wallet.
+                  {selectedWallet.id === 'walletconnect'
+                    ? 'WalletConnect QR scanning requires a real provider setup. For now, try MetaMask or another injected wallet.'
+                    : `You don't have ${selectedWallet.name} installed. Install it to connect your wallet.`}
                 </p>
                 <div className="flex flex-col gap-3 w-full max-w-xs">
                   {selectedWallet.id === 'metamask' && (
@@ -386,14 +424,6 @@ const WalletModal: React.FC<WalletModalProps> = ({ isOpen, onClose }) => {
                     >
                       Install Trust Wallet →
                     </a>
-                  )}
-                  {!['metamask', 'coinbase', 'rainbow', 'phantom', 'trust'].includes(selectedWallet.id) && (
-                    <button
-                      onClick={handleBack}
-                      className="btn-primary px-6 py-2.5 rounded-xl text-sm font-medium"
-                    >
-                      Try Another Wallet
-                    </button>
                   )}
                   <button
                     onClick={handleBack}

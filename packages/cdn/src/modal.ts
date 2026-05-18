@@ -13,8 +13,8 @@
  * ```
  */
 
-import { getConfig, validateConfig } from "./config.js.js";
-import type { CinaConnectConfig } from "./config.js.js";
+import { getConfig, validateConfig } from "./config.js";
+import type { CinaConnectConfig } from "./config.js";
 
 export type ModalView = "connect" | "connecting" | "connected" | "networks";
 

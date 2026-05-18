@@ -4,8 +4,8 @@
  * Provides swap quotes and execution via the 1inch Aggregation Protocol API.
  * Documentation: https://docs.1inch.io/docs/aggregation-protocol/introduction
  */
-import type { SwapExecutor } from "../router.js.js";
-import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js.js";
+import type { SwapExecutor } from "../router.js";
+import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js";
 export declare class OneInchExecutor implements SwapExecutor {
     readonly name = "1inch";
     private apiKey;

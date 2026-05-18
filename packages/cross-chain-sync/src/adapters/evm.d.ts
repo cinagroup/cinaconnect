@@ -3,7 +3,7 @@
  *
  * Syncs state for EVM-compatible chains (Ethereum, Polygon, Arbitrum, etc.)
  */
-import type { ChainAccount, SessionState, StateStorage } from "./types.js.js";
+import type { ChainAccount, SessionState, StateStorage } from "./types.js";
 /** EVM-specific account info */
 export interface EvmAccount extends ChainAccount {
     chain: "evm";

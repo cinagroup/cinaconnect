@@ -4,8 +4,8 @@
  * The SwapRouter manages executor lifecycle, caches quotes,
  * and provides a unified interface for fetching and executing swaps.
  */
-import type { BestQuote, SwapQuote, SwapQuoteParams, SwapReceipt, SwapTransaction, TokenInfo, SwapExecuteParams } from "./types.js.js";
-import type { SwapQuoter } from "./quoter.js.js";
+import type { BestQuote, SwapQuote, SwapQuoteParams, SwapReceipt, SwapTransaction, TokenInfo, SwapExecuteParams } from "./types.js";
+import type { SwapQuoter } from "./quoter.js";
 /**
  * Interface that all DEX executors must implement.
  */

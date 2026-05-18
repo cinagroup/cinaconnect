@@ -4,8 +4,8 @@
  * Integration with MoonPay's on-ramp API and widget.
  * Documentation: https://dev.moonpay.com/
  */
-import type { OnRampProviderAdapter } from "../aggregator.js.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
+import type { OnRampProviderAdapter } from "../aggregator.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
 export interface MoonPayConfig {
     /** MoonPay API key (publishable for widget, secret for server) */
     apiKey: string;

@@ -17,7 +17,7 @@
  * 4. Consistency is maintained via merkle proofs or bridge relayers
  */
 import type { Address, Hex } from "viem";
-import type { SessionKey, SessionKeyPolicy } from "./types.js.js";
+import type { SessionKey, SessionKeyPolicy } from "./types.js";
 /**
  * Supported chain types for cross-chain sync.
  */

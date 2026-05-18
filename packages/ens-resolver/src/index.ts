@@ -17,7 +17,7 @@ export {
   resolveENSName,
   reverseLookupENS,
   getAvatarENS,
-} from "./ens.js.js";
+} from "./ens.js";
 
 export type {
   ENSRecord,
@@ -27,10 +27,10 @@ export type {
   ENSContracts,
   ChainId,
   ENSErrorCode,
-} from "./types.js.js";
+} from "./types.js";
 
 export {
   ENS_CHAIN_CONFIG,
   ENS_ERRORS,
   ENSResolverError,
-} from "./types.js.js";
+} from "./types.js";

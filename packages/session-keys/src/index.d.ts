@@ -31,9 +31,9 @@
  * console.log(`Expires: ${new Date(sessionKey.expiresAt * 1000).toISOString()}`);
  * ```
  */
-export type { SessionKey, SessionKeyPolicy, DailySpend, Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult, } from "./types.js.js";
-export { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from "./session-key.js.js";
-export { SessionKeyPolicyManager } from "./policy.js.js";
-export type { PolicyParams } from "./policy.js.js";
-export { SocialRecoveryManager } from "./social-recovery.js.js";
+export type { SessionKey, SessionKeyPolicy, DailySpend, Guardian, RecoveryConfig, RecoveryRequest, RecoveryResult, } from "./types.js";
+export { SessionKeyManager, encodeEnableSessionKey, encodeDisableSessionKey, isKeyValidForOperation } from "./session-key.js";
+export { SessionKeyPolicyManager } from "./policy.js";
+export type { PolicyParams } from "./policy.js";
+export { SocialRecoveryManager } from "./social-recovery.js";
 //# sourceMappingURL=index.d.ts.map

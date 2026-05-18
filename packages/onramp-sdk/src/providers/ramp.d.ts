@@ -4,8 +4,8 @@
  * Integration with Ramp Network's on-ramp API and widget.
  * Documentation: https://ramp.network/
  */
-import type { OnRampProviderAdapter } from "../aggregator.js.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
+import type { OnRampProviderAdapter } from "../aggregator.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
 export interface RampConfig {
     /** Ramp partner ID / API key */
     apiKey: string;

@@ -12,7 +12,7 @@ import type {
   OnRampResult,
   OnRampWidgetParams,
   UserPreferences,
-} from "./types.js.js";
+} from "./types.js";
 
 // ============================================================
 // Provider Interface

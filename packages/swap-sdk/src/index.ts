@@ -40,20 +40,20 @@ export type {
   PriceImpact,
   BestQuote,
   SwapExecuteParams,
-} from "./types.js.js";
+} from "./types.js";
 
 // Quoter
-export { SwapQuoter } from "./quoter.js.js";
-export type { QuoterConfig } from "./quoter.js.js";
+export { SwapQuoter } from "./quoter.js";
+export type { QuoterConfig } from "./quoter.js";
 
 // Router
-export { SwapRouter } from "./router.js.js";
-export type { SwapExecutor, RouterExecuteParams } from "./router.js.js";
+export { SwapRouter } from "./router.js";
+export type { SwapExecutor, RouterExecuteParams } from "./router.js";
 
 // Executors
-export { UniswapExecutor } from "./executors/uniswap.js.js";
-export { OneInchExecutor } from "./executors/1inch.js.js";
-export { ZeroxExecutor } from "./executors/0x.js.js";
+export { UniswapExecutor } from "./executors/uniswap.js";
+export { OneInchExecutor } from "./executors/1inch.js";
+export { ZeroxExecutor } from "./executors/0x.js";
 
 // Slippage utilities
 export {
@@ -65,4 +65,4 @@ export {
   getExchangeRate,
   percentDiff,
   adjustSlippageForVolatility,
-} from "./slippage.js.js";
+} from "./slippage.js";

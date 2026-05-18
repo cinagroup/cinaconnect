@@ -14,14 +14,14 @@ export {
   type RpcMethod,
   type RpcParams,
   type RpcResponse,
-} from "./MockProvider.js.js";
+} from "./MockProvider.js";
 
 // MockWallet
 export {
   MockWallet,
   type WalletState,
   type MockWalletOptions,
-} from "./MockWallet.js.js";
+} from "./MockWallet.js";
 
 // MockChains
 export {
@@ -31,7 +31,7 @@ export {
   createMockChain,
   allMockChains,
   type ChainConfig,
-} from "./MockChains.js.js";
+} from "./MockChains.js";
 
 // MockTransactions
 export {
@@ -45,7 +45,7 @@ export {
   type MockTxReceipt,
   type MockLog,
   type TxStatus,
-} from "./MockTransactions.js.js";
+} from "./MockTransactions.js";
 
 // Fixtures
 export {
@@ -59,4 +59,4 @@ export {
   PROVIDER_STATES,
   ERRORS,
   type ProviderStateFixture,
-} from "./fixtures.js.js";
+} from "./fixtures.js";

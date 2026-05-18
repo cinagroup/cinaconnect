@@ -27,15 +27,15 @@
  * });
  * ```
  */
-export type { ChainFamily, ChainAccount, CrossChainState, SessionState, SyncResult, LinkingProof, StateStorage, } from "./types.js.js";
-export type { UnifiedIdentity } from "./identity.js.js";
-export type { EvmAccount } from "./adapters/evm.js.js";
-export type { SolanaAccount } from "./adapters/solana.js.js";
-export type { BitcoinAccount } from "./adapters/bitcoin.js.js";
-export { StateSync } from "./sync.js.js";
-export { CrossChainIdentityManager, generateIdentityHash, verifyLinkingProof, createLinkingProof, } from "./identity.js.js";
-export { syncEvmState, getEvmSession } from "./adapters/evm.js.js";
-export { syncSolanaState, getSolanaSession } from "./adapters/solana.js.js";
-export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js.js";
-export { InMemoryStorage, LocalStorage } from "./storage.js.js";
+export type { ChainFamily, ChainAccount, CrossChainState, SessionState, SyncResult, LinkingProof, StateStorage, } from "./types.js";
+export type { UnifiedIdentity } from "./identity.js";
+export type { EvmAccount } from "./adapters/evm.js";
+export type { SolanaAccount } from "./adapters/solana.js";
+export type { BitcoinAccount } from "./adapters/bitcoin.js";
+export { StateSync } from "./sync.js";
+export { CrossChainIdentityManager, generateIdentityHash, verifyLinkingProof, createLinkingProof, } from "./identity.js";
+export { syncEvmState, getEvmSession } from "./adapters/evm.js";
+export { syncSolanaState, getSolanaSession } from "./adapters/solana.js";
+export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js";
+export { InMemoryStorage, LocalStorage } from "./storage.js";
 //# sourceMappingURL=index.d.ts.map

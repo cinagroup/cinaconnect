@@ -5,9 +5,9 @@
  * Documentation: https://docs.1inch.io/docs/aggregation-protocol/introduction
  */
 
-import type { SwapExecutor } from "../router.js.js";
-import type { SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction, TokenInfo } from "../types.js.js";
-import { calculateMinimumReceived } from "../slippage.js.js";
+import type { SwapExecutor } from "../router.js";
+import type { SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction, TokenInfo } from "../types.js";
+import { calculateMinimumReceived } from "../slippage.js";
 
 // ============================================================
 // Constants

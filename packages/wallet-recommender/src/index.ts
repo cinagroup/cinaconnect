@@ -17,16 +17,16 @@
  * ```
  */
 
-export { WalletRecommender } from "./recommender.js.js";
-export type { WalletEntry, UserBehavior } from "./recommender.js.js";
+export { WalletRecommender } from "./recommender.js";
+export type { WalletEntry, UserBehavior } from "./recommender.js";
 
 export {
   scoreWallet,
   getChainCompatibleWallets,
   DEFAULT_WEIGHTS,
-} from "./scoring.js.js";
+} from "./scoring.js";
 export type {
   RecommendationContext,
   ScoringWeights,
   WalletRecommendation,
-} from "./scoring.js.js";
+} from "./scoring.js";

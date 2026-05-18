@@ -5,7 +5,7 @@
  * without requiring a real browser extension or WalletConnect session.
  */
 
-import { MockProvider } from "./MockProvider.js.js";
+import { MockProvider } from "./MockProvider.js";
 
 export interface WalletState {
   connected: boolean;

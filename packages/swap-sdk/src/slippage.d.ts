@@ -5,7 +5,7 @@
  * validating price impact, and constructing slippage-protected
  * swap parameters.
  */
-import type { PriceImpact, SwapQuote } from "./types.js.js";
+import type { PriceImpact, SwapQuote } from "./types.js";
 /**
  * Calculate the minimum received amount given slippage tolerance.
  *

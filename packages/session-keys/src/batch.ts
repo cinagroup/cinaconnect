@@ -7,8 +7,8 @@
 
 import type { Address, Hex } from "viem";
 import { encodeFunctionData, zeroAddress } from "viem";
-import type { SessionKey, SessionKeyPolicy } from "./types.js.js";
-import { isKeyValidForOperation } from "./session-key.js.js";
+import type { SessionKey, SessionKeyPolicy } from "./types.js";
+import { isKeyValidForOperation } from "./session-key.js";
 
 // ============================================================
 // Types

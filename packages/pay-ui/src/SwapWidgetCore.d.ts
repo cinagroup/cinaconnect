@@ -5,7 +5,7 @@
  * for the SwapWidget UI.
  */
 import type { SwapQuote, SwapTransaction, SwapReceipt, TokenInfo } from "@cinaconnect/swap-sdk";
-import type { SwapWidgetCoreConfig, SwapWidgetCoreState, SlippageConfig } from "./types.js.js";
+import type { SwapWidgetCoreConfig, SwapWidgetCoreState, SlippageConfig } from "./types.js";
 /**
  * Core swap widget controller (framework-agnostic).
  *

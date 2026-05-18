@@ -119,7 +119,7 @@ export class LeapConnector implements CosmosWalletConnector {
    */
   isAvailable(): boolean {
     if (typeof window === 'undefined') return false;
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
     return typeof win.leap === 'object' && win.leap !== null;
   }
 
@@ -136,7 +136,7 @@ export class LeapConnector implements CosmosWalletConnector {
       throw new Error('Leap is only available in browser environments');
     }
 
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
     const leap = win.leap as LeapProvider | undefined;
 
     if (leap) {
@@ -152,7 +152,7 @@ export class LeapConnector implements CosmosWalletConnector {
       }, timeoutMs);
 
       const handler = () => {
-        const found = (window as Record<string, unknown>).leap as LeapProvider | undefined;
+        const found = (window as unknown as Record<string, unknown>).leap as LeapProvider | undefined;
         if (found) {
           clearTimeout(timeout);
           window.removeEventListener('leap_keystorechange', handler);

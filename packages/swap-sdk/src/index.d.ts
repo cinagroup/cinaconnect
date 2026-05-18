@@ -28,13 +28,13 @@
  * console.log(`Best: ${best.quote.provider} → ${best.quote.toAmount}`);
  * ```
  */
-export type { SwapQuoteParams, SwapQuote, SwapReceipt, SwapRoute, SwapTransaction, TokenInfo, PriceImpact, BestQuote, SwapExecuteParams, } from "./types.js.js";
-export { SwapQuoter } from "./quoter.js.js";
-export type { QuoterConfig } from "./quoter.js.js";
-export { SwapRouter } from "./router.js.js";
-export type { SwapExecutor, RouterExecuteParams } from "./router.js.js";
-export { UniswapExecutor } from "./executors/uniswap.js.js";
-export { OneInchExecutor } from "./executors/1inch.js.js";
-export { ZeroxExecutor } from "./executors/0x.js.js";
-export { calculateMinimumReceived, calculatePriceImpact, classifyPriceImpact, getImpactWarning, isPriceImpactAcceptable, getExchangeRate, percentDiff, adjustSlippageForVolatility, } from "./slippage.js.js";
+export type { SwapQuoteParams, SwapQuote, SwapReceipt, SwapRoute, SwapTransaction, TokenInfo, PriceImpact, BestQuote, SwapExecuteParams, } from "./types.js";
+export { SwapQuoter } from "./quoter.js";
+export type { QuoterConfig } from "./quoter.js";
+export { SwapRouter } from "./router.js";
+export type { SwapExecutor, RouterExecuteParams } from "./router.js";
+export { UniswapExecutor } from "./executors/uniswap.js";
+export { OneInchExecutor } from "./executors/1inch.js";
+export { ZeroxExecutor } from "./executors/0x.js";
+export { calculateMinimumReceived, calculatePriceImpact, classifyPriceImpact, getImpactWarning, isPriceImpactAcceptable, getExchangeRate, percentDiff, adjustSlippageForVolatility, } from "./slippage.js";
 //# sourceMappingURL=index.d.ts.map

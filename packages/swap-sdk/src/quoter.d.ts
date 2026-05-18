@@ -4,8 +4,8 @@
  * Fetches quotes from all configured DEX executors, compares them,
  * and returns the best route for the user.
  */
-import type { BestQuote, SwapQuote, SwapQuoteParams } from "./types.js.js";
-import type { SwapExecutor } from "./router.js.js";
+import type { BestQuote, SwapQuote, SwapQuoteParams } from "./types.js";
+import type { SwapExecutor } from "./router.js";
 export interface QuoterConfig {
     /** Maximum time to wait for all quotes (ms) */
     quoteTimeoutMs: number;

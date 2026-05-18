@@ -5,9 +5,9 @@
  * and returns the best route for the user.
  */
 
-import type { BestQuote, SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction } from "./types.js.js";
-import type { SwapExecutor } from "./router.js.js";
-import { calculatePriceImpact, classifyPriceImpact, calculateMinimumReceived } from "./slippage.js.js";
+import type { BestQuote, SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction } from "./types.js";
+import type { SwapExecutor } from "./router.js";
+import { calculatePriceImpact, classifyPriceImpact, calculateMinimumReceived } from "./slippage.js";
 
 // ============================================================
 // Quoter Interface

@@ -50,24 +50,24 @@ export type {
   OnRampResult,
   OnRampWidgetParams,
   UserPreferences,
-} from "./types.js.js";
+} from "./types.js";
 
 // Aggregator
-export { OnRampAggregator } from "./aggregator.js.js";
-export type { OnRampProviderAdapter, AggregatorConfig } from "./aggregator.js.js";
+export { OnRampAggregator } from "./aggregator.js";
+export type { OnRampProviderAdapter, AggregatorConfig } from "./aggregator.js";
 
 // Providers
-export { MoonPayProvider } from "./providers/moonpay.js.js";
-export type { MoonPayConfig } from "./providers/moonpay.js.js";
-export { RampProvider } from "./providers/ramp.js.js";
-export type { RampConfig } from "./providers/ramp.js.js";
-export { TransakProvider } from "./providers/transak.js.js";
-export type { TransakConfig } from "./providers/transak.js.js";
+export { MoonPayProvider } from "./providers/moonpay.js";
+export type { MoonPayConfig } from "./providers/moonpay.js";
+export { RampProvider } from "./providers/ramp.js";
+export type { RampConfig } from "./providers/ramp.js";
+export { TransakProvider } from "./providers/transak.js";
+export type { TransakConfig } from "./providers/transak.js";
 
 // Widget
-export { OnRampWidget } from "./widget.js.js";
+export { OnRampWidget } from "./widget.js";
 export type {
   WidgetConfig,
   OnRampWidgetEvent,
   OnRampWidgetCallback,
-} from "./widget.js.js";
+} from "./widget.js";

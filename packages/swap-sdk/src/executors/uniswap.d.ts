@@ -4,8 +4,8 @@
  * Provides swap quotes and execution via Uniswap V3 and V4 pools.
  * Uses the Uniswap Quoter contract for off-chain price estimation.
  */
-import type { SwapExecutor } from "../router.js.js";
-import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js.js";
+import type { SwapExecutor } from "../router.js";
+import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js";
 export declare class UniswapExecutor implements SwapExecutor {
     readonly name = "uniswap";
     private quoterAddress;

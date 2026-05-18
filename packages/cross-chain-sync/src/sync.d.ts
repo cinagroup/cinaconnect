@@ -3,8 +3,8 @@
  *
  * Syncs session state and identity across EVM, Solana, BTC, TON, TRON, and Polkadot.
  */
-import type { ChainFamily, CrossChainState, SyncResult, StateStorage, SessionState } from "./types.js.js";
-import type { UnifiedIdentity } from "./identity.js.js";
+import type { ChainFamily, CrossChainState, SyncResult, StateStorage, SessionState } from "./types.js";
+import type { UnifiedIdentity } from "./identity.js";
 /**
  * StateSync — cross-chain state synchronization engine.
  */

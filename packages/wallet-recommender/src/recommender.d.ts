@@ -3,7 +3,7 @@
  *
  * Intelligent wallet recommendations based on chain, platform, user behavior, and EIP-6963 detection.
  */
-import type { WalletRecommendation, RecommendationContext, ScoringWeights } from "./scoring.js.js";
+import type { WalletRecommendation, RecommendationContext, ScoringWeights } from "./scoring.js";
 /**
  * Wallet metadata used by the recommender.
  */

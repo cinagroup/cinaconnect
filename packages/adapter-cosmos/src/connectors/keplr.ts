@@ -156,7 +156,7 @@ export class KeplrConnector implements CosmosWalletConnector {
    */
   isAvailable(): boolean {
     if (typeof window === 'undefined') return false;
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
     return typeof win.keplr === 'object' && win.keplr !== null;
   }
 
@@ -176,7 +176,7 @@ export class KeplrConnector implements CosmosWalletConnector {
       throw new Error('Keplr is only available in browser environments');
     }
 
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
     const keplr = win.keplr as KeplrProvider | undefined;
 
     if (keplr) {
@@ -192,7 +192,7 @@ export class KeplrConnector implements CosmosWalletConnector {
       }, timeoutMs);
 
       const handler = () => {
-        const found = (window as Record<string, unknown>).keplr as KeplrProvider | undefined;
+        const found = (window as unknown as Record<string, unknown>).keplr as KeplrProvider | undefined;
         if (found) {
           clearTimeout(timeout);
           window.removeEventListener('keplr_keystorechange', handler);

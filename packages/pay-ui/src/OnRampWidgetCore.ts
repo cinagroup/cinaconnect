@@ -15,7 +15,7 @@ import type {
   OnRampWidgetCoreConfig,
   OnRampWidgetCoreState,
   OnRampWidgetState,
-} from "./types.js.js";
+} from "./types.js";
 
 /**
  * Core on-ramp widget controller (framework-agnostic).

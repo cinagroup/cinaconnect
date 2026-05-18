@@ -10,7 +10,7 @@
  * const address = await resolver.resolveName('vitalik.eth');
  * ```
  */
-export { ENSResolver, createENSResolver, resolveENSName, reverseLookupENS, getAvatarENS, } from "./ens.js.js";
-export type { ENSRecord, ENSProfile, ENSResolverConfig, CacheEntry, ENSContracts, ChainId, ENSErrorCode, } from "./types.js.js";
-export { ENS_CHAIN_CONFIG, ENS_ERRORS, ENSResolverError, } from "./types.js.js";
+export { ENSResolver, createENSResolver, resolveENSName, reverseLookupENS, getAvatarENS, } from "./ens.js";
+export type { ENSRecord, ENSProfile, ENSResolverConfig, CacheEntry, ENSContracts, ChainId, ENSErrorCode, } from "./types.js";
+export { ENS_CHAIN_CONFIG, ENS_ERRORS, ENSResolverError, } from "./types.js";
 //# sourceMappingURL=index.d.ts.map

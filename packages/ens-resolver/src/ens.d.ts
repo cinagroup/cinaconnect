@@ -4,7 +4,7 @@
  * Multi-chain: Ethereum mainnet, Arbitrum, Optimism, Polygon, Base, Sepolia.
  */
 import { type Address } from "viem";
-import type { ENSProfile, ENSResolverConfig } from "./types.js.js";
+import type { ENSProfile, ENSResolverConfig } from "./types.js";
 export declare class ENSResolver {
     private readonly config;
     private readonly cache;

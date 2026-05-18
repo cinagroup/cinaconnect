@@ -39,15 +39,15 @@
  * console.log(`Best on-ramp: ${bestQuote.providerName} — ${bestQuote.cryptoAmount} ETH`);
  * ```
  */
-export type { OnRampProviderId, OnRampFees, OnRampProvider, OnRampQuoteParams, OnRampQuote, OnRampResult, OnRampWidgetParams, UserPreferences, } from "./types.js.js";
-export { OnRampAggregator } from "./aggregator.js.js";
-export type { OnRampProviderAdapter, AggregatorConfig } from "./aggregator.js.js";
-export { MoonPayProvider } from "./providers/moonpay.js.js";
-export type { MoonPayConfig } from "./providers/moonpay.js.js";
-export { RampProvider } from "./providers/ramp.js.js";
-export type { RampConfig } from "./providers/ramp.js.js";
-export { TransakProvider } from "./providers/transak.js.js";
-export type { TransakConfig } from "./providers/transak.js.js";
-export { OnRampWidget } from "./widget.js.js";
-export type { WidgetConfig, OnRampWidgetEvent, OnRampWidgetCallback, } from "./widget.js.js";
+export type { OnRampProviderId, OnRampFees, OnRampProvider, OnRampQuoteParams, OnRampQuote, OnRampResult, OnRampWidgetParams, UserPreferences, } from "./types.js";
+export { OnRampAggregator } from "./aggregator.js";
+export type { OnRampProviderAdapter, AggregatorConfig } from "./aggregator.js";
+export { MoonPayProvider } from "./providers/moonpay.js";
+export type { MoonPayConfig } from "./providers/moonpay.js";
+export { RampProvider } from "./providers/ramp.js";
+export type { RampConfig } from "./providers/ramp.js";
+export { TransakProvider } from "./providers/transak.js";
+export type { TransakConfig } from "./providers/transak.js";
+export { OnRampWidget } from "./widget.js";
+export type { WidgetConfig, OnRampWidgetEvent, OnRampWidgetCallback, } from "./widget.js";
 //# sourceMappingURL=index.d.ts.map

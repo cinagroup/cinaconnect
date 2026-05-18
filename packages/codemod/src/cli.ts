@@ -14,7 +14,7 @@ import { hideBin } from "yargs/helpers";
 import { readFileSync, writeFileSync } from "fs";
 import { join, relative } from "path";
 import { sync as globSync } from "glob";
-import { TRANSFORMS, listTransforms } from "./index.js.js";
+import { TRANSFORMS, listTransforms } from "./index.js";
 
 interface CliOptions {
   srcDir: string;

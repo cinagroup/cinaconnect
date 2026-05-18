@@ -4,7 +4,7 @@
  * Core event tracking with provider-agnostic design.
  * Exports both the new EventTracker API and a legacy-compatible Analytics class.
  */
-import type { AnalyticsEvent, AnalyticsEventType, AnalyticsProvider, WalletProvider } from "./types.js.js";
+import type { AnalyticsEvent, AnalyticsEventType, AnalyticsProvider, WalletProvider } from "./types.js";
 export declare class EventTracker {
     private providers;
     private sessionId;

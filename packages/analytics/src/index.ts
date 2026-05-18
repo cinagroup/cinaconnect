@@ -27,15 +27,15 @@ export type {
   ConsentPreferences,
   AnonymizeOptions,
   DataExport,
-} from "./types.js.js";
+} from "./types.js";
 
 // Tracker
-export { EventTracker } from "./tracker.js.js";
+export { EventTracker } from "./tracker.js";
 
 // Providers
-export { LocalStorageProvider, InMemoryProvider } from "./providers/local.js.js";
-export { RemoteProvider } from "./providers/remote.js.js";
-export type { RemoteProviderConfig } from "./providers/remote.js.js";
+export { LocalStorageProvider, InMemoryProvider } from "./providers/local.js";
+export { RemoteProvider } from "./providers/remote.js";
+export type { RemoteProviderConfig } from "./providers/remote.js";
 
 // Metrics
 export {
@@ -44,7 +44,7 @@ export {
   calculateChainUsage,
   calculateTransactionSuccessRate,
   countUniqueSessions,
-} from "./metrics.js.js";
+} from "./metrics.js";
 
 // Privacy
 export {
@@ -53,4 +53,4 @@ export {
   ConsentManager,
   exportUserData,
   deleteUserData,
-} from "./privacy.js.js";
+} from "./privacy.js";

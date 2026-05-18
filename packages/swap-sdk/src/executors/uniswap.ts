@@ -5,9 +5,9 @@
  * Uses the Uniswap Quoter contract for off-chain price estimation.
  */
 
-import type { SwapExecutor } from "../router.js.js";
-import type { SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction, TokenInfo } from "../types.js.js";
-import { calculateMinimumReceived, calculatePriceImpact } from "../slippage.js.js";
+import type { SwapExecutor } from "../router.js";
+import type { SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction, TokenInfo } from "../types.js";
+import { calculateMinimumReceived, calculatePriceImpact } from "../slippage.js";
 
 // ============================================================
 // Constants

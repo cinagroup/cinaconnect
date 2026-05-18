@@ -5,8 +5,8 @@
  * Documentation: https://docs.transak.com/
  */
 
-import type { OnRampProviderAdapter } from "../aggregator.js.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
+import type { OnRampProviderAdapter } from "../aggregator.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
 
 const TRANSAK_WIDGET_BASE = "https://global.transak.com";
 const TRANSAK_API_BASE = "https://api.transak.com";

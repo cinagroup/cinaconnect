@@ -11,7 +11,7 @@ import type {
   AnalyticsEventType,
   AnalyticsProvider,
   WalletProvider,
-} from "./types.js.js";
+} from "./types.js";
 
 // ============================================================
 // EventTracker — new unified API

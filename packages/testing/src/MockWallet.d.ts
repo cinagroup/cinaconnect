@@ -4,7 +4,7 @@
  * Mimics the lifecycle of a wallet connector (connect, disconnect, switch chain)
  * without requiring a real browser extension or WalletConnect session.
  */
-import { MockProvider } from "./MockProvider.js.js";
+import { MockProvider } from "./MockProvider.js";
 export interface WalletState {
     connected: boolean;
     accounts: string[];

@@ -4,8 +4,8 @@
  * Provides swap quotes and execution via the 0x API v2.
  * Documentation: https://0x.org/docs/api
  */
-import type { SwapExecutor } from "../router.js.js";
-import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js.js";
+import type { SwapExecutor } from "../router.js";
+import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from "../types.js";
 export declare class ZeroxExecutor implements SwapExecutor {
     readonly name = "0x";
     private apiKey;

@@ -5,7 +5,7 @@
  * session key policies that define what actions a session key
  * is authorized to perform.
  */
-import type { SessionKeyPolicy } from "./types.js.js";
+import type { SessionKeyPolicy } from "./types.js";
 import type { Address, Hex } from "viem";
 export declare class SessionKeyPolicyManager {
     private policies;

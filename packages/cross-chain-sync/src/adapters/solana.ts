@@ -4,7 +4,7 @@
  * Syncs state for Solana accounts.
  */
 
-import type { ChainAccount, SessionState, StateStorage } from "./types.js.js";
+import type { ChainAccount, SessionState, StateStorage } from "./types.js";
 
 /** Solana-specific account info */
 export interface SolanaAccount extends ChainAccount {

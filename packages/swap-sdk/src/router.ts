@@ -13,8 +13,8 @@ import type {
   SwapTransaction,
   TokenInfo,
   SwapExecuteParams,
-} from "./types.js.js";
-import type { SwapQuoter } from "./quoter.js.js";
+} from "./types.js";
+import type { SwapQuoter } from "./quoter.js";
 
 // ============================================================
 // Executor Interface

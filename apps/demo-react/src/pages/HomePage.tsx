@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import WalletModal from '../components/WalletModal'
-import { useWallet, formatAddress } from '../contexts/WalletContext'
+import { useWallet, formatAddress } from '../hooks/useWallet'
 
 interface Chain {
   name: string
@@ -44,7 +44,7 @@ const FEATURES: Feature[] = [
 ]
 
 const HomePage: React.FC = () => {
-  const { connected, address, disconnect } = useWallet()
+  const { isConnected, address, disconnect } = useWallet()
   const [walletModalOpen, setWalletModalOpen] = useState(false)
   const [selectedChain, setSelectedChain] = useState('Ethereum')
 
@@ -68,7 +68,7 @@ const HomePage: React.FC = () => {
               <Link to="/multichain" className="text-gray-400 hover:text-white transition-colors text-sm">Multi-Chain</Link>
               <Link to="/auth" className="text-gray-400 hover:text-white transition-colors text-sm">Auth</Link>
             </div>
-            {connected ? (
+            {isConnected ? (
               <div className="flex items-center gap-3">
                 <span className="text-xs px-2 py-1 rounded-full bg-emerald-500/20 text-emerald-400">
                   ● Connected
@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
                 onClick={() => setWalletModalOpen(true)}
                 className="btn-primary px-8 py-4 rounded-2xl text-lg font-semibold w-full sm:w-auto animate-pulse-glow"
               >
-                {connected ? '🔗 Reconnect Wallet' : '🚀 Connect Wallet'}
+                {isConnected ? '🔗 Reconnect Wallet' : '🚀 Connect Wallet'}
               </button>
               <Link
                 to="/swap"
@@ -134,7 +134,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Connected State */}
-      {connected && (
+      {isConnected && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-slide-up">
           <div className="glass-card rounded-2xl p-6">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

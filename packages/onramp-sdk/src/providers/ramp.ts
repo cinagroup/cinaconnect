@@ -5,8 +5,8 @@
  * Documentation: https://ramp.network/
  */
 
-import type { OnRampProviderAdapter } from "../aggregator.js.js";
-import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js.js";
+import type { OnRampProviderAdapter } from "../aggregator.js";
+import type { OnRampProvider, OnRampQuote, OnRampQuoteParams, OnRampWidgetParams } from "../types.js";
 
 const RAMP_WIDGET_BASE = "https://buy.ramp.network";
 const RAMP_API_BASE = "https://api-instant.ramp.network";

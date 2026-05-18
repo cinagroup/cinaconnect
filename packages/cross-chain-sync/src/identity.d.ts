@@ -3,8 +3,8 @@
  *
  * Unified identity hash, account linking proofs, and verification.
  */
-import type { ChainAccount, LinkingProof, StateStorage } from "./types.js.js";
-export { type UnifiedIdentity } from "./types.js.js";
+import type { ChainAccount, LinkingProof, StateStorage } from "./types.js";
+export { type UnifiedIdentity } from "./types.js";
 /**
  * Generate a deterministic identity hash from linked accounts.
  */

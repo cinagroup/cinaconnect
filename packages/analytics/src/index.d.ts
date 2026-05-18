@@ -14,11 +14,11 @@
  * await tracker.trackTransactionAttempted('0x123', 1, 'metamask');
  * ```
  */
-export type { AnalyticsEvent, AnalyticsEventType, AnalyticsProvider, WalletProvider, ConnectionMetrics, WalletPopularity, ChainUsage, ConsentPreferences, AnonymizeOptions, DataExport, } from "./types.js.js";
-export { EventTracker } from "./tracker.js.js";
-export { LocalStorageProvider, InMemoryProvider } from "./providers/local.js.js";
-export { RemoteProvider } from "./providers/remote.js.js";
-export type { RemoteProviderConfig } from "./providers/remote.js.js";
-export { calculateConnectionMetrics, calculateWalletPopularity, calculateChainUsage, calculateTransactionSuccessRate, countUniqueSessions, } from "./metrics.js.js";
-export { anonymizeEvent, anonymizeEvents, ConsentManager, exportUserData, deleteUserData, } from "./privacy.js.js";
+export type { AnalyticsEvent, AnalyticsEventType, AnalyticsProvider, WalletProvider, ConnectionMetrics, WalletPopularity, ChainUsage, ConsentPreferences, AnonymizeOptions, DataExport, } from "./types.js";
+export { EventTracker } from "./tracker.js";
+export { LocalStorageProvider, InMemoryProvider } from "./providers/local.js";
+export { RemoteProvider } from "./providers/remote.js";
+export type { RemoteProviderConfig } from "./providers/remote.js";
+export { calculateConnectionMetrics, calculateWalletPopularity, calculateChainUsage, calculateTransactionSuccessRate, countUniqueSessions, } from "./metrics.js";
+export { anonymizeEvent, anonymizeEvents, ConsentManager, exportUserData, deleteUserData, } from "./privacy.js";
 //# sourceMappingURL=index.d.ts.map

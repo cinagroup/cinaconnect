@@ -5,7 +5,7 @@
  * that cover the most common testing scenarios.
  */
 
-import { ChainConfig } from "./MockChains.js.js";
+import { ChainConfig } from "./MockChains.js";
 
 // ── Addresses ───────────────────────────────────────────────────────────────
 

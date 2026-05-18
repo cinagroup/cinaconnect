@@ -6,7 +6,7 @@
  * is authorized to perform.
  */
 
-import type { SessionKeyPolicy } from "./types.js.js";
+import type { SessionKeyPolicy } from "./types.js";
 import type { Address, Hex } from "viem";
 import { createPublicClient, http, parseAbiItem } from "viem";
 

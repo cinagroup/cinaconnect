@@ -19,7 +19,7 @@
 
 import type { Address, Hex } from "viem";
 import { keccak256, stringToBytes, bytesToHex } from "viem";
-import type { SessionKey, SessionKeyPolicy } from "./types.js.js";
+import type { SessionKey, SessionKeyPolicy } from "./types.js";
 
 // ============================================================
 // Types

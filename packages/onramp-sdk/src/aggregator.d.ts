@@ -4,7 +4,7 @@
  *
  * Supported providers: MoonPay, Ramp, Transak, Stripe, Coinbase.
  */
-import type { OnRampQuote, OnRampQuoteParams, OnRampProvider, OnRampResult, OnRampWidgetParams, UserPreferences } from "./types.js.js";
+import type { OnRampQuote, OnRampQuoteParams, OnRampProvider, OnRampResult, OnRampWidgetParams, UserPreferences } from "./types.js";
 export interface OnRampProviderAdapter {
     /** Provider ID */
     id: string;

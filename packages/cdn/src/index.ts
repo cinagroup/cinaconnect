@@ -5,15 +5,15 @@
  * Exposes global window.CinaConnect namespace for script-tag usage.
  */
 
-import { getConfig, validateConfig } from "./config.js.js";
-import type { CinaConnectConfig } from "./config.js.js";
+import { getConfig, validateConfig } from "./config.js";
+import type { CinaConnectConfig } from "./config.js";
 import {
   renderConnectButton,
   getConnectButtonState,
   getConnectedAddress as getButtonAddress,
   disconnect,
-} from "./connect.js.js";
-import type { ConnectButtonOptions } from "./connect.js.js";
+} from "./connect.js";
+import type { ConnectButtonOptions } from "./connect.js";
 import {
   renderConnectModal,
   showModal,
@@ -21,10 +21,10 @@ import {
   toggleModal,
   getCurrentView,
   getConnectedAddress as getModalAddress,
-} from "./modal.js.js";
-import type { ConnectModalOptions } from "./modal.js.js";
-import { loadModule, isLoaded, getModule, clearCache, preloadModules } from "./loader.js.js";
-import type { LoadState, LoadResult } from "./loader.js.js";
+} from "./modal.js";
+import type { ConnectModalOptions } from "./modal.js";
+import { loadModule, isLoaded, getModule, clearCache, preloadModules } from "./loader.js";
+import type { LoadState, LoadResult } from "./loader.js";
 
 // ============================================================
 // Global API — mounted on window.CinaConnect
