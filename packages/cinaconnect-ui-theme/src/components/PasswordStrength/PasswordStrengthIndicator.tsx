@@ -81,8 +81,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
   const strength = useMemo(() => calculatePasswordStrength(password), [password]);
   const activeSegments = Math.min(strength.score, segments);
 
-  const container = motion.div as React.ElementType;
-  const segment = motion.div as React.ElementType;
+  const MotionDiv = motion.div;
 
   return (
     <div className={`flex flex-col gap-1.5 ${className}`}>
@@ -93,7 +92,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
           const colorClass = isActive ? strength.color : strength.bgColor;
 
           return (
-            <segment
+            <MotionDiv
               key={i}
               className={`h-1.5 flex-1 rounded-full transition-colors duration-200 ${colorClass}`}
               initial={animate ? { scaleX: 0 } : false}
@@ -107,7 +106,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
 
       {/* Text label */}
       {showLabel && password && (
-        <container
+        <MotionDiv
           className="text-xs font-medium"
           initial={animate ? { opacity: 0, y: 4 } : false}
           animate={animate ? { opacity: 1, y: 0 } : false}
@@ -124,7 +123,7 @@ export const PasswordStrengthIndicator: React.FC<PasswordStrengthIndicatorProps>
           >
             {strength.label}
           </span>
-        </container>
+        </MotionDiv>
       )}
     </div>
   );

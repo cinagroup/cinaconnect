@@ -8,9 +8,9 @@
  * @packageDocumentation
  */
 
-import { sha256 } from '@noble/hashes/sha256';
-import { hkdf } from '@noble/hashes/hkdf';
-import { randomBytes } from '@noble/hashes/utils';
+import { sha256 } from '@noble/hashes/sha2.js';
+import { extract, expand } from '@noble/hashes/hkdf.js';
+import { randomBytes } from '@noble/hashes/utils.js';
 import {
   RecoveryShare,
   RecoverySetupConfig,
@@ -312,14 +312,9 @@ function deriveKeyFromPassword(password: string, salt: Uint8Array): Uint8Array {
   // Use SHA-256 to extract, then HKDF-Expand
   const passwordBytes = new TextEncoder().encode(password);
 
-  // First, extract using SHA-256 with salt
-  const extracted = sha256.create();
-  extracted.update(salt);
-  extracted.update(passwordBytes);
-  const prk = extracted.digest();
-
-  // Then expand to 32 bytes
-  return hkdf(sha256, prk, new Uint8Array(0), '', 32);
+  // HKDF: extract then expand
+  const prk = extract(sha256, passwordBytes, salt);
+  return expand(sha256, prk, undefined, 32);
 }
 
 /**
