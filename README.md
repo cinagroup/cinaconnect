@@ -113,8 +113,8 @@ function Main() {
 ### Status Legend
 - ✅ **Built & Published** — compiled, tested, published to npm, ready to install
 - 🚧 **In Development** — source written, actively being built/deployed (e.g., Cloudflare Workers)
-- 📝 **Source Written** — source code exists but **not yet built or published** to npm
-- ⬜ **Planned** — package.json scaffolding only, source not yet written
+- 📝 **Source Written** — source code exists, **all packages now built**
+- ⬜ **Planned** — package.json scaffolding only, source not yet written (1 remaining: dotnet)
 - 🔌 **SDK Layer** — type definitions & integration interfaces only; **requires external API key or service** to function
 
 ### Core
