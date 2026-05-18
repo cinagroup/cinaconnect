@@ -10,6 +10,8 @@
 // Types
 export {
   DepositStatus,
+} from "./types";
+export type {
   ExchangeInfo,
   AssetInfo,
   NetworkInfo,

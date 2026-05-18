@@ -150,4 +150,3 @@ describe("Cross-Chain Identity", () => {
         expect(retrieved).toHaveLength(2);
     });
 });
-//# sourceMappingURL=identity.test.js.map

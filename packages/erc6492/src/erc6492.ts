@@ -84,7 +84,7 @@ export async function validateSignature(
   input: ValidationInput,
   options?: { rpcUrl?: string },
 ): Promise<ValidationResult> {
-  const { signer, hash, signature } = input;
+  const { signer, hash, signature: sig } = input;
 
   // Basic validation
   if (!signer || !isAddress(signer)) {
@@ -93,14 +93,14 @@ export async function validateSignature(
   if (!hash || !hash.startsWith('0x')) {
     return { isValid: false, reason: 'Invalid hash' };
   }
-  if (!signature || !signature.startsWith('0x')) {
+  if (!sig || !sig.startsWith('0x')) {
     return { isValid: false, reason: 'Invalid signature' };
   }
 
   // Check if it's an ERC-6492 encoded signature
-  if (isERC6492Signature(signature)) {
+  if (isERC6492Signature(sig)) {
     try {
-      const decoded = decodeValidation(signature);
+      const decoded = decodeValidation(sig);
       // The decoded signature should have proper structure
       if (decoded.deployer.length === 42 && decoded.signature.startsWith('0x')) {
         return { isValid: true };

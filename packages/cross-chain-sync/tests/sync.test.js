@@ -116,4 +116,3 @@ describe("StateSync", () => {
         expect(sync2.getState()?.identity.identityHash).toBe("0xrestore");
     });
 });
-//# sourceMappingURL=sync.test.js.map

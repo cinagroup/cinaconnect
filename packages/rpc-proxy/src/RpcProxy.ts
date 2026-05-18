@@ -55,8 +55,11 @@ export class RpcProxy {
 
   /** Stop the proxy server */
   async stop(): Promise<void> {
-    return new Promise((resolve) => {
-      this.server?.close(resolve);
+    return new Promise((resolve, reject) => {
+      this.server?.close((err?: Error) => {
+        if (err) reject(err);
+        else resolve();
+      });
     });
   }
 

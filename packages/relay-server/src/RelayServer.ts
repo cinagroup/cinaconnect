@@ -1,5 +1,5 @@
 import { createServer, type Server } from 'http';
-import { WebSocketServer, type WebSocket } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
 
 export interface RelayServerConfig {
@@ -61,9 +61,12 @@ export class RelayServer {
     this.clients.forEach((ws) => ws.close());
     this.clients.clear();
     this.topics.clear();
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       this.wss?.close(() => {
-        this.server?.close(resolve);
+        this.server?.close((err?: Error) => {
+          if (err) reject(err);
+          else resolve();
+        });
       });
     });
   }

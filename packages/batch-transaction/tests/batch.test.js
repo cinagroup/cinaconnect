@@ -77,4 +77,3 @@ describe('BatchTransaction', () => {
         expect(summary.estimatedGas).toBeGreaterThan(0n);
     });
 });
-//# sourceMappingURL=batch.test.js.map

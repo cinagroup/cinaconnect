@@ -41,7 +41,7 @@ export class SuiWalletConnector implements SuiConnector {
    */
   private _resolveProvider(): SuiWalletProvider | null {
     if (typeof window === 'undefined') return null;
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
 
     // Official Sui Wallet exposes `window.sui`
     return (win.sui as SuiWalletProvider) ?? null;

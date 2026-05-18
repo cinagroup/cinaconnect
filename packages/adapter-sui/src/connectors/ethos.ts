@@ -40,7 +40,7 @@ export class EthosConnector implements SuiConnector {
    */
   private _resolveProvider(): SuiWalletProvider | null {
     if (typeof window === 'undefined') return null;
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
 
     // Ethos exposes `window.ethosWallet`
     return (win.ethosWallet as SuiWalletProvider) ?? null;
