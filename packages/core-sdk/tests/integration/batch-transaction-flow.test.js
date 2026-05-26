@@ -43,6 +43,7 @@ class MockBatchConnector extends Connector {
     async signTransaction(tx) {
         if (!this._connected)
             throw new Error('Not connected');
+        if (tx.to && !tx.to.startsWith('0x') || tx.to === 'invalid') throw new Error('Invalid address');
         this._signedTxs.push(tx);
         return '0xsigned_' + this._signedTxs.length;
     }

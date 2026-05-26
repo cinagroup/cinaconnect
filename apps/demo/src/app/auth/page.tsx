@@ -1,458 +1,852 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
+import { useState, useCallback, useEffect } from 'react';
+import { useWallet, shortenAddress } from '@/lib/useWallet';
+import DemoLayout from '@/components/DemoLayout';
+import { useToast } from '@/lib/toast';
+import { parseMessage } from '@cinaconnect/siwe';
+import {
+  createSiweMessage,
+  signSiweMessage,
+  verifySiweSignature,
+} from '@/lib/siwe';
+import {
+  registerPasskey,
+  authenticatePasskey,
+  isWebAuthnSupported,
+  hasPlatformAuthenticator,
+  getStoredCredentials,
+  getCredentialById,
+  removePasskey,
+} from '@/lib/passkey';
+import {
+  getAuthSession,
+  clearAuthSession,
+  isAuthenticated,
+  formatSessionRemaining,
+  signOut,
+  type AuthSession,
+} from '@/lib/authSession';
 
-const SUPPORTED_CHAINS = [
-  { name: 'Ethereum', symbol: 'Ξ', color: 'from-blue-400 to-indigo-500', chainId: 1 },
-  { name: 'Polygon', symbol: '⬡', color: 'from-purple-400 to-violet-600', chainId: 137 },
-  { name: 'Arbitrum', symbol: 'λ', color: 'from-sky-400 to-blue-600', chainId: 42161 },
-  { name: 'Base', symbol: '⊙', color: 'from-blue-500 to-cyan-400', chainId: 8453 },
-];
-
-const MOCK_ADDRESS = '0x7a3bF12e8C4d9A01bE5673cD8f29a1E0c49fc49f';
-const MOCK_NONCE = 'a8f3c2e1b0d9456789abcdef01234567';
-const MOCK_SIGNATURE = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12';
-const MOCK_ISSUED_AT = '2025-05-17T13:10:00.000Z';
-
-function generateSiweMessage(domain: string, address: string, nonce: string, chainId: number, issuedAt: string): string {
-  return `${domain} wants you to sign in with your Ethereum account:
-${address}
-
-I accept the ServiceAgreement Terms and Conditions.
-
-URI: https://${domain}
-Version: 1
-Chain ID: ${chainId}
-Nonce: ${nonce}
-Issued At: ${issuedAt}
-Resources:
-- https://${domain}/terms
-- https://${domain}/privacy`;
-}
-
-const SIWE_CODE_EXAMPLE = `import { SiweMessage } from 'siwe';
-import { CinaConnect } from '@cinaconnect/sdk';
-
-const client = new CinaConnect({ chains: ['ethereum', 'polygon'] });
-const message = new SiweMessage({ domain: window.location.host, address, ... });
-const signature = await client.wallet.signMessage(message.prepareMessage());
-const verified = await client.auth.verify({ message, signature });`;
-
-type Step = 'connect' | 'sign' | 'verify' | 'done';
+/* ── types ── */
+type AuthStep = 'idle' | 'connected' | 'signing' | 'signed' | 'verifying' | 'verified' | 'error';
+type PasskeyStep = 'idle' | 'registering' | 'authenticating' | 'success' | 'error';
 
 export default function AuthPage() {
-  const [step, setStep] = useState<Step>('connect');
-  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[0]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { account, status, error: walletError, connectors, connect, disconnect } = useWallet();
+  const { success, error: toastError, info } = useToast();
 
-  const siweMessage = generateSiweMessage(
-    'demo.cinaconnect.io',
-    MOCK_ADDRESS,
-    MOCK_NONCE,
-    selectedChain.chainId,
-    MOCK_ISSUED_AT,
-  );
+  // ── SIWE state ──
+  const [authStep, setAuthStep] = useState<AuthStep>('idle');
+  const [siweMessage, setSiweMessage] = useState('');
+  const [signature, setSignature] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [verificationResult, setVerificationResult] = useState<{ valid: boolean; recoveredAddress: string } | null>(null);
+  const [isSigningLoading, setIsSigningLoading] = useState(false);
+  const [isVerifyingLoading, setIsVerifyingLoading] = useState(false);
 
-  const handleConnect = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep('sign');
-    }, 800);
+  // ── Passkey state ──
+  const [passkeyStep, setPasskeyStep] = useState<PasskeyStep>('idle');
+  const [passkeyUsername, setPasskeyUsername] = useState('');
+  const [passkeyError, setPasskeyError] = useState<string | null>(null);
+  const [passkeyResult, setPasskeyResult] = useState<{ credentialId: string; username: string } | null>(null);
+  const [webAuthnSupported, setWebAuthnSupported] = useState(false);
+  const [platformAuthAvailable, setPlatformAuthAvailable] = useState(false);
+
+  // ── Session state ──
+  const [session, setSession] = useState<AuthSession | null>(null);
+  const [showSessionInfo, setShowSessionInfo] = useState(false);
+
+  const isConnected = status === 'connected';
+
+  // ── Restore session on mount ──
+  useEffect(() => {
+    setWebAuthnSupported(isWebAuthnSupported());
+
+    hasPlatformAuthenticator().then((available) => {
+      setPlatformAuthAvailable(available);
+    });
+
+    const existing = getAuthSession();
+    if (existing.authenticated) {
+      setSession(existing);
+      if (existing.passkey.authenticated) {
+        setPasskeyStep('success');
+        setPasskeyResult({
+          credentialId: existing.passkey.credentialId || '',
+          username: existing.passkey.username || '',
+        });
+      }
+      if (existing.siwe.verified) {
+        setAuthStep('verified');
+        setSiweMessage(existing.siwe.message || '');
+        setSignature(existing.siwe.signature || '');
+        setVerificationResult({ valid: true, recoveredAddress: existing.address || '' });
+      }
+    }
+  }, []);
+
+  // ── SIWE handlers ──
+  const handleConnect = useCallback(async () => {
+    setError(null);
+    setAuthStep('idle');
+    setSiweMessage('');
+    setSignature('');
+    setVerificationResult(null);
+    setShowSessionInfo(false);
+
+    try {
+      await connect('io.metamask');
+      setAuthStep('connected');
+      success('Wallet Connected', 'Ready to sign SIWE message');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Connection failed';
+      setError(msg);
+      setAuthStep('error');
+      toastError('Connection Failed', msg);
+    }
+  }, [connect, success, toastError]);
+
+  const handleSign = useCallback(async () => {
+    if (!account.address || !account.chainId) {
+      setError('Wallet not connected');
+      setAuthStep('error');
+      return;
+    }
+
+    setError(null);
+    setIsSigningLoading(true);
+    setAuthStep('signing');
+    setSignature('');
+    setVerificationResult(null);
+
+    try {
+      const { message, data } = createSiweMessage(account.address, account.chainId);
+      setSiweMessage(message);
+
+      const sig = await signSiweMessage(message, account.address);
+      setSignature(sig);
+      setAuthStep('signed');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Signing failed';
+      if (msg.includes('User denied') || msg.includes('rejected') || msg.includes('User rejected')) {
+        setError('Signing rejected by user');
+        toastError('Signing Rejected', 'User denied the signature request');
+      } else {
+        setError(msg);
+        toastError('Signing Failed', msg);
+      }
+      setAuthStep('error');
+    } finally {
+      setIsSigningLoading(false);
+    }
+  }, [account.address, account.chainId, toastError]);
+
+  const handleVerify = useCallback(async () => {
+    if (!siweMessage || !signature || !account.address) {
+      setError('Missing message or signature');
+      setAuthStep('error');
+      return;
+    }
+
+    setError(null);
+    setIsVerifyingLoading(true);
+    setAuthStep('verifying');
+
+    try {
+      const result = await verifySiweSignature(account.address, siweMessage, signature);
+      setVerificationResult({ valid: result.valid, recoveredAddress: result.recoveredAddress });
+
+      if (result.valid) {
+        setAuthStep('verified');
+        // Restore session display
+        const updated = getAuthSession();
+        setSession(updated);
+        success('Authentication Successful', 'Wallet ownership verified via SIWE');
+      } else {
+        setError(`Signature verification failed — ${result.error || 'address mismatch'}`);
+        setAuthStep('error');
+        toastError('Verification Failed', result.error || 'Signature does not match expected address');
+      }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Verification failed');
+      setAuthStep('error');
+    } finally {
+      setIsVerifyingLoading(false);
+    }
+  }, [siweMessage, signature, account.address, success, toastError]);
+
+  // ── Passkey handlers ──
+  const handleRegisterPasskey = useCallback(async () => {
+    if (!passkeyUsername.trim()) {
+      setPasskeyError('Please enter a username');
+      return;
+    }
+
+    setPasskeyError(null);
+    setPasskeyStep('registering');
+
+    try {
+      const result = await registerPasskey(passkeyUsername.trim());
+      if (result.success && result.credential) {
+        setPasskeyStep('success');
+        setPasskeyResult({
+          credentialId: result.credential.id,
+          username: result.credential.username,
+        });
+        const updated = getAuthSession();
+        setSession(updated);
+        success('Passkey Registered', `Welcome, ${result.credential.username}!`);
+      } else {
+        setPasskeyError(result.error || 'Registration failed');
+        setPasskeyStep('error');
+        toastError('Registration Failed', result.error || 'Unknown error');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Registration failed';
+      setPasskeyError(msg);
+      setPasskeyStep('error');
+      toastError('Registration Failed', msg);
+    }
+  }, [passkeyUsername, success, toastError]);
+
+  const handleLoginPasskey = useCallback(async () => {
+    setPasskeyError(null);
+    setPasskeyStep('authenticating');
+
+    try {
+      const result = await authenticatePasskey();
+      if (result.success) {
+        setPasskeyStep('success');
+        setPasskeyResult({
+          credentialId: result.credentialId || '',
+          username: result.username || '',
+        });
+        const updated = getAuthSession();
+        setSession(updated);
+        success('Passkey Authenticated', `Welcome back, ${result.username}!`);
+      } else {
+        setPasskeyError(result.error || 'Authentication failed');
+        setPasskeyStep('error');
+        toastError('Authentication Failed', result.error || 'Unknown error');
+      }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : 'Authentication failed';
+      setPasskeyError(msg);
+      setPasskeyStep('error');
+      toastError('Authentication Failed', msg);
+    }
+  }, [success, toastError]);
+
+  // ── Shared handlers ──
+  const handleReset = useCallback(() => {
+    setAuthStep('idle');
+    setSiweMessage('');
+    setSignature('');
+    setError(null);
+    setVerificationResult(null);
+    setShowSessionInfo(false);
+    setPasskeyStep('idle');
+    setPasskeyError(null);
+    setPasskeyResult(null);
+    setPasskeyUsername('');
+  }, []);
+
+  const handleDisconnect = useCallback(async () => {
+    await disconnect();
+    handleReset();
+  }, [disconnect, handleReset]);
+
+  const handleSignOut = useCallback(() => {
+    signOut();
+    handleReset();
+    success('Signed Out', 'Session cleared');
+  }, [handleReset, success]);
+
+  /* ── step progress helpers ── */
+  const stepLabels = ['Connect', 'Sign', 'Verify', 'Done'];
+  const stepMap: Record<AuthStep, number> = {
+    idle: 0, connected: 0, signing: 1, signed: 1, verifying: 2, verified: 3, error: -1,
   };
+  const currentStep = stepMap[authStep];
 
-  const handleSign = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep('verify');
-    }, 1200);
-  };
-
-  const handleVerify = () => {
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep('done');
-    }, 600);
-  };
-
-  const handleReset = () => {
-    setStep('connect');
-  };
-
-  const stepIndex = ['connect', 'sign', 'verify', 'done'].indexOf(step);
-
-  const stepLabels = ['Connect', 'Sign', 'Verify', 'Profile'];
+  const storedCredentials = getStoredCredentials();
+  const hasExistingPasskeys = storedCredentials.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      {/* Navbar */}
-      <nav className="border-b border-gray-800 bg-gray-950/80 backdrop-blur sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent">
-              CinaConnect
-            </Link>
-            <div className="flex items-center gap-4">
-              <Link href="/swap" className="text-sm text-gray-400 hover:text-white transition-colors">
-                Swap
-              </Link>
-              <Link href="/multi-chain" className="text-sm text-gray-400 hover:text-white transition-colors">
-                Multi-Chain
-              </Link>
-              <Link href="/auth" className="text-sm text-blue-400 font-medium">
-                SIWE Auth
-              </Link>
-              <a
-                href="https://github.com/cinaseek/onux"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-sm text-gray-400 hover:text-white transition-colors"
-              >
-                GitHub
-              </a>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Hero */}
+    <DemoLayout>
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* ── Hero ── */}
         <section className="py-16 sm:py-20 text-center">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium mb-6">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
-            Sign-In with Ethereum
+            Real SIWE — EIP-4361 + Passkeys
           </div>
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
             <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              SIWE Auth
+              Sign-In With Ethereum
             </span>
           </h1>
           <p className="mt-5 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-            Authenticate users with their wallet. No passwords, no accounts to manage — just a signature.
+            Authenticate with your wallet or biometrics. No passwords, no accounts.
             <br />
-            <span className="text-gray-500">One message to prove ownership. Zero friction.</span>
+            <span className="text-gray-500">Powered by @cinaconnect/siwe + WebAuthn Passkeys.</span>
           </p>
         </section>
 
-        {/* Step Progress Indicator */}
-        <section className="mb-10">
-          <div className="flex items-center justify-center gap-0">
-            {stepLabels.map((label, i) => (
-              <div key={label} className="flex items-center">
-                <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                  i < stepIndex
-                    ? 'bg-green-500/15 text-green-400 border border-green-500/25'
-                    : i === stepIndex
-                    ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30 ring-2 ring-blue-500/20'
-                    : 'bg-gray-800/40 text-gray-500 border border-gray-800'
+        {/* ── Active Session Banner ── */}
+        {session?.authenticated && (
+          <div className="mb-8 p-4 rounded-xl bg-green-500/10 border border-green-500/20 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
+                <svg className="w-5 h-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-green-400">
+                  {session.address
+                    ? `Authenticated: ${shortenAddress(session.address)}`
+                    : `Authenticated: ${session.passkey.username}`
+                  }
+                </p>
+                <p className="text-xs text-gray-400">
+                  {session.siwe.verified ? 'SIWE verified' : 'Passkey authenticated'}
+                  {' · '}
+                  {formatSessionRemaining()}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleSignOut}
+              className="px-3 py-1.5 rounded-lg bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-red-500/25 text-xs font-medium transition-colors"
+            >
+              Sign Out
+            </button>
+          </div>
+        )}
+
+        {/* ── Error Banner ── */}
+        {(error || passkeyError) && (
+          <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 flex items-start gap-3">
+            <svg className="w-5 h-5 text-red-400 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+            <div>
+              <p className="text-sm text-red-400 font-medium">{error || passkeyError}</p>
+              {walletError && <p className="text-xs text-red-400/70 mt-1">Wallet error: {walletError}</p>}
+            </div>
+          </div>
+        )}
+
+        {/* ── Two-column layout: SIWE + Passkey ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-16">
+          {/* ═══════════════════════════════════════════ */}
+          {/* ── SIWE Auth Panel ── */}
+          {/* ═══════════════════════════════════════════ */}
+          <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <span className="text-blue-400">🔗</span> Wallet Auth (SIWE)
+            </h2>
+
+            {/* Step Progress */}
+            <section className="mb-6">
+              <div className="flex items-center justify-center gap-0">
+                {stepLabels.map((label, i) => {
+                  const isDone = authStep === 'verified' ? i < 3 : authStep === 'connected' && i === 0;
+                  const isCurrent = currentStep === i && authStep !== 'error';
+                  return (
+                    <div key={label} className="flex items-center">
+                      <div className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                        isDone || (authStep === 'verified' && i === 3)
+                          ? 'bg-green-500/15 text-green-400 border border-green-500/25'
+                          : isCurrent
+                          ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30 ring-2 ring-blue-500/20'
+                          : 'bg-gray-800/40 text-gray-500 border border-gray-800'
+                      }`}>
+                        {isDone || (authStep === 'verified' && i === 3) ? (
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        ) : (
+                          <span className="w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center text-[10px] font-bold"
+                            style={{ borderColor: isCurrent ? 'rgb(96 165 250)' : 'rgb(107 114 128)', color: isCurrent ? 'rgb(96 165 250)' : 'rgb(107 114 128)' }}>
+                            {i + 1}
+                          </span>
+                        )}
+                        {label}
+                      </div>
+                      {i < 3 && (
+                        <div className={`w-4 h-0.5 mx-1 ${
+                          isDone || (authStep === 'verified' && i === 3)
+                            ? 'bg-green-500/40'
+                            : 'bg-gray-800'
+                        }`} />
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+
+            {/* Wallet Status */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
+                  isConnected
+                    ? 'bg-green-500/15 text-green-400 border border-green-500/20'
+                    : 'bg-gray-700/50 text-gray-500 border border-gray-600/40'
                 }`}>
-                  {i < stepIndex ? (
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                  ) : (
-                    <span className="w-4 h-4 rounded-full border-2 flex items-center justify-center text-xs font-bold"
-                      style={{ borderColor: i === stepIndex ? 'rgb(96 165 250)' : 'rgb(107 114 128)', color: i === stepIndex ? 'rgb(96 165 250)' : 'rgb(107 114 128)' }}>
-                      {i + 1}
-                    </span>
-                  )}
-                  {label}
-                </div>
-                {i < stepLabels.length - 1 && (
-                  <div className={`w-8 sm:w-12 h-0.5 mx-1 sm:mx-2 ${
-                    i < stepIndex ? 'bg-green-500/40' : 'bg-gray-800'
-                  }`} />
+                  <span className={`size-2 rounded-full ${isConnected ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`} />
+                  {isConnected ? 'Connected' : 'Disconnected'}
+                </span>
+                {isConnected && account.address && (
+                  <span className="text-xs font-mono text-gray-400">{shortenAddress(account.address)}</span>
                 )}
               </div>
-            ))}
-          </div>
-        </section>
-
-        {/* Main Auth Flow */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-16">
-          {/* Left: Interactive Flow */}
-          <div className="space-y-6">
-            {/* Step 1: Connect Wallet */}
-            <div className={`rounded-2xl border transition-all duration-300 ${
-              step === 'connect'
-                ? 'bg-gray-900/80 border-blue-500/30 shadow-lg shadow-blue-500/5'
-                : stepIndex > 0
-                ? 'bg-gray-900/50 border-green-500/20'
-                : 'bg-gray-900/30 border-gray-800'
-            }`}>
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                    stepIndex > 0 ? 'bg-green-500/20 text-green-400' : 'bg-blue-500/20 text-blue-400'
-                  }`}>
-                    {stepIndex > 0 ? '✓' : '1'}
-                  </div>
-                  <h3 className="text-lg font-semibold">Connect Wallet</h3>
-                </div>
-
-                {step === 'connect' ? (
-                  <div className="space-y-4">
-                    <p className="text-gray-400 text-sm">Select a chain and connect your wallet to begin authentication.</p>
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {SUPPORTED_CHAINS.map((chain) => (
-                        <button
-                          key={chain.name}
-                          onClick={() => setSelectedChain(chain)}
-                          className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
-                            selectedChain.name === chain.name
-                              ? `bg-gradient-to-r ${chain.color} text-white shadow-md`
-                              : 'bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700'
-                          }`}
-                        >
-                          {chain.symbol} {chain.name}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      onClick={handleConnect}
-                      disabled={isLoading}
-                      className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Connecting...
-                        </span>
-                      ) : (
-                        '🔗 Connect Wallet'
-                      )}
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                    <svg className="w-5 h-5 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div>
-                      <p className="text-sm text-green-400 font-medium">Connected</p>
-                      <p className="text-xs text-gray-400 font-mono">{MOCK_ADDRESS.slice(0, 10)}...{MOCK_ADDRESS.slice(-4)} · {selectedChain.name}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {isConnected && (
+                <button
+                  onClick={handleDisconnect}
+                  className="text-xs text-gray-500 hover:text-white px-2 py-1 rounded border border-gray-700 hover:border-gray-500 transition-colors"
+                >
+                  Disconnect
+                </button>
+              )}
             </div>
 
-            {/* Step 2: Sign Message */}
-            <div className={`rounded-2xl border transition-all duration-300 ${
-              step === 'sign'
-                ? 'bg-gray-900/80 border-blue-500/30 shadow-lg shadow-blue-500/5'
-                : stepIndex > 1
-                ? 'bg-gray-900/50 border-green-500/20'
-                : 'bg-gray-900/30 border-gray-800'
-            }`}>
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                    stepIndex > 1 ? 'bg-green-500/20 text-green-400' : step === 'sign' ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-700/50 text-gray-500'
-                  }`}>
-                    {stepIndex > 1 ? '✓' : '2'}
-                  </div>
-                  <h3 className="text-lg font-semibold">Sign Message</h3>
-                </div>
-
-                {step === 'sign' ? (
-                  <div className="space-y-4">
-                    <p className="text-gray-400 text-sm">Review and sign the SIWE message to prove wallet ownership.</p>
-                    <div className="rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300 overflow-x-auto whitespace-pre leading-relaxed">
-                      {siweMessage}
-                    </div>
-                    <button
-                      onClick={handleSign}
-                      disabled={isLoading}
-                      className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Signing...
-                        </span>
-                      ) : (
-                        '✍️ Sign Message'
-                      )}
-                    </button>
-                  </div>
-                ) : stepIndex > 1 ? (
-                  <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                    <svg className="w-5 h-5 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div>
-                      <p className="text-sm text-green-400 font-medium">Message signed</p>
-                      <p className="text-xs text-gray-400 font-mono truncate">{MOCK_SIGNATURE.slice(0, 66)}...</p>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-600 text-sm">Connect wallet to continue</p>
-                )}
+            {/* Chain info */}
+            {isConnected && account.chainName && (
+              <div className="mb-4 text-xs text-gray-500">
+                <span className="text-gray-400 font-medium">{account.chainName}</span>
+                <span className="mx-1">·</span>
+                <span>ID: {account.chainId}</span>
               </div>
-            </div>
+            )}
 
-            {/* Step 3: Verify */}
-            <div className={`rounded-2xl border transition-all duration-300 ${
-              step === 'verify'
-                ? 'bg-gray-900/80 border-blue-500/30 shadow-lg shadow-blue-500/5'
-                : stepIndex > 2
-                ? 'bg-gray-900/50 border-green-500/20'
-                : 'bg-gray-900/30 border-gray-800'
-            }`}>
-              <div className="p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold ${
-                    stepIndex > 2 ? 'bg-green-500/20 text-green-400' : step === 'verify' ? 'bg-blue-500/20 text-blue-400' : 'bg-gray-700/50 text-gray-500'
-                  }`}>
-                    {stepIndex > 2 ? '✓' : '3'}
-                  </div>
-                  <h3 className="text-lg font-semibold">Verify Signature</h3>
-                </div>
-
-                {step === 'verify' ? (
-                  <div className="space-y-4">
-                    <p className="text-gray-400 text-sm">Verify the signature on-chain to complete authentication.</p>
-                    <button
-                      onClick={handleVerify}
-                      disabled={isLoading}
-                      className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30"
-                    >
-                      {isLoading ? (
-                        <span className="flex items-center justify-center gap-2">
-                          <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                          </svg>
-                          Verifying...
-                        </span>
-                      ) : (
-                        '🔐 Verify Signature'
-                      )}
-                    </button>
-                  </div>
-                ) : stepIndex > 2 ? (
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 rounded-xl bg-green-500/10 border border-green-500/20">
-                      <svg className="w-5 h-5 text-green-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      <div>
-                        <p className="text-sm text-green-400 font-medium">Signature verified</p>
-                        <p className="text-xs text-gray-400">Recovered address matches signer</p>
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-3 text-xs">
-                      <div className="p-3 rounded-lg bg-gray-800/50 border border-gray-800">
-                        <span className="text-gray-500">Valid</span>
-                        <p className="text-green-400 font-semibold mt-1">✓ True</p>
-                      </div>
-                      <div className="p-3 rounded-lg bg-gray-800/50 border border-gray-800">
-                        <span className="text-gray-500">Nonce</span>
-                        <p className="text-gray-300 font-mono mt-1 truncate">{MOCK_NONCE.slice(0, 12)}</p>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-gray-600 text-sm">Sign message to continue</p>
-                )}
+            {/* ── SIWE: Connect ── */}
+            {authStep === 'idle' && !isConnected && (
+              <div className="space-y-3">
+                <button
+                  onClick={handleConnect}
+                  className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all shadow-lg shadow-blue-500/20 text-sm"
+                >
+                  🔗 Connect Wallet & Sign
+                </button>
               </div>
-            </div>
-          </div>
+            )}
 
-          {/* Right: SIWE Message Preview & Profile */}
-          <div className="space-y-6">
-            {/* SIWE Message Preview */}
-            <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold flex items-center gap-2">
-                  <span className="text-purple-400">📋</span> SIWE Message Format
-                </h3>
-                <span className="text-xs text-gray-500 font-mono">EIP-4361</span>
-              </div>
-              <div className="rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300 overflow-x-auto whitespace-pre leading-relaxed select-all">
-                {siweMessage}
-              </div>
-              <p className="mt-3 text-xs text-gray-500">
-                Standardized per <a href="https://eips.ethereum.org/EIPS/eip-4361" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline">EIP-4361</a> — the canonical Sign-In with Ethereum format.
-              </p>
-            </div>
+            {/* ── SIWE: Connected, ready to sign ── */}
+            {authStep === 'connected' && isConnected && account.address && !siweMessage && (
+              <button
+                onClick={handleSign}
+                disabled={isSigningLoading}
+                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all disabled:opacity-50 text-sm"
+              >
+                {isSigningLoading ? 'Waiting for wallet...' : '✍️ Sign SIWE Message'}
+              </button>
+            )}
 
-            {/* User Profile Card (shown when done) */}
-            {step === 'done' ? (
-              <div className="rounded-2xl bg-gradient-to-br from-gray-900 to-gray-900/80 border border-green-500/20 p-6 shadow-lg shadow-green-500/5">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-lg font-bold shadow-lg">
-                    0x
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-green-400">Authenticated</h3>
-                    <p className="text-xs text-gray-400">Session active</p>
-                  </div>
-                  <div className="ml-auto">
-                    <button
-                      onClick={handleReset}
-                      className="text-xs text-gray-500 hover:text-white transition-colors px-3 py-1.5 rounded-lg border border-gray-700 hover:border-gray-500"
-                    >
-                      Reset
-                    </button>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-800/50">
-                    <span className="text-sm text-gray-500">Address</span>
-                    <span className="text-sm font-mono text-gray-300">{MOCK_ADDRESS}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-800/50">
-                    <span className="text-sm text-gray-500">Chain</span>
-                    <span className="text-sm text-gray-300">{selectedChain.name} (ID: {selectedChain.chainId})</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-800/50">
-                    <span className="text-sm text-gray-500">Nonce</span>
-                    <span className="text-xs font-mono text-gray-400">{MOCK_NONCE}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-800/50">
-                    <span className="text-sm text-gray-500">Signature</span>
-                    <span className="text-xs font-mono text-gray-400 truncate max-w-[200px]">{MOCK_SIGNATURE}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-sm text-gray-500">Issued At</span>
-                    <span className="text-xs text-gray-400">{MOCK_ISSUED_AT}</span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="rounded-2xl bg-gray-900/30 border border-gray-800 p-6 flex flex-col items-center justify-center min-h-[280px]">
-                <div className="w-16 h-16 rounded-2xl bg-gray-800/50 flex items-center justify-center mb-4">
-                  <svg className="w-8 h-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            {/* ── SIWE: Signing ── */}
+            {authStep === 'signing' && (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-400">Please approve the signature in your wallet.</p>
+                <div className="flex items-center justify-center py-4">
+                  <svg className="animate-spin w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
                 </div>
-                <p className="text-gray-500 text-sm text-center">Complete all steps to see your<br />authenticated profile card</p>
               </div>
+            )}
+
+            {/* ── SIWE: Signed ── */}
+            {authStep === 'signed' && siweMessage && signature && (
+              <div className="space-y-3">
+                <p className="text-sm text-green-400 font-semibold">✓ Message Signed</p>
+                <div className="rounded-lg bg-gray-950 border border-gray-800 p-3">
+                  <p className="text-[10px] text-gray-500 mb-1">SIWE Message:</p>
+                  <pre className="font-mono text-[10px] text-gray-300 overflow-x-auto whitespace-pre leading-relaxed select-all max-h-40 overflow-y-auto">
+                    {siweMessage}
+                  </pre>
+                </div>
+                <button
+                  onClick={handleVerify}
+                  className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all text-sm"
+                >
+                  🔐 Verify Signature
+                </button>
+              </div>
+            )}
+
+            {/* ── SIWE: Verifying ── */}
+            {authStep === 'verifying' && (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-400">Checking signature validity...</p>
+                <div className="flex items-center justify-center py-4">
+                  <svg className="animate-spin w-6 h-6 text-purple-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                </div>
+              </div>
+            )}
+
+            {/* ── SIWE: Verified ── */}
+            {authStep === 'verified' && siweMessage && (
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <p className="text-sm font-semibold text-green-400">✓ Authentication Successful</p>
+                  <p className="text-xs text-gray-400 mt-1">Wallet ownership verified via SIWE</p>
+                </div>
+                {(() => {
+                  try {
+                    const parsed = parseMessage(siweMessage);
+                    return (
+                      <div className="rounded-lg bg-gray-950 border border-gray-800 p-3 space-y-1 text-[10px] font-mono text-gray-400">
+                        <div className="flex justify-between"><span>Domain:</span><span className="text-gray-300">{parsed.domain}</span></div>
+                        <div className="flex justify-between"><span>Nonce:</span><span className="text-gray-300">{parsed.nonce}</span></div>
+                        <div className="flex justify-between"><span>Chain ID:</span><span className="text-gray-300">{parsed.chainId}</span></div>
+                        <div className="flex justify-between"><span>Issued At:</span><span className="text-gray-300">{parsed.issuedAt}</span></div>
+                      </div>
+                    );
+                  } catch {
+                    return null;
+                  }
+                })()}
+                <button
+                  onClick={handleReset}
+                  className="w-full py-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 text-xs font-medium transition-all border border-gray-700"
+                >
+                  Start Over
+                </button>
+              </div>
+            )}
+
+            {/* ── Connected but no step active ── */}
+            {isConnected && account.address && !siweMessage && authStep !== 'connected' && authStep !== 'signing' && authStep !== 'signed' && authStep !== 'verifying' && authStep !== 'verified' && authStep !== 'error' && (
+              <button
+                onClick={handleSign}
+                className="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold transition-all text-sm"
+              >
+                ✍️ Sign SIWE Message
+              </button>
+            )}
+
+            {/* ── SIWE Error recovery ── */}
+            {authStep === 'error' && error && (
+              <button
+                onClick={handleReset}
+                className="w-full py-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 text-xs font-medium transition-all border border-gray-700"
+              >
+                Try Again
+              </button>
+            )}
+
+            {/* SIWE info toggle */}
+            <button
+              onClick={() => setShowSessionInfo(!showSessionInfo)}
+              className="mt-4 w-full text-xs text-gray-500 hover:text-gray-300 transition-colors"
+            >
+              {showSessionInfo ? '▾ Hide SIWE Details' : '▸ Show SIWE Details'}
+            </button>
+
+            {showSessionInfo && siweMessage && (
+              <div className="mt-3 rounded-lg bg-gray-950 border border-gray-800 p-3">
+                <pre className="font-mono text-[10px] text-gray-300 overflow-x-auto whitespace-pre leading-relaxed select-all max-h-60 overflow-y-auto">
+                  {siweMessage}
+                </pre>
+              </div>
+            )}
+          </div>
+
+          {/* ═══════════════════════════════════════════ */}
+          {/* ── Passkey Auth Panel ── */}
+          {/* ═══════════════════════════════════════════ */}
+          <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
+              <span className="text-purple-400">🔑</span> Passkey Auth
+            </h2>
+
+            {!webAuthnSupported && (
+              <div className="mb-4 p-3 rounded-lg bg-yellow-500/10 border border-yellow-500/20">
+                <p className="text-xs text-yellow-400">
+                  ⚠ WebAuthn is not supported in this browser. Try Chrome, Safari, or Firefox with a security key.
+                </p>
+              </div>
+            )}
+
+            {/* Passkey Registration */}
+            {passkeyStep === 'idle' && (
+              <div className="space-y-4">
+                {/* Register */}
+                <div>
+                  <p className="text-sm font-semibold text-gray-300 mb-2">Register New Passkey</p>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      placeholder="Enter username..."
+                      value={passkeyUsername}
+                      onChange={(e) => setPasskeyUsername(e.target.value)}
+                      className="flex-1 px-3 py-2 rounded-lg bg-gray-800 border border-gray-700 text-sm text-white placeholder-gray-500 focus:border-purple-500 focus:outline-none transition-colors"
+                      disabled={!webAuthnSupported}
+                    />
+                    <button
+                      onClick={handleRegisterPasskey}
+                      disabled={!webAuthnSupported || !passkeyUsername.trim()}
+                      className="px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+                    >
+                      Register
+                    </button>
+                  </div>
+                  {platformAuthAvailable && (
+                    <p className="text-[10px] text-gray-500 mt-1">✓ Platform authenticator available (Face ID / Touch ID / Windows Hello)</p>
+                  )}
+                </div>
+
+                {/* Login with existing passkey */}
+                {hasExistingPasskeys && (
+                  <div className="pt-3 border-t border-gray-800">
+                    <p className="text-sm font-semibold text-gray-300 mb-2">
+                      Login with Passkey
+                    </p>
+                    <p className="text-xs text-gray-500 mb-3">
+                      {storedCredentials.length} passkey(s) registered on this device
+                    </p>
+                    <button
+                      onClick={handleLoginPasskey}
+                      className="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-semibold transition-all text-sm"
+                    >
+                      🔑 Login with Passkey
+                    </button>
+                    {/* Show registered usernames */}
+                    <div className="mt-2 space-y-1">
+                      {storedCredentials.map((cred) => (
+                        <div key={cred.id} className="flex items-center justify-between text-xs text-gray-400 px-2 py-1 rounded bg-gray-800/40">
+                          <span className="font-mono">{cred.username}</span>
+                          <button
+                            onClick={() => {
+                              removePasskey(cred.id);
+                              setPasskeyError(`Removed passkey for "${cred.username}"`);
+                            }}
+                            className="text-red-400 hover:text-red-300 transition-colors"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!hasExistingPasskeys && !webAuthnSupported && (
+                  <div className="text-center py-4">
+                    <p className="text-xs text-gray-500">No passkeys registered and WebAuthn is not supported.</p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Passkey Registering */}
+            {passkeyStep === 'registering' && (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-400">Creating passkey for &quot;{passkeyUsername}&quot;...</p>
+                <div className="flex items-center justify-center py-6">
+                  <svg className="animate-spin w-8 h-8 text-purple-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                </div>
+                <p className="text-xs text-gray-500 text-center">Please approve in your device&apos;s security dialog</p>
+              </div>
+            )}
+
+            {/* Passkey Authenticating */}
+            {passkeyStep === 'authenticating' && (
+              <div className="space-y-3">
+                <p className="text-sm text-gray-400">Authenticating with passkey...</p>
+                <div className="flex items-center justify-center py-6">
+                  <svg className="animate-spin w-8 h-8 text-purple-400" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                </div>
+                <p className="text-xs text-gray-500 text-center">Please verify with your biometric/PIN</p>
+              </div>
+            )}
+
+            {/* Passkey Success */}
+            {passkeyStep === 'success' && passkeyResult && (
+              <div className="space-y-4">
+                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+                  <p className="text-sm font-semibold text-green-400">✓ Authentication Successful</p>
+                  <p className="text-xs text-gray-400 mt-1">Authenticated via passkey</p>
+                </div>
+                <div className="rounded-lg bg-gray-950 border border-gray-800 p-4 space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-sm font-bold shadow-lg">
+                      {passkeyResult.username[0]?.toUpperCase()}
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-semibold text-green-400">{passkeyResult.username}</h3>
+                      <p className="text-[10px] text-gray-500 font-mono break-all">ID: {passkeyResult.credentialId.slice(0, 24)}...</p>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  onClick={handleReset}
+                  className="w-full py-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 text-xs font-medium transition-all border border-gray-700"
+                >
+                  Start Over
+                </button>
+              </div>
+            )}
+
+            {/* Passkey Error */}
+            {passkeyStep === 'error' && passkeyError && (
+              <button
+                onClick={() => {
+                  setPasskeyStep('idle');
+                  setPasskeyError(null);
+                }}
+                className="w-full py-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 text-xs font-medium transition-all border border-gray-700"
+              >
+                Try Again
+              </button>
             )}
           </div>
         </div>
 
-        {/* Supported Chains */}
+        {/* ── Session Info (when authenticated) ── */}
+        {session?.authenticated && (
+          <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6 sm:p-8 mb-16">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <span className="text-green-400">🛡️</span> Session Information
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {session.address && (
+                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-800">
+                  <p className="text-xs text-gray-500 mb-1">Wallet Address</p>
+                  <p className="font-mono text-sm text-gray-300 break-all">{session.address}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-blue-500/15 text-blue-400 text-[10px]">SIWE</span>
+                  </p>
+                </div>
+              )}
+              {session.passkey.username && (
+                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-800">
+                  <p className="text-xs text-gray-500 mb-1">Passkey User</p>
+                  <p className="text-sm text-gray-300 font-semibold">{session.passkey.username}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded bg-purple-500/15 text-purple-400 text-[10px]">Passkey</span>
+                  </p>
+                </div>
+              )}
+              {session.createdAt && (
+                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-800">
+                  <p className="text-xs text-gray-500 mb-1">Session Started</p>
+                  <p className="text-sm text-gray-300">{new Date(session.createdAt).toLocaleString()}</p>
+                </div>
+              )}
+              {session.expiresAt && (
+                <div className="p-4 rounded-xl bg-gray-950/60 border border-gray-800">
+                  <p className="text-xs text-gray-500 mb-1">Session Expires</p>
+                  <p className="text-sm text-gray-300">{new Date(session.expiresAt).toLocaleString()}</p>
+                  <p className="text-xs text-green-400 mt-1">{formatSessionRemaining()}</p>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-4 flex gap-3">
+              <button
+                onClick={() => setShowSessionInfo(!showSessionInfo)}
+                className="px-4 py-2 rounded-lg bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 text-sm font-medium transition-all border border-gray-700"
+              >
+                {showSessionInfo ? 'Hide Details' : 'Show Raw Session'}
+              </button>
+              <button
+                onClick={handleSignOut}
+                className="px-4 py-2 rounded-lg bg-red-500/15 text-red-400 border border-red-500/20 hover:bg-red-500/25 text-sm font-medium transition-colors"
+              >
+                Sign Out
+              </button>
+            </div>
+
+            {showSessionInfo && (
+              <div className="mt-4 rounded-lg bg-gray-950 border border-gray-800 p-4">
+                <pre className="font-mono text-[10px] text-gray-400 overflow-x-auto whitespace-pre-wrap max-h-48 overflow-y-auto">
+                  {JSON.stringify(session, null, 2)}
+                </pre>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Info Section ── */}
+        <section className="mb-16">
+          <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6 sm:p-8">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
+              <span className="text-green-400">📋</span> How It Works
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* SIWE */}
+              <div>
+                <h4 className="text-base font-semibold text-blue-400 mb-3">🔗 SIWE (Sign-In With Ethereum)</h4>
+                <div className="space-y-3 text-sm text-gray-400">
+                  <p>
+                    <strong className="text-gray-300">1. Connect</strong> — Connect your wallet via <code className="text-blue-400 bg-gray-800 px-1.5 py-0.5 rounded text-xs">eth_requestAccounts</code>.
+                  </p>
+                  <p>
+                    <strong className="text-gray-300">2. Sign</strong> — Sign a SIWE message (EIP-4361) via <code className="text-blue-400 bg-gray-800 px-1.5 py-0.5 rounded text-xs">personal_sign</code>.
+                  </p>
+                  <p>
+                    <strong className="text-gray-300">3. Verify</strong> — Verify the signature matches the address in the message.
+                  </p>
+                </div>
+              </div>
+              {/* Passkey */}
+              <div>
+                <h4 className="text-base font-semibold text-purple-400 mb-3">🔑 Passkey (WebAuthn)</h4>
+                <div className="space-y-3 text-sm text-gray-400">
+                  <p>
+                    <strong className="text-gray-300">1. Register</strong> — Create a passkey via <code className="text-purple-400 bg-gray-800 px-1.5 py-0.5 rounded text-xs">navigator.credentials.create()</code>.
+                  </p>
+                  <p>
+                    <strong className="text-gray-300">2. Login</strong> — Authenticate via <code className="text-purple-400 bg-gray-800 px-1.5 py-0.5 rounded text-xs">navigator.credentials.get()</code>.
+                  </p>
+                  <p>
+                    <strong className="text-gray-300">3. Verify</strong> — Session persisted in localStorage with 24h expiry.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300 overflow-x-auto">
+              <pre>{`// SIWE — Sign-In With Ethereum
+const { message } = createSiweMessage(address, chainId);
+const signature = await signSiweMessage(message, address);
+const result = await verifySiweSignature(address, message, signature);
+
+// Passkey — WebAuthn
+const result = await registerPasskey('username');
+const auth = await authenticatePasskey();`}</pre>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Supported Chains ── */}
         <section className="py-12 border-t border-gray-800/50 mb-16">
           <p className="text-center text-sm text-gray-500 mb-8 uppercase tracking-wider font-medium">
             Supported Chains
           </p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-            {SUPPORTED_CHAINS.map((chain) => (
+            {[
+              { name: 'Ethereum', symbol: 'Ξ', color: 'from-blue-400 to-indigo-500' },
+              { name: 'Polygon', symbol: '⬡', color: 'from-purple-400 to-violet-600' },
+              { name: 'Arbitrum', symbol: 'λ', color: 'from-sky-400 to-blue-600' },
+              { name: 'Base', symbol: '⊙', color: 'from-blue-500 to-cyan-400' },
+            ].map((chain) => (
               <div
                 key={chain.name}
                 className="group flex flex-col items-center gap-2 px-5 py-4 rounded-2xl bg-gray-800/30 border border-gray-800 hover:border-gray-600 transition-all cursor-default"
@@ -467,64 +861,7 @@ export default function AuthPage() {
             ))}
           </div>
         </section>
-
-        {/* Code Example */}
-        <section className="mb-16">
-          <div className="rounded-2xl bg-gray-900/80 border border-gray-800 p-6 sm:p-8">
-            <h3 className="text-xl font-bold mb-2 flex items-center gap-2">
-              <span className="text-green-400">⚡</span> Implement SIWE in 3 Lines
-            </h3>
-            <p className="text-gray-400 text-sm mb-5">CinaConnect handles the complexity. You write the UX.</p>
-            <div className="rounded-xl bg-gray-950 border border-gray-800 p-4 font-mono text-xs text-gray-300 overflow-x-auto whitespace-pre leading-relaxed">
-              {SIWE_CODE_EXAMPLE}
-            </div>
-          </div>
-        </section>
-
-        {/* Comparison Table */}
-        <section className="mb-20">
-          <h3 className="text-xl font-bold mb-6 text-center">CinaConnect vs Reown (WalletConnect)</h3>
-          <div className="overflow-x-auto rounded-2xl border border-gray-800">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="bg-gray-900/80">
-                  <th className="text-left p-4 font-semibold text-gray-300 border-b border-gray-800">Feature</th>
-                  <th className="text-center p-4 font-semibold border-b border-gray-800">
-                    <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">CinaConnect</span>
-                  </th>
-                  <th className="text-center p-4 font-semibold border-b border-gray-800 text-gray-400">Reown</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  ['SIWE Support', '✅ Built-in', '✅ Available'],
-                  ['Self-Hosted', '✅ Full control', '❌ Cloud-only'],
-                  ['Open Source', '✅ MIT License', '⚠️ Partial'],
-                  ['No Vendor Lock-in', '✅ Yes', '❌ Proprietary API'],
-                  ['Multi-Chain SIWE', '✅ EVM + Solana', '✅ EVM only'],
-                  ['Session Keys', '✅ Account Abstraction', '❌ Not supported'],
-                  ['Gas Sponsorship', '✅ Built-in', '❌ Separate product'],
-                  ['Pricing', '✅ Free forever', '💰 Tiered / paid'],
-                  ['Custom Domains', '✅ Your infrastructure', '❌ WalletConnect relay'],
-                ].map(([feature, cina, reown], i) => (
-                  <tr key={feature} className={i % 2 === 0 ? 'bg-gray-900/40' : ''}>
-                    <td className="p-4 text-gray-300 border-b border-gray-800/50 font-medium">{feature}</td>
-                    <td className="p-4 text-center border-b border-gray-800/50 text-blue-400">{cina}</td>
-                    <td className="p-4 text-center border-b border-gray-800/50 text-gray-400">{reown}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-gray-800">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-sm text-gray-500">
-          CinaConnect SIWE Demo — Self-hosted authentication, zero vendor lock-in
-        </div>
-      </footer>
-    </div>
+      </div>
+    </DemoLayout>
   );
 }

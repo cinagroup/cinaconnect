@@ -1,11 +1,34 @@
-namespace CinaConnect.Models
+using System.Text.Json.Serialization;
+
+namespace CinaConnect.Models;
+
+/// <summary>
+/// Represents a blockchain account.
+/// Matches <c>CinaConnect.Models.Account</c> in the TypeScript type definitions.
+/// </summary>
+public record Account
 {
-    /// <summary>Represents a blockchain account.</summary>
-    public class Account
-    {
-        public string Address { get; set; }
-        public string ChainId { get; set; }
-        public string Balance { get; set; }
-        public string Label { get; set; }
-    }
+    /// <summary>
+    /// The wallet address.
+    /// </summary>
+    [JsonPropertyName("address")]
+    public required string Address { get; init; }
+
+    /// <summary>
+    /// The chain ID.
+    /// </summary>
+    [JsonPropertyName("chainId")]
+    public required string ChainId { get; init; }
+
+    /// <summary>
+    /// The account balance (as a string to preserve precision).
+    /// </summary>
+    [JsonPropertyName("balance")]
+    public required string Balance { get; init; }
+
+    /// <summary>
+    /// Human-readable label for the account.
+    /// </summary>
+    [JsonPropertyName("label")]
+    public required string Label { get; init; }
 }

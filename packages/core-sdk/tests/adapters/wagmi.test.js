@@ -90,7 +90,13 @@ describe('WagmiConnector', () => {
         expect(typeof sig).toBe('string');
     });
     it('should throw when signing without connecting', async () => {
-        await expect(connector.signMessage('test')).rejects.toThrow();
+        const noAccountInstance = createMockWagmiConnector({
+            id: 'no-account',
+            name: 'No Account Wallet',
+            getAccounts: async () => [],
+        });
+        const c = new WagmiConnector(noAccountInstance, config);
+        await expect(c.signMessage('test')).rejects.toThrow();
     });
     it('should get wagmi config', () => {
         expect(connector.getWagmiConfig()).toBe(config);

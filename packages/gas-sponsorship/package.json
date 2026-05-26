@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/gas-sponsorship",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Enterprise gas sponsorship for smart accounts via paymaster integration.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -32,5 +32,8 @@
     "type": "git",
     "url": "https://github.com/cinaconnect/onux.git",
     "directory": "packages/gas-sponsorship"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

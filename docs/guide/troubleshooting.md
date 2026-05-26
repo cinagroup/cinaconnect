@@ -470,6 +470,615 @@ cinaconnect.on('connect', (session) => {
 
 ---
 
+## 🔦 MetaMask Compatibility Issues
+
+### MetaMask Not Detected
+
+**Problem:** `window.ethereum` is undefined even with MetaMask installed.
+
+**Causes & solutions:**
+
+```typescript
+// 1. Check EIP-6963 announcement (modern approach)
+window.addEventListener('eip6963:announceProvider', (event: CustomEvent) => {
+  console.log('Wallet found:', event.detail.info.name)
+})
+
+// Dispatch the request
+window.dispatchEvent(new Event('eip6963:requestProvider'))
+
+// 2. Fallback to window.ethereum
+if (typeof window.ethereum !== 'undefined') {
+  console.log('MetaMask (or compatible) detected via window.ethereum')
+} else {
+  console.warn('No Ethereum provider detected')
+}
+```
+
+### MetaMask Popup Not Appearing
+
+**Problem:** `eth_requestAccounts` call hangs without showing a popup.
+
+**Solutions:**
+
+```typescript
+// Must be triggered by user gesture (click event)
+async function connectWallet() {
+  if (!window.ethereum) {
+    window.open('https://metamask.io/download/', '_blank')
+    return
+  }
+
+  try {
+    // This MUST be called synchronously from a user click handler
+    const accounts = await window.ethereum.request({
+      method: 'eth_requestAccounts',
+    })
+    console.log('Connected:', accounts[0])
+  } catch (error: any) {
+    if (error.code === 4001) {
+      // User rejected the request
+      showToast('Connection rejected. Please try again.')
+    } else {
+      console.error('MetaMask connection error:', error)
+    }
+  }
+}
+
+// ✅ Correct: called from click handler
+<button onClick={connectWallet}>Connect Wallet</button>
+
+// ❌ Wrong: called on page load (blocked by browser)
+useEffect(() => { connectWallet() }, [])
+```
+
+### MetaMask Chain Not Auto-Adding
+
+**Problem:** User gets error when trying to switch to an unknown chain.
+
+```typescript
+async function addAndSwitchChain() {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: '0x89' }], // Polygon
+    })
+  } catch (switchError: any) {
+    // This error code indicates the chain has not been added
+    if (switchError.code === 4902) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: '0x89',
+              chainName: 'Polygon',
+              nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
+              rpcUrls: ['https://polygon-rpc.com'],
+              blockExplorerUrls: ['https://polygonscan.com'],
+            },
+          ],
+        })
+      } catch (addError) {
+        console.error('Failed to add chain:', addError)
+      }
+    }
+  }
+}
+```
+
+### MetaMask Multiple Account Selection
+
+**Problem:** MetaMask shows account selection modal unexpectedly.
+
+This is normal MetaMask behavior when `eth_requestAccounts` is called and the user has multiple accounts. Handle gracefully:
+
+```typescript
+// MetaMask may return different accounts than previously connected
+cinaconnect.on('accountsChanged', (accounts: string[]) => {
+  if (accounts.length === 0) {
+    // User disconnected all accounts
+    setConnected(false)
+  } else {
+    // Active account changed
+    setActiveAccount(accounts[0])
+  }
+})
+```
+
+---
+
+## 🔀 Chain Switching Failures
+
+### User Rejects Chain Switch
+
+**Problem:** `wallet_switchEthereumChain` throws user rejection error.
+
+```typescript
+async function switchChain(chainId: number) {
+  try {
+    await window.ethereum.request({
+      method: 'wallet_switchEthereumChain',
+      params: [{ chainId: `0x${chainId.toString(16)}` }],
+    })
+  } catch (error: any) {
+    if (error.code === 4001) {
+      // User rejected — show friendly message
+      showChainSwitchPrompt(chainId)
+    } else if (error.code === 4902) {
+      // Chain not added — try adding it
+      await addChain(chainId)
+    } else {
+      console.error('Chain switch failed:', error)
+    }
+  }
+}
+
+function showChainSwitchPrompt(chainId: number) {
+  const chainName = getChainName(chainId)
+  showModal({
+    title: 'Chain Switch Required',
+    message: `This feature requires ${chainName}. Please switch chains in your wallet.`,
+    actions: [{ label: 'Got it', onClick: closeModal }],
+  })
+}
+```
+
+### Pending Chain Switch (User Action Required)
+
+Wallets show a pending state while waiting for user approval. Track this:
+
+```typescript
+const [switchingChain, setSwitchingChain] = useState<number | null>(null)
+
+async function handleSwitch(chainId: number) {
+  setSwitchingChain(chainId)
+  try {
+    await switchChain(chainId)
+  } finally {
+    setSwitchingChain(null)
+  }
+}
+
+// Show loading indicator in UI
+{switchingChain && (
+  <Spinner label={`Switching to ${getChainName(switchingChain)}...`} />
+)}
+```
+
+### Chain Switch Race Conditions
+
+Multiple rapid chain switches can cause conflicts. Debounce:
+
+```typescript
+import { useRef, useCallback } from 'react'
+
+function useChainSwitch() {
+  const pendingRef = useRef<Promise<void> | null>(null)
+
+  const switchChain = useCallback(async (chainId: number) => {
+    // Wait for any pending switch to complete
+    if (pendingRef.current) {
+      await pendingRef.current
+    }
+
+    const chainSwitch = (async () => {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${chainId.toString(16)}` }],
+      })
+    })()
+
+    pendingRef.current = chainSwitch
+    try {
+      await chainSwitch
+    } finally {
+      pendingRef.current = null
+    }
+  }, [])
+
+  return switchChain
+}
+```
+
+---
+
+## 📦 EIP-5792 Batch Call Errors
+
+### Wallet Doesn't Support EIP-5792
+
+**Problem:** `wallet_sendCalls` returns method not supported.
+
+```typescript
+async function checkBatchCallSupport(): Promise<boolean> {
+  try {
+    const capabilities = await window.ethereum.request({
+      method: 'wallet_getCapabilities',
+    })
+
+    // Check if sendCalls is supported
+    return typeof capabilities?.sendCalls !== 'undefined'
+  } catch {
+    return false
+  }
+}
+
+// Fallback for wallets without EIP-5792
+async function executeCalls(transactions: any[]) {
+  const supportsBatch = await checkBatchCallSupport()
+
+  if (supportsBatch) {
+    // Use atomic batch
+    return await window.ethereum.request({
+      method: 'wallet_sendCalls',
+      params: [
+        {
+          version: '1.0',
+          chainId: '0x1',
+          from: userAddress,
+          calls: transactions.map((tx) => ({
+            to: tx.to,
+            data: tx.data,
+            value: tx.value || '0x0',
+          })),
+        },
+      ],
+    })
+  } else {
+    // Fallback: execute sequentially
+    for (const tx of transactions) {
+      await window.ethereum.request({
+        method: 'eth_sendTransaction',
+        params: [tx],
+      })
+    }
+  }
+}
+```
+
+### Batch Call Capacity Exceeded
+
+**Problem:** Too many calls in a single batch.
+
+```typescript
+const MAX_BATCH_SIZE = 10 // Wallet-specific limit
+
+function chunkCalls(calls: any[], chunkSize = MAX_BATCH_SIZE): any[][] {
+  const chunks: any[][] = []
+  for (let i = 0; i < calls.length; i += chunkSize) {
+    chunks.push(calls.slice(i, i + chunkSize))
+  }
+  return chunks
+}
+
+// Execute in chunks
+const batches = chunkCalls(allCalls)
+for (const batch of batches) {
+  await window.ethereum.request({
+    method: 'wallet_sendCalls',
+    params: [{ version: '1.0', chainId: '0x1', from: userAddress, calls: batch }],
+  })
+}
+```
+
+### Batch Call Status Polling
+
+**Problem:** Need to track batch call execution status.
+
+```typescript
+async function pollBatchCallStatus(batchId: string, maxRetries = 20) {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      const status = await window.ethereum.request({
+        method: 'wallet_getCallsStatus',
+        params: [batchId],
+      })
+
+      if (status.status === 'CONFIRMED') {
+        return { status: 'confirmed', receipts: status.receipts }
+      }
+      if (status.status === 'PENDING') {
+        await new Promise((r) => setTimeout(r, 2000))
+        continue
+      }
+      return { status: 'failed', reason: status.reason }
+    } catch {
+      await new Promise((r) => setTimeout(r, 2000))
+    }
+  }
+  return { status: 'timeout' }
+}
+
+// Usage
+const batchId = await executeCalls(transactions)
+const result = await pollBatchCallStatus(batchId)
+
+if (result.status === 'confirmed') {
+  showSuccess('All transactions confirmed!')
+} else if (result.status === 'failed') {
+  showError(`Batch failed: ${result.reason}`)
+}
+```
+
+### EIP-5792 Capability Detection
+
+```typescript
+interface WalletCapabilities {
+  atomicBatch?: { supported: boolean }
+  paymasterService?: { supported: boolean; url?: string }
+  sessionKeys?: { supported: boolean }
+}
+
+async function getWalletCapabilities(): Promise<WalletCapabilities> {
+  try {
+    const capabilities = await window.ethereum.request({
+      method: 'wallet_getCapabilities',
+    })
+    return capabilities
+  } catch {
+    return {}
+  }
+}
+```
+
+---
+
+## 🔐 SIWE Verification Failures
+
+### Domain Mismatch
+
+**Problem:** SIWE verification fails because the domain in the message doesn't match the request origin.
+
+```typescript
+// Backend SIWE verification with strict domain check
+import { SiweMessage } from 'siwe'
+
+app.post('/api/auth/siwe/verify', async (req, res) => {
+  const { message, signature } = req.body
+
+  try {
+    const siweMessage = new SiweMessage(message)
+
+    // 1. Verify the domain matches the request origin
+    const origin = req.headers.origin || req.headers.referer
+    const originDomain = origin ? new URL(origin).hostname : null
+
+    if (originDomain && siweMessage.domain !== originDomain) {
+      return res.status(400).json({
+        error: `Domain mismatch: message says ${siweMessage.domain}, request from ${originDomain}`,
+      })
+    }
+
+    // 2. Verify the nonce hasn't been reused
+    const nonceUsed = await redis.get(`siwe:nonce:${siweMessage.nonce}`)
+    if (nonceUsed) {
+      return res.status(400).json({ error: 'Nonce already used — possible replay attack' })
+    }
+
+    // 3. Check expiration
+    if (siweMessage.expirationTime && new Date(siweMessage.expirationTime) < new Date()) {
+      return res.status(400).json({ error: 'SIWE message has expired' })
+    }
+
+    // 4. Verify the signature
+    const fields = await siweMessage.verify({ signature })
+    if (!fields.success) {
+      return res.status(401).json({ error: 'Invalid signature' })
+    }
+
+    // 5. Mark nonce as used
+    await redis.setex(`siwe:nonce:${siweMessage.nonce}`, 3600, 'used')
+
+    // 6. Create session
+    res.json({
+      success: true,
+      address: siweMessage.address,
+      expirationTime: siweMessage.expirationTime,
+    })
+  } catch (error) {
+    console.error('SIWE verification error:', error)
+    res.status(500).json({ error: 'Verification failed' })
+  }
+})
+```
+
+### Nonce Generation & Replay Protection
+
+```typescript
+// Generate cryptographically secure nonce
+import { randomBytes } from 'crypto'
+
+function generateSecureNonce(length = 32): string {
+  return randomBytes(length).toString('hex')
+}
+
+// Serve nonce to frontend
+app.get('/api/auth/siwe/nonce', async (_req, res) => {
+  const nonce = generateSecureNonce()
+
+  // Store nonce with TTL
+  await redis.setex(`siwe:nonce:${nonce}`, 300, 'pending') // 5 min TTL
+
+  res.json({ nonce })
+})
+
+// Frontend: fetch nonce before SIWE
+async function getNonce(): Promise<string> {
+  const res = await fetch('/api/auth/siwe/nonce')
+  const { nonce } = await res.json()
+  return nonce
+}
+```
+
+### Message Expiration
+
+**Problem:** User takes too long to sign, message expires.
+
+```typescript
+// Frontend: generate SIWE message with reasonable expiration
+import { SiweMessage } from 'siwe'
+
+async function createSiweMessage(address: string) {
+  const nonce = await getNonce()
+
+  const message = new SiweMessage({
+    domain: window.location.host,
+    address,
+    statement: 'Sign in to CinaConnect',
+    uri: window.location.origin,
+    version: '1',
+    chainId: 1,
+    nonce,
+    // Expire in 5 minutes — balance between usability and security
+    expirationTime: new Date(Date.now() + 5 * 60 * 1000).toISOString(),
+    // Optional: not valid before now
+    notBefore: new Date().toISOString(),
+  })
+
+  return message.prepareMessage()
+}
+```
+
+### Common SIWE Error Codes
+
+| Code | Error | Cause | Fix |
+|------|-------|-------|-----|
+| `WC_4001` | `siwe_failed` | Signing or verification failed | Check message format, domain, nonce |
+| `WC_4004` | `nonce_reused` | Nonce was already used | Generate new nonce, implement nonce store |
+| `WC_4005` | `message_expired` | Message TTL exceeded | Increase expirationTime or prompt re-sign |
+| `WC_4006` | `domain_mismatch` | Domain in message ≠ request origin | Ensure `domain` matches `window.location.host` |
+| `WC_4007` | `signature_invalid` | Cryptographic verification failed | Check message integrity, wallet compatibility |
+
+---
+
+## 🐛 Debug Mode and Logging
+
+### Enable Maximum Debug Output
+
+```typescript
+const config = {
+  projectId: 'your-project-id',
+  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  chains: [mainnet],
+  debug: true,
+  logger: {
+    level: 'trace', // Most verbose: trace > debug > info > warn > error
+    output: 'console', // or 'file', 'remote'
+  },
+}
+```
+
+### Conditional Debug Logging (Production-Safe)
+
+```typescript
+// Never log sensitive data in production
+const isDev = process.env.NODE_ENV === 'development'
+
+const logger = {
+  debug: (...args: any[]) => isDev && console.debug('[CinaConnect]', ...args),
+  info: (...args: any[]) => console.info('[CinaConnect]', ...args),
+  warn: (...args: any[]) => console.warn('[CinaConnect]', ...args),
+  error: (...args: any[]) => console.error('[CinaConnect]', ...args),
+  // NEVER log these even in debug mode:
+  // private keys, seed phrases, API keys, session tokens
+}
+```
+
+### Network Traffic Inspection
+
+```typescript
+// Intercept and log relay messages (development only)
+if (isDev) {
+  const originalSend = WebSocket.prototype.send
+  WebSocket.prototype.send = function (data: any) {
+    console.log('[WS OUT]', data)
+    return originalSend.call(this, data)
+  }
+
+  const originalOnMessage = Object.getOwnPropertyDescriptor(
+    WebSocket.prototype,
+    'onmessage'
+  )
+  Object.defineProperty(WebSocket.prototype, 'onmessage', {
+    set(fn: any) {
+      const wrapped = function (this: WebSocket, event: MessageEvent) {
+        console.log('[WS IN]', event.data)
+        return fn.call(this, event)
+      }
+      return originalOnMessage?.set.call(this, wrapped)
+    },
+  })
+}
+```
+
+### Error Boundary for React
+
+```tsx
+import { Component, type ErrorInfo, type ReactNode } from 'react'
+
+interface Props {
+  children: ReactNode
+  fallback?: ReactNode
+}
+
+interface State {
+  hasError: boolean
+  error: Error | null
+}
+
+class CinaConnectErrorBoundary extends Component<Props, State> {
+  state: State = { hasError: false, error: null }
+
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error }
+  }
+
+  componentDidCatch(error: Error, info: ErrorInfo) {
+    // Log to error tracking service
+    console.error('[CinaConnect Error Boundary]', error, info.componentStack)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        this.props.fallback ?? (
+          <div className="error-boundary">
+            <h2>Something went wrong</h2>
+            <p>{this.state.error?.message}</p>
+            <button onClick={() => this.setState({ hasError: false, error: null })}>
+              Try Again
+            </button>
+          </div>
+        )
+      )
+    }
+    return this.props.children
+  }
+}
+
+// Usage
+<CinaConnectErrorBoundary>
+  <CinaConnectProvider config={config}>
+    <App />
+  </CinaConnectProvider>
+</CinaConnectErrorBoundary>
+```
+
+---
+
+## 📊 Error Codes Quick Reference
+
+For the complete error code reference, see [Error Code Reference](./error-codes.md).
+
+| Range | Category |
+|-------|----------|
+| `WC_1001` – `WC_1010` | Connection & Pairing Errors |
+| `WC_2001` – `WC_2010` | RPC & Method Errors |
+| `WC_3001` – `WC_3010` | Payment & Swap Errors |
+| `WC_4001` – `WC_4010` | Authentication (SIWE/SIWX) Errors |
+
+---
+
 ## 📞 Getting Help
 
 If you're still stuck:

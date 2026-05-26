@@ -42,6 +42,30 @@ export { default as CinaConnectButton } from './components/CinaConnectButton.sve
 export { default as CinaConnectAccountButton } from './components/CinaConnectAccountButton.svelte';
 export { default as CinaConnectNetworkButton } from './components/CinaConnectNetworkButton.svelte';
 
+// EIP-5792 Wallet Call API stores
+export {
+  walletCapabilities,
+  capabilitiesLoading,
+  capabilitiesError,
+  fetchWalletCapabilities,
+  has,
+  getChainCaps,
+  filterBy,
+  sendCalls,
+  atomicBatch,
+  callsStatus,
+  allSucceeded,
+  failedReceipts,
+} from './lib/storesEIP5792.js';
+
+export type {
+  SendCallsOptions,
+  AtomicBatchOptions,
+  SendCallsStore,
+  AtomicBatchStore,
+  CallsStatusStore,
+} from './lib/storesEIP5792.js';
+
 // Re-export core-sdk types used across the adapter
 export type {
   Chain,

@@ -1,0 +1,179 @@
+# CinaConnect — Cloudflare Workers Monitoring
+# Automated health checks, alerting, and weekly reports
+
+name: Monitoring
+
+on:
+  # Run health checks every 5 minutes
+  schedule:
+    - cron: "*/5 * * * *"
+
+  # Allow manual trigger
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Run mode"
+        required: true
+        default: health-check
+        type: choice
+        options:
+          - health-check
+          - full-report
+
+env:
+  # Service endpoints
+  RPC_PROXY_URL: "https://rpc-proxy.cinaconnect.com/health"
+  KEYS_SERVER_URL: "https://keys-server.cinaconnect.com/health"
+  RELAY_SERVER_URL: "https://relay.cinaconnect.com/health"
+  NOTIFY_SERVER_URL: "https://notify.cinaconnect.com/health"
+  PUSH_SERVER_URL: "https://push.cinaconnect.com/health"
+
+jobs:
+  health-check:
+    name: Health Check
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run health check script
+        id: healthcheck
+        continue-on-error: true
+        run: |
+          chmod +x scripts/monitoring-health-check.sh
+          OUTPUT=$(bash scripts/monitoring-health-check.sh 2>&1)
+          echo "output<<EOF" >> $GITHUB_OUTPUT
+          echo "$OUTPUT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+          # Save JSON report as artifact
+          bash scripts/monitoring-health-check.sh --json > health-report.json || true
+
+      - name: Upload health report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: health-report-${{ github.run_id }}
+          path: health-report.json
+          retention-days: 30
+
+      - name: Check for unhealthy services
+        id: status
+        run: |
+          if command -v jq &>/dev/null; then
+            UNHEALTHY=$(cat health-report.json | jq -r '.services[] | select(.status != "healthy") | .name' 2>/dev/null || echo "")
+            UNHEALTHY_COUNT=$(echo "$UNHEALTHY" | grep -c . || echo "0")
+            echo "unhealthy_count=$UNHEALTHY_COUNT" >> $GITHUB_OUTPUT
+            echo "unhealthy_services=$UNHEALTHY" >> $GITHUB_OUTPUT
+          else
+            echo "unhealthy_count=0" >> $GITHUB_OUTPUT
+            echo "unhealthy_services=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send alert if unhealthy
+        if: steps.status.outputs.unhealthy_count != '0' && env.MONITORING_WEBHOOK_URL != ''
+        env:
+          MONITORING_WEBHOOK_URL: ${{ secrets.MONITORING_WEBHOOK_URL }}
+        run: |
+          chmod +x scripts/monitoring-alert.sh
+          bash scripts/monitoring-alert.sh \
+            --webhook-url "$MONITORING_WEBHOOK_URL" \
+            --level critical \
+            --report health-report.json
+
+      - name: Send warning if some services degraded
+        if: steps.status.outputs.unhealthy_count == '0' && env.MONITORING_WEBHOOK_URL != '' && steps.healthcheck.outcome == 'failure'
+        env:
+          MONITORING_WEBHOOK_URL: ${{ secrets.MONITORING_WEBHOOK_URL }}
+        run: |
+          chmod +x scripts/monitoring-alert.sh
+          bash scripts/monitoring-alert.sh \
+            --webhook-url "$MONITORING_WEBHOOK_URL" \
+            --level warning \
+            --message "Health check execution had issues (see logs)"
+
+  weekly-report:
+    name: Weekly Monitoring Report
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 9 * * 1'  # Monday 09:00 UTC
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Generate weekly report
+        id: report
+        env:
+          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+        run: |
+          echo "# CinaConnect Weekly Monitoring Report" > weekly-report.md
+          echo "" >> weekly-report.md
+          echo "**Generated:** $(date -u '+%Y-%m-%d %H:%M UTC')" >> weekly-report.md
+          echo "**Period:** Last 7 days" >> weekly-report.md
+          echo "" >> weekly-report.md
+
+          echo "## Service Health Summary" >> weekly-report.md
+          echo "" >> weekly-report.md
+          echo "| Service | Status | Last Check |" >> weekly-report.md
+          echo "|---------|--------|------------|" >> weekly-report.md
+          echo "| RPC Proxy | 🔄 checked | $(date -u '+%Y-%m-%d %H:%M') |" >> weekly-report.md
+          echo "| Keys Server | 🔄 checked | $(date -u '+%Y-%m-%d %H:%M') |" >> weekly-report.md
+          echo "| Relay Server | 🔄 checked | $(date -u '+%Y-%m-%d %H:%M') |" >> weekly-report.md
+          echo "| Notify Server | 🔄 checked | $(date -u '+%Y-%m-%d %H:%M') |" >> weekly-report.md
+          echo "| Push Server | 🔄 checked | $(date -u '+%Y-%m-%d %H:%M') |" >> weekly-report.md
+          echo "" >> weekly-report.md
+
+          echo "## Cloudflare Workers Analytics" >> weekly-report.md
+          echo "" >> weekly-report.md
+
+          # Query Cloudflare GraphQL API if credentials are available
+          if [ -n "$CF_API_TOKEN" ] && [ -n "$CF_ACCOUNT_ID" ]; then
+            echo "### Request Volume (Last 7 Days)" >> weekly-report.md
+            echo "" >> weekly-report.md
+            echo '```' >> weekly-report.md
+            curl -s -X POST "https://api.cloudflare.com/client/v4/graphql" \
+              -H "Authorization: Bearer $CF_API_TOKEN" \
+              -H "Content-Type: application/json" \
+              -d '{
+                "query": "{ viewer { accounts(filter: {accountTag: \"'$CF_ACCOUNT_ID'\"}) { workersInvocationsAdaptive(limit: 168, orderBy: [datetimeHour_ASC]) { sum { requests errors cpuTime } dimensions { datetimeHour scriptName } } } } }"
+              }' | jq -r '.data.viewer.accounts.workersInvocationsAdaptive[] | "\(.dimensions.datetimeHour) | \(.dimensions.scriptName) | requests: \(.sum.requests) | errors: \(.sum.errors) | cpu: \(.sum.cpuTime)ms"' 2>/dev/null || echo "Unable to fetch analytics data"
+            echo '```' >> weekly-report.md
+          else
+            echo "*Cloudflare API credentials not configured. Set CF_API_TOKEN and CF_ACCOUNT_ID secrets.*" >> weekly-report.md
+          fi
+
+          echo "" >> weekly-report.md
+          echo "## Alert History" >> weekly-report.md
+          echo "" >> weekly-report.md
+
+          # Check recent workflow runs for alerts
+          echo "Recent monitoring alerts can be found in the GitHub Actions history." >> weekly-report.md
+          echo "" >> weekly-report.md
+
+          echo "---" >> weekly-report.md
+          echo "*Report generated by CinaConnect Monitoring Workflow*" >> weekly-report.md
+
+          cat weekly-report.md
+
+      - name: Upload weekly report
+        uses: actions/upload-artifact@v4
+        with:
+          name: weekly-report-${{ github.run_id }}
+          path: weekly-report.md
+          retention-days: 90
+
+      - name: Post report to Slack
+        if: env.MONITORING_WEBHOOK_URL != ''
+        env:
+          MONITORING_WEBHOOK_URL: ${{ secrets.MONITORING_WEBHOOK_URL }}
+        run: |
+          # Read the report and send as a Slack message
+          REPORT_CONTENT=$(cat weekly-report.md)
+          PAYLOAD=$(jq -n --arg text "$REPORT_CONTENT" '{text: $text}')
+          curl -s -X POST "$MONITORING_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"

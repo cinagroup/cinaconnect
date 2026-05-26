@@ -1,0 +1,20 @@
+name = "cinaconnect-keys-server"
+main = "cloudflare/worker.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+LOG_LEVEL = "info"
+DEFAULT_TTL = "86400"
+
+[[kv_namespaces]]
+binding = "KEYS_CACHE"
+id = "e4c457a74fdf465dada283af98a4a992"
+
+[[d1_databases]]
+binding = "KEYS_DB"
+database_name = "cinaconnect-keys"
+database_id = "1f24922a-19d9-451f-9125-11736d54ec3c"
+
+routes = [
+  { pattern = "keys.cinacoin.com", custom_domain = true }
+]

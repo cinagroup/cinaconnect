@@ -1,12 +1,14 @@
 {
   "name": "@cinaconnect/adapter-sui",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Sui chain adapter for CinaConnect — Sui Wallet, Ethos, Suiet, Martian connectors",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts",
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
@@ -20,5 +22,7 @@
     "typescript": "^5.7.0"
   },
   "license": "MIT",
-  "publishConfig": { "access": "public" }
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/blockchain-api",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Managed Blockchain API (ENS, balance history, tx lookup) for CinaConnect",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,5 +42,11 @@
     "next": ">=14.0.0",
     "react": ">=18.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

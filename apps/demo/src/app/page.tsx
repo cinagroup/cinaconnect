@@ -1,7 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useWallet, shortenAddress } from '@/lib/useWallet';
+import { useToast } from '@/lib/toast';
+import { getConnectionHistory, addConnectionRecord, getLastConnection, type ConnectionRecord } from '@/lib/connectionHistory';
+import { useWorkerHealth } from '@/lib/WorkerHealthProvider';
+import { WORKER_URLS, type WorkerName } from '@/lib/workers';
 
 /* ── chain data ── */
 const CHAINS = [
@@ -80,10 +85,181 @@ function FeatureCard({ feature }: { feature: (typeof FEATURES)[number] }) {
   );
 }
 
+/* ── backend status component ── */
+const WORKER_LABELS: Record<WorkerName, string> = {
+  rpcProxy: 'RPC Proxy',
+  keysServer: 'Keys Server',
+  relayServer: 'Relay Server',
+  notifyServer: 'Notify Server',
+  pushServer: 'Push Server',
+};
+
+function BackendStatus() {
+  const { health, loading, lastChecked, refresh } = useWorkerHealth();
+  const healthyCount = health.filter((h) => h.healthy).length;
+  const total = Object.keys(WORKER_URLS).length;
+
+  return (
+    <section className="w-full max-w-2xl px-4 py-8">
+      <div className="bg-gradient-to-b from-gray-800/80 to-gray-900/80 backdrop-blur-xl rounded-3xl border border-gray-700/50 shadow-2xl shadow-black/40 overflow-hidden">
+        {/* Card header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700/40">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5">
+              <span className="size-3 rounded-full bg-red-500/60" />
+              <span className="size-3 rounded-full bg-yellow-500/60" />
+              <span className="size-3 rounded-full bg-green-500/60" />
+            </div>
+            <span className="text-xs text-gray-500 font-mono ml-2">Backend Status</span>
+          </div>
+          <div className="flex items-center gap-2">
+            {lastChecked && (
+              <span className="text-[10px] text-gray-600">
+                {Math.round((Date.now() - lastChecked) / 1000)}s ago
+              </span>
+            )}
+            <button
+              onClick={refresh}
+              disabled={loading}
+              className="text-xs text-gray-400 hover:text-gray-200 transition-colors disabled:opacity-50"
+              title="Refresh"
+            >
+              {loading ? (
+                <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+              ) : (
+                '↻'
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Overall status bar */}
+        <div className="px-6 py-3 border-b border-gray-800/40 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                healthyCount === total
+                  ? 'bg-green-500/15 text-green-400 border border-green-500/20'
+                  : healthyCount > 0
+                  ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20'
+                  : 'bg-red-500/15 text-red-400 border border-red-500/20'
+              }`}
+            >
+              <span
+                className={`size-1.5 rounded-full ${
+                  healthyCount === total
+                    ? 'bg-green-400 animate-pulse'
+                    : healthyCount > 0
+                    ? 'bg-yellow-400 animate-pulse'
+                    : 'bg-red-400 animate-pulse'
+                }`}
+              />
+              {healthyCount}/{total} Workers Online
+            </span>
+          </div>
+          <span className="text-[10px] text-gray-600 font-mono">Cloudflare Workers Edge</span>
+        </div>
+
+        {/* Worker rows */}
+        <div className="divide-y divide-gray-800/40">
+          {(loading ? Array.from({ length: total }) : health).map((h, i) => {
+            if (loading) {
+              return (
+                <div key={i} className="flex items-center gap-3 px-6 py-3 animate-pulse">
+                  <div className="size-2 rounded-full bg-gray-700" />
+                  <div className="flex-1 h-3 bg-gray-800 rounded" />
+                  <div className="w-16 h-3 bg-gray-800 rounded" />
+                </div>
+              );
+            }
+            const result = h as NonNullable<typeof health>[number];
+            return (
+              <div key={result.name} className="flex items-center gap-3 px-6 py-3 hover:bg-gray-800/20 transition-colors">
+                <span
+                  className={`size-2 rounded-full ${
+                    result.healthy ? 'bg-green-400' : 'bg-red-400'
+                  }`} />
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-gray-200">
+                    {WORKER_LABELS[result.name]}
+                  </p>
+                  <p className="text-[10px] text-gray-600 font-mono truncate">
+                    {result.url}
+                  </p>
+                </div>
+                <div className="text-right shrink-0">
+                  <p className="text-xs font-medium text-gray-400">
+                    {result.latencyMs}ms
+                  </p>
+                  <p className={`text-[10px] ${result.healthy ? 'text-green-500' : 'text-red-400'}`}>
+                    {result.healthy ? 'OK' : result.status ? `HTTP ${result.status}` : 'Offline'}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 /* ── main page ── */
 export default function HomePage() {
-  const [connected, setConnected] = useState(false);
+  const { account, status, error, connectors, connect, disconnect } = useWallet();
+  const { success, error: toastError, info } = useToast();
+  const isConnected = status === 'connected';
+  const isConnecting = status === 'connecting';
+
+  // For the chain selector in the demo card, use a local state
   const [selectedChain, setSelectedChain] = useState('Ethereum');
+  const [connectionHistory, setConnectionHistory] = useState<ConnectionRecord[]>([]);
+
+  useEffect(() => {
+    setConnectionHistory(getConnectionHistory());
+  }, []);
+
+  // Record connection in history
+  const handleConnect = useCallback(async (connectorId: string) => {
+    try {
+      await connect(connectorId);
+      // Connection success will be detected via status change
+    } catch (e) {
+      toastError('Connection Failed', e instanceof Error ? e.message : 'Unknown error');
+    }
+  }, [connect, toastError]);
+
+  // Watch for connection success
+  useEffect(() => {
+    if (isConnected && account.address) {
+      const connector = connectors.find((c) => c.id === 'io.metamask') ?? connectors[0];
+      addConnectionRecord({
+        address: account.address,
+        chainId: account.chainId ?? 1,
+        chainName: account.chainName,
+        connectorId: connector?.id ?? 'unknown',
+        connectorName: connector?.name ?? 'Unknown',
+        connectedAt: Date.now(),
+      });
+      setConnectionHistory(getConnectionHistory());
+      success('Wallet Connected', `${shortenAddress(account.address)} on ${account.chainName}`);
+    }
+  }, [isConnected, account.address]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const handleDisconnect = useCallback(async () => {
+    await disconnect();
+    info('Disconnected', 'Wallet disconnected');
+  }, [disconnect, info]);
+
+  const handleQuickReconnect = useCallback(async () => {
+    const last = getLastConnection();
+    if (last) {
+      await handleConnect(last.connectorId);
+    }
+  }, [handleConnect]);
 
   return (
     <div className="flex flex-col items-center min-h-screen">
@@ -123,10 +299,19 @@ export default function HomePage() {
         {/* CTA Buttons */}
         <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
           <button
-            onClick={() => setConnected((v) => !v)}
-            className="px-8 py-4 rounded-2xl font-semibold text-base bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200 hover:-translate-y-0.5"
+            onClick={() => handleConnect('io.metamask')}
+            disabled={isConnecting}
+            className="px-8 py-4 rounded-2xl font-semibold text-base bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Connect Wallet
+            {isConnecting ? (
+              <span className="inline-flex items-center gap-2">
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Connecting...
+              </span>
+            ) : 'Connect Wallet'}
           </button>
           <Link
             href="/swap"
@@ -161,56 +346,139 @@ export default function HomePage() {
             <div className="flex items-center gap-2">
               <span
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
-                  connected
+                  isConnected
                     ? 'bg-green-500/15 text-green-400 border border-green-500/20'
+                    : status === 'connecting'
+                    ? 'bg-yellow-500/15 text-yellow-400 border border-yellow-500/20'
                     : 'bg-gray-700/50 text-gray-500 border border-gray-600/40'
                 }`}
               >
                 <span
-                  className={`size-1.5 rounded-full ${connected ? 'bg-green-400 animate-pulse' : 'bg-gray-500'}`}
+                  className={`size-1.5 rounded-full ${
+                    isConnected ? 'bg-green-400 animate-pulse' : status === 'connecting' ? 'bg-yellow-400 animate-pulse' : 'bg-gray-500'
+                  }`}
                 />
-                {connected ? 'Live' : 'Idle'}
+                {isConnected ? 'Live' : isConnecting ? 'Connecting...' : 'Idle'}
               </span>
             </div>
           </div>
 
           {/* Card body */}
           <div className="p-6 sm:p-8 space-y-6">
-            {/* Mock address when connected */}
-            {connected && (
+            {/* Wallet connection options when not connected */}
+            {!isConnected && !isConnecting && connectors.length > 0 && (
+              <div className="space-y-3">
+                <p className="text-xs text-gray-400 uppercase tracking-wider">Available Wallets</p>
+                <div className="grid gap-2">
+                  {connectors.map((c) => (
+                    <button
+                      key={c.id}
+                      onClick={() => handleConnect(c.id)}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gray-800/60 border border-gray-700/50 hover:border-gray-500 hover:bg-gray-700/60 transition-all text-left"
+                    >
+                      <span className="size-8 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-xs font-bold text-gray-300">
+                        {c.name[0]}
+                      </span>
+                      <span className="text-sm font-medium text-gray-200">{c.name}</span>
+                      {c.id.includes('metamask') && (
+                        <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          Recommended
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* No wallet detected */}
+            {!isConnected && !isConnecting && connectors.length === 0 && (
+              <div className="text-center py-6">
+                <p className="text-gray-400 text-sm">No wallet extension detected.</p>
+                <p className="text-gray-500 text-xs mt-1">Install MetaMask or another EIP-1193 wallet to continue.</p>
+                <button
+                  onClick={() => window.open('https://metamask.io/download/', '_blank')}
+                  className="mt-4 px-6 py-2 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 text-sm font-medium transition-colors"
+                >
+                  Get MetaMask →
+                </button>
+              </div>
+            )}
+
+            {/* Connected state */}
+            {isConnected && account.address && (
               <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900/60 border border-gray-700/40 animate-in">
                 <div className="size-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-blue-500/20">
-                  0x
+                  {account.address.slice(2, 4).toUpperCase()}
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-mono text-gray-200 truncate">
-                    0x7a3F8C12dE4bF5678901234567890AbCdEfE82b
+                    {shortenAddress(account.address)}
                   </p>
-                  <p className="text-xs text-gray-500">{selectedChain} Mainnet</p>
+                  <p className="text-xs text-gray-500">{account.chainName} (Chain ID: {account.chainId})</p>
                 </div>
                 <div className="text-right shrink-0">
-                  <p className="text-sm font-semibold text-gray-200">1.2847 ETH</p>
-                  <p className="text-xs text-gray-500">≈ $3,842.10</p>
+                  <p className="text-sm font-semibold text-gray-200">{account.balance} {account.chainSymbol}</p>
                 </div>
+              </div>
+            )}
+
+            {/* Error state */}
+            {error && (
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20">
+                <p className="text-sm text-red-400">{error}</p>
               </div>
             )}
 
             {/* Action buttons */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => setConnected((v) => !v)}
-                className={`flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
-                  connected
-                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600'
-                    : 'bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30'
-                }`}
-              >
-                {connected ? 'Disconnect' : '⚡ Connect Wallet'}
-              </button>
+              {!isConnected ? (
+                connectionHistory.length > 0 ? (
+                  <div className="flex-1 flex gap-3">
+                    <button
+                      onClick={handleQuickReconnect}
+                      disabled={isConnecting}
+                      className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isConnecting ? (
+                        <span className="inline-flex items-center gap-2">
+                          <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                          </svg>
+                          Reconnecting...
+                        </span>
+                      ) : '⚡ Quick Reconnect'}
+                    </button>
+                    <button
+                      onClick={() => handleConnect('io.metamask')}
+                      disabled={isConnecting || connectors.length === 0}
+                      className="px-6 py-3.5 rounded-xl font-semibold text-sm bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      New
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => handleConnect('io.metamask')}
+                    disabled={isConnecting || connectors.length === 0}
+                    className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm bg-gradient-to-r from-blue-600 to-violet-600 text-white hover:from-blue-500 hover:to-violet-500 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/30 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {isConnecting ? 'Connecting...' : '⚡ Connect Wallet'}
+                  </button>
+                )
+              ) : (
+                <button
+                  onClick={handleDisconnect}
+                  className="flex-1 px-6 py-3.5 rounded-xl font-semibold text-sm bg-gray-700 text-gray-300 hover:bg-gray-600 border border-gray-600 transition-all duration-200"
+                >
+                  Disconnect
+                </button>
+              )}
 
               <div className="relative flex-1">
                 <select
-                  value={selectedChain}
+                  value={isConnected && account.chainName ? account.chainName : selectedChain}
                   onChange={(e) => setSelectedChain(e.target.value)}
                   className="w-full px-4 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-xl text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/50 appearance-none cursor-pointer transition-all"
                 >
@@ -230,26 +498,33 @@ export default function HomePage() {
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Status</p>
-                <p className={`text-sm font-semibold ${connected ? 'text-green-400' : 'text-gray-500'}`}>
-                  {connected ? 'Connected' : 'Not Connected'}
+                <p className={`text-sm font-semibold ${
+                  isConnected ? 'text-green-400' : isConnecting ? 'text-yellow-400' : 'text-gray-500'
+                }`}>
+                  {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : 'Not Connected'}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Network</p>
                 <p className="text-sm font-semibold text-gray-300">
-                  {selectedChain} Mainnet
+                  {isConnected ? account.chainName : selectedChain}
                 </p>
               </div>
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Balance</p>
                 <p className="text-sm font-semibold text-gray-300">
-                  {connected ? '1.2847 ETH' : '—'}
+                  {isConnected ? `${account.balance} ${account.chainSymbol}` : '—'}
                 </p>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          BACKEND STATUS (Cloudflare Workers)
+         ═══════════════════════════════════════════ */}
+      <BackendStatus />
 
       {/* ═══════════════════════════════════════════
           STATS BAR
@@ -309,6 +584,48 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ═══════════════════════════════════════════
+          CONNECTION HISTORY
+         ═══════════════════════════════════════════ */}
+      {connectionHistory.length > 0 && (
+        <section className="w-full max-w-2xl px-4 py-8">
+          <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-700/50 flex items-center justify-between">
+              <h2 className="text-lg font-bold text-white">Recent Connections</h2>
+              <span className="text-xs text-gray-500">{connectionHistory.length} records</span>
+            </div>
+            <div className="divide-y divide-gray-800/50">
+              {connectionHistory.slice(0, 5).map((record, i) => {
+                const ago = Date.now() - record.connectedAt;
+                const timeLabel = ago < 60000 ? 'Just now' : ago < 3600000 ? `${Math.floor(ago / 60000)}m ago` : ago < 86400000 ? `${Math.floor(ago / 3600000)}h ago` : `${Math.floor(ago / 86400000)}d ago`;
+                return (
+                  <div key={i} className="flex items-center gap-3 px-5 py-3 hover:bg-gray-700/20 transition-colors">
+                    <div className="size-8 rounded-full bg-gradient-to-br from-blue-500/20 to-purple-500/20 flex items-center justify-center text-xs font-bold text-gray-300 shrink-0">
+                      {record.address.slice(2, 4).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-mono text-gray-200 truncate">{shortenAddress(record.address)}</p>
+                      <p className="text-xs text-gray-500">{record.chainName} · {record.connectorName}</p>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <p className="text-xs text-gray-500">{timeLabel}</p>
+                      {!isConnected && (
+                        <button
+                          onClick={() => handleConnect(record.connectorId)}
+                          className="text-xs text-blue-400 hover:text-blue-300 transition-colors mt-0.5"
+                        >
+                          Reconnect
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ═══════════════════════════════════════════
           CTA SECTION

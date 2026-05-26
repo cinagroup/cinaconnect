@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CinaConnectService, type Network } from '../cinaconnect.service.js';
 import { Subscription } from 'rxjs';
 
@@ -11,6 +12,8 @@ import { Subscription } from 'rxjs';
  */
 @Component({
   selector: 'cina-network-button',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div
       *ngIf="network && network.connected; else disconnected"

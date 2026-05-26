@@ -2,17 +2,28 @@
  * Utility functions for SIWE message generation and parsing.
  */
 
-import { randomBytes } from 'crypto';
-
 /**
  * Generate a cryptographically secure random nonce.
  * Default length is 8 bytes (16 hex characters).
+ *
+ * Works in both Node.js and browser environments.
  *
  * @param byteLength - Number of random bytes (default: 8).
  * @returns Hex-encoded nonce string.
  */
 export function generateNonce(byteLength: number = 8): string {
-  const bytes = randomBytes(byteLength);
+  // Browser: use crypto.getRandomValues
+  if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
+    const bytes = new Uint8Array(byteLength);
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes)
+      .map((b) => b.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  // Node.js: use crypto module
+  const nodeCrypto = require('crypto');
+  const bytes = nodeCrypto.randomBytes(byteLength);
   return bytes.toString('hex');
 }
 

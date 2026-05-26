@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/passkey-auth",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect Passkey Auth — WebAuthn-based authentication for blockchain apps",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -37,5 +37,8 @@
     "dist"
   ],
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

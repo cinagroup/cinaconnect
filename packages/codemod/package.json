@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/codemod",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Codemods for migrating from Web3Modal/AppKit and WalletConnect v1 to CinaConnect",
   "bin": {
     "cinaconnect-codemod": "./dist/cli.js"
@@ -36,5 +36,8 @@
     "jest": "^29.7.0",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

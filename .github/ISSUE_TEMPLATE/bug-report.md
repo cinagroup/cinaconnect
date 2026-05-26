@@ -1,35 +1,79 @@
 ---
 name: 🐛 Bug Report
-about: Create a report to help us improve
+about: Report a bug to help us improve CinaConnect
 title: "[BUG] "
 labels: bug
 assignees: ""
 ---
 
-## Describe the Bug
+## Description
+
 <!-- A clear and concise description of what the bug is. -->
 
-## To Reproduce
-Steps to reproduce the behavior:
+## Package(s) Affected
+
+<!-- Which @cinaconnect/* package(s) are affected? e.g. @cinaconnect/react, @cinaconnect/core-sdk, relay-server -->
+
+- [ ] `@cinaconnect/core-sdk`
+- [ ] `@cinaconnect/react` (or another UI framework package)
+- [ ] `@cinaconnect/adapter-*` (specify which)
+- [ ] `@cinaconnect/chains`
+- [ ] `@cinaconnect/aa-sdk` / `@cinaconnect/bundler` / `@cinaconnect/paymaster`
+- [ ] Infrastructure (relay-server, rpc-proxy, keys-server)
+- [ ] Demo app
+- [ ] Other: _______________
+
+## Reproduction
+
+### Steps to Reproduce
 
 1. Go to '...'
 2. Click on '....'
-3. Scroll down to '....'
-4. See error
+3. Observe '...'
 
-## Expected Behavior
-<!-- A clear and concise description of what you expected to happen. -->
+### Expected Behavior
 
-## Screenshots
-<!-- If applicable, add screenshots to help explain your problem. -->
+<!-- What did you expect to happen? -->
+
+### Actual Behavior
+
+<!-- What actually happened? -->
+
+### Code Sample
+
+<!-- A minimal code snippet that reproduces the issue. -->
+
+```ts
+// Your code here
+```
+
+### Error Output
+
+<!-- Paste any error messages, stack traces, or console output. -->
+
+```
+Paste error output here
+```
 
 ## Environment
 
-- **OS:** [e.g. macOS 14.2, Ubuntu 22.04]
-- **Node version:** [e.g. v20.11.0]
-- **pnpm version:** [e.g. 9.15.0]
-- **Package & version:** [e.g. @cinaconnect/core@0.1.0]
-- **Browser (if UI-related):** [e.g. Chrome 120]
+| Detail | Value |
+|--------|-------|
+| **OS** | <!-- e.g. macOS 14.2, Ubuntu 22.04, Windows 11 --> |
+| **Node.js** | <!-- e.g. v20.11.0 (run: node -v) --> |
+| **pnpm** | <!-- e.g. 9.15.0 (run: pnpm -v) --> |
+| **Browser** | <!-- e.g. Chrome 120, Firefox 121 (if UI-related) --> |
+| **Package version** | <!-- e.g. @cinaconnect/core-sdk@0.1.0 --> |
+| **Framework** | <!-- e.g. Next.js 14, React 18, Vanilla JS --> |
 
 ## Additional Context
-<!-- Add any other context about the problem here. -->
+
+<!-- Add any other context: screenshots, recordings, related issues, what you've already tried. -->
+
+## Severity
+
+<!-- How critical is this? -->
+
+- [ ] 🔴 **Critical** — Blocks core functionality, no workaround
+- [ ] 🟡 **Major** — Significant issue, workaround exists
+- [ ] 🟢 **Minor** — Cosmetic or edge case, does not block usage

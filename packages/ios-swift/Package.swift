@@ -24,10 +24,10 @@ let package = Package(
                 .product(name: "WalletConnect", package: "WalletConnectSwiftV2"),
                 .product(name: "WalletConnectNetworking", package: "WalletConnectSwiftV2"),
             ],
-            path: "Sources/CinaConnect",
+            path: "Sources/OnChainUX",
             // Include WalletConnect v2 module files
             sources: [
-                "CinaConnect.swift",
+                "OnChainUX.swift",
                 "WalletManager.swift",
                 "ConnectButton.swift",
                 "ConnectModal.swift",
@@ -42,6 +42,6 @@ let package = Package(
         .testTarget(
             name: "CinaConnectTests",
             dependencies: ["CinaConnect"],
-            path: "Tests/CinaConnectTests"),
+            path: "Tests/OnChainUXTests"),
     ]
 )

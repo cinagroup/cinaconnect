@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/token-list",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect Token List — Token discovery, metadata, and validation",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -35,5 +35,8 @@
     "dist"
   ],
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

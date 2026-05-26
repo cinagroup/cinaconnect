@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/payment-flow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Complete payment UI components — Buy, Send, Receive flow",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -26,5 +26,8 @@
   "files": [
     "dist"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

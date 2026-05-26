@@ -1,0 +1,144 @@
+# Deploy CinaConnect Health Status Page to Cloudflare Pages
+# Triggers on changes to the health-status app
+name: Deploy Health Status Page
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/health-status/**"
+      - ".github/workflows/deploy-health-status.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "apps/health-status/**"
+      - ".github/workflows/deploy-health-status.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: production
+        type: choice
+        options:
+          - preview
+          - production
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  # ── Build ───────────────────────────────────────────────────
+  build:
+    name: Build & Export Static Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Cache pnpm modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/pnpm/store
+            node_modules
+            apps/health-status/node_modules
+            packages/*/node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build health status page
+        working-directory: apps/health-status
+        run: pnpm build
+
+      - name: Verify static export
+        run: |
+          echo "Verifying static export..."
+          test -d apps/health-status/out/index.html || { echo "✗ out/index.html missing"; exit 1; }
+          test -d apps/health-status/out/_next || { echo "✗ out/_next missing"; exit 1; }
+          echo "✓ Static export verified"
+          echo "Export size:"
+          du -sh apps/health-status/out/
+
+      - name: Upload build artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/health-status/out/
+
+  # ── Deploy to Cloudflare Pages ──────────────────────────────
+  deploy:
+    name: Deploy to Cloudflare Pages
+    needs: build
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: cinaconnect-health-status
+          directory: apps/health-status/out
+          wranglerVersion: "3"
+          branch: ${{ github.ref_name }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Post-deploy verification
+        run: |
+          echo "Waiting for deployment to propagate..."
+          sleep 10
+
+          # Verify the default *.pages.dev URL is reachable
+          DEPLOY_URL="https://cinaconnect-health-status.pages.dev"
+          echo "Verifying deployment at $DEPLOY_URL..."
+          HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$DEPLOY_URL" || echo "000")
+
+          if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 400 ]]; then
+            echo "✓ Health status page accessible (HTTP $HTTP_CODE)"
+          else
+            echo "⚠ Initial check returned HTTP $HTTP_CODE — may need a few more seconds to propagate"
+          fi
+
+      - name: Deployment Summary
+        if: always()
+        run: |
+          echo "## 🩺 Health Status Page Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Project:** cinaconnect-health-status" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL:** https://cinaconnect-health-status.pages.dev" >> $GITHUB_STEP_SUMMARY

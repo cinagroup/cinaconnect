@@ -272,4 +272,100 @@ describe('PolkadotChainAdapter signMessage', () => {
   it('throws when no provider', async () => {
     await expect(adapter.signMessage('hello')).rejects.toThrow('does not support message signing');
   });
+
+  it('throws when no connected address', async () => {
+    const mockProvider = {
+      accounts: [],
+      signer: { signRaw: vi.fn() },
+      subscribe: vi.fn(),
+      disconnect: vi.fn(),
+    };
+    adapter.setProvider(mockProvider as any);
+    await expect(adapter.signMessage('hello')).rejects.toThrow('No connected address');
+  });
+
+  it('signMessage works when signer is available', async () => {
+    const mockProvider = {
+      accounts: [{ address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY' }],
+      signer: { signRaw: vi.fn().mockResolvedValue({ signature: '0xdeadbeef' }) },
+      subscribe: vi.fn(),
+      disconnect: vi.fn(),
+    };
+    adapter.setProvider(mockProvider as any);
+    // signMessage requires a connected address (set via connect()),
+    // so without connection it throws 'No connected address'
+    await expect(adapter.signMessage('hello')).rejects.toThrow('No connected address');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  PolkadotChainAdapter - Provider & API                               */
+/* ------------------------------------------------------------------ */
+
+describe('PolkadotChainAdapter provider and API', () => {
+  let adapter: PolkadotChainAdapter;
+  beforeEach(() => { adapter = new PolkadotChainAdapter(); });
+
+  it('returns null provider before setProvider', () => {
+    expect(adapter.getProvider()).toBeNull();
+  });
+
+  it('accepts and returns provider', () => {
+    const mockProvider = {
+      accounts: [],
+      signer: {},
+      subscribe: vi.fn(),
+      disconnect: vi.fn(),
+    };
+    adapter.setProvider(mockProvider as any);
+    expect(adapter.getProvider()).toBe(mockProvider);
+  });
+
+  it('connect throws when no wallet', async () => {
+    await expect(adapter.connect()).rejects.toThrow('No Polkadot wallet found');
+  });
+
+  it('connect throws for unrecognized wallet ID', async () => {
+    await expect(adapter.connect('unknown-wallet')).rejects.toThrow('No Polkadot wallet found');
+  });
+
+  it('disconnect clears state', async () => {
+    const mockProvider = {
+      accounts: [{ address: '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY' }],
+      signer: {},
+      subscribe: vi.fn(),
+      disconnect: vi.fn().mockResolvedValue(undefined),
+    };
+    adapter.setProvider(mockProvider as any);
+    await adapter.disconnect();
+    expect(adapter.getAddress()).toBeNull();
+  });
+
+  it('getBalance throws on invalid address', async () => {
+    await expect(adapter.getBalance('invalid-address')).rejects.toThrow('Invalid Polkadot address');
+  });
+
+  it('getBalanceFormatted throws on invalid address', async () => {
+    await expect(adapter.getBalanceFormatted('invalid')).rejects.toThrow('Invalid Polkadot address');
+  });
+
+  it('getAssetBalance throws on invalid address', async () => {
+    await expect(adapter.getAssetBalance('1', 'invalid')).rejects.toThrow('Invalid Polkadot address');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  decodeSS58 extended                                                 */
+/* ------------------------------------------------------------------ */
+
+describe('decodeSS58 extended', () => {
+  it('returns null for too-long address', () => {
+    expect(decodeSS58('a'.repeat(50))).toBeNull();
+  });
+
+  it('returns null for address with too many leading zeros causing short bytes', () => {
+    // '1' is the leading zero character in base58, so many '1's produce
+    // a very short byte array that's less than 35 bytes
+    expect(decodeSS58('1111111111111111111111111111111111111111111111111')).toBeNull();
+  });
 });

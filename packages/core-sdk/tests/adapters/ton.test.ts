@@ -274,3 +274,83 @@ describe('TONChainAdapter signMessage', () => {
     await expect(adapter.signMessage('hello')).rejects.toThrow('No provider connected');
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  TONChainAdapter - Provider & Connection                            */
+/* ------------------------------------------------------------------ */
+
+describe('TONChainAdapter provider and connection', () => {
+  let adapter: TONChainAdapter;
+  beforeEach(() => { adapter = new TONChainAdapter(); });
+
+  it('returns null provider before setProvider', () => {
+    expect(adapter.getProvider()).toBeNull();
+  });
+
+  it('accepts and returns provider', () => {
+    const mockProvider = {
+      connect: vi.fn(),
+      disconnect: vi.fn(),
+      sendTransaction: vi.fn(),
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    adapter.setProvider(mockProvider as any);
+    expect(adapter.getProvider()).toBe(mockProvider);
+  });
+
+  it('connect throws when no wallet', async () => {
+    await expect(adapter.connect()).rejects.toThrow('No TON wallet found');
+  });
+
+  it('disconnect clears state', async () => {
+    const mockProvider = {
+      connect: vi.fn().mockResolvedValue([{ address: 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N' }]),
+      disconnect: vi.fn().mockResolvedValue(undefined),
+      sendTransaction: vi.fn(),
+      on: vi.fn(),
+      off: vi.fn(),
+    };
+    adapter.setProvider(mockProvider as any);
+    await adapter.disconnect();
+    expect(adapter.getAddress()).toBeNull();
+    expect(adapter.getProvider()).toBeNull();
+  });
+
+  it('getBalance throws on invalid address', async () => {
+    await expect(adapter.getBalance('invalid-address')).rejects.toThrow('Invalid TON address');
+  });
+
+  it('getBalanceFormatted throws on invalid address', async () => {
+    await expect(adapter.getBalanceFormatted('invalid')).rejects.toThrow('Invalid TON address');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TONChainAdapter - buildTransfer edge cases                         */
+/* ------------------------------------------------------------------ */
+
+describe('TONChainAdapter buildTransfer edge cases', () => {
+  let adapter: TONChainAdapter;
+  beforeEach(() => { adapter = new TONChainAdapter(); });
+
+  it('builds transfer with comment', () => {
+    const tx = adapter.buildTransfer(
+      'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
+      '1000000000',
+      'Hello TON',
+    );
+    expect(tx.comment).toBe('Hello TON');
+    expect(tx.value).toBe('1000000000');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TON nanotonsToTON with bigint                                      */
+/* ------------------------------------------------------------------ */
+
+describe('TONChainAdapter nanotonsToTON with bigint input', () => {
+  it('handles bigint input', () => {
+    expect(TONChainAdapter.nanotonsToTON(BigInt('1000000000'))).toBe('1');
+  });
+});

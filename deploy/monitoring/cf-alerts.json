@@ -1,0 +1,211 @@
+{
+  "_comment": "CinaConnect Cloudflare Workers — Alert Policy Definitions",
+  "_description": "Apply these via Cloudflare API or Dashboard → Workers → Alerting",
+  "version": "1.0.0",
+  "updated": "2026-05-18",
+  "services": [
+    "cinaconnect-rpc-proxy",
+    "cinaconnect-keys-server",
+    "cinaconnect-relay-server",
+    "cinaconnect-notify-server",
+    "cinaconnect-push-server"
+  ],
+  "notification_endpoints": [
+    {
+      "name": "Slack — Monitoring Alerts",
+      "type": "webhook",
+      "settings": {
+        "url": "${SLACK_WEBHOOK_URL}"
+      }
+    }
+  ],
+  "policies": [
+    {
+      "name": "Worker High Error Rate — Critical",
+      "description": "5xx error rate exceeds 5% over a 5-minute window",
+      "alert_type": "workers_alerts",
+      "severity": "critical",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "status": "5xx",
+          "timeSpan": "5m",
+          "threshold": 100
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker High Error Rate — Warning",
+      "description": "5xx error rate exceeds 1% over a 5-minute window",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "status": "5xx",
+          "timeSpan": "5m",
+          "threshold": 20
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker High Latency — Critical",
+      "description": "P95 response time exceeds 2000ms over 5 minutes",
+      "alert_type": "workers_alerts",
+      "severity": "critical",
+      "enabled": true,
+      "condition": {
+        "metric": "quantile(0.95, responseTime)",
+        "filter": {
+          "timeSpan": "5m",
+          "threshold": 2000
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker High Latency — Warning",
+      "description": "P95 response time exceeds 500ms over 5 minutes",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "quantile(0.95, responseTime)",
+        "filter": {
+          "timeSpan": "5m",
+          "threshold": 500
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker CPU Time Exhaustion",
+      "description": "Worker CPU time exceeds 80% of budget in 5 minutes",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(cpuTime)",
+        "filter": {
+          "timeSpan": "5m",
+          "threshold": 2400
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker Invocation Drop",
+      "description": "Request volume drops below 10% of baseline for 15 minutes",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(requests)",
+        "filter": {
+          "timeSpan": "15m",
+          "threshold": "baseline_10_percent"
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker Invocation Spike",
+      "description": "Request volume exceeds 300% of baseline in 5 minutes (possible attack or viral load)",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(requests)",
+        "filter": {
+          "timeSpan": "5m",
+          "threshold": "baseline_300_percent"
+        }
+      },
+      "applies_to": ["all"]
+    },
+    {
+      "name": "Worker Timeout Spike",
+      "description": "More than 10 requests hitting CPU timeout per minute",
+      "alert_type": "workers_alerts",
+      "severity": "critical",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "status": "5xx",
+          "timeSpan": "1m",
+          "threshold": 10
+        }
+      },
+      "applies_to": ["cinaconnect-rpc-proxy", "cinaconnect-keys-server"]
+    },
+    {
+      "name": "RPC Proxy — Subrequest Failure",
+      "description": "RPC Proxy subrequest error rate exceeds 5%",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(subrequests)",
+        "filter": {
+          "scriptName": "cinaconnect-rpc-proxy",
+          "timeSpan": "5m",
+          "threshold": 50
+        }
+      },
+      "applies_to": ["cinaconnect-rpc-proxy"]
+    },
+    {
+      "name": "Relay Server — Connection Drops",
+      "description": "Relay server WebSocket connection drops spike",
+      "alert_type": "workers_alerts",
+      "severity": "critical",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "scriptName": "cinaconnect-relay-server",
+          "timeSpan": "5m",
+          "threshold": 10
+        }
+      },
+      "applies_to": ["cinaconnect-relay-server"]
+    },
+    {
+      "name": "Push Server — Delivery Failure",
+      "description": "Push notification delivery failures exceed threshold",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "scriptName": "cinaconnect-push-server",
+          "timeSpan": "5m",
+          "threshold": 20
+        }
+      },
+      "applies_to": ["cinaconnect-push-server"]
+    },
+    {
+      "name": "Notify Server — Webhook Failure",
+      "description": "Notify server webhook delivery failures exceed threshold",
+      "alert_type": "workers_alerts",
+      "severity": "warning",
+      "enabled": true,
+      "condition": {
+        "metric": "sum(errors)",
+        "filter": {
+          "scriptName": "cinaconnect-notify-server",
+          "timeSpan": "5m",
+          "threshold": 20
+        }
+      },
+      "applies_to": ["cinaconnect-notify-server"]
+    }
+  ]
+}

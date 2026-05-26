@@ -135,14 +135,9 @@ describe('Full Flow: Connect → Sign → Send → Disconnect', () => {
   });
 
   it('should track session state through the flow', async () => {
-    // Connect
-    await connector.connect();
-    sessionManager.updateState({
-      status: 'connected',
-      accounts: await connector.getAccounts(),
-      chainId: await connector.getChainId(),
-    });
-    expect(sessionManager.state.status).toBe('connected');
+    // Connect via SessionManager (it calls connector.connect() internally)
+    await sessionManager.initiate(connector);
+    expect(sessionManager.getState().status).toBe('connected');
 
     // Sign
     const sig = await connector.signMessage('test');
@@ -150,12 +145,8 @@ describe('Full Flow: Connect → Sign → Send → Disconnect', () => {
 
     // Disconnect
     await connector.disconnect();
-    sessionManager.updateState({
-      status: 'disconnected',
-      accounts: [],
-      chainId: 0,
-    });
-    expect(sessionManager.state.status).toBe('disconnected');
+    await sessionManager.terminate();
+    expect(sessionManager.getState().status).toBe('disconnected');
   });
 
   it('should emit events through the flow', async () => {

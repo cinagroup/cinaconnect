@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/nuxt",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Nuxt 3 module for CinaConnect wallet connection",
   "license": "MIT",
   "main": "./dist/module.mjs",
@@ -39,5 +39,8 @@
     "@cinaconnect/core-sdk": "workspace:*",
     "nuxt": "^3.15.0"
   },
-  "packageManager": "pnpm@9.15.0"
+  "packageManager": "pnpm@9.15.0",
+  "publishConfig": {
+    "access": "public"
+  }
 }

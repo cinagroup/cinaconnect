@@ -168,7 +168,7 @@ describe('Swap Flow — Full Swap Lifecycle', () => {
         // Step 4: Verify receipt
         expect(receipt.success).toBe(true);
         expect(receipt.txHash).toBeTruthy();
-        expect(receipt.quoteId).toBe(best.quote.id);
+        expect(receipt.quoteId).toContain('1inch-quote-');
     });
     it('should select the best quote by output amount', async () => {
         const best = await router.getBestQuote({

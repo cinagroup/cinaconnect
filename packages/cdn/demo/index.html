@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CinaConnect CDN Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0f172a;
+      color: #e2e8f0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 800px;
+      width: 100%;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+    header p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card h2 {
+      color: #f1f5f9;
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+    }
+    .status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+    .status-ok { background: #065f46; color: #6ee7b7; }
+    .status-err { background: #7f1d1d; color: #fca5a5; }
+    #connect-button { margin: 1rem 0; }
+    pre {
+      background: #0f172a;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      margin-top: 0.5rem;
+    }
+    code { font-family: 'Fira Code', monospace; }
+    .badge {
+      display: inline-block;
+      background: #6366f1;
+      color: white;
+      padding: 0.125rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      margin-left: 0.5rem;
+    }
+    footer {
+      margin-top: 3rem;
+      color: #475569;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>CinaConnect CDN Demo</h1>
+      <p>Loaded via CDN bundle with Subresource Integrity</p>
+    </header>
+
+    <!-- 1. Configure before loading -->
+    <script>
+      window.CinaConnect = {
+        projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
+        theme: 'dark',
+        primaryColor: '#6366F1',
+        chains: [1, 10, 137],
+      };
+    </script>
+
+    <!-- 2. Load CDN bundle with SRI -->
+    <!--
+      Replace the URL with your actual CDN URL after deployment.
+      The integrity hash must match the generated SRI hash.
+
+      <script
+        src="https://cdn.cinaconnect.dev/v0.2.0/cinaconnect.js"
+        integrity="sha384-REPLACE_WITH_ACTUAL_HASH"
+        crossorigin="anonymous"
+      ></script>
+    -->
+    <script src="../dist/cdn.js"></script>
+
+    <!-- 3. Load Status -->
+    <div class="card">
+      <h2>📦 CDN Load Status</h2>
+      <p>
+        CinaConnect loaded:
+        <span id="load-status" class="status status-err">checking...</span>
+      </p>
+      <p style="margin-top: 0.5rem; color: #64748b;">
+        Version: <span id="cdn-version" class="badge">unknown</span>
+      </p>
+    </div>
+
+    <!-- 4. Connect Button -->
+    <div class="card">
+      <h2>🔗 Connect Button</h2>
+      <div id="connect-button"></div>
+      <p id="button-status" style="margin-top: 0.5rem; color: #64748b;"></p>
+    </div>
+
+    <!-- 5. API Reference -->
+    <div class="card">
+      <h2>📋 Available API Methods</h2>
+      <pre id="api-methods"></pre>
+    </div>
+
+    <!-- 6. Script Usage -->
+    <div class="card">
+      <h2>📝 Usage Example</h2>
+      <pre><code>&lt;!-- Step 1: Configure --&gt;
+&lt;script&gt;
+  window.CinaConnect = {
+    projectId: 'YOUR_PROJECT_ID',
+    theme: 'dark',
+    chains: [1, 10, 137]
+  };
+&lt;/script&gt;
+
+&lt;!-- Step 2: Load with SRI --&gt;
+&lt;script
+  src="https://cdn.cinaconnect.dev/v0.2.0/cinaconnect.js"
+  integrity="sha384-XXXXX"
+  crossorigin="anonymous"
+&gt;&lt;/script&gt;
+
+&lt;!-- Step 3: Render --&gt;
+&lt;script&gt;
+  CinaConnect.renderConnectButton('#connect-button', {
+    size: 'lg',
+    onConnect: (addr) => console.log('Connected:', addr)
+  });
+&lt;/script&gt;</code></pre>
+    </div>
+
+    <footer>
+      <p>@cinaconnect/cdn v0.2.0 — Built with ❤️ for dApps</p>
+    </footer>
+  </div>
+
+  <script>
+    // Check load status
+    const loadStatus = document.getElementById('load-status');
+    const versionBadge = document.getElementById('cdn-version');
+    const apiMethods = document.getElementById('api-methods');
+    const buttonStatus = document.getElementById('button-status');
+
+    if (typeof CinaConnect !== 'undefined') {
+      loadStatus.textContent = 'loaded ✓';
+      loadStatus.className = 'status status-ok';
+      versionBadge.textContent = CinaConnect.getVersion ? CinaConnect.getVersion() : '0.2.0';
+
+      // List available methods
+      const methods = Object.keys(CinaConnect)
+        .filter(k => typeof CinaConnect[k] === 'function')
+        .map(k => `CinaConnect.${k}()`);
+      apiMethods.textContent = methods.join('\n');
+
+      // Try to render connect button
+      try {
+        CinaConnect.renderConnectButton('#connect-button', {
+          size: 'lg',
+          label: 'Connect Wallet',
+          onConnect: (address) => {
+            buttonStatus.textContent = `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`;
+            buttonStatus.style.color = '#6ee7b7';
+          },
+          onDisconnect: () => {
+            buttonStatus.textContent = 'Disconnected';
+            buttonStatus.style.color = '#94a3b8';
+          },
+        });
+      } catch (e) {
+        buttonStatus.textContent = `Render skipped: ${e.message}`;
+        buttonStatus.style.color = '#fbbf24';
+      }
+    } else {
+      loadStatus.textContent = 'failed ✗';
+      loadStatus.className = 'status status-err';
+    }
+  </script>
+</body>
+</html>

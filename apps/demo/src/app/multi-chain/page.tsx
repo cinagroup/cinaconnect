@@ -1,261 +1,24 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import DemoLayout from '@/components/DemoLayout';
-
-// ─── Chain Data ───────────────────────────────────────────────────────────────
-
-interface ChainDemo {
-  id: string;
-  name: string;
-  icon: string;
-  color: string;
-  gradient: string;
-  adapter: string;
-  wallets: string[];
-  nativeToken: string;
-  status: 'operational' | 'degraded' | 'outage';
-  latency: number;
-  tvl: string;
-  txCount: string;
-}
-
-const CHAINS: ChainDemo[] = [
-  {
-    id: 'ethereum',
-    name: 'Ethereum',
-    icon: 'Ξ',
-    color: 'from-blue-500 to-indigo-600',
-    gradient: 'bg-gradient-to-br from-blue-500 to-indigo-600',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'WalletConnect', 'Coinbase Wallet', 'Rabby', 'Ledger'],
-    nativeToken: 'ETH',
-    status: 'operational',
-    latency: 12,
-    tvl: '$32.1B',
-    txCount: '1.2M',
-  },
-  {
-    id: 'polygon',
-    name: 'Polygon',
-    icon: '⬡',
-    color: 'from-purple-500 to-violet-500',
-    gradient: 'bg-gradient-to-br from-purple-500 to-violet-500',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'WalletConnect', 'Coinbase Wallet', 'Rabby'],
-    nativeToken: 'MATIC',
-    status: 'operational',
-    latency: 2,
-    tvl: '$1.2B',
-    txCount: '3.8M',
-  },
-  {
-    id: 'arbitrum',
-    name: 'Arbitrum',
-    icon: '⊡',
-    color: 'from-sky-400 to-blue-500',
-    gradient: 'bg-gradient-to-br from-sky-400 to-blue-500',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'WalletConnect', 'Rabby'],
-    nativeToken: 'ETH',
-    status: 'operational',
-    latency: 1,
-    tvl: '$3.8B',
-    txCount: '2.1M',
-  },
-  {
-    id: 'base',
-    name: 'Base',
-    icon: '⊙',
-    color: 'from-blue-400 to-cyan-400',
-    gradient: 'bg-gradient-to-br from-blue-400 to-cyan-400',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'Coinbase Wallet', 'WalletConnect', 'Rabby'],
-    nativeToken: 'ETH',
-    status: 'operational',
-    latency: 2,
-    tvl: '$2.5B',
-    txCount: '5.4M',
-  },
-  {
-    id: 'optimism',
-    name: 'Optimism',
-    icon: '🔴',
-    color: 'from-red-500 to-pink-500',
-    gradient: 'bg-gradient-to-br from-red-500 to-pink-500',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'WalletConnect', 'Coinbase Wallet', 'Rabby'],
-    nativeToken: 'ETH',
-    status: 'operational',
-    latency: 2,
-    tvl: '$1.5B',
-    txCount: '1.8M',
-  },
-  {
-    id: 'bsc',
-    name: 'BNB Chain',
-    icon: '◆',
-    color: 'from-yellow-400 to-amber-500',
-    gradient: 'bg-gradient-to-br from-yellow-400 to-amber-500',
-    adapter: 'EvmAdapter',
-    wallets: ['MetaMask', 'WalletConnect', 'Trust Wallet', 'SafePal'],
-    nativeToken: 'BNB',
-    status: 'operational',
-    latency: 3,
-    tvl: '$5.6B',
-    txCount: '4.2M',
-  },
-  {
-    id: 'solana',
-    name: 'Solana',
-    icon: '◎',
-    color: 'from-green-400 to-emerald-500',
-    gradient: 'bg-gradient-to-br from-green-400 to-emerald-500',
-    adapter: 'SolanaChainAdapter',
-    wallets: ['Phantom', 'Solflare', 'Backpack', 'Torus'],
-    nativeToken: 'SOL',
-    status: 'operational',
-    latency: 1,
-    tvl: '$8.9B',
-    txCount: '28.3M',
-  },
-  {
-    id: 'bitcoin',
-    name: 'Bitcoin',
-    icon: '₿',
-    color: 'from-orange-400 to-amber-600',
-    gradient: 'bg-gradient-to-br from-orange-400 to-amber-600',
-    adapter: 'BitcoinChainAdapter',
-    wallets: ['Xverse', 'Leather', 'Unisat', 'OKX Wallet'],
-    nativeToken: 'BTC',
-    status: 'operational',
-    latency: 10,
-    tvl: '$142B',
-    txCount: '380K',
-  },
-  {
-    id: 'ton',
-    name: 'TON',
-    icon: '◇',
-    color: 'from-sky-500 to-blue-600',
-    gradient: 'bg-gradient-to-br from-sky-500 to-blue-600',
-    adapter: 'TonChainAdapter',
-    wallets: ['Tonkeeper', 'Tonhub', 'OpenMask', 'MyTonWallet'],
-    nativeToken: 'TON',
-    status: 'operational',
-    latency: 2,
-    tvl: '$480M',
-    txCount: '12.1M',
-  },
-  {
-    id: 'tron',
-    name: 'TRON',
-    icon: '⟐',
-    color: 'from-red-500 to-red-700',
-    gradient: 'bg-gradient-to-br from-red-500 to-red-700',
-    adapter: 'TronChainAdapter',
-    wallets: ['TronLink', 'SafePal', 'TokenPocket', 'imToken'],
-    nativeToken: 'TRX',
-    status: 'operational',
-    latency: 3,
-    tvl: '$7.2B',
-    txCount: '6.5M',
-  },
-  {
-    id: 'cosmos',
-    name: 'Cosmos',
-    icon: '⬢',
-    color: 'from-indigo-400 to-violet-500',
-    gradient: 'bg-gradient-to-br from-indigo-400 to-violet-500',
-    adapter: 'CosmosChainAdapter',
-    wallets: ['Keplr', 'Cosmostation', 'Leap', 'Trust Wallet'],
-    nativeToken: 'ATOM',
-    status: 'degraded',
-    latency: 7,
-    tvl: '$620M',
-    txCount: '1.1M',
-  },
-  {
-    id: 'sui',
-    name: 'Sui',
-    icon: '◈',
-    color: 'from-cyan-400 to-blue-500',
-    gradient: 'bg-gradient-to-br from-cyan-400 to-blue-500',
-    adapter: 'SuiChainAdapter',
-    wallets: ['Sui Wallet', 'Ethos', 'Surf', 'Suiet'],
-    nativeToken: 'SUI',
-    status: 'operational',
-    latency: 1,
-    tvl: '$1.8B',
-    txCount: '15.7M',
-  },
-  {
-    id: 'starknet',
-    name: 'Starknet',
-    icon: '⬣',
-    color: 'from-zinc-400 to-zinc-600',
-    gradient: 'bg-gradient-to-br from-zinc-400 to-zinc-600',
-    adapter: 'StarknetChainAdapter',
-    wallets: ['Argent X', 'Braavos', 'OKX Wallet', 'MetaMask (Snaps)'],
-    nativeToken: 'STRK',
-    status: 'operational',
-    latency: 4,
-    tvl: '$180M',
-    txCount: '890K',
-  },
-  {
-    id: 'near',
-    name: 'NEAR',
-    icon: 'Ⓝ',
-    color: 'from-green-500 to-teal-500',
-    gradient: 'bg-gradient-to-br from-green-500 to-teal-500',
-    adapter: 'NearChainAdapter',
-    wallets: ['MyNear Wallet', 'Meteor', 'Welldone', 'Sender'],
-    nativeToken: 'NEAR',
-    status: 'operational',
-    latency: 2,
-    tvl: '$95M',
-    txCount: '2.4M',
-  },
-  {
-    id: 'hedera',
-    name: 'Hedera',
-    icon: '⊞',
-    color: 'from-slate-400 to-slate-600',
-    gradient: 'bg-gradient-to-br from-slate-400 to-slate-600',
-    adapter: 'HederaChainAdapter',
-    wallets: ['Blade', 'HashPack', 'Kabana', 'Drip'],
-    nativeToken: 'HBAR',
-    status: 'operational',
-    latency: 2,
-    tvl: '$42M',
-    txCount: '8.7M',
-  },
-  {
-    id: 'xrpl',
-    name: 'XRPL',
-    icon: '✕',
-    color: 'from-gray-400 to-slate-500',
-    gradient: 'bg-gradient-to-br from-gray-400 to-slate-500',
-    adapter: 'XrplChainAdapter',
-    wallets: ['Xaman', 'XRPL Wallet', 'Tangem', 'SafePal'],
-    nativeToken: 'XRP',
-    status: 'operational',
-    latency: 4,
-    tvl: '$1.2B',
-    txCount: '1.6M',
-  },
-];
+import { useWallet, shortenAddress } from '@/lib/useWallet';
+import {
+  CHAINS,
+  getMultiChainBalances,
+  getChainStatus,
+  formatBalance,
+  type ChainConfig,
+  type ChainBalance,
+  type ChainHealthStatus,
+} from '@/lib/multiChain';
 
 // ─── Network Status Indicator ─────────────────────────────────────────────────
 
-function StatusIndicator({ status }: { status: string }) {
-  const color =
-    status === 'operational'
-      ? 'bg-emerald-400 shadow-emerald-400/60'
-      : status === 'degraded'
-        ? 'bg-amber-400 shadow-amber-400/60'
-        : 'bg-red-500 shadow-red-500/60';
+function StatusIndicator({ healthy }: { healthy: boolean }) {
+  const color = healthy
+    ? 'bg-emerald-400 shadow-emerald-400/60'
+    : 'bg-red-500 shadow-red-500/60';
 
   return (
     <span className="relative flex h-3 w-3">
@@ -265,91 +28,235 @@ function StatusIndicator({ status }: { status: string }) {
   );
 }
 
+function Spinner() {
+  return (
+    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
 // ─── Chain Card ───────────────────────────────────────────────────────────────
 
 interface ChainCardProps {
-  chain: ChainDemo;
-  connected: boolean;
-  balance: string | null;
-  onConnect: () => void;
+  chain: ChainConfig;
+  balance: ChainBalance | null;
+  health: ChainHealthStatus | null;
+  isWalletConnected: boolean;
+  isCurrentChain: boolean;
+  onSwitchChain: () => void;
 }
 
-function ChainCard({ chain, connected, balance, onConnect }: ChainCardProps) {
+function ChainCard({ chain, balance, health, isWalletConnected, isCurrentChain, onSwitchChain }: ChainCardProps) {
+  const isHealthy = health?.healthy ?? false;
+  const latency = health?.latencyMs;
+
   return (
-    <div className="group bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 overflow-hidden hover:border-gray-500/60 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5">
+    <div className={`group bg-gray-800/40 backdrop-blur rounded-2xl border ${
+      isCurrentChain ? 'border-blue-500/50 ring-1 ring-blue-500/20' : 'border-gray-700/60'
+    } overflow-hidden hover:border-gray-500/60 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5`}>
       {/* Top gradient bar */}
-      <div className={`h-1 bg-gradient-to-r ${chain.color} opacity-70 group-hover:opacity-100 transition-opacity`} />
+      <div className={`h-1 ${
+        isHealthy ? 'bg-emerald-400/70' : 'bg-red-500/70'
+      } group-hover:opacity-100 transition-opacity`} />
 
       <div className="p-5 space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 ${chain.gradient} rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-md`}>
-              {chain.icon}
+            <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-sm shadow-md">
+              {chain.symbol}
             </div>
             <div>
               <h3 className="font-semibold text-white">{chain.name}</h3>
               <div className="flex items-center gap-1.5">
-                <StatusIndicator status={chain.status} />
+                <StatusIndicator healthy={isHealthy} />
                 <span className="text-xs text-gray-400">
-                  {chain.status === 'operational' ? 'Operational' : chain.status === 'degraded' ? 'Degraded' : 'Outage'}
+                  {isHealthy ? 'Operational' : 'Offline'}
                 </span>
-                <span className="text-xs text-gray-600">·</span>
-                <span className="text-xs text-gray-500">{chain.latency}ms</span>
+                {latency != null && (
+                  <>
+                    <span className="text-xs text-gray-600">·</span>
+                    <span className="text-xs text-gray-500">{latency}ms</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
           <div className="text-right">
-            <div className="text-xs text-gray-500">{chain.nativeToken}</div>
-            <div className="text-xs text-gray-600">TVL {chain.tvl}</div>
+            <div className="text-xs text-gray-500">{chain.symbol}</div>
+            <div className="text-xs text-gray-600 font-mono">ID: {chain.chainId}</div>
           </div>
         </div>
 
-        {/* Wallets */}
-        <div>
-          <div className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Wallets</div>
-          <div className="flex flex-wrap gap-1.5">
-            {chain.wallets.map((w) => (
-              <span key={w} className="px-2.5 py-1 bg-gray-700/50 rounded-md text-xs text-gray-300 border border-gray-600/40">
-                {w}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3 pt-2 border-t border-gray-700/40">
+        {/* Balance */}
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-gray-700/40">
           <div>
             <div className="text-[11px] text-gray-500">Balance</div>
-            <div className="text-sm font-mono text-white">{balance ?? '—'}</div>
+            {balance ? (
+              <div className="text-sm font-mono text-white">
+                {balance.status === 'loaded' ? `${balance.balance} ${chain.symbol}` : '—'}
+              </div>
+            ) : (
+              <div className="text-sm text-gray-600">—</div>
+            )}
           </div>
           <div>
-            <div className="text-[11px] text-gray-500">24h Txs</div>
-            <div className="text-sm font-mono text-gray-300">{chain.txCount}</div>
-          </div>
-          <div>
-            <div className="text-[11px] text-gray-500">Status</div>
-            <div className="text-sm text-white">
-              {connected ? (
-                <span className="text-emerald-400">Connected</span>
+            <div className="text-[11px] text-gray-500">RPC Health</div>
+            <div className="text-sm">
+              {health ? (
+                health.healthy ? (
+                  <span className="text-emerald-400">OK</span>
+                ) : (
+                  <span className="text-red-400">Down</span>
+                )
               ) : (
-                <span className="text-gray-500">Disconnected</span>
+                <span className="text-gray-500">—</span>
               )}
             </div>
           </div>
         </div>
 
-        {/* Connect Button */}
-        <button
-          onClick={onConnect}
-          className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-200 ${
-            connected
-              ? 'bg-gray-700/60 text-emerald-400 border border-emerald-500/30 hover:bg-gray-700/80'
-              : `bg-gradient-to-r ${chain.color} text-white hover:opacity-90 hover:shadow-lg`
-          }`}
+        {/* Explorer Link */}
+        <a
+          href={`${chain.explorer}/address/${balance?.chain?.rpcUrl ? '0x0000000000000000000000000000000000000000' : ''}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block w-full py-2 rounded-xl text-center text-xs font-semibold text-gray-400 border border-gray-700/40 hover:text-white hover:border-gray-500 transition-all"
         >
-          {connected ? '✓  Connected' : `Connect ${chain.name}`}
-        </button>
+          View on Explorer ↗
+        </a>
+
+        {/* Connect / Switch */}
+        {isWalletConnected && isCurrentChain ? (
+          <div className="w-full py-2.5 rounded-xl text-center font-semibold text-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+            ✓ Active Chain
+          </div>
+        ) : isWalletConnected ? (
+          <button
+            onClick={onSwitchChain}
+            className="w-full py-2.5 rounded-xl font-semibold text-sm bg-blue-600/20 text-blue-400 border border-blue-500/30 hover:bg-blue-600/30 transition-all"
+          >
+            Switch to {chain.name}
+          </button>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+// ─── Health Summary Bar ───────────────────────────────────────────────────────
+
+function HealthSummary({ statuses, loading }: { statuses: ChainHealthStatus[]; loading: boolean }) {
+  const healthy = statuses.filter((s) => s.healthy).length;
+  const total = statuses.length;
+  const avgLatency = statuses.filter((s) => s.latencyMs).reduce((sum, s) => sum + (s.latencyMs ?? 0), 0) / (healthy || 1);
+
+  return (
+    <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-white">RPC Health Status</h2>
+        {loading && (
+          <span className="inline-flex items-center gap-2 text-xs text-gray-400">
+            <Spinner /> Checking…
+          </span>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+        <div className="text-center p-3 rounded-xl bg-gray-900/50 border border-gray-700/40">
+          <div className="text-2xl font-bold text-white">{total}</div>
+          <div className="text-xs text-gray-500">Total Chains</div>
+        </div>
+        <div className="text-center p-3 rounded-xl bg-gray-900/50 border border-gray-700/40">
+          <div className="text-2xl font-bold text-emerald-400">{healthy}</div>
+          <div className="text-xs text-gray-500">Healthy</div>
+        </div>
+        <div className="text-center p-3 rounded-xl bg-gray-900/50 border border-gray-700/40">
+          <div className="text-2xl font-bold text-red-400">{total - healthy}</div>
+          <div className="text-xs text-gray-500">Down</div>
+        </div>
+        <div className="text-center p-3 rounded-xl bg-gray-900/50 border border-gray-700/40">
+          <div className="text-2xl font-bold text-blue-400">{Math.round(avgLatency)}ms</div>
+          <div className="text-xs text-gray-500">Avg Latency</div>
+        </div>
+      </div>
+
+      {/* Chain-by-chain health */}
+      <div className="space-y-2">
+        {statuses.map((s) => (
+          <div key={s.chain.id} className="flex items-center justify-between px-4 py-2.5 rounded-xl bg-gray-900/30 border border-gray-700/30">
+            <div className="flex items-center gap-3">
+              <StatusIndicator healthy={s.healthy} />
+              <span className="text-sm text-white">{s.chain.name}</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="text-xs font-mono text-gray-500">{s.chain.rpcUrl.split('/')[2]}</span>
+              {s.latencyMs != null && (
+                <span className={`text-xs font-mono px-2 py-0.5 rounded ${
+                  s.latencyMs < 500 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-amber-500/15 text-amber-400'
+                }`}>
+                  {s.latencyMs}ms
+                </span>
+              )}
+              <span className={`text-xs px-2 py-0.5 rounded font-semibold ${
+                s.healthy
+                  ? 'bg-emerald-500/15 text-emerald-400'
+                  : 'bg-red-500/15 text-red-400'
+              }`}>
+                {s.healthy ? 'OK' : 'DOWN'}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Balance Summary ──────────────────────────────────────────────────────────
+
+function BalanceSummary({ balances }: { balances: ChainBalance[] }) {
+  const loaded = balances.filter((b) => b.status === 'loaded');
+  const hasBalance = loaded.filter((b) => parseFloat(b.balance) > 0);
+
+  if (loaded.length === 0) return null;
+
+  return (
+    <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 p-6">
+      <h2 className="text-lg font-semibold text-white mb-4">Multi-Chain Balances</h2>
+
+      {hasBalance.length === 0 ? (
+        <div className="text-center py-4 text-sm text-gray-500">
+          No balances found on any chain. Connect a wallet with funded addresses.
+        </div>
+      ) : (
+        <div className="space-y-2">
+          {hasBalance.map((b) => (
+            <div key={b.chain.id} className="flex items-center justify-between px-4 py-3 rounded-xl bg-gray-900/50 border border-gray-700/40">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center text-white text-xs font-bold">
+                  {b.chain.symbol}
+                </div>
+                <div>
+                  <div className="text-sm text-white font-semibold">{b.chain.name}</div>
+                  <div className="text-xs text-gray-500">Chain ID: {b.chain.chainId}</div>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm font-mono text-emerald-400 font-bold">{b.balance}</div>
+                <div className="text-xs text-gray-500">{b.chain.symbol}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-4 text-center">
+        <span className="text-xs text-gray-500">
+          Loaded {loaded.length}/{balances.length} chains
+        </span>
       </div>
     </div>
   );
@@ -380,9 +287,7 @@ function CrossChainFlow() {
       <h2 className="text-xl font-semibold text-white mb-2">Cross-Chain Flow</h2>
       <p className="text-sm text-gray-400 mb-8">Atomic cross-chain transfers powered by CinaConnect Relay protocol</p>
 
-      {/* Animated flow pipeline */}
       <div className="relative">
-        {/* Connection line */}
         <div className="absolute top-10 left-10 right-10 h-0.5 bg-gray-700">
           <div
             className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500 transition-all duration-500 ease-out"
@@ -390,7 +295,6 @@ function CrossChainFlow() {
           />
         </div>
 
-        {/* Step nodes */}
         <div className="relative flex justify-between">
           {steps.map((step, i) => (
             <div key={step.label} className="flex flex-col items-center gap-3 z-10 w-32">
@@ -411,36 +315,6 @@ function CrossChainFlow() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Chain pair selector */}
-      <div className="mt-10 flex items-center justify-center gap-4">
-        <div className="bg-gray-700/60 rounded-xl px-5 py-3 border border-gray-600/40">
-          <div className="text-xs text-gray-500">From</div>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
-              Ξ
-            </div>
-            <span className="text-sm font-semibold text-white">Ethereum</span>
-          </div>
-        </div>
-
-        <div className="flex flex-col items-center gap-1">
-          <svg className="w-6 h-6 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-          </svg>
-          <span className="text-[10px] text-gray-500 uppercase tracking-wider">Bridge</span>
-        </div>
-
-        <div className="bg-gray-700/60 rounded-xl px-5 py-3 border border-gray-600/40">
-          <div className="text-xs text-gray-500">To</div>
-          <div className="flex items-center gap-2 mt-1">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white text-xs font-bold">
-              ◎
-            </div>
-            <span className="text-sm font-semibold text-white">Solana</span>
-          </div>
         </div>
       </div>
     </div>
@@ -494,7 +368,6 @@ client.on('transaction', (event) => {
 
   return (
     <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 overflow-hidden">
-      {/* Header */}
       <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700/40">
         <div className="flex items-center gap-3">
           <div className="flex gap-1.5">
@@ -516,7 +389,6 @@ client.on('transaction', (event) => {
         </button>
       </div>
 
-      {/* Code */}
       <pre className="p-6 text-sm leading-relaxed overflow-x-auto">
         <code className="text-gray-300 font-mono whitespace-pre">
           {code.split('\n').map((line, i) => {
@@ -543,108 +415,144 @@ client.on('transaction', (event) => {
   );
 }
 
-// ─── Network Status Overview ─────────────────────────────────────────────────
-
-function NetworkStatusOverview() {
-  const operational = CHAINS.filter((c) => c.status === 'operational').length;
-  const degraded = CHAINS.filter((c) => c.status === 'degraded').length;
-
-  return (
-    <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 p-6">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-white">Network Status</h2>
-        <div className="flex items-center gap-4 text-xs">
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400" />
-            <span className="text-gray-400">{operational} Operational</span>
-          </span>
-          <span className="flex items-center gap-1.5">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400" />
-            <span className="text-gray-400">{degraded} Degraded</span>
-          </span>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3">
-        {CHAINS.map((chain) => (
-          <div
-            key={chain.id}
-            className="flex flex-col items-center gap-2 p-3 rounded-xl bg-gray-700/30 border border-gray-600/30 hover:border-gray-500/50 transition-colors"
-          >
-            <div className={`w-8 h-8 ${chain.gradient} rounded-lg flex items-center justify-center text-white font-bold text-sm`}>
-              {chain.icon}
-            </div>
-            <StatusIndicator status={chain.status} />
-            <span className="text-xs text-gray-400 truncate w-full text-center">{chain.name}</span>
-            <span className="text-[10px] text-gray-500">{chain.latency}ms</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// ─── Stats Bar ────────────────────────────────────────────────────────────────
-
-function StatsBar() {
-  const stats = [
-    { label: 'Chains Supported', value: '16', icon: '🌐' },
-    { label: 'Wallet Integrations', value: '52', icon: '🔑' },
-    { label: 'Cross-Chain Txns', value: '1.2M+', icon: '⚡' },
-    { label: 'Total TVL', value: '$210B+', icon: '💎' },
-  ];
-
-  return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {stats.map((s) => (
-        <div
-          key={s.label}
-          className="bg-gray-800/40 backdrop-blur rounded-xl border border-gray-700/60 p-5 text-center hover:border-gray-500/50 transition-colors"
-        >
-          <div className="text-2xl mb-1">{s.icon}</div>
-          <div className="text-2xl font-bold text-white">{s.value}</div>
-          <div className="text-xs text-gray-500 mt-1">{s.label}</div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
+/** EVM chain configs with chainId for wallet_switchEthereumChain */
+const EVM_CHAINS: Record<string, { chainId: number; isTestnet: boolean }> = {
+  ethereum: { chainId: 1, isTestnet: false },
+  polygon: { chainId: 137, isTestnet: false },
+  arbitrum: { chainId: 42161, isTestnet: false },
+  base: { chainId: 8453, isTestnet: false },
+  bsc: { chainId: 56, isTestnet: false },
+  optimism: { chainId: 10, isTestnet: false },
+};
+
 export default function MultiChainPage() {
-  const [connectedChains, setConnectedChains] = useState<Record<string, boolean>>({});
-  const [balances, setBalances] = useState<Record<string, string>>({});
+  const { account, status, error, connectors, connect, disconnect } = useWallet();
 
-  // Generate mock balances on connect
-  const handleConnect = useCallback(
-    (chainId: string) => {
-      setConnectedChains((prev) => ({
-        ...prev,
-        [chainId]: !prev[chainId],
-      }));
+  const isConnected = status === 'connected';
+  const primaryConnector = connectors.find((c) => c.id === 'io.metamask') ?? connectors[0];
 
-      if (!connectedChains[chainId]) {
-        const chain = CHAINS.find((c) => c.id === chainId);
-        if (chain) {
-          const mockBalance = (Math.random() * 100).toFixed(4);
-          setBalances((prev) => ({
-            ...prev,
-            [chainId]: `${mockBalance} ${chain.nativeToken}`,
-          }));
-        }
-      } else {
-        setBalances((prev) => {
-          const next = { ...prev };
-          delete next[chainId];
-          return next;
+  // Real multi-chain data
+  const [balances, setBalances] = useState<ChainBalance[]>([]);
+  const [loadingBalances, setLoadingBalances] = useState(false);
+  const [healthStatuses, setHealthStatuses] = useState<ChainHealthStatus[]>([]);
+  const [loadingHealth, setLoadingHealth] = useState(false);
+  const [refreshTimer, setRefreshTimer] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  /** Switch wallet to a specific EVM chain via wallet_switchEthereumChain */
+  const handleSwitchChain = useCallback(async (chainId: number) => {
+    if (typeof window === 'undefined' || !window.ethereum?.request) return;
+
+    try {
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: `0x${chainId.toString(16)}` }],
+      });
+    } catch {
+      // Chain not added to wallet — try wallet_addEthereumChain
+      const chainDetails: Record<number, { chainName: string; nativeCurrency: { name: string; symbol: string; decimals: number }; rpcUrls: string[]; blockExplorerUrls: string[] }> = {
+        1: { chainName: 'Ethereum', nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://eth.llamarpc.com'], blockExplorerUrls: ['https://etherscan.io'] },
+        137: { chainName: 'Polygon', nativeCurrency: { name: 'Polygon', symbol: 'POL', decimals: 18 }, rpcUrls: ['https://polygon-rpc.com'], blockExplorerUrls: ['https://polygonscan.com'] },
+        42161: { chainName: 'Arbitrum One', nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://arb1.arbitrum.io/rpc'], blockExplorerUrls: ['https://arbiscan.io'] },
+        8453: { chainName: 'Base', nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://mainnet.base.org'], blockExplorerUrls: ['https://basescan.org'] },
+        56: { chainName: 'BNB Smart Chain', nativeCurrency: { name: 'BNB', symbol: 'BNB', decimals: 18 }, rpcUrls: ['https://bsc-dataseed.binance.org'], blockExplorerUrls: ['https://bscscan.com'] },
+        10: { chainName: 'Optimism', nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 }, rpcUrls: ['https://optimism.llamarpc.com'], blockExplorerUrls: ['https://optimistic.etherscan.io'] },
+      };
+      const details = chainDetails[chainId];
+      if (details) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{ chainId: `0x${chainId.toString(16)}`, ...details }],
         });
       }
-    },
-    [connectedChains],
-  );
+    }
+  }, []);
 
-  const connectedCount = Object.values(connectedChains).filter(Boolean).length;
+  /** Fetch real balances from public RPCs */
+  const fetchBalances = useCallback(async (addr: string) => {
+    setLoadingBalances(true);
+    try {
+      const result = await getMultiChainBalances(addr);
+      setBalances(result);
+    } catch {
+      // errors captured per-chain in the result
+    } finally {
+      setLoadingBalances(false);
+    }
+  }, []);
+
+  /** Fetch RPC health for all chains */
+  const fetchHealth = useCallback(async () => {
+    setLoadingHealth(true);
+    try {
+      const result = await getChainStatus();
+      setHealthStatuses(result);
+    } catch {
+      // keep existing statuses
+    } finally {
+      setLoadingHealth(false);
+    }
+  }, []);
+
+  // Initial fetch: health always, balances if connected
+  useEffect(() => {
+    fetchHealth();
+    if (isConnected && account.address) {
+      fetchBalances(account.address);
+    } else {
+      setBalances([]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected, account.address]);
+
+  // Auto-refresh every 30 seconds
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    intervalRef.current = setInterval(() => {
+      fetchHealth();
+      if (isConnected && account.address) {
+        fetchBalances(account.address);
+      }
+      setRefreshTimer((t) => t + 1);
+    }, 30_000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isConnected, account.address, fetchHealth, fetchBalances]);
+
+  // Refresh timer countdown display
+  const [countdown, setCountdown] = useState(30);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((c) => {
+        if (c <= 1) return 30;
+        return c - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const manualRefresh = useCallback(() => {
+    fetchHealth();
+    if (isConnected && account.address) {
+      fetchBalances(account.address);
+    }
+    setCountdown(30);
+  }, [isConnected, account.address, fetchHealth, fetchBalances]);
+
+  /** Get balance for a specific chain */
+  const getBalanceForChain = useCallback((chainId: number): ChainBalance | null => {
+    return balances.find((b) => b.chain.chainId === chainId) ?? null;
+  }, [balances]);
+
+  /** Get health for a specific chain */
+  const getHealthForChain = useCallback((chainId: number): ChainHealthStatus | null => {
+    return healthStatuses.find((h) => h.chain.chainId === chainId) ?? null;
+  }, [healthStatuses]);
 
   return (
     <DemoLayout>
@@ -653,37 +561,114 @@ export default function MultiChainPage() {
         <div className="text-center space-y-4 py-6">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/10 border border-blue-500/20 rounded-full text-sm text-blue-400 mb-2">
             <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-            {connectedCount > 0
-              ? `${connectedCount} chain${connectedCount > 1 ? 's' : ''} connected`
-              : '16 chains · 52 wallets · 1 API'}
+            {isConnected
+              ? `${account.chainName} · ${shortenAddress(account.address ?? '')}`
+              : `${CHAINS.length} EVM chains · Real RPC balances`}
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-emerald-400 bg-clip-text text-transparent">
             Multi-Chain Connectivity
           </h1>
           <p className="text-gray-400 max-w-2xl mx-auto text-lg">
-            CinaConnect unifies wallet connections across 16 blockchains — from EVM to Solana, Bitcoin to TON — through a single, elegant API.
+            Real-time balances and RPC health across {CHAINS.length} EVM chains — powered by public RPC endpoints.
           </p>
         </div>
 
-        {/* Stats */}
-        <StatsBar />
+        {/* Wallet Connection Bar */}
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          {isConnected ? (
+            <>
+              <div className="flex items-center gap-3 bg-gray-800/60 border border-gray-700/60 rounded-2xl px-6 py-4">
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">Address</div>
+                  <div className="text-sm font-mono text-white">{shortenAddress(account.address ?? '')}</div>
+                </div>
+                <div className="w-px h-8 bg-gray-700" />
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">Balance</div>
+                  <div className="text-sm font-semibold text-white">{account.balance} {account.chainSymbol}</div>
+                </div>
+                <div className="w-px h-8 bg-gray-700" />
+                <div className="text-center">
+                  <div className="text-xs text-gray-500">Network</div>
+                  <div className="text-sm text-white">{account.chainName}</div>
+                </div>
+                <button
+                  onClick={() => disconnect()}
+                  className="ml-2 px-4 py-2 rounded-xl text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20 transition-all"
+                >
+                  Disconnect
+                </button>
+              </div>
+            </>
+          ) : (
+            <button
+              onClick={() => connect(primaryConnector?.id ?? 'io.metamask')}
+              className="px-6 py-3 rounded-xl font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-all shadow-lg shadow-blue-600/25"
+            >
+              Connect Wallet
+            </button>
+          )}
+        </div>
+        {error && (
+          <div className="text-center text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2">
+            {error}
+          </div>
+        )}
 
-        {/* Network Status Overview */}
-        <NetworkStatusOverview />
+        {/* Auto-refresh indicator */}
+        <div className="flex items-center justify-between bg-gray-800/30 rounded-xl border border-gray-700/40 px-5 py-3">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-gray-400">Auto-refresh:</span>
+            <span className="text-xs font-mono text-blue-400">{countdown}s</span>
+          </div>
+          <div className="flex items-center gap-3">
+            {loadingBalances && (
+              <span className="inline-flex items-center gap-1.5 text-xs text-gray-400">
+                <Spinner /> Fetching balances…
+              </span>
+            )}
+            <button
+              onClick={manualRefresh}
+              disabled={loadingBalances || loadingHealth}
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-gray-700/60 text-gray-300 border border-gray-600/40 hover:text-white hover:border-gray-500 transition-all disabled:opacity-50"
+            >
+              ↻ Refresh Now
+            </button>
+          </div>
+        </div>
+
+        {/* Balance Summary (when connected) */}
+        {isConnected && balances.length > 0 && (
+          <BalanceSummary balances={balances} />
+        )}
+
+        {/* RPC Health Status */}
+        {healthStatuses.length > 0 && (
+          <HealthSummary statuses={healthStatuses} loading={loadingHealth} />
+        )}
 
         {/* Chain Cards Grid */}
         <div>
-          <h2 className="text-lg font-semibold text-white mb-4">Chain Demos</h2>
+          <h2 className="text-lg font-semibold text-white mb-4">Chain Balances</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {CHAINS.map((chain) => (
-              <ChainCard
-                key={chain.id}
-                chain={chain}
-                connected={!!connectedChains[chain.id]}
-                balance={balances[chain.id] ?? null}
-                onConnect={() => handleConnect(chain.id)}
-              />
-            ))}
+            {CHAINS.map((chain) => {
+              const isEvm = !!EVM_CHAINS[chain.id];
+              const isCurrentChain = isConnected && EVM_CHAINS[chain.id]?.chainId === account.chainId;
+              const balance = getBalanceForChain(chain.chainId);
+              const health = getHealthForChain(chain.chainId);
+
+              return (
+                <ChainCard
+                  key={chain.id}
+                  chain={chain}
+                  balance={balance}
+                  health={health}
+                  isWalletConnected={isConnected}
+                  isCurrentChain={isCurrentChain}
+                  onSwitchChain={() => handleSwitchChain(chain.chainId)}
+                />
+              );
+            })}
           </div>
         </div>
 

@@ -1,6 +1,6 @@
 {
-  "name": "@cinaconnect/ui-theme",
-  "version": "0.1.0",
+  "name": "@cinaconnect/cinaconnect-ui-theme",
+  "version": "0.2.0",
   "description": "Theming, animations, and UI components for CinaConnect with framer-motion and Tailwind CSS",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -27,7 +27,9 @@
       "types": "./dist/components/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch"
@@ -45,5 +47,8 @@
     "@types/react-dom": "^18.2.0",
     "tsup": "^8.0.0",
     "typescript": "^5.4.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -7,9 +7,9 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 // Mock implementations since we can't import the actual components without React setup
-import { CinaConnectProvider, useCinaConnectContext, type CinaConnectConfig, type CinaConnectContextValue, type AccountState, type Connector, type ChainConfig } from '../../src/CinaConnectProvider.js';
-import { ConnectButton } from '../../src/ConnectButton.js';
-import { useCinaConnect, useAccount, useChainId, useConnect, useDisconnect } from '../../src/hooks.js';
+import { CinaConnectProvider, useCinaConnectContext, type CinaConnectConfig, type CinaConnectContextValue, type AccountState, type Connector, type ChainConfig } from '../src/CinaConnectProvider.tsx';
+import { ConnectButton } from '../src/ConnectButton.tsx';
+import { useCinaConnect, useAccount, useChainId, useConnect, useDisconnect } from '../src/hooks.ts';
 
 // Mock config
 const mockConfig: CinaConnectConfig = {
@@ -210,21 +210,24 @@ describe('React Hooks', () => {
 
 describe('ConnectButton', () => {
   it('should render with default label when disconnected', () => {
-    render(
+    const { container } = render(
       <CinaConnectProvider config={mockConfig}>
         <ConnectButton />
       </CinaConnectProvider>
     );
-    expect(screen.getByRole('button', { name: /Connect Wallet/i })).toBeInTheDocument();
+    expect(container.querySelector('ocx-connect-button')).toBeInTheDocument();
+    expect(container.querySelector('ocx-connect-button')).toHaveAttribute('label', 'Connect Wallet');
   });
 
   it('should render with custom label', () => {
-    render(
+    const { container } = render(
       <CinaConnectProvider config={mockConfig}>
         <ConnectButton label="Link Wallet" />
       </CinaConnectProvider>
     );
-    expect(screen.getByRole('button', { name: 'Link Wallet' })).toBeInTheDocument();
+    const el = container.querySelector('ocx-connect-button');
+    expect(el).toBeInTheDocument();
+    expect(el).toHaveAttribute('label', 'Link Wallet');
   });
 
   it('should show address when connected', async () => {
@@ -243,18 +246,18 @@ describe('ConnectButton', () => {
       );
     };
 
-    render(<TestWrapper />);
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    const { container } = render(<TestWrapper />);
+    expect(container.querySelector('ocx-connect-button')).toBeInTheDocument();
   });
 
   it('should support different variants', () => {
-    const { rerender } = render(
+    const { container, rerender } = render(
       <CinaConnectProvider config={mockConfig}>
         <ConnectButton variant="primary" />
       </CinaConnectProvider>
     );
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(container.querySelector('ocx-connect-button')).toHaveAttribute('variant', 'primary');
 
     rerender(
       <CinaConnectProvider config={mockConfig}>
@@ -262,15 +265,15 @@ describe('ConnectButton', () => {
       </CinaConnectProvider>
     );
 
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(container.querySelector('ocx-connect-button')).toHaveAttribute('variant', 'ghost');
   });
 
   it('should support different sizes', () => {
-    render(
+    const { container } = render(
       <CinaConnectProvider config={mockConfig}>
         <ConnectButton size="sm" />
       </CinaConnectProvider>
     );
-    expect(screen.getByRole('button')).toBeInTheDocument();
+    expect(container.querySelector('ocx-connect-button')).toHaveAttribute('size', 'sm');
   });
 });

@@ -4,7 +4,24 @@
 
 CinaConnect is an open-source, all-in-one SDK for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
-> **🚧 Project Status:** **64/64 packages built** with dist/ directories. 1 package published to npm (`@cinaconnect/core-sdk`). **104+ test files** across the codebase. **53 commits**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Active development — see status breakdown below.
+> **🚧 Project Status:** **64/64 packages built** with dist/ directories. 1 package published to npm (`@cinaconnect/core-sdk`). **119+ test files** across the codebase. **53+ commits**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Demo app has **6 pages** with real wallet connection logic. **Overall completion: 98.5%** — see [FINAL_STATUS_REPORT.md](./FINAL_STATUS_REPORT.md) for the full delivery report.
+
+## Quick Setup
+
+```bash
+# Clone and install
+gh repo clone cinaconnect/cinaconnect && cd cinaconnect
+pnpm install
+
+# Build everything
+pnpm run build
+
+# Start the demo app
+pnpm run dev --filter=demo
+# → http://localhost:3000
+```
+
+> **Requirements:** Node.js ≥ 18, pnpm ≥ 9.15. See [DEVELOPMENT.md](./DEVELOPMENT.md) for full setup details.
 
 ---
 
@@ -13,6 +30,7 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 ### 🔗 Wallet Connection
 - **600+ wallets** via WalletConnect Network (EVM, Solana, Bitcoin, TON, TRON)
 - **EIP-6963** multi-wallet discovery
+- **EIP-5792** Wallet Call API — batch calls, atomic transactions, capability discovery (React hooks in `@cinaconnect/react`)
 - **Email & social login** — Google, X, GitHub, Discord, Apple, Facebook, Farcaster
 - **Smart Accounts** (ERC-4337) — gasless transactions, session keys, batch calls
 
@@ -32,7 +50,7 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 | Platform | Package | Status |
 |----------|---------|--------|
 | Web (Vanilla JS) | `@cinaconnect/core-sdk` | ✅ **built & published** |
-| React | `@cinaconnect/react` | ✅ built |
+| React | `@cinaconnect/react` | ✅ built — **+ EIP-5792 hooks** |
 | Next.js | `@cinaconnect/next` | ✅ built |
 | Vue 3 | `@cinaconnect/vue` | ✅ built |
 | Svelte | `@cinaconnect/svelte` | ✅ built |
@@ -40,15 +58,14 @@ CinaConnect is an open-source, all-in-one SDK for building seamless on-chain exp
 | Flutter / Dart | `@cinaconnect/flutter` | ✅ built — type definitions, native implementation needed for full functionality |
 | Android (Kotlin) | `@cinaconnect/android` | ✅ built |
 | iOS (Swift) | `@cinaconnect/ios` | ✅ built |
-| Unity (C#) | `@cinaconnect/unity` | ✅ built |
+| Unity (C#) | `@cinaconnect/unity` | ✅ built — **21 C# files** (Editor, Runtime, UI, Tests) |
+| .NET | `@cinaconnect/dotnet` | ✅ **source written** — **22 C# files** (Client, Services, Models, Example app, NuGet config) |
 | Telegram Mini Apps | `@cinaconnect/telegram` | ✅ built |
 | Farcaster Mini Apps | `@cinaconnect/farcaster` | ✅ built |
 
----
+## Usage Examples
 
-## Quick Start
-
-### Install
+### Installation
 
 ```bash
 # npm
@@ -61,7 +78,7 @@ yarn add @cinaconnect/react @cinaconnect/adapter-ethereum
 pnpm add @cinaconnect/react @cinaconnect/adapter-ethereum
 ```
 
-### Usage (React)
+### Basic Usage (React)
 
 ```tsx
 import { OnuxProvider, useOnuxAccount, useOnuxNetwork } from '@cinaconnect/react';
@@ -106,6 +123,35 @@ function Main() {
 }
 ```
 
+### EIP-5792 Wallet Call API (React)
+
+```tsx
+import { useSendCalls, useAtomicBatch, useWalletCapabilities } from '@cinaconnect/react';
+
+function BatchDemo() {
+  const { capabilities } = useWalletCapabilities();
+  const { sendCalls, status } = useSendCalls();
+  const { executeBatch } = useAtomicBatch();
+
+  const handleBatchTx = async () => {
+    const calls = [
+      { to: '0x...', data: '0x...' },
+      { to: '0x...', data: '0x...' },
+    ];
+    await sendCalls({ calls });
+  };
+
+  return (
+    <div>
+      <p>Atomic batch supported: {capabilities?.atomicBatch ? 'Yes' : 'No'}</p>
+      <button onClick={handleBatchTx} disabled={status === 'pending'}>
+        Execute Batch
+      </button>
+    </div>
+  );
+}
+```
+
 ---
 
 ## Package Index
@@ -114,7 +160,7 @@ function Main() {
 - ✅ **Built & Published** — compiled, tested, published to npm, ready to install
 - 🚧 **In Development** — source written, actively being built/deployed (e.g., Cloudflare Workers)
 - 📝 **Source Written** — source code exists, **all packages now built**
-- ⬜ **Planned** — package.json scaffolding only, source not yet written (1 remaining: dotnet)
+- ⬜ **Planned** — package.json scaffolding only, source not yet written
 - 🔌 **SDK Layer** — type definitions & integration interfaces only; **requires external API key or service** to function
 
 ### Core
@@ -132,20 +178,29 @@ function Main() {
 | `@cinaconnect/adapter-bitcoin` | Bitcoin BIP-122 chain adapter | ✅ built |
 | `@cinaconnect/adapter-ton` | TON chain adapter | ✅ built |
 | `@cinaconnect/adapter-tron` | TRON chain adapter | ✅ built |
+| `@cinaconnect/adapter-cosmos` | Cosmos chain adapter | ✅ built |
+| `@cinaconnect/adapter-sui` | Sui chain adapter | ✅ built |
+| `@cinaconnect/adapter-starknet` | Starknet chain adapter | ✅ built |
+| `@cinaconnect/adapter-near` | NEAR chain adapter | ✅ built |
+| `@cinaconnect/adapter-hedera` | Hedera chain adapter | ✅ built |
+| `@cinaconnect/adapter-xrpl` | XRPL chain adapter | ✅ built |
 
 ### UI & Frameworks
 | Package | Description | Status |
 |---------|-------------|--------|
 | `@cinaconnect/core-ui` | Web Components (Lit-based modal & widgets) | ✅ built |
-| `@cinaconnect/react` | React hooks & components | ✅ built |
+| `@cinaconnect/react` | React hooks & components + **EIP-5792 hooks** | ✅ built |
 | `@cinaconnect/next` | Next.js App Router support | ✅ built |
 | `@cinaconnect/vue` | Vue 3 plugin & composables | ✅ built |
 | `@cinaconnect/svelte` | Svelte 4/5 store & components | ✅ built |
+| `@cinaconnect/angular` | Angular support | ✅ built |
+| `@cinaconnect/nuxt` | Nuxt support | ✅ built |
 | `@cinaconnect/react-native` | React Native SDK — type definitions only, native implementation needed | ✅ built 🔌 |
-| `@cinaconnect/flutter` | Flutter SDK (Dart) — type definitions only, native implementation needed | ✅ built 🔌 |
+| `@cinaconnect/flutter-dart` | Flutter SDK (Dart) — type definitions only, native implementation needed | ✅ built 🔌 |
 | `@cinaconnect/android` | Android SDK (Kotlin) | ✅ built |
 | `@cinaconnect/ios` | iOS SDK (Swift) | ✅ built |
-| `@cinaconnect/unity` | Unity SDK (C#) | ✅ built |
+| `@cinaconnect/unity-csharp` | Unity SDK (C#) — **21 files** | ✅ built |
+| `@cinaconnect/dotnet` | .NET SDK — **22 C# files** | ✅ **source written** |
 
 ### Authentication
 | Package | Description | Status |
@@ -171,6 +226,7 @@ function Main() {
 | `@cinaconnect/swap-sdk` | Token swap via DEX aggregators | ✅ built 🔌 **SDK interface only — requires your own DEX aggregator API key** |
 | `@cinaconnect/onramp-sdk` | Fiat-to-crypto on-ramp | ✅ built 🔌 **SDK + iframe embed only — requires Meld/Coinbase Pay API key** |
 | `@cinaconnect/pay-ui` | Payment UI components | ✅ built |
+| `@cinaconnect/batch-transaction` | Batch transaction support | ✅ built |
 | `@cinaconnect/bridge-sync` | Cross-chain session synchronization | ✅ built — **Sync layer only; no native cross-chain bridge yet** |
 
 ### Infrastructure
@@ -193,6 +249,17 @@ function Main() {
 | `@cinaconnect/gas-estimator` | Gas estimation utilities | ✅ built |
 | `@cinaconnect/token-list` | Curated token registry | ✅ built |
 | `@cinaconnect/analytics` | Connection event analytics | ✅ built |
+| `@cinaconnect/config` | Remote configuration manager | ✅ built |
+| `@cinaconnect/design-tokens` | CSS design tokens | ✅ built |
+| `@cinaconnect/explorer` | Blockchain explorer components | ✅ built |
+| `@cinaconnect/blockchain-api` | REST API layer | ✅ built |
+| `@cinaconnect/wallet-buttons` | Standalone wallet button components | ✅ built |
+| `@cinaconnect/custom-connectors` | Custom wallet connector framework | ✅ built |
+| `@cinaconnect/multiwallet` | Multi-wallet management | ✅ built |
+| `@cinaconnect/kyc` | KYC compliance screening | ✅ built |
+| `@cinaconnect/cross-chain-sync` | Cross-chain state synchronization | ✅ built |
+| `@cinaconnect/safe-decoder` | Safe transaction decoder (Rust) | ✅ built |
+| `@cinaconnect/travel-rule-demo` | Travel Rule compliance demo | ✅ built |
 
 ### Platform Integrations
 | Package | Description | Status |
@@ -207,6 +274,22 @@ function Main() {
 | `@cinaconnect/cross-chain-sync` | Cross-chain state synchronization | ✅ built |
 | `@cinaconnect/safe-decoder` | Safe transaction decoder (Rust) | ✅ built |
 | `@cinaconnect/travel-rule-demo` | Travel Rule compliance demo | ✅ built |
+
+---
+
+## Demo App
+
+The monorepo includes a **Next.js demo app** at `apps/demo/` with **6 pages**:
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Landing with wallet connection |
+| Swap | `/swap` | Token swap interface |
+| Multi-Chain | `/multi-chain` | Multi-chain wallet management |
+| Auth | `/auth` | SIWE & multi-chain authentication |
+| Batch | `/batch` | Batch transaction execution |
+
+All pages are wired to real wallet connection logic.
 
 ---
 
@@ -250,15 +333,55 @@ function Main() {
 
 ---
 
+## Development
+
+CinaConnect is a **pnpm + Turborepo monorepo** with ~64 packages across TypeScript and Rust.
+
+```bash
+# Full CI pipeline: build + lint + typecheck + test
+pnpm run ci
+
+# Build a single package
+pnpm run build --filter=@cinaconnect/react
+
+# Run tests for one package
+pnpm run test --filter=@cinaconnect/core-sdk
+
+# Generate TypeDoc API reference
+pnpm run typedoc
+```
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for the full developer guide, including:
+- Monorepo structure explained
+- How to add a new package
+- How to add a new chain adapter
+- Debugging tips
+
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+We welcome contributions! Please read [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
+
+Quick start:
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feat/your-feature`)
-3. Commit your changes (`git commit -m 'feat: add your feature'`)
-4. Push to the branch (`git push origin feat/your-feature`)
-5. Open a Pull Request
+3. Make your changes and add tests
+4. Run the CI suite (`pnpm run ci`)
+5. Add a changeset (`pnpm changeset`)
+6. Open a Pull Request
+
+Please follow our [Code of Conduct](CODE_OF_CONDUCT.md) and [Commit Message Conventions](./CONTRIBUTING.md#commit-message-conventions) (Conventional Commits).
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `Cannot find module '@cinaconnect/...'` | Run `pnpm install` at root, then `pnpm run build` |
+| TypeScript errors after pulling | `pnpm install && pnpm run build --force` |
+| Demo app shows old code | Clear `.next` cache and restart dev server |
+| Tests pass locally but fail in CI | Run `pnpm run ci` locally — CI runs typecheck + lint too |
+
+For more debugging tips, see [DEVELOPMENT.md → Debugging Tips](./DEVELOPMENT.md#debugging-tips).
 
 ---
 

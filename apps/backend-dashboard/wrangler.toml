@@ -1,0 +1,7 @@
+name = "backend-dashboard"
+compatibility_date = "2025-01-01"
+
+[build]
+command = "pnpm dashboard:build"
+cwd = "../.."
+watch_dir = "apps/backend-dashboard/src"

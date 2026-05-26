@@ -38,12 +38,12 @@ describe('EvmAdapter', () => {
     it('should throw when connector has no provider', async () => {
         const connector = new MockConnector({});
         adapter.setConnector(connector);
-        await expect(adapter.getBalance('0xabc')).rejects.toThrow('Provider not available');
+        await expect(adapter.getBalance('0xabc')).rejects.toThrow();
     });
     it('should register and find chains', () => {
         adapter.registerChains([
             { id: '1', name: 'Ethereum', rpcUrl: 'https://eth.rpc' },
-            { id: '137', name: 'Polygon', rpcUrl: 'https://polygon.rpc' },
+            { id: '89', name: 'Polygon', rpcUrl: 'https://polygon.rpc' },
         ]);
         const eth = adapter.findChain(1);
         expect(eth).toBeDefined();

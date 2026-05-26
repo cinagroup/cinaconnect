@@ -151,6 +151,7 @@ export class QRTransport extends Connector {
     this.relay.disconnect();
     this.connectedAccounts = [];
     this.connectedChainId = null;
+    this.currentUri = null;
     this.emit('disconnect');
   }
 

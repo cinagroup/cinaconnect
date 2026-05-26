@@ -202,3 +202,17 @@ export interface ChangePasswordParams {
   /** The new password. */
   newPassword: string;
 }
+
+/**
+ * Encrypted share bundle with nonce for transport.
+ */
+export interface EncryptedShareBundle {
+  /** The encrypted share data (ciphertext + 16-byte tag, hex-encoded). */
+  encryptedData: string;
+
+  /** The 24-byte nonce used for encryption (hex-encoded). */
+  nonce: string;
+
+  /** The share index. */
+  shareIndex: number;
+}

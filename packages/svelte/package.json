@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/svelte",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Svelte/SvelteKit adapter for CinaConnect wallet connection toolkit",
   "type": "module",
   "main": "dist/index.js",
@@ -18,7 +18,9 @@
       "types": "./dist/kit/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "check": "svelte-check --tsconfig ./tsconfig.json",
@@ -28,7 +30,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "file:../core-sdk"
+    "@cinaconnect/core-sdk": "workspace:*"
   },
   "peerDependencies": {
     "svelte": "^4.0.0 || ^5.0.0",
@@ -49,5 +51,16 @@
     "vitest": "^1.2.0"
   },
   "license": "MIT",
-  "keywords": ["svelte", "sveltekit", "wallet", "web3", "cinaconnect", "ethereum", "crypto"]
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "wallet",
+    "web3",
+    "cinaconnect",
+    "ethereum",
+    "crypto"
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

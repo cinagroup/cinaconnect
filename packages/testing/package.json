@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/testing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Testing utilities for CinaConnect — mock providers, wallets, chains, and transactions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -36,5 +36,8 @@
   },
   "peerDependencies": {
     "typescript": ">=5.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

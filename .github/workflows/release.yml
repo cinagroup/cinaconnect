@@ -1,21 +1,76 @@
+# CinaConnect Release Workflow
+#
+# Triggered when a version tag (v*) is pushed to the repository.
+# This workflow:
+#   1. Runs the full test suite
+#   2. Builds all packages
+#   3. Publishes packages to npm via Changesets
+#   4. Creates a GitHub Release with auto-generated notes
+#   5. Uploads build artifacts
+#
+# Tag format: v<semver> (e.g., v1.1.0, v0.2.1)
+
 name: Release
 
 on:
   push:
     tags:
       - "v*"
-  workflow_dispatch:
 
 permissions:
   contents: write
   packages: write
+  id-token: write # For npm provenance (if configured)
 
 jobs:
-  release:
-    name: Release
+  # ──────────────────────────────────────────────
+  # Job 1: Verify — run tests and build
+  # ──────────────────────────────────────────────
+  verify:
+    name: Verify Build & Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build all packages
+        run: pnpm run build
+
+      - name: Run lint
+        run: pnpm run lint
+
+      - name: Run typecheck
+        run: pnpm run typecheck
+
+      - name: Run tests
+        run: pnpm run test
+
+  # ──────────────────────────────────────────────
+  # Job 2: Publish — npm packages
+  # ──────────────────────────────────────────────
+  publish:
+    name: Publish to npm
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -34,24 +89,118 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Build
-        run: pnpm build
+      - name: Build all packages
+        run: pnpm run build
 
-      - name: Create Release Pull Request or Publish
+      - name: Publish packages
         id: changesets
         uses: changesets/action@v1
         with:
           publish: pnpm changeset publish
-          commit: "chore: version packages"
-          title: "chore: version packages"
+          commit: "chore(release): version packages"
+          title: "chore(release): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Output publish status
+        run: |
+          echo "Published: ${{ steps.changesets.outputs.published }}"
+          echo "Published packages: ${{ steps.changesets.outputs.publishedPackages }}"
+
+  # ──────────────────────────────────────────────
+  # Job 3: GitHub Release — create release with notes
+  # ──────────────────────────────────────────────
+  github-release:
+    name: Create GitHub Release
+    needs: [verify, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Extract tag version
+        id: version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> "$GITHUB_OUTPUT"
+
       - name: Create GitHub Release
-        if: steps.changesets.outputs.published == 'true'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: "Release ${{ steps.version.outputs.version }}"
           generate_release_notes: true
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.version, '-rc') || contains(steps.version.outputs.version, '-alpha') || contains(steps.version.outputs.version, '-beta') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ──────────────────────────────────────────────
+  # Job 4: Documentation — build and verify docs
+  # ──────────────────────────────────────────────
+  docs-build:
+    name: Build Documentation
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build docs site
+        run: pnpm run docs:build
+
+      - name: Generate TypeDoc
+        run: pnpm run typedoc
+
+      - name: Upload docs artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs-build
+          path: docs/.vitepress/dist/
+          retention-days: 7
+
+  # ──────────────────────────────────────────────
+  # Job 5: Bundle size check
+  # ──────────────────────────────────────────────
+  bundle-size:
+    name: Check Bundle Sizes
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Check bundle sizes
+        run: pnpm run check-bundle

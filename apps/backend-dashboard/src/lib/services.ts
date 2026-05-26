@@ -102,15 +102,15 @@ function getBaseUrl(serviceId: string): string {
   const isProduction = typeof window !== "undefined" && window.location.hostname !== "localhost";
   
   if (isProduction) {
-    // Production Cloudflare Workers URLs
+    // Production custom domain URLs
     const productionUrls: Record<string, string> = {
-      "rpc-proxy": "https://cinaconnect-rpc-proxy.cinagroup.workers.dev",
-      "keys-server": "https://cinaconnect-keys-server.cinagroup.workers.dev",
-      "relay-server": "https://cinaconnect-relay-server.cinagroup.workers.dev",
-      "notify-server": "https://cinaconnect-notify-server.cinagroup.workers.dev",
-      "push-server": "https://cinaconnect-push-server.cinagroup.workers.dev",
+      "rpc-proxy": "https://rpc.cinacoin.com",
+      "keys-server": "https://keys.cinacoin.com",
+      "relay-server": "https://relay.cinacoin.com",
+      "notify-server": "https://notify.cinacoin.com",
+      "push-server": "https://push.cinacoin.com",
     };
-    return productionUrls[serviceId] || `https://cinaconnect-${serviceId}.cinagroup.workers.dev`;
+    return productionUrls[serviceId] || `https://${serviceId}.cinacoin.com`;
   }
   
   // Default: localhost dev URLs

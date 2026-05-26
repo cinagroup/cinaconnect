@@ -22,7 +22,7 @@ TypeDoc processes the following entry points:
 
 | Package | Entry Point |
 |---------|-------------|
-| `@cinaconnect/core` | `packages/core-sdk/src/index.ts` |
+| `@cinaconnect/core-sdk` | `packages/core-sdk/src/index.ts` |
 | `@cinaconnect/react` | `packages/react/src/index.ts` |
 | `@cinaconnect/react-native` | `packages/react-native/src/index.ts` |
 | `@cinaconnect/siwe` | `packages/siwe/src/index.ts` |
@@ -43,12 +43,29 @@ See [`typedoc.json`](../../../typedoc.json) for the full configuration. Key sett
 
 ## Manually Written Docs
 
-For hand-crafted API documentation with better narrative context, see:
+For hand-crafted API documentation with better narrative context, see the parent directory:
 
 - [Core SDK](../core-sdk.md)
+- [React](../react.md)
 - [Mobile SDK](../mobile.md)
 - [SIWE](../siwe.md)
-- [UI Components](../ui-components.md)
+- [AA SDK](../aa-sdk.md)
 - [Swap SDK](../swap-sdk.md)
 - [On-Ramp SDK](../onramp-sdk.md)
 - [Session Keys](../session-keys.md)
+- [Bundler](../bundler.md)
+- [Paymaster](../paymaster.md)
+- [UI Components](../ui-components.md)
+
+## Package Index (Generated)
+
+| File | Package |
+|------|---------|
+| [aa-sdk.md](./aa-sdk.md) | `@cinaconnect/aa-sdk` |
+| [analytics.md](./analytics.md) | `@cinaconnect/analytics` |
+| [core-sdk.md](./core-sdk.md) | `@cinaconnect/core-sdk` |
+| [infra.md](./infra.md) | Infrastructure packages |
+| [mobile.md](./mobile.md) | `@cinaconnect/react-native` |
+| [onramp-sdk.md](./onramp-sdk.md) | `@cinaconnect/onramp-sdk` |
+| [session-keys.md](./session-keys.md) | `@cinaconnect/session-keys` |
+| [swap-sdk.md](./swap-sdk.md) | `@cinaconnect/swap-sdk` |

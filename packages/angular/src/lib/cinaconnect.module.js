@@ -142,4 +142,4 @@ let CinaConnectModule = (() => {
     return CinaConnectModule = _classThis;
 })();
 export { CinaConnectModule };
-//# sourceMappingURL=cinaconnect.module.js.map
+//# sourceMappingURL=cinaconnect.module.js.mapexport { Eip5792Service } from './eip5792/eip5792.service.js';

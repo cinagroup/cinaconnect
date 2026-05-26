@@ -11,9 +11,61 @@ interface Env {
   ENCRYPTION_KEY?: string;
 }
 
+interface Metrics {
+  requestCount: number;
+  errorCount: number;
+  keypairCreateCount: number;
+  keypairListCount: number;
+  sessionCreateCount: number;
+  startTime: number;
+}
+
+// Global metrics storage
+let metrics: Metrics = {
+  requestCount: 0,
+  errorCount: 0,
+  keypairCreateCount: 0,
+  keypairListCount: 0,
+  sessionCreateCount: 0,
+  startTime: Date.now(),
+};
+
+function formatUptime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days}d ${hours % 24}h`;
+  if (hours > 0) return `${hours}h ${minutes % 60}m`;
+  if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+  return `${seconds}s`;
+}
+
+function handleMetrics(): Response {
+  const uptime = Date.now() - metrics.startTime;
+  const errorRate = metrics.requestCount > 0
+    ? ((metrics.errorCount / metrics.requestCount) * 100).toFixed(2)
+    : "0.00";
+
+  return jsonResponse({
+    service: "cinaconnect-keys-server",
+    uptime_ms: uptime,
+    uptime_readable: formatUptime(uptime),
+    request_count: metrics.requestCount,
+    error_count: metrics.errorCount,
+    error_rate_percent: parseFloat(errorRate),
+    keypair_create_count: metrics.keypairCreateCount,
+    keypair_list_count: metrics.keypairListCount,
+    session_create_count: metrics.sessionCreateCount,
+    timestamp: new Date().toISOString(),
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    metrics.requestCount++;
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
@@ -24,6 +76,9 @@ export default {
       switch (url.pathname) {
         case '/health':
           return jsonResponse({ status: 'ok', timestamp: Date.now() });
+
+        case '/metrics':
+          return handleMetrics();
 
         case '/api/v1/keypairs': {
           if (request.method === 'GET') return listKeypairs(request, env);
@@ -40,12 +95,15 @@ export default {
           return notFound();
       }
     } catch (err) {
+      metrics.errorCount++;
       return jsonResponse({ error: 'Internal error', message: String(err) }, 500);
     }
   },
 };
 
 async function listKeypairs(request: Request, env: Env): Promise<Response> {
+  metrics.keypairListCount++;
+
   const url = new URL(request.url);
   const address = url.searchParams.get('address');
 
@@ -62,6 +120,8 @@ async function listKeypairs(request: Request, env: Env): Promise<Response> {
 }
 
 async function createKeypair(request: Request, env: Env): Promise<Response> {
+  metrics.keypairCreateCount++;
+
   const body = await request.json();
   const { address, chainId, encryptedKey, publicKey } = body;
 
@@ -80,6 +140,8 @@ async function createKeypair(request: Request, env: Env): Promise<Response> {
 }
 
 async function createSession(request: Request, env: Env): Promise<Response> {
+  metrics.sessionCreateCount++;
+
   const body = await request.json();
   const { address, nonce, expiresIn } = body;
 

@@ -79,13 +79,38 @@ export class PushServer {
   /**
    * Get delivery log for auditing.
    */
-  getDeliveryLog(): DeliveryResult[] {
-    return [...this.deliveryLog];
+  getDeliveryLog(limit = 100, offset = 0): unknown {
+    return {
+      logs: this.deliveryLog.slice(offset, offset + limit),
+      total: this.deliveryLog.length,
+      limit,
+      offset,
+    };
   }
 
   /** Clear delivery log */
   clearDeliveryLog(): void {
     this.deliveryLog = [];
+  }
+
+  /**
+   * Get server metrics.
+   */
+  getMetrics(): unknown {
+    const successCount = this.deliveryLog.filter((log) => log.success).length;
+    const failureCount = this.deliveryLog.length - successCount;
+    const successRate = this.deliveryLog.length > 0
+      ? ((successCount / this.deliveryLog.length) * 100).toFixed(2)
+      : "0.00";
+
+    return {
+      service: "cinaconnect-push-server",
+      delivery_log_size: this.deliveryLog.length,
+      success_count: successCount,
+      failure_count: failureCount,
+      success_rate_percent: parseFloat(successRate),
+      timestamp: Date.now(),
+    };
   }
 
   private async sendApns(notification: PushNotification): Promise<DeliveryResult> {

@@ -255,3 +255,121 @@ describe('TRONChainAdapter signMessage', () => {
     await expect(adapter.signMessage('hello')).rejects.toThrow('does not support message signing');
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  TRONChainAdapter - Provider & Connection                           */
+/* ------------------------------------------------------------------ */
+
+describe('TRONChainAdapter provider and connection', () => {
+  let adapter: TRONChainAdapter;
+  beforeEach(() => { adapter = new TRONChainAdapter(); });
+
+  it('returns null provider before setProvider', () => {
+    expect(adapter.getProvider()).toBeNull();
+  });
+
+  it('accepts and returns provider', () => {
+    const mockProvider = { request: vi.fn(), tronWeb: {} };
+    adapter.setProvider(mockProvider as any);
+    expect(adapter.getProvider()).toBe(mockProvider);
+  });
+
+  it('connect throws when no wallet', async () => {
+    await expect(adapter.connect()).rejects.toThrow('No TRON wallet found');
+  });
+
+  it('connect throws for unrecognized wallet ID', async () => {
+    await expect(adapter.connect('unknown')).rejects.toThrow('No TRON wallet found');
+  });
+
+  it('disconnect clears state', async () => {
+    const mockProvider = { request: vi.fn(), tronWeb: {} };
+    adapter.setProvider(mockProvider as any);
+    await adapter.disconnect();
+    expect(adapter.getAddress()).toBeNull();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TRONChainAdapter - Token Balance                                   */
+/* ------------------------------------------------------------------ */
+
+describe('TRONChainAdapter getTokenBalance', () => {
+  let adapter: TRONChainAdapter;
+  beforeEach(() => { adapter = new TRONChainAdapter(); });
+
+  it('throws on invalid contract address', async () => {
+    await expect(adapter.getTokenBalance('invalid', 'TN2Y7e5RLkKz6kBPZHMoCjLpQJvGvCqTjZ'))
+      .rejects.toThrow('Invalid contract address');
+  });
+
+  it('throws on invalid wallet address', async () => {
+    await expect(adapter.getTokenBalance('TN2Y7e5RLkKz6kBPZHMoCjLpQJvGvCqTjZ', 'invalid'))
+      .rejects.toThrow('Invalid address');
+  });
+
+  it('returns 0 when provider fails', async () => {
+    const mockProvider = {
+      request: vi.fn(),
+      tronWeb: {
+        trc20: vi.fn(() => ({
+          methods: {
+            balanceOf: vi.fn().mockRejectedValue(new Error('fail')),
+          },
+        })),
+      },
+    };
+    adapter.setProvider(mockProvider as any);
+    const result = await adapter.getTokenBalance(
+      'TN2Y7e5RLkKz6kBPZHMoCjLpQJvGvCqTjZ',
+      'T9yD14Nj9j7xAB4dbGeiX9h8zzNUFroF6m',
+    );
+    expect(result).toBe('0');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TRONChainAdapter - TRC-20 Transfer                                 */
+/* ------------------------------------------------------------------ */
+
+describe('TRONChainAdapter buildTRC20Transfer', () => {
+  let adapter: TRONChainAdapter;
+  beforeEach(() => { adapter = new TRONChainAdapter(); });
+
+  it('throws on invalid recipient in TRC-20 transfer', () => {
+    expect(() =>
+      adapter.buildTRC20Transfer({
+        contractAddress: 'TN2Y7e5RLkKz6kBPZHMoCjLpQJvGvCqTjZ',
+        to: 'invalid',
+        amount: '100',
+      }),
+    ).toThrow('Invalid recipient address');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TRONChainAdapter - sendTransaction via provider                    */
+/* ------------------------------------------------------------------ */
+
+describe('TRONChainAdapter sendTransaction via provider', () => {
+  let adapter: TRONChainAdapter;
+  beforeEach(() => { adapter = new TRONChainAdapter(); });
+
+  it('throws when tronWeb is missing', async () => {
+    const mockProvider = { request: vi.fn() };
+    adapter.setProvider(mockProvider as any);
+    await expect(
+      adapter.sendTransaction({ to: 'TN2Y7e5RLkKz6kBPZHMoCjLpQJvGvCqTjZ', value: '1000' }),
+    ).rejects.toThrow('No provider connected');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  TRON base58ToHex / hexToBase58 edge cases                          */
+/* ------------------------------------------------------------------ */
+
+describe('TRON base58ToHex edge cases', () => {
+  it('throws on invalid base58 character', () => {
+    expect(() => base58ToHex('TN2Y!')).toThrow('Invalid base58 character');
+  });
+});

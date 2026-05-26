@@ -1,15 +1,21 @@
 # Core SDK API
 
-> `@cinaconnect/core` — CinaConnect 核心 SDK 参考。
+> `@cinaconnect/core-sdk` — CinaConnect 核心 SDK 参考。
 
-## CinaConnect
+## Installation
+
+```bash
+npm install @cinaconnect/core-sdk
+```
+
+## Main Entry — CinaConnect
 
 主入口类，管理钱包连接、链切换、会话等核心功能。
 
 ### 构造函数
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core'
+import { CinaConnect } from '@cinaconnect/core-sdk'
 
 const cinaconnect = new CinaConnect(config: CinaConnectConfig)
 ```
@@ -18,268 +24,108 @@ const cinaconnect = new CinaConnect(config: CinaConnectConfig)
 
 ```typescript
 interface CinaConnectConfig {
-  /** 项目唯一标识 */
-  projectId: string
-  /** Relay WebSocket URL */
-  relayUrl: string
-  /** 支持的链 */
-  chains: Chain[]
-  /** 应用元数据 */
-  metadata?: Metadata
-  /** 是否开启调试日志 */
-  debug?: boolean
+  projectId: string          // 项目唯一标识
+  relayUrl: string           // Relay WebSocket URL
+  chains: Chain[]            // 支持的链
+  metadata?: Metadata        // 应用元数据
+  debug?: boolean            // 是否开启调试日志
 }
 ```
 
 ### 方法
 
-#### `registerAdapter(adapter: ChainAdapter)`
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `registerAdapter` | `(adapter: ChainAdapter) => void` | 注册链适配器 |
+| `registerTransport` | `(transport: Transport) => void` | 注册传输层 |
+| `getConnectors` | `() => Connector[]` | 获取所有已注册的连接器 |
+| `connect` | `(connector: Connector, params?: ConnectParams) => Promise<ConnectionResult>` | 连接指定钱包 |
+| `disconnect` | `() => Promise<void>` | 断开当前连接 |
+| `switchChain` | `(chainId: number) => Promise<void>` | 切换区块链网络 |
+| `signMessage` | `(message: string) => Promise<string>` | 签名消息（EIP-191） |
+| `signTransaction` | `(tx: TransactionRequest) => Promise<string>` | 签名交易 |
+| `getAccounts` | `() => Promise<string[]>` | 获取当前账户列表 |
+| `getChainId` | `() => Promise<number>` | 获取当前链 ID |
+| `on` | `(event: string, handler: EventHandler) => void` | 监听事件 |
+| `off` | `(event: string, handler: EventHandler) => void` | 移除事件监听 |
 
-注册链适配器（EVM、Solana 等）。
+### 事件
 
-```typescript
-import { EvmAdapter } from '@cinaconnect/adapter-evm'
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `accountChanged` | `string[]` | 账户变更 |
+| `chainChanged` | `number` | 链切换 |
+| `disconnect` | — | 断开连接 |
+| `connect` | `ConnectionResult` | 连接成功 |
 
-cinaconnect.registerAdapter(new EvmAdapter())
-```
+## Connector — 抽象基类
 
-#### `registerTransport(transport: Transport)`
-
-注册传输层（Relay WebSocket、QR 码等）。
-
-```typescript
-import { RelayTransport } from '@cinaconnect/transport-relay'
-
-cinaconnect.registerTransport(new RelayTransport({
-  url: 'wss://relay.yourdomain.com/v1',
-}))
-```
-
-#### `getConnectors(): Connector[]`
-
-获取所有已注册的连接器。
-
-```typescript
-const connectors = cinaconnect.getConnectors()
-// [{ id: 'metamask', name: 'MetaMask', ... }, ...]
-```
-
-#### `connect(connector: Connector, params?: ConnectParams): Promise<ConnectionResult>`
-
-连接指定钱包。
+所有钱包连接方式（injected, QR, relay/WC）都实现此接口。
 
 ```typescript
-const [connector] = cinaconnect.getConnectors()
-const result = await cinaconnect.connect(connector)
+import { Connector, RedirectHandler } from '@cinaconnect/core-sdk'
 
-console.log(result.accounts)  // ['0x1a2b...3c4d']
-console.log(result.chainId)   // 1
-```
+abstract class Connector extends EventEmitter {
+  readonly id: string          // 唯一标识符
+  readonly name: string        // 显示名称
+  readonly icon: string        // 图标 URL
+  readonly installed: boolean  // 是否已安装
+  readonly type: string        // 'injected' | 'qr' | 'relay' | 'walletconnect'
 
-#### `disconnect(): Promise<void>`
+  abstract connect(params?: ConnectParams): Promise<ConnectionResult>
+  abstract disconnect(): Promise<void>
+  abstract getAccounts(): Promise<string[]>
+  abstract getChainId(): Promise<number>
+  abstract switchChain(chainId: number): Promise<void>
+  abstract signMessage(message: string): Promise<string>
+  abstract signTransaction(tx: TransactionRequest): Promise<string>
 
-断开当前连接。
-
-```typescript
-await cinaconnect.disconnect()
-```
-
-#### `switchChain(chainId: number): Promise<void>`
-
-切换区块链网络。
-
-```typescript
-await cinaconnect.switchChain(137)  // 切换到 Polygon
-```
-
-#### `signMessage(message: string): Promise<string>`
-
-签名消息（EIP-191）。
-
-```typescript
-const signature = await cinaconnect.signMessage('Hello, CinaConnect!')
-```
-
-#### `signTransaction(tx: TransactionRequest): Promise<string>`
-
-签名交易。
-
-```typescript
-const txHash = await cinaconnect.signTransaction({
-  to: '0x...',
-  value: 1000000000000000000n,  // 1 ETH
-  data: '0x...',
-})
-```
-
-#### `on(event: string, handler: EventHandler): void`
-
-监听事件。
-
-```typescript
-cinaconnect.on('accountChanged', (accounts: string[]) => {
-  console.log('Account changed:', accounts)
-})
-
-cinaconnect.on('chainChanged', (chainId: number) => {
-  console.log('Chain changed:', chainId)
-})
-
-cinaconnect.on('disconnect', () => {
-  console.log('Disconnected')
-})
-```
-
-#### `off(event: string, handler: EventHandler): void`
-
-移除事件监听器。
-
-```typescript
-cinaconnect.off('accountChanged', handler)
-```
-
-#### `getAccounts(): Promise<string[]>`
-
-获取当前账户列表。
-
-```typescript
-const accounts = await cinaconnect.getAccounts()
-// ['0x1a2b...3c4d']
-```
-
-#### `getChainId(): Promise<number>`
-
-获取当前链 ID。
-
-```typescript
-const chainId = await cinaconnect.getChainId()
-// 1
-```
-
-## Connector 接口
-
-```typescript
-interface Connector {
-  readonly id: string
-  readonly name: string
-  readonly icon: string
-  readonly installed: boolean
-
-  connect(params?: ConnectParams): Promise<ConnectionResult>
-  disconnect(): Promise<void>
-  getAccounts(): Promise<string[]>
-  getChainId(): Promise<number>
-  switchChain(chainId: number): Promise<void>
-  signMessage(message: string): Promise<string>
-  signTransaction(tx: TransactionRequest): Promise<string>
-  on(event: string, handler: EventHandler): void
-  off(event: string, handler: EventHandler): void
+  // Deep link support
+  setRedirectHandler(handler?: RedirectHandler): void
+  openDeepLink(walletId: string, uri: string, params?: DeepLinkParams): Promise<RedirectResult>
+  generateDeepLink(walletId: string, uri: string, queryParams?: Record<string, string>): string
 }
 ```
 
-## ConnectionResult
+### RedirectHandler
+
+处理 deep link 跳转逻辑（deep link → timeout → universal link → QR code）：
 
 ```typescript
-interface ConnectionResult {
-  /** 已连接的账户 */
-  accounts: string[]
-  /** 当前链 ID */
-  chainId: number
-  /** 会话 ID */
-  sessionId: string
-}
+import { RedirectHandler } from '@cinaconnect/core-sdk'
+
+const handler = new RedirectHandler()
+await handler.openDeepLink('metamask', 'wc://...')
 ```
 
-## ChainAdapter
+## SessionManager — 会话管理
 
-链适配器基类，每种链（EVM、Solana 等）实现自己的适配器。
-
-```typescript
-interface ChainAdapter {
-  /** 适配器支持的链类型 */
-  readonly chainType: string
-
-  /** 解析连接器 */
-  resolveConnector(connector: Connector): Promise<Connector>
-
-  /** 签名交易 */
-  signTransaction(tx: any): Promise<string>
-
-  /** 签名消息 */
-  signMessage(message: string): Promise<string>
-}
-```
-
-## EIP-6963 钱包发现
+管理钱包连接生命周期状态机。
 
 ```typescript
-import { discoverWallets } from '@cinaconnect/core'
+import { SessionManager } from '@cinaconnect/core-sdk'
 
-const wallets = await discoverWallets()
-// [
-//   { info: { rdns: 'io.metamask', name: 'MetaMask', ... }, provider: ... },
-//   { info: { rdns: 'com.rabby', name: 'Rabby', ... }, provider: ... },
-// ]
-```
+const sessionManager = new SessionManager()
 
-## 传输层
+// 启动连接
+await sessionManager.initiate(connector, params)
 
-### RelayTransport
+// 确认连接
+await sessionManager.confirm(sessionId, accounts, chainId)
 
-通过自建 Relay 进行 WebSocket 通信。
-
-```typescript
-import { RelayTransport } from '@cinaconnect/transport-relay'
-
-const transport = new RelayTransport({
-  url: 'wss://relay.yourdomain.com/v1',
-  reconnectInterval: 5000,
-  pingInterval: 30000,
-})
-```
-
-### InjectedTransport
-
-通过注入的 EIP-1193 Provider 通信。
-
-```typescript
-import { InjectedTransport } from '@cinaconnect/transport-injected'
-
-const transport = new InjectedTransport(window.ethereum!)
-```
-
-### QRCodeTransport
-
-通过扫码连接。
-
-```typescript
-import { QRCodeTransport } from '@cinaconnect/transport-qrcode'
-
-const transport = new QRCodeTransport({
-  relayUrl: 'wss://relay.yourdomain.com/v1',
-})
-
-const uri = await transport.getUri()
-// 展示 uri 为 QR 码
-```
-
-## 会话管理
-
-```typescript
-import { SessionManager } from '@cinaconnect/core'
-
-const sessionManager = new SessionManager({
-  storage: localStorage,
-  ttl: 30 * 24 * 60 * 60 * 1000, // 30 天
-})
+// 断开连接
+await sessionManager.terminate()
 
 // 恢复持久化会话
 const state = await sessionManager.restore()
 
-// 监听状态变化
-sessionManager.subscribe((state) => {
-  console.log(state)
+// 订阅状态变化
+const unsubscribe = sessionManager.subscribe((state) => {
+  console.log('State:', state.status)
 })
+
+// 取消订阅
+unsubscribe()
 ```
 
 ### SessionState
@@ -287,7 +133,418 @@ sessionManager.subscribe((state) => {
 ```typescript
 type SessionState =
   | { status: 'disconnected' }
-  | { status: 'connecting' }
-  | { status: 'connected'; accounts: string[]; chainId: number; sessionId: string }
+  | { status: 'connecting'; connectorId: string }
+  | { status: 'connected'; accounts: string[]; chainId: number; sessionId: string; connectorId: string }
   | { status: 'error'; error: Error }
 ```
+
+### 状态转换
+
+```
+disconnected → connecting → connected → disconnected
+    ↓               ↓           ↓
+    └────── error ──┘           │
+                                └── error → disconnected
+```
+
+## Core Types
+
+### Chain & ChainReference
+
+```typescript
+type ChainNamespace = 'eip155' | 'solana' | 'bip121' | 'bip122' | 'tron' | 'ton' | 'polkadot'
+
+interface ChainReference {
+  namespace: ChainNamespace  // e.g. 'eip155'
+  reference: string          // e.g. '1' for Ethereum mainnet
+}
+
+interface Chain {
+  id: string                 // CAIP-2 chain ID
+  name: string               // Human-readable name
+  rpcUrl: string             // JSON-RPC endpoint
+  nativeCurrency?: {
+    name: string
+    symbol: string
+    decimals: number
+  }
+  explorerUrl?: string
+  iconUrl?: string
+}
+```
+
+### ConnectParams & ConnectionResult
+
+```typescript
+interface ConnectParams {
+  topic?: string             // 已有会话的 topic
+  relayUrl?: string          // Relay URL 覆盖
+  uri?: string               // WalletConnect 配对 URI
+  chains?: number[]          // 支持的链 ID
+  metadata?: AppMetadata     // dApp 元数据
+}
+
+interface ConnectionResult {
+  sessionId: string           // 会话 ID
+  accounts: string[]          // 已连接账户
+  chainId: number             // 当前链 ID
+  connectorId: string         // 使用的连接器
+}
+```
+
+### AppMetadata
+
+```typescript
+interface AppMetadata {
+  name: string
+  description: string
+  url: string
+  icons: string[]
+}
+```
+
+### TransactionRequest
+
+```typescript
+interface TransactionRequest {
+  from: string
+  to: string
+  value?: string              // wei (hex)
+  data?: string               // calldata (hex)
+  gas?: string                // gas limit (hex)
+  gasPrice?: string           // gas price (hex)
+  maxFeePerGas?: string       // EIP-1559 (hex)
+  maxPriorityFeePerGas?: string
+  nonce?: string
+  chainId?: number
+}
+```
+
+### SessionProposal & Pairing
+
+```typescript
+interface SessionProposal {
+  id: number
+  requiredNamespaces: Record<string, RequiredNamespace>
+  optionalNamespaces?: Record<string, RequiredNamespace>
+  relays: { protocol: string; data?: string }[]
+  proposer: { publicKey: string; metadata: AppMetadata }
+}
+
+interface RequiredNamespace {
+  chains: string[]
+  methods: string[]
+  events: string[]
+}
+
+interface PairingData {
+  topic: string
+  uri: string
+  peerMetadata?: AppMetadata
+  active: boolean
+  expiry: number             // ms timestamp
+}
+```
+
+## Transports
+
+### RelayTransport
+
+通过自建 Relay 进行 WebSocket 通信：
+
+```typescript
+import { RelayTransport, type RelayTransportConfig } from '@cinaconnect/core-sdk'
+
+const transport = new RelayTransport({
+  url: 'wss://relay.yourdomain.com/v1',
+})
+```
+
+### InjectedProvider
+
+通过浏览器注入的 EIP-1193 Provider 通信：
+
+```typescript
+import { InjectedProvider } from '@cinaconnect/core-sdk'
+
+const provider = new InjectedProvider(window.ethereum!)
+```
+
+### QRTransport
+
+通过扫码连接：
+
+```typescript
+import { QRTransport, type QRTransportConfig } from '@cinaconnect/core-sdk'
+
+const transport = new QRTransport(config)
+```
+
+## Chain Adapters
+
+The SDK includes adapters for multiple blockchain ecosystems, all available through `createAdapter()`:
+
+### createAdapter
+
+```typescript
+import { createAdapter, type NewChainAdapterFactoryConfig } from '@cinaconnect/core-sdk'
+
+// Create adapters by type
+const tonAdapter = await createAdapter({ type: 'ton' })
+const tronAdapter = await createAdapter({ type: 'tron', chains: [...] })
+const polkadotAdapter = await createAdapter({ type: 'polkadot' })
+const solanaAdapter = await createAdapter({ type: 'solana' })
+```
+
+Supported adapter types: `'viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'ton' | 'tron' | 'polkadot' | 'solana'`
+
+### Built-in Adapters
+
+| Adapter | Export | Utilities |
+|---------|--------|-----------|
+| EVM | `EvmAdapter` | — |
+| viem | `ViemChainAdapter`, `createViemAdapter` | `ViemClient`, `ViemAccount`, `ViemChain` |
+| wagmi | `WagmiConnector`, `MultiChainConnector`, `createWagmiConnector` | `WagmiConfig`, `WagmiChain` |
+| ethers v5 | `Ethers5Adapter` | `Ethers5Provider`, `Ethers5Signer` |
+| ethers v6 | `Ethers6Adapter` | `Ethers6Provider`, `Ethers6Signer` |
+| Solana | `SolanaChainAdapter`, `SOLANA_CHAINS`, `SOLANA_WALLETS` | `isValidSolanaAddress`, `base58Decode` |
+| Bitcoin | `BitcoinChainAdapter`, `BITCOIN_CHAINS`, `BITCOIN_WALLETS` | `validateBitcoinAddress`, `UTXO`, `AddressFormat` |
+| TON | `TONChainAdapter`, `TON_CHAINS`, `TON_WALLETS` | `isValidTONAddress`, `parseTONAddress`, `hexToBase64url` |
+| TRON | `TRONChainAdapter`, `TRON_CHAINS`, `TRON_WALLETS` | `isValidTRONAddress`, `base58ToHex`, `hexToBase58` |
+| Polkadot | `PolkadotChainAdapter`, `POLKADOT_CHAINS`, `POLKADOT_WALLETS` | `decodeSS58`, `isValidSS58Address` |
+
+## EIP-6963 Wallet Discovery
+
+```typescript
+import { discoverWallets, watchWallets, findWalletByRdns } from '@cinaconnect/core-sdk'
+
+// One-time discovery
+const wallets = await discoverWallets()
+
+// Watch for new wallets
+const unwatch = watchWallets((wallet) => {
+  console.log('New wallet detected:', wallet.info.name)
+})
+
+// Find a specific wallet by RDNS
+const metamask = findWalletByRdns('io.metamask')
+```
+
+### EIP-6963 Types
+
+```typescript
+interface EIP6963ProviderInfo {
+  rdns: string
+  name: string
+  icon: string   // data URI
+  uuid: string
+}
+
+interface EIP6963ProviderDetail {
+  info: EIP6963ProviderInfo
+  provider: EIP1193Provider
+}
+```
+
+## EIP-5792 Wallet Call API
+
+Support for atomic batch transactions via EIP-5792:
+
+```typescript
+import {
+  walletGetCapabilities,
+  walletSendCalls,
+  buildAtomicBatch,
+  executeAtomicBatch,
+  createEthTransferCall,
+  createContractCall,
+  createErc20ApproveCall,
+  createApproveAndSwapCalls,
+  supportsAtomicBatch,
+  validateBatchConfig,
+} from '@cinaconnect/core-sdk'
+```
+
+### Key Functions
+
+| Function | Description |
+|----------|-------------|
+| `walletGetCapabilities` | Fetch wallet capabilities per chain |
+| `walletSendCalls` | Send batched calls |
+| `walletGetCallsStatus` | Get batch status |
+| `waitForCallsStatus` | Poll until batch is confirmed |
+| `buildAtomicBatch` | Build an atomic batch config |
+| `executeAtomicBatch` | Execute an atomic batch |
+| `createEthTransferCall` | Create an ETH transfer call |
+| `createContractCall` | Create a contract call |
+| `createErc20ApproveCall` | Create an ERC-20 approve call |
+| `createApproveAndSwapCalls` | Create approve + swap call batch |
+| `supportsAtomicBatch` | Check if wallet supports atomic batch |
+| `hasCapability` | Check if a capability is supported |
+| `filterByCapability` | Filter chains by capability |
+
+### Types
+
+```typescript
+interface WalletCapabilities {
+  [chainId: string]: ChainCapabilities
+}
+
+interface ChainCapabilities {
+  atomicBatch?: { supported: boolean }
+  paymasterService?: { supported: boolean; url?: string }
+}
+
+interface Call {
+  to: string
+  value?: string
+  data?: string
+}
+
+interface SendCallsParams {
+  calls: Call[]
+  capabilities?: Record<string, unknown>
+}
+
+interface SendCallsResult {
+  id: string  // batch identifier
+}
+
+interface AtomicBatchConfig {
+  calls: Call[]
+  simulate?: boolean
+}
+```
+
+## Deep Linking
+
+```typescript
+import {
+  generateDeepLink,
+  registerWalletDeepLink,
+  getAppStoreUrl,
+  generateUniversalLink,
+  generateWalletConnectUniversalLink,
+  smartRedirect,
+  detectPlatform,
+  WALLET_DEEP_LINKS,
+} from '@cinaconnect/core-sdk'
+```
+
+| Function | Description |
+|----------|-------------|
+| `generateDeepLink` | Generate a deep link URL for a wallet |
+| `generateUniversalLink` | Generate an Apple universal link |
+| `generateWalletConnectUniversalLink` | Generate a WalletConnect universal link |
+| `smartRedirect` | Smart redirect with fallback chain |
+| `detectPlatform` | Detect current platform (iOS/Android/Desktop) |
+| `getAppStoreUrl` | Get App Store or Play Store URL for a wallet |
+| `registerWalletDeepLink` | Register a wallet's deep link config |
+
+## Crypto Utilities
+
+```typescript
+import {
+  generateKeypair,
+  sharedSecret,
+  serializeKeypair,
+  deserializeKeypair,
+  encrypt,
+  decrypt,
+  deriveSymmetricKey,
+  deriveTopic,
+  generateNonce,
+  bytesToHex,
+  hexToBytes,
+} from '@cinaconnect/core-sdk'
+```
+
+| Function | Description |
+|----------|-------------|
+| `generateKeypair` | Generate X25519 keypair for encryption |
+| `sharedSecret` | Compute shared secret from keypairs |
+| `serializeKeypair` | Serialize keypair to bytes |
+| `deserializeKeypair` | Deserialize keypair from bytes |
+| `encrypt` | Encrypt data with shared secret |
+| `decrypt` | Decrypt data with shared secret |
+| `deriveSymmetricKey` | Derive a symmetric encryption key |
+| `deriveTopic` | Derive a topic string for relay |
+| `generateNonce` | Generate a cryptographic nonce |
+
+## State Management
+
+```typescript
+import { createCinaConnectStore, initializeStore } from '@cinaconnect/core-sdk'
+
+const store = createCinaConnectStore({
+  chains: [...],
+  projectId: '...',
+})
+
+// Or initialize from existing state
+initializeStore(store, persistedState)
+```
+
+### CinaConnectState
+
+```typescript
+interface CinaConnectState {
+  connection: ConnectionStatus
+  accounts: string[]
+  chainId: number
+  connectors: string[]
+}
+
+type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error'
+```
+
+## SIWE Authentication
+
+Optional SIWE integration (requires `@cinaconnect/siwe`):
+
+```typescript
+import { SIWEAuth } from '@cinaconnect/core-sdk'
+
+const siweAuth = new SIWEAuth({
+  domain: 'mydapp.com',
+  uri: 'https://mydapp.com',
+  statement: 'Sign in to My dApp',
+})
+
+const result = await siweAuth.signIn(address, signMessage)
+```
+
+### SIWEAuthConfig
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `domain` | `string` | Request domain |
+| `uri` | `string` | Request URI |
+| `statement` | `string` | Human-readable statement |
+| `expirationTime` | `string` | Optional expiration |
+
+### SIWESignInResult
+
+```typescript
+interface SIWESignInResult {
+  valid: boolean
+  address: string
+  nonce: string
+}
+```
+
+## Version
+
+```typescript
+import { VERSION } from '@cinaconnect/core-sdk'
+
+console.log(VERSION) // '0.1.0'
+```
+
+## See Also
+
+- [React SDK](./react.md) — React hooks and components
+- [AA SDK](./aa-sdk.md) — Account Abstraction
+- [SIWE](./siwe.md) — Sign-In With Ethereum
+- [Generated TypeDoc](./generated/core-sdk.md) — Auto-generated reference
+- [Full TypeDoc Output](./typedoc/) — Complete generated documentation

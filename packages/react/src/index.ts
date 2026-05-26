@@ -22,3 +22,20 @@ export { ChainSwitcher } from './ChainSwitcher.js';
 export type { ChainSwitcherProps } from './ChainSwitcher.js';
 
 export { useCinaConnect, useAccount, useChainId, useConnect, useDisconnect } from './hooks.js';
+
+// EIP-5792 Wallet Call API hooks
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useAtomicBatch,
+  useCallsStatus,
+} from './hooks.js';
+
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  UseAtomicBatchReturn,
+  UseCallsStatusReturn,
+  SendCallsOptions,
+  AtomicBatchOptions,
+} from './hooks.js';

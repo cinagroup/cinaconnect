@@ -1,0 +1,22 @@
+# Cloudflare Pages configuration for CinaConnect API Documentation
+# Project name: cinaconnect-docs
+# Framework: VitePress (static site generator)
+
+name = "cinaconnect-docs"
+compatibility_date = "2024-01-01"
+
+# Build configuration
+# VitePress build command: `vitepress build docs`
+# Output directory: docs/.vitepress/dist (relative to docs-site/)
+# Cloudflare Pages needs to know where to find the built static files.
+# We copy the output to a top-level `dist/` dir for simple deployment.
+[build]
+command = "npm run build && rm -rf dist && cp -r docs/.vitepress/dist dist"
+build_output_directory = "dist"
+
+[build.environment]
+NODE_VERSION = "20"
+
+# Environment variables — set secrets via Cloudflare dashboard
+# [vars]
+# BASE_URL = "https://docs.cinaconnect.com"

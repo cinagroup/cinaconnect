@@ -2,10 +2,44 @@ name = "cinaconnect-rpc-proxy"
 main = "worker.ts"
 compatibility_date = "2024-01-01"
 
+# ── Production variables ───────────────────────────────────────
+# Secrets (set via wrangler secret put, NOT in this file):
+#   RPC_API_KEYS      — comma-separated list of allowed API keys
+#   RATE_LIMIT_TOKEN  — Cloudflare Rate Limiting API token
+#   WEBHOOK_SECRET    — secret for outbound webhook signatures
+
 [vars]
 CACHE_TTL = 300
+LOG_LEVEL = "info"
+MAX_RETRIES = "3"
+REQUEST_TIMEOUT_MS = "30000"
 
+# ── KV Namespaces ──────────────────────────────────────────────
 [[kv_namespaces]]
 binding = "RPC_CACHE"
-id = ""
-preview_id = ""
+id = ""                        # ← fill with production KV namespace ID
+preview_id = ""                 # ← fill with preview KV namespace ID
+
+# ── Durable Objects (optional future use) ──────────────────────
+# [[durable_objects.bindings]]
+# name = "RATE_LIMITER"
+# class_name = "RateLimiter"
+
+# ── Routes ─────────────────────────────────────────────────────
+# routes = [
+#   { pattern = "rpc.cinaconnect.com/*", zone_name = "cinaconnect.com" }
+# ]
+
+# ── Staging environment ────────────────────────────────────────
+[env.staging]
+name = "cinaconnect-rpc-proxy-staging"
+
+[env.staging.vars]
+CACHE_TTL = 60
+LOG_LEVEL = "debug"
+MAX_RETRIES = "5"
+REQUEST_TIMEOUT_MS = "45000"
+
+# [[env.staging.kv_namespaces]]
+# binding = "RPC_CACHE"
+# id = ""                       # ← staging KV namespace ID

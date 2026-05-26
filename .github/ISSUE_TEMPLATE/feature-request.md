@@ -1,22 +1,82 @@
 ---
 name: ✨ Feature Request
-about: Suggest an idea for this project
+about: Suggest a new feature or enhancement for CinaConnect
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""
 ---
 
-## Is your feature request related to a problem?
-<!-- A clear and concise description of what the problem is. e.g. I'm always frustrated when [...] -->
+## Problem Statement
 
-## Describe the solution you'd like
-<!-- A clear and concise description of what you want to happen. -->
+<!-- What problem does this feature solve? Be specific. e.g. "I'm always frustrated when [...]" -->
 
-## Describe alternatives you've considered
-<!-- A clear and concise description of any alternative solutions or features you've considered. -->
+## Proposed Solution
 
-## Which package does this affect?
-<!-- e.g. @cinaconnect/core, @cinaconnect/ui, relay-server, etc. -->
+<!-- Describe your proposed solution in detail. How would it work? What would the API look like? -->
 
-## Additional context
-<!-- Add any other context, screenshots, or examples about the feature request here. -->
+### API Design (if applicable)
+
+<!-- If this involves a code change, sketch the proposed API: -->
+
+```ts
+// Example of how the new API might look
+import { newFeature } from '@cinaconnect/...';
+
+// Usage example
+```
+
+## Alternatives Considered
+
+<!-- What other approaches did you consider? Why did you choose this one? -->
+
+| Alternative | Pros | Cons | Why Not |
+|-------------|------|------|---------|
+|             |      |      |         |
+
+## Scope & Impact
+
+### Affected Package(s)
+
+<!-- Which @cinaconnect/* package(s) would this affect? -->
+
+- [ ] `@cinaconnect/core-sdk`
+- [ ] `@cinaconnect/react` (or another UI framework package)
+- [ ] `@cinaconnect/adapter-*` (specify which)
+- [ ] `@cinaconnect/chains`
+- [ ] `@cinaconnect/aa-sdk`
+- [ ] Infrastructure (relay-server, rpc-proxy, keys-server)
+- [ ] Demo app
+- [ ] New package
+- [ ] Other: _______________
+
+### Breaking Changes
+
+<!-- Would this require a major version bump? -->
+
+- [ ] Yes — this changes existing API behavior
+- [ ] No — this is purely additive
+- [ ] Unsure — needs discussion
+
+## Use Cases
+
+<!-- Describe 1-3 real-world use cases for this feature. -->
+
+1. **Use Case 1:** ...
+2. **Use Case 2:** ...
+3. **Use Case 3:** ...
+
+## Related Work
+
+<!-- Are there similar features in other libraries (Reown, RainbowKit, web3modal, etc.)? Link to relevant docs or code. -->
+
+## Implementation Notes
+
+<!-- If you have ideas about how to implement this, share them here. If you're willing to work on it, let us know! -->
+
+- [ ] I'm willing to implement this feature
+- [ ] I need help implementing this
+- [ ] This is just a suggestion
+
+## Additional Context
+
+<!-- Screenshots, mockups, related issues, or any other relevant information. -->

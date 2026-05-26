@@ -8,6 +8,7 @@
  */
 
 import type { AppleLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types.js';
+import { TokenVerifier, type TokenVerifyResult } from '../token-verifier.js';
 
 /** Apple OAuth2 authorization endpoint. */
 const APPLE_AUTH_URL = 'https://appleid.apple.com/auth/authorize';
@@ -159,6 +160,14 @@ export async function loginWithApple(
 ): Promise<SocialLoginResult> {
   const clientSecret = await generateAppleClientSecret(params);
   const tokens = await exchangeAppleCode(code, params, clientSecret);
+
+  // Server-side token verification
+  const verifier = new TokenVerifier({ appleClientId: params.clientId });
+  const verification: TokenVerifyResult = await verifier.verify('apple', tokens.idToken);
+  if (!verification.valid) {
+    throw new Error(`Apple ID token verification failed: ${verification.error}`);
+  }
+
   const profile = decodeAppleIdToken(tokens.idToken);
 
   // Apple only returns name/email on first login via form POST

@@ -1,6 +1,6 @@
 # @cinaconnect/codemod
 
-Automated codemods for migrating from **Web3Modal/AppKit** and **WalletConnect v1** to **CinaConnect**.
+Automated codemods for migrating from **Reown/AppKit**, **RainbowKit**, **ConnectKit**, and **WalletConnect v1** to **CinaConnect**.
 
 ## Installation
 
@@ -66,6 +66,50 @@ Migrates Web3Modal / AppKit code to CinaConnect:
 
 | Before | After |
 |--------|-------|
+| `@reown/appkit` | `@cinaconnect/core-sdk` |
+| `@web3modal/react` | `@cinaconnect/react` |
+| `Web3Modal` | `CinaConnect` |
+| `createWeb3Modal` | `createCinaConnect` |
+| `useWeb3Modal` | `useCinaConnect` |
+| `W3mButton` | `CinaConnectButton` |
+
+### `rainbowkit-to-cinaconnect`
+
+Migrates RainbowKit + wagmi code to CinaConnect:
+
+| Before | After |
+|--------|-------|
+| `@rainbow-me/rainbowkit` | `@cinaconnect/react` |
+| `RainbowKitProvider` | `CinaConnectProvider` |
+| `ConnectButton` (RainbowKit) | `ConnectButton` (CinaConnect) |
+| `useConnectModal` | `useCinaConnectModal` |
+| `useChainModal` | `useCinaConnectChain` |
+| `useAccount` (wagmi) | `useAccount` (from @cinaconnect/react) |
+| `useConnect` (wagmi) | `useConnect` (from @cinaconnect/react) |
+| `wagmi/chains` | `@cinaconnect/core-sdk` ChainConfig |
+| `wagmi/connectors` | Wallet ID strings (`'metamask'`, `'walletconnect'`) |
+| `wagmi` hooks | Same hooks from `@cinaconnect/react` |
+
+### `connectkit-to-cinaconnect`
+
+Migrates Family.co ConnectKit + wagmi code to CinaConnect:
+
+| Before | After |
+|--------|-------|
+| `connectkit` | `@cinaconnect/react` |
+| `ConnectKitProvider` | `CinaConnectProvider` |
+| `ConnectKitButton` | `ConnectButton` |
+| `useAccount` (wagmi) | `useAccount` (from @cinaconnect/react) |
+| `createConfig` | Inline `CinaConnectProvider` config |
+| `wagmi connectors` | Wallet ID strings |
+| `@tanstack/react-query` | Removed (not needed) |
+
+### `wc-v1-to-v2`
+
+Migrates Web3Modal / AppKit code to CinaConnect:
+
+| Before | After |
+|--------|-------|
 | `@reown/appkit` | `@cinaconnect/core` |
 | `@web3modal/react` | `@cinaconnect/react` |
 | `@web3modal/ethereum` | `@cinaconnect/ethereum` |
@@ -91,12 +135,30 @@ Migrates WalletConnect v1 patterns to v2:
 
 ## Recommended Migration Order
 
+### From Web3Modal/AppKit
+
 1. **Commit your code** before running codemods
-2. Run `appkit-to-cinaconnect` first (package/identifier renames)
-3. Run `wc-v1-to-v2` second (WalletConnect protocol updates)
+2. Run `appkit-to-cinaconnect` (package/identifier renames)
+3. Run `wc-v1-to-v2` if using WalletConnect v1 patterns
 4. Review changes with `git diff`
-5. Fix any manual migration steps (e.g., API differences)
+5. Fix any manual migration steps
 6. Run tests
+
+### From RainbowKit
+
+1. **Commit your code** before running codemods
+2. Run `rainbowkit-to-cinaconnect`
+3. Review changes with `git diff` (chain configs need manual RPC URLs)
+4. Update connector calls from objects to wallet ID strings
+5. Run tests
+
+### From ConnectKit
+
+1. **Commit your code** before running codemods
+2. Run `connectkit-to-cinaconnect`
+3. Review changes with `git diff`
+4. Update chain configuration with RPC URLs
+5. Run tests
 
 ## License
 

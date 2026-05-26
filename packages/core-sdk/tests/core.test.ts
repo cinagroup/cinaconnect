@@ -5,6 +5,7 @@
  * abstract interface contract.
  */
 
+import { describe, it, expect, beforeEach } from 'vitest';
 import { EventEmitter } from '../src/events.js';
 import { Connector, RedirectHandler } from '../src/connector.js';
 import type { ConnectParams, ConnectionResult, TransactionRequest } from '../src/types.js';
@@ -67,176 +68,95 @@ class TestConnector extends Connector {
 // Connector
 // ---------------------------------------------------------------------------
 
-let connector: TestConnector;
+describe('Connector', () => {
+  let connector: TestConnector;
 
-function setup() {
-  connector = new TestConnector();
-}
+  beforeEach(() => {
+    connector = new TestConnector();
+  });
 
-function assert(condition: boolean, msg: string) {
-  if (!condition) throw new Error(`Assertion failed: ${msg}`);
-}
+  it('connector identity', () => {
+    expect(connector.id).toBe('test-connector');
+    expect(connector.name).toBe('Test Connector');
+    expect(connector.installed).toBe(true);
+    expect(connector.type).toBe('injected');
+  });
 
-// --- Initialization ---
+  it('connector is EventEmitter', () => {
+    expect(connector instanceof EventEmitter).toBe(true);
 
-async function testConnectorIdentity() {
-  setup();
-  assert(connector.id === 'test-connector', 'id should be test-connector');
-  assert(connector.name === 'Test Connector', 'name should match');
-  assert(connector.installed === true, 'installed should be true');
-  assert(connector.type === 'injected', 'type should be injected');
-  console.log('✓ connector identity');
-}
+    let called = false;
+    connector.on('test_event', () => { called = true; });
+    connector.emit('test_event');
+    expect(called).toBe(true);
+  });
 
-// --- EventEmitter inheritance ---
+  it('connect / disconnect', async () => {
+    const result = await connector.connect();
+    expect(result.sessionId).toBe('session-123');
+    expect(result.accounts.length).toBe(1);
+    expect(result.chainId).toBe(1);
+    expect(result.connectorId).toBe('test-connector');
 
-async function testConnectorIsEventEmitter() {
-  setup();
-  assert(connector instanceof EventEmitter, 'Connector should extend EventEmitter');
+    const accounts = await connector.getAccounts();
+    expect(accounts.length).toBe(1);
 
-  let called = false;
-  connector.on('test_event', () => { called = true; });
-  connector.emit('test_event');
-  assert(called === true, 'event handler should fire');
-  console.log('✓ connector is EventEmitter');
-}
+    await connector.disconnect();
+    const afterDisconnect = await connector.getAccounts();
+    expect(afterDisconnect.length).toBe(0);
+  });
 
-// --- Connect / Disconnect ---
+  it('switch chain', async () => {
+    await connector.connect();
 
-async function testConnectDisconnect() {
-  setup();
+    let changedChain: number | undefined;
+    connector.on('chainChanged', (chainId: number) => { changedChain = chainId; });
 
-  const result = await connector.connect();
-  assert(result.sessionId === 'session-123', 'sessionId should match');
-  assert(result.accounts.length === 1, 'should have 1 account');
-  assert(result.chainId === 1, 'chainId should be 1');
-  assert(result.connectorId === 'test-connector', 'connectorId should match');
+    await connector.switchChain(42161);
+    expect(changedChain).toBe(42161);
 
-  const accounts = await connector.getAccounts();
-  assert(accounts.length === 1, 'should return accounts after connect');
+    const chainId = await connector.getChainId();
+    expect(chainId).toBe(42161);
+  });
 
-  await connector.disconnect();
-  const afterDisconnect = await connector.getAccounts();
-  assert(afterDisconnect.length === 0, 'should return empty after disconnect');
+  it('sign message', async () => {
+    const sig = await connector.signMessage('hello');
+    expect(sig).toBe('sig:hello');
+  });
 
-  console.log('✓ connect / disconnect');
-}
+  it('sign transaction', async () => {
+    const sig = await connector.signTransaction({ from: '0x1', to: '0x2', value: '100' });
+    expect(sig).toBe('0xsignedtx');
+  });
 
-// --- Switch chain ---
+  it('getProvider default', () => {
+    expect(connector.getProvider()).toBeNull();
+  });
 
-async function testSwitchChain() {
-  setup();
-  await connector.connect();
+  it('connect event', async () => {
+    let connectData: any;
+    connector.on('connect', (data: any) => { connectData = data; });
+    await connector.connect();
+    expect(connectData.chainId).toBe(1);
+  });
 
-  let changedChain: number | undefined;
-  connector.on('chainChanged', (chainId: number) => { changedChain = chainId; });
+  it('disconnect event', async () => {
+    await connector.connect();
+    let disconnected = false;
+    connector.on('disconnect', () => { disconnected = true; });
+    await connector.disconnect();
+    expect(disconnected).toBe(true);
+  });
 
-  await connector.switchChain(42161);
-  assert(changedChain === 42161, 'chainChanged event should fire with new chain');
+  it('RedirectHandler', () => {
+    const handler = new RedirectHandler('desktop');
+    expect(handler.platform).toBe('desktop');
 
-  const chainId = await connector.getChainId();
-  assert(chainId === 42161, 'chainId should update after switch');
+    handler.setPlatform('mobile');
+    expect(handler.platform).toBe('mobile');
 
-  console.log('✓ switch chain');
-}
-
-// --- Sign message ---
-
-async function testSignMessage() {
-  setup();
-  const sig = await connector.signMessage('hello');
-  assert(sig === 'sig:hello', 'signMessage should return formatted sig');
-  console.log('✓ sign message');
-}
-
-// --- Sign transaction ---
-
-async function testSignTransaction() {
-  setup();
-  const sig = await connector.signTransaction({ from: '0x1', to: '0x2', value: '100' });
-  assert(sig === '0xsignedtx', 'signTransaction should return signed tx');
-  console.log('✓ sign transaction');
-}
-
-// --- getProvider default ---
-
-async function testGetProvider() {
-  setup();
-  assert(connector.getProvider() === null, 'default getProvider should return null');
-  console.log('✓ getProvider default');
-}
-
-// --- Connect events ---
-
-async function testConnectEvent() {
-  setup();
-  let connectData: any;
-  connector.on('connect', (data: any) => { connectData = data; });
-  await connector.connect();
-  assert(connectData.chainId === 1, 'connect event should include chainId');
-  console.log('✓ connect event');
-}
-
-// --- Disconnect event ---
-
-async function testDisconnectEvent() {
-  setup();
-  await connector.connect();
-  let disconnected = false;
-  connector.on('disconnect', () => { disconnected = true; });
-  await connector.disconnect();
-  assert(disconnected === true, 'disconnect event should fire');
-  console.log('✓ disconnect event');
-}
-
-// --- RedirectHandler ---
-
-async function testRedirectHandler() {
-  const handler = new RedirectHandler('desktop');
-  assert(handler.platform === 'desktop', 'platform should be desktop');
-
-  handler.setPlatform('mobile');
-  assert(handler.platform === 'mobile', 'platform should update');
-
-  const link = handler.generateLink('metamask', 'wc:uri', { foo: 'bar' });
-  assert(link.includes('wc:uri'), 'generated link should include uri');
-  assert(link.includes('metamask'), 'generated link should include walletId');
-  console.log('✓ RedirectHandler');
-}
-
-// ---------------------------------------------------------------------------
-// Runner
-// ---------------------------------------------------------------------------
-
-async function run() {
-  const tests = [
-    testConnectorIdentity,
-    testConnectorIsEventEmitter,
-    testConnectDisconnect,
-    testSwitchChain,
-    testSignMessage,
-    testSignTransaction,
-    testGetProvider,
-    testConnectEvent,
-    testDisconnectEvent,
-    testRedirectHandler,
-  ];
-
-  let passed = 0;
-  let failed = 0;
-
-  for (const fn of tests) {
-    try {
-      await fn();
-      passed++;
-    } catch (e: any) {
-      console.error(`✗ ${fn.name}: ${e.message}`);
-      failed++;
-    }
-  }
-
-  console.log(`\nResults: ${passed} passed, ${failed} failed (${tests.length} total)`);
-  if (failed > 0) process.exit(1);
-}
-
-run();
+    const link = handler.generateLink('metamask', 'wc:uri', { foo: 'bar' });
+    expect(link).toContain('metamask');
+    expect(link).toContain('wc'); // URI may be URL-encoded
+  });
+});

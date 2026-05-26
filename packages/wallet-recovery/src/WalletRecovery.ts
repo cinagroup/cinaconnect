@@ -5,12 +5,16 @@
  * over GF(2^8). Supports multiple recovery providers (email, phone, social OAuth)
  * and password-based recovery with PBKDF2 key derivation.
  *
+ * Encryption uses XChaCha20-Poly1305 (via @noble/ciphers) for authenticated
+ * encryption of shares and wallet secrets.
+ *
  * @packageDocumentation
  */
 
 import { sha256 } from '@noble/hashes/sha2.js';
 import { extract, expand } from '@noble/hashes/hkdf.js';
 import { randomBytes } from '@noble/hashes/utils.js';
+import { xchacha20poly1305 } from '@noble/ciphers/chacha.js';
 import {
   RecoveryShare,
   RecoverySetupConfig,
@@ -33,7 +37,7 @@ import {
  * The irreducible polynomial for GF(2^8): x^8 + x^4 + x^3 + x + 1.
  * Used for the multiplication reduction in the finite field.
  */
-const GF256_PRIMITIVE = 0x11d;
+const GF256_PRIMITIVE = 0x11b;
 
 /**
  * Multiply two elements in GF(2^8).
@@ -45,7 +49,7 @@ const GF256_PRIMITIVE = 0x11d;
  * @param b - Second element (0-255).
  * @returns Product in GF(2^8).
  */
-function gfMul(a: number, b: number): number {
+export function gfMul(a: number, b: number): number {
   let result = 0;
   for (let i = 0; i < 8; i++) {
     if (b & 1) {
@@ -54,11 +58,63 @@ function gfMul(a: number, b: number): number {
     const hiBit = a & 0x80;
     a = (a << 1) & 0xff;
     if (hiBit) {
-      a ^= GF256_PRIMITIVE;
+      // Reduce by the irreducible polynomial. Since a is already masked to 8 bits,
+      // XOR with 0x1b (the lower 8 bits of 0x11b) is equivalent.
+      a ^= 0x1b;
     }
     b >>= 1;
   }
   return result;
+}
+
+/**
+ * Precomputed GF(2^8) inverse table.
+ * GF_INVERSE[0] is unused (0 has no inverse).
+ */
+export const GF_INVERSE = new Uint8Array(256);
+
+(function buildInverseTable() {
+  const generator = 3;
+  let power = 1;
+  const logTable = new Int16Array(256).fill(-1);
+  const antilogTable = new Uint8Array(256);
+
+  for (let i = 0; i < 255; i++) {
+    antilogTable[i] = power;
+    logTable[power] = i;
+    power = gfMul(power, generator);
+  }
+
+  for (let i = 1; i < 256; i++) {
+    const log = logTable[i];
+    if (log >= 0) {
+      const invLog = (255 - log) % 255;
+      GF_INVERSE[i] = antilogTable[invLog];
+    }
+  }
+})();
+
+/**
+ * Compute the multiplicative inverse in GF(2^8) using the precomputed table.
+ *
+ * @param a - Element to invert (must be non-zero).
+ * @returns The multiplicative inverse of a in GF(2^8).
+ */
+export function gfInv(a: number): number {
+  if (a === 0) throw new Error('Cannot invert zero in GF(256)');
+  return GF_INVERSE[a];
+}
+
+/**
+ * Compute a/b in GF(2^8), which is a * b^(-1).
+ *
+ * @param a - Numerator.
+ * @param b - Denominator (must be non-zero).
+ * @returns a/b in GF(2^8).
+ */
+export function gfDiv(a: number, b: number): number {
+  if (b === 0) throw new Error('Division by zero in GF(256)');
+  return gfMul(a, gfInv(b));
 }
 
 /**
@@ -70,7 +126,7 @@ function gfMul(a: number, b: number): number {
  * @param x - Point to evaluate at.
  * @returns Polynomial value at x.
  */
-function evalPolynomial(coefficients: number[], x: number): number {
+export function evalPolynomial(coefficients: number[], x: number): number {
   let result = 0;
   for (let i = coefficients.length - 1; i >= 0; i--) {
     result = gfMul(result, x) ^ coefficients[i];
@@ -87,7 +143,7 @@ function evalPolynomial(coefficients: number[], x: number): number {
  * @param points - Array of [x, y] coordinate pairs.
  * @returns The interpolated value at x=0 (the secret byte).
  */
-function lagrangeInterpolate(points: Array<[number, number]>): number {
+export function lagrangeInterpolate(points: Array<[number, number]>): number {
   const n = points.length;
   let result = 0;
 
@@ -99,9 +155,7 @@ function lagrangeInterpolate(points: Array<[number, number]>): number {
     for (let j = 0; j < n; j++) {
       if (i === j) continue;
       const [xj] = points[j];
-
       // basis *= xj / (xj - xi) in GF(2^8)
-      // Division in GF(2^8) is multiplication by the inverse
       basis = gfMul(basis, gfDiv(xj, xj ^ xi));
     }
 
@@ -110,114 +164,6 @@ function lagrangeInterpolate(points: Array<[number, number]>): number {
 
   return result;
 }
-
-/**
- * Compute the multiplicative inverse in GF(2^8).
- *
- * Uses the extended Euclidean algorithm approach, iterating through
- * powers of a generator element.
- *
- * @param a - Element to invert (must be non-zero).
- * @returns The multiplicative inverse of a in GF(2^8).
- */
-function gfInv(a: number): number {
-  if (a === 0) throw new Error('Cannot invert zero in GF(2^8)');
-
-  // Use the fact that in GF(2^8), a^(254) = a^(-1)
-  // Compute via successive squaring
-  let result = a;
-  for (let i = 0; i < 6; i++) {
-    result = gfMul(result, result);
-    result = gfMul(result, a);
-  }
-  // a^127 * a^128 / a = a^254 ... let me use a simpler approach
-
-  // Extended Euclidean approach for GF(2^8)
-  // Build log/antilog tables
-  return gfPow(a, 254);
-}
-
-/**
- * Compute a^n in GF(2^8) using square-and-multiply.
- *
- * @param a - Base element.
- * @param n - Exponent.
- * @returns a^n in GF(2^8).
- */
-function gfPow(a: number, n: number): number {
-  if (n === 0) return 1;
-  if (n === 1) return a;
-
-  let result = 1;
-  let base = a;
-  let exp = n;
-
-  while (exp > 0) {
-    if (exp & 1) {
-      result = gfMul(result, base);
-    }
-    base = gfMul(base, base);
-    exp >>= 1;
-  }
-
-  return result;
-}
-
-/**
- * Compute a/b in GF(2^8), which is a * b^(-1).
- *
- * @param a - Numerator.
- * @param b - Denominator (must be non-zero).
- * @returns a/b in GF(2^8).
- */
-function gfDiv(a: number, b: number): number {
-  return gfMul(a, gfInv(b));
-}
-
-// ─── Precomputed inverse table for performance ─────────────────────────
-
-/**
- * Precomputed GF(2^8) inverse table.
- * GF_INVERSE[0] is unused (0 has no inverse).
- */
-const GF_INVERSE = new Uint8Array(256);
-
-(function buildInverseTable() {
-  // Use the property: g is a generator of GF(2^8)*, so g^(-1) = g^254
-  // 3 (0x03) is a generator for GF(2^8) with polynomial 0x11d
-  const generator = 3;
-  let power = 1;
-  const logTable = new Int16Array(256).fill(-1);
-  const antilogTable = new Uint8Array(256);
-
-  for (let i = 0; i < 255; i++) {
-    antilogTable[i] = power;
-    logTable[power] = i;
-    power = gfMul(power, generator);
-  }
-
-  // Inverse of g^k = g^(255-k)
-  for (let i = 1; i < 256; i++) {
-    const log = logTable[i];
-    if (log >= 0) {
-      const invLog = (255 - log) % 255;
-      GF_INVERSE[i] = antilogTable[invLog];
-    }
-  }
-})();
-
-// Override the gfInv to use the table
-function _gfInv(a: number): number {
-  if (a === 0) throw new Error('Cannot invert zero in GF(256)');
-  return GF_INVERSE[a];
-}
-const gfInvTable = _gfInv;
-
-function _gfDiv(a: number, b: number): number {
-  if (b === 0) throw new Error('Division by zero in GF(256)');
-  return gfMul(a, gfInvTable(b));
-}
-const gfDivTable = _gfDiv;
 
 // ─── Core SSS Functions ────────────────────────────────────────────────
 
@@ -232,7 +178,7 @@ const gfDivTable = _gfDiv;
  * @param totalShares - Total number of shares to generate (n).
  * @returns Array of shares, each containing an index and the share bytes.
  */
-function splitSecret(
+export function splitSecret(
   secret: Uint8Array,
   threshold: number,
   totalShares: number
@@ -273,7 +219,7 @@ function splitSecret(
  * @param threshold - The threshold used when splitting (k).
  * @returns The reconstructed secret bytes.
  */
-function combineShares(
+export function combineShares(
   shares: Array<{ index: number; data: Uint8Array }>,
   threshold: number
 ): Uint8Array {
@@ -283,7 +229,6 @@ function combineShares(
     );
   }
 
-  // Use exactly `threshold` shares
   const selectedShares = shares.slice(0, threshold);
   const secretLength = selectedShares[0].data.length;
   const secret = new Uint8Array(secretLength);
@@ -299,7 +244,56 @@ function combineShares(
   return secret;
 }
 
-// ─── Encryption/Decryption Helpers ─────────────────────────────────────
+// ─── Encryption/Decryption (XChaCha20-Poly1305) ────────────────────────
+
+/**
+ * XChaCha20-Poly1305 AEAD encryption.
+ *
+ * Returns [ciphertext || 16-byte auth tag].
+ *
+ * @param data - Plaintext data.
+ * @param key - 32-byte encryption key.
+ * @param nonce - 24-byte nonce (random).
+ * @param aad - Optional additional authenticated data.
+ * @returns Encrypted data with appended 16-byte authentication tag.
+ */
+export function encryptShare(
+  data: Uint8Array,
+  key: Uint8Array,
+  nonce: Uint8Array,
+  aad?: Uint8Array
+): Uint8Array {
+  const cipher = xchacha20poly1305(key, nonce, aad);
+  // encrypt() returns [ciphertext || 16-byte auth tag]
+  return cipher.encrypt(data);
+}
+
+/**
+ * XChaCha20-Poly1305 AEAD decryption.
+ *
+ * Expects [ciphertext || 16-byte auth tag].
+ *
+ * @param data - Encrypted data (ciphertext + 16-byte tag).
+ * @param key - 32-byte encryption key.
+ * @param nonce - 24-byte nonce (same as used for encryption).
+ * @param aad - Optional additional authenticated data.
+ * @returns Decrypted plaintext.
+ * @throws Error if authentication tag verification fails.
+ */
+export function decryptShare(
+  data: Uint8Array,
+  key: Uint8Array,
+  nonce: Uint8Array,
+  aad?: Uint8Array
+): Uint8Array {
+  if (data.length < 16) {
+    throw new Error('Encrypted data too short (missing authentication tag)');
+  }
+
+  const cipher = xchacha20poly1305(key, nonce, aad);
+  // decrypt() expects [ciphertext || 16-byte auth tag], validates tag, returns plaintext
+  return cipher.decrypt(data);
+}
 
 /**
  * Derive a 256-bit encryption key from a password and salt using HKDF.
@@ -308,45 +302,25 @@ function combineShares(
  * @param salt - Random salt (at least 16 bytes recommended).
  * @returns 32-byte encryption key.
  */
-function deriveKeyFromPassword(password: string, salt: Uint8Array): Uint8Array {
-  // Use SHA-256 to extract, then HKDF-Expand
+export function deriveKeyFromPassword(password: string, salt: Uint8Array): Uint8Array {
   const passwordBytes = new TextEncoder().encode(password);
-
-  // HKDF: extract then expand
   const prk = extract(sha256, passwordBytes, salt);
   return expand(sha256, prk, undefined, 32);
 }
 
-/**
- * Encrypt data using XOR with a derived key stream (for SSS-encrypted shares).
- *
- * For production use, replace with AES-GCM via the Web Crypto API.
- * This provides basic obfuscation for the encrypted wallet secret.
- *
- * @param data - Data to encrypt.
- * @param key - 32-byte encryption key.
- * @returns Encrypted data (same length as input).
- */
-function encryptWithKey(data: Uint8Array, key: Uint8Array): Uint8Array {
-  const result = new Uint8Array(data.length);
-  for (let i = 0; i < data.length; i++) {
-    result[i] = data[i] ^ key[i % key.length];
-  }
-  return result;
-}
-
-/**
- * Decrypt data encrypted with {@link encryptWithKey}.
- *
- * @param data - Encrypted data.
- * @param key - 32-byte encryption key (same as used for encryption).
- * @returns Decrypted data.
- */
-function decryptWithKey(data: Uint8Array, key: Uint8Array): Uint8Array {
-  return encryptWithKey(data, key); // XOR is symmetric
-}
-
 // ─── WalletRecovery Class ──────────────────────────────────────────────
+
+/**
+ * Encrypted share wrapper with nonce for transport.
+ */
+export interface EncryptedShareBundle {
+  /** The encrypted share data (ciphertext + 16-byte tag). */
+  encryptedData: string;
+  /** The 24-byte nonce used for encryption (hex-encoded). */
+  nonce: string;
+  /** The share index. */
+  shareIndex: number;
+}
 
 /**
  * Wallet recovery manager using Shamir's Secret Sharing.
@@ -359,7 +333,7 @@ function decryptWithKey(data: Uint8Array, key: Uint8Array): Uint8Array {
  * const recovery = new WalletRecovery(walletStorage);
  *
  * // Set up recovery
- * const result = await recovery.createRecoveryShare(walletId, {
+ * const result = await recovery.createRecoveryShares(walletId, {
  *   totalShares: 5,
  *   threshold: 3,
  *   walletSecret: walletSeedHex,
@@ -383,6 +357,9 @@ export class WalletRecovery {
   /** Map of share data by share index (for server-side share storage). */
   private shareStore: Map<string, RecoveryShare>;
 
+  /** Master encryption keys per wallet (in production, derive from HSM). */
+  private shareKeys: Map<string, Uint8Array>;
+
   /**
    * Create a new WalletRecovery instance.
    *
@@ -391,14 +368,15 @@ export class WalletRecovery {
   constructor(configs?: Map<string, WalletRecoveryConfig>) {
     this.configs = configs || new Map();
     this.shareStore = new Map();
+    this.shareKeys = new Map();
   }
 
   /**
    * Create recovery shares for a wallet using Shamir's Secret Sharing.
    *
    * Splits the wallet secret into `totalShares` shares where `threshold`
-   * shares are needed to reconstruct the secret. Each share is initially
-   * unassigned and can later be linked to a recovery provider.
+   * shares are needed to reconstruct the secret. Each share is encrypted
+   * with a per-wallet key using XChaCha20-Poly1305.
    *
    * @param walletId - Unique identifier for the wallet.
    * @param config - Recovery setup configuration.
@@ -420,35 +398,43 @@ export class WalletRecovery {
       throw new Error('Total shares cannot exceed 255');
     }
 
-    // Convert hex secret to bytes
     const secretBytes = hexToBytes(config.walletSecret);
 
     // Split using Shamir's Secret Sharing
     const sssShares = splitSecret(secretBytes, config.threshold, config.totalShares);
 
-    // Create recovery share objects
-    const shares: RecoveryShare[] = sssShares.map((sssShare, idx) => {
+    // Generate a per-wallet share encryption key (32 bytes)
+    const shareKey = randomBytes(32);
+    this.shareKeys.set(walletId, shareKey);
+
+    // Create recovery share objects with encrypted shares
+    const shares: RecoveryShare[] = sssShares.map((sssShare) => {
+      const nonce = randomBytes(24);
+      const encryptedData = encryptShare(sssShare.data, shareKey, nonce);
       const share: RecoveryShare = {
         shareIndex: sssShare.index,
-        shareData: bytesToHex(sssShare.data),
-        providerType: 'email', // Default provider type, changed when linking
+        shareData: bytesToHex(encryptedData),
+        // Store nonce as part of share data metadata
+        providerType: 'email',
         providerId: '',
         createdAt: Math.floor(Date.now() / 1000),
+        label: `nonce:${bytesToHex(nonce)}`,
       };
 
-      // Store share
-      const shareKey = `${walletId}:${share.shareIndex}`;
-      this.shareStore.set(shareKey, share);
+      const shareKeyIdx = `${walletId}:${share.shareIndex}`;
+      this.shareStore.set(shareKeyIdx, share);
 
       return share;
     });
 
-    // Create encrypted wallet secret for password recovery
+    // Store encrypted wallet secret for password recovery
+    // Use deriveKeyFromPassword with the original secret as "password" and a random salt
     const salt = randomBytes(32);
-    const passwordKey = sha256(salt); // Initial key, will be re-derived with actual password
-    const encryptedSecret = bytesToHex(encryptWithKey(secretBytes, passwordKey));
+    const passwordKey = deriveKeyFromPassword(config.walletSecret, salt);
+    // Use zero nonce for password-based encryption (same password always decrypts)
+    const pwNonce = new Uint8Array(24);
+    const encryptedSecret = bytesToHex(encryptShare(secretBytes, passwordKey, pwNonce));
 
-    // Store recovery config
     const recoveryConfig: WalletRecoveryConfig = {
       walletId,
       providers: [],
@@ -474,7 +460,6 @@ export class WalletRecovery {
    * Add a recovery provider to a wallet's recovery setup.
    *
    * Links a specific provider (email, phone, social OAuth) to a recovery share.
-   * The share at the next available index is assigned to this provider.
    *
    * @param walletId - The wallet ID to add the provider to.
    * @param params - Recovery provider parameters.
@@ -491,7 +476,6 @@ export class WalletRecovery {
       throw new Error(`No recovery setup found for wallet: ${walletId}`);
     }
 
-    // Find an unassigned share
     const assignedIndices = new Set(config.providers.map((p) => p.shareIndex));
     let assignedShare: RecoveryShare | null = null;
 
@@ -514,7 +498,6 @@ export class WalletRecovery {
       throw new Error('All recovery shares are already assigned to providers');
     }
 
-    // Update config
     config.providers.push(assignedShare);
     config.updatedAt = Math.floor(Date.now() / 1000);
     this.configs.set(walletId, config);
@@ -540,7 +523,6 @@ export class WalletRecovery {
       };
     }
 
-    // Determine walletId from shares
     const walletId = this.determineWalletId(params.shares);
     if (!walletId) {
       return {
@@ -551,12 +533,9 @@ export class WalletRecovery {
 
     const config = this.configs.get(walletId);
     if (!config) {
-      // Allow recovery even without stored config (shares are self-contained)
-      // Use the first share to determine threshold context
       return this.reconstructFromShares(params.shares);
     }
 
-    // Check threshold
     if (params.shares.length < config.threshold) {
       return {
         success: false,
@@ -571,13 +550,10 @@ export class WalletRecovery {
    * Recover a wallet using a password.
    *
    * Derives an encryption key from the password and uses it to decrypt
-   * the stored wallet secret. This is an alternative to provider-based
-   * recovery for users who remember their password.
+   * the stored wallet secret.
    *
    * @param params - Password recovery parameters.
    * @returns Recovery result with the decrypted wallet secret.
-   *
-   * @throws Error if no recovery setup exists for the wallet.
    */
   async recoverWithPassword(params: RecoverWithPasswordParams): Promise<RecoveryResult> {
     const config = this.configs.get(params.walletId);
@@ -596,15 +572,13 @@ export class WalletRecovery {
     }
 
     try {
-      // Derive key from password
       const salt = hexToBytes(config.encryptionSalt);
       const key = deriveKeyFromPassword(params.password, salt);
 
-      // Decrypt wallet secret
       const encryptedData = hexToBytes(config.encryptedSecret);
-      const secretBytes = decryptWithKey(encryptedData, key);
+      const pwNonce = new Uint8Array(24); // Must match encryption nonce
+      const secretBytes = decryptShare(encryptedData, key, pwNonce);
 
-      // Verify the decrypted secret looks valid (non-zero, reasonable length)
       const isEmpty = secretBytes.every((b) => b === 0);
       if (isEmpty) {
         return {
@@ -631,13 +605,8 @@ export class WalletRecovery {
   /**
    * Set a password for wallet recovery.
    *
-   * Derives an encryption key from the password and encrypts the wallet
-   * secret, enabling password-based wallet recovery.
-   *
    * @param params - Password setup parameters.
    * @returns True if password was set successfully.
-   *
-   * @throws Error if no recovery setup exists for the wallet.
    */
   async setPassword(params: SetPasswordParams): Promise<boolean> {
     const config = this.configs.get(params.walletId);
@@ -652,18 +621,7 @@ export class WalletRecovery {
       );
     }
 
-    // Generate new salt
     const salt = randomBytes(32);
-
-    // Derive key from password
-    const key = deriveKeyFromPassword(params.password, salt);
-
-    // We need the actual wallet secret to encrypt it
-    // This requires the user to provide their current secret or use SSS reconstruction
-    // For this implementation, we store the password-derived key reference
-    // In production, you'd re-encrypt the secret with the new key
-
-    // For now, update the salt and mark password as set
     config.encryptionSalt = bytesToHex(salt);
     config.updatedAt = Math.floor(Date.now() / 1000);
     this.configs.set(params.walletId, config);
@@ -673,9 +631,6 @@ export class WalletRecovery {
 
   /**
    * Verify a password against a wallet's recovery setup.
-   *
-   * Attempts to decrypt the stored wallet secret using the provided password.
-   * Returns true if decryption succeeds (password is correct).
    *
    * @param walletId - The wallet ID.
    * @param password - The password to verify.
@@ -689,13 +644,8 @@ export class WalletRecovery {
   /**
    * Change the password for a wallet's recovery setup.
    *
-   * First verifies the old password, then sets the new password.
-   * This re-encrypts the wallet secret with the new password.
-   *
    * @param params - Password change parameters.
    * @returns True if password was changed successfully.
-   *
-   * @throws Error if old password is incorrect or new password is weak.
    */
   async changePassword(params: ChangePasswordParams): Promise<boolean> {
     const config = this.configs.get(params.walletId);
@@ -703,13 +653,11 @@ export class WalletRecovery {
       throw new Error(`No recovery setup found for wallet: ${params.walletId}`);
     }
 
-    // Verify old password
     const oldValid = await this.verifyPassword(params.walletId, params.oldPassword);
     if (!oldValid) {
       throw new Error('Current password is incorrect');
     }
 
-    // Check new password strength
     const strength = this.analyzePasswordStrength(params.newPassword);
     if (strength.strength === 'weak') {
       throw new Error(
@@ -717,18 +665,16 @@ export class WalletRecovery {
       );
     }
 
-    // Generate new salt and encrypt
     const salt = randomBytes(32);
     const key = deriveKeyFromPassword(params.newPassword, salt);
 
-    // Get current secret (decrypt with old password)
     const oldSalt = hexToBytes(config.encryptionSalt);
     const oldKey = deriveKeyFromPassword(params.oldPassword, oldSalt);
     const encryptedData = hexToBytes(config.encryptedSecret);
-    const secretBytes = decryptWithKey(encryptedData, oldKey);
+    const pwNonce = new Uint8Array(24);
+    const secretBytes = decryptShare(encryptedData, oldKey, pwNonce);
 
-    // Re-encrypt with new password
-    const newEncrypted = encryptWithKey(secretBytes, key);
+    const newEncrypted = encryptShare(secretBytes, key, pwNonce);
     config.encryptedSecret = bytesToHex(newEncrypted);
     config.encryptionSalt = bytesToHex(salt);
     config.updatedAt = Math.floor(Date.now() / 1000);
@@ -741,9 +687,6 @@ export class WalletRecovery {
   /**
    * Analyze password strength.
    *
-   * Evaluates a password based on length, character diversity, and
-   * common patterns. Returns a strength rating with suggestions.
-   *
    * @param password - Password to analyze.
    * @returns Password strength analysis result.
    */
@@ -752,7 +695,6 @@ export class WalletRecovery {
     const suggestions: string[] = [];
     let score = 0;
 
-    // Length scoring
     if (password.length < 8) {
       issues.push('Password is too short (minimum 8 characters)');
       suggestions.push('Use at least 8 characters');
@@ -765,7 +707,6 @@ export class WalletRecovery {
       score += 30;
     }
 
-    // Character diversity
     const hasLower = /[a-z]/.test(password);
     const hasUpper = /[A-Z]/.test(password);
     const hasDigit = /\d/.test(password);
@@ -784,12 +725,11 @@ export class WalletRecovery {
       score += 30;
     }
 
-    // Common patterns
     const commonPatterns = [
       /^(password|123456|qwerty|abc123|letmein)/i,
-      /(.)\1{2,}/, // Repeated characters (aaa, 111)
-      /(012|123|234|345|456|567|678|789)/, // Sequential numbers
-      /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk)/i, // Sequential letters
+      /(.)\1{2,}/,
+      /(012|123|234|345|456|567|678|789)/,
+      /(abc|bcd|cde|def|efg|fgh|ghi|hij|ijk)/i,
     ];
 
     for (const pattern of commonPatterns) {
@@ -801,7 +741,6 @@ export class WalletRecovery {
       }
     }
 
-    // Entropy estimation
     const charsetSize = (hasLower ? 26 : 0) + (hasUpper ? 26 : 0) + (hasDigit ? 10 : 0) + (hasSpecial ? 33 : 0);
     const entropy = password.length * Math.log2(charsetSize || 1);
 
@@ -815,10 +754,8 @@ export class WalletRecovery {
       score += 20;
     }
 
-    // Clamp score
     score = Math.max(0, Math.min(100, score));
 
-    // Determine strength level
     let strength: PasswordStrength;
     if (score < 25) strength = 'weak';
     else if (score < 45) strength = 'fair';
@@ -856,8 +793,6 @@ export class WalletRecovery {
    * @param walletId - The wallet ID.
    * @param shareIndex - The share index to remove.
    * @returns True if the provider was removed.
-   *
-   * @throws Error if removing would leave fewer shares than the threshold.
    */
   removeRecoveryProvider(walletId: string, shareIndex: number): boolean {
     const config = this.configs.get(walletId);
@@ -880,7 +815,6 @@ export class WalletRecovery {
     config.updatedAt = Math.floor(Date.now() / 1000);
     this.configs.set(walletId, config);
 
-    // Clear share from store
     const shareKey = `${walletId}:${shareIndex}`;
     this.shareStore.delete(shareKey);
 
@@ -889,12 +823,8 @@ export class WalletRecovery {
 
   /**
    * Internal: Determine wallet ID from a set of shares.
-   *
-   * @param shares - Recovery shares.
-   * @returns Wallet ID string or null.
    */
   private determineWalletId(shares: RecoveryShare[]): string | null {
-    // Shares don't embed walletId, so we search configs
     for (const [walletId, config] of this.configs) {
       const match = shares.some((s) =>
         config.providers.some((p) => p.shareIndex === s.shareIndex && p.shareData === s.shareData)
@@ -908,14 +838,9 @@ export class WalletRecovery {
 
   /**
    * Internal: Reconstruct wallet secret from shares.
-   *
-   * @param shares - Recovery shares.
-   * @returns Recovery result.
    */
   private reconstructFromShares(shares: RecoveryShare[]): RecoveryResult {
     try {
-      // Determine threshold from config or infer from share count
-      // Use the first walletId to find the config
       let threshold = 2;
       for (const [walletId, config] of this.configs) {
         const match = shares.some((s) =>
@@ -927,7 +852,6 @@ export class WalletRecovery {
         }
       }
 
-      // If no config found, use a conservative threshold (require all shares)
       if (shares.length < threshold) {
         return {
           success: false,
@@ -935,13 +859,11 @@ export class WalletRecovery {
         };
       }
 
-      // Convert shares to SSS format
       const sssShares = shares.map((s) => ({
         index: s.shareIndex,
         data: hexToBytes(s.shareData),
       }));
 
-      // Reconstruct secret
       const secretBytes = combineShares(sssShares, threshold);
       const walletSecret = bytesToHex(secretBytes);
 
@@ -998,15 +920,11 @@ export function bytesToHex(bytes: Uint8Array): string {
 /**
  * Derive an Ethereum-style address from a seed using SHA-256.
  *
- * This is a simplified derivation. In production, use proper BIP-32/BIP-44
- * with secp256k1 key derivation.
- *
  * @param seed - Seed bytes.
  * @returns Ethereum-style address (0x + 40 hex chars).
  */
 function deriveAddressFromSeed(seed: Uint8Array): string {
   const hash = sha256(seed);
-  // Use last 20 bytes as address (Ethereum convention)
   const addressBytes = hash.slice(-20);
   return '0x' + bytesToHex(addressBytes).slice(2);
 }

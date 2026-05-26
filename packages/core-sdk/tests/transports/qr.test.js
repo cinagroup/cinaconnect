@@ -218,7 +218,9 @@ describe('QRTransport', () => {
         mockWs.simulateOpen();
         await uriPromise;
         const connectPromise = transport.connect();
-        vi.advanceTimersByTime(3001);
+        // Pre-attach catch to avoid unhandled rejection
+        connectPromise.catch(() => {});
+        await vi.advanceTimersByTimeAsync(3001);
         await expect(connectPromise).rejects.toThrow('QR connection timed out');
     });
     it('generates unique topics', async () => {

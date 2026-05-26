@@ -67,13 +67,14 @@ describe('SessionManager state transitions', () => {
         if (state.status === 'connecting') {
             expect(state.connectorId).toBe('test-connector');
         }
+        await vi.advanceTimersByTimeAsync(50);
         await promise;
-        await vi.advanceTimersByTimeAsync(10);
     });
     it('should transition from connecting to connected on successful connect', async () => {
         connector.setDelay(50);
-        await manager.initiate(connector);
+        const promise = manager.initiate(connector);
         await vi.advanceTimersByTimeAsync(60);
+        await promise;
         const state = manager.getState();
         expect(state.status).toBe('connected');
         if (state.status === 'connected') {

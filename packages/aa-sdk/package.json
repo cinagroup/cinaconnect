@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/aa-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect Account Abstraction SDK — Smart accounts, paymaster, and bundler client",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -37,5 +37,8 @@
     "dist"
   ],
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

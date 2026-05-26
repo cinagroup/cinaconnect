@@ -1,0 +1,60 @@
+{
+  "name": "@cinaconnect/performance-utils",
+  "version": "0.1.0",
+  "description": "Performance monitoring and optimization utilities for CinaConnect",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./hooks": {
+      "import": "./dist/hooks/index.mjs",
+      "require": "./dist/hooks/index.js",
+      "types": "./dist/hooks/index.d.ts"
+    },
+    "./bundle-analyzer": {
+      "import": "./dist/bundle-analyzer/index.mjs",
+      "require": "./dist/bundle-analyzer/index.js",
+      "types": "./dist/bundle-analyzer/index.d.ts"
+    },
+    "./memory-leak": {
+      "import": "./dist/memory-leak/index.mjs",
+      "require": "./dist/memory-leak/index.js",
+      "types": "./dist/memory-leak/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "typescript": "^5.3.0",
+    "vitest": "^1.2.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
+}

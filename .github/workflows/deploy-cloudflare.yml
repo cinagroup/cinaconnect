@@ -1,0 +1,209 @@
+name: Deploy Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/rpc-proxy/cloudflare/**"
+      - "packages/keys-server/cloudflare/**"
+      - ".github/workflows/deploy-cloudflare.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: production
+        type: choice
+        options:
+          - staging
+          - production
+      service:
+        description: "Service to deploy"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - rpc-proxy
+          - keys-server
+      dry_run:
+        description: "Dry run only (no actual deploy)"
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: "20"
+  WRANGLER_VERSION: "3"
+
+jobs:
+  # ── Validate Configurations ───────────────────────────────────
+  validate:
+    name: Validate Wrangler Configs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install wrangler
+        run: npm install -g wrangler@${{ env.WRANGLER_VERSION }}
+
+      - name: Validate RPC Proxy wrangler.toml
+        run: |
+          echo "Validating packages/rpc-proxy/cloudflare/wrangler.toml..."
+          wrangler deploy --dry-run --outdir=/tmp/rpc-proxy-build -c packages/rpc-proxy/cloudflare/wrangler.toml
+          echo "✓ RPC Proxy wrangler.toml is valid"
+
+      - name: Validate Keys Server wrangler.toml
+        run: |
+          echo "Validating packages/keys-server/cloudflare/wrangler.toml..."
+          wrangler deploy --dry-run --outdir=/tmp/keys-server-build -c packages/keys-server/cloudflare/wrangler.toml
+          echo "✓ Keys Server wrangler.toml is valid"
+
+  # ── Deploy RPC Proxy ──────────────────────────────────────────
+  deploy-rpc-proxy:
+    name: Deploy RPC Proxy
+    needs: validate
+    if: >-
+      (github.event_name == 'workflow_dispatch' &&
+        (github.event.inputs.service == 'all' || github.event.inputs.service == 'rpc-proxy')) ||
+      github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    concurrency:
+      group: deploy-rpc-proxy-${{ github.event.inputs.environment || 'production' }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install wrangler
+        run: npm install -g wrangler@${{ env.WRANGLER_VERSION }}
+
+      - name: Deploy RPC Proxy to Cloudflare Workers
+        run: |
+          cd packages/rpc-proxy/cloudflare
+
+          ENV_FLAG=""
+          if [[ "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            ENV_FLAG="--env staging"
+          fi
+
+          DRY_RUN_FLAG=""
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            DRY_RUN_FLAG="--dry-run --outdir=/tmp/rpc-proxy-build"
+          fi
+
+          echo "Deploying cinaconnect-rpc-proxy..."
+          wrangler deploy $ENV_FLAG $DRY_RUN_FLAG
+
+      - name: Post-deploy health check
+        run: |
+          echo "Waiting for worker to stabilize..."
+          sleep 5
+
+          WORKER_URL="https://cinaconnect-rpc-proxy.workers.dev"
+
+          echo "Running health check against $WORKER_URL/health..."
+          HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 15 "$WORKER_URL/health" || echo "000")
+
+          if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 400 ]]; then
+            echo "✓ RPC Proxy health check passed (HTTP $HTTP_CODE)"
+          else
+            echo "⚠ RPC Proxy health check returned HTTP $HTTP_CODE"
+            echo "  Verify manually: $WORKER_URL"
+          fi
+
+  # ── Deploy Keys Server ────────────────────────────────────────
+  deploy-keys-server:
+    name: Deploy Keys Server
+    needs: validate
+    if: >-
+      (github.event_name == 'workflow_dispatch' &&
+        (github.event.inputs.service == 'all' || github.event.inputs.service == 'keys-server')) ||
+      github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    concurrency:
+      group: deploy-keys-server-${{ github.event.inputs.environment || 'production' }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install wrangler
+        run: npm install -g wrangler@${{ env.WRANGLER_VERSION }}
+
+      - name: Deploy Keys Server to Cloudflare Workers
+        run: |
+          cd packages/keys-server/cloudflare
+
+          ENV_FLAG=""
+          if [[ "${{ github.event.inputs.environment }}" == "staging" ]]; then
+            ENV_FLAG="--env staging"
+          fi
+
+          DRY_RUN_FLAG=""
+          if [[ "${{ github.event.inputs.dry_run }}" == "true" ]]; then
+            DRY_RUN_FLAG="--dry-run --outdir=/tmp/keys-server-build"
+          fi
+
+          echo "Deploying cinaconnect-keys-server..."
+          wrangler deploy $ENV_FLAG $DRY_RUN_FLAG
+
+      - name: Post-deploy health check
+        run: |
+          echo "Waiting for worker to stabilize..."
+          sleep 5
+
+          WORKER_URL="https://cinaconnect-keys-server.workers.dev"
+
+          echo "Running health check against $WORKER_URL/health..."
+          HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 15 "$WORKER_URL/health" || echo "000")
+
+          if [[ "$HTTP_CODE" -ge 200 && "$HTTP_CODE" -lt 400 ]]; then
+            echo "✓ Keys Server health check passed (HTTP $HTTP_CODE)"
+          else
+            echo "⚠ Keys Server health check returned HTTP $HTTP_CODE"
+            echo "  Verify manually: $WORKER_URL"
+          fi
+
+  # ── Post-Deploy Notification ──────────────────────────────────
+  notify:
+    name: Deployment Notification
+    needs: [deploy-rpc-proxy, deploy-keys-server]
+    if: always() && github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deployment Summary
+        run: |
+          echo "## Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- **Environment:** ${{ github.event.inputs.environment }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Service:** ${{ github.event.inputs.service }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Dry Run:** ${{ github.event.inputs.dry_run }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          RPC_STATUS="${{ needs.deploy-rpc-proxy.result }}"
+          KEYS_STATUS="${{ needs.deploy-keys-server.result }}"
+
+          if [[ "$RPC_STATUS" != "skipped" ]]; then
+            echo "- RPC Proxy: \`$RPC_STATUS\`" >> $GITHUB_STEP_SUMMARY
+          fi
+          if [[ "$KEYS_STATUS" != "skipped" ]]; then
+            echo "- Keys Server: \`$KEYS_STATUS\`" >> $GITHUB_STEP_SUMMARY
+          fi

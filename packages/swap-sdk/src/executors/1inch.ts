@@ -8,6 +8,12 @@
 import type { SwapExecutor } from "../router.js";
 import type { SwapQuote, SwapQuoteParams, SwapRoute, SwapTransaction, TokenInfo } from "../types.js";
 import { calculateMinimumReceived } from "../slippage.js";
+import type {
+  WalletClient,
+  Transport,
+  Chain,
+  Account,
+} from "viem";
 
 // ============================================================
 // Constants
@@ -15,6 +21,9 @@ import { calculateMinimumReceived } from "../slippage.js";
 
 const ONEINCH_API_BASE = "https://api.1inch.dev/swap";
 const ONEINCH_TOKENS_BASE = "https://api.1inch.dev/token";
+const DEFAULT_TIMEOUT_MS = 8_000;
+const MAX_RETRIES = 2;
+const RETRY_DELAY_MS = 1_000;
 
 // ============================================================
 // 1inch API Response Types
@@ -51,10 +60,12 @@ export class OneInchExecutor implements SwapExecutor {
 
   private apiKey: string;
   private apiVersion: string;
+  private timeoutMs: number;
 
-  constructor(apiKey: string, version: string = "6.0") {
+  constructor(apiKey: string, options?: { version?: string; timeoutMs?: number }) {
     this.apiKey = apiKey;
-    this.apiVersion = version;
+    this.apiVersion = options?.version ?? "6.0";
+    this.timeoutMs = options?.timeoutMs ?? DEFAULT_TIMEOUT_MS;
   }
 
   async isAvailable(): Promise<boolean> {
@@ -80,16 +91,49 @@ export class OneInchExecutor implements SwapExecutor {
     url.searchParams.set("dst", this.resolveAddress(params.toToken));
     url.searchParams.set("amount", params.fromAmount.toString());
 
-    const res = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${this.apiKey}` },
-    });
+    let lastError: Error | null = null;
 
-    if (!res.ok) {
-      throw new Error(`1inch quote failed: ${res.status} ${res.statusText}`);
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+
+        const res = await fetch(url.toString(), {
+          headers: { Authorization: `Bearer ${this.apiKey}` },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeout);
+
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`1inch quote failed: ${res.status} ${res.statusText} — ${body}`);
+        }
+
+        const data: OneInchQuoteResponse = await res.json();
+        return this.buildQuoteFromResponse(params, data);
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+
+        // Don't retry on client errors (4xx)
+        if (lastError.message.includes("4")) break;
+
+        if (attempt < MAX_RETRIES) {
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * (attempt + 1)));
+        }
+      }
     }
 
-    const data: OneInchQuoteResponse = await res.json();
+    throw lastError ?? new Error("1inch quote failed after retries");
+  }
 
+  /**
+   * Build a SwapQuote from a 1inch API response.
+   */
+  private buildQuoteFromResponse(
+    params: SwapQuoteParams,
+    data: OneInchQuoteResponse,
+  ): SwapQuote {
     const toAmount = BigInt(data.dstAmount);
 
     const route: SwapRoute[] = data.protocols.map((p) => ({
@@ -124,11 +168,12 @@ export class OneInchExecutor implements SwapExecutor {
       minimumReceived: calculateMinimumReceived(toAmount, params.slippageBps),
       provider: this.name,
       expiresAt: Date.now() + 30_000,
+      chainId: params.chainId,
     };
   }
 
   async getTransaction(quote: SwapQuote, slippageBps: number): Promise<SwapTransaction> {
-    const chainId = this.getChainId(quote);
+    const chainId = quote.chainId || this.getChainId(quote);
     const url = new URL(
       `${ONEINCH_API_BASE}/v${this.apiVersion}/${chainId}/swap`,
     );
@@ -138,22 +183,42 @@ export class OneInchExecutor implements SwapExecutor {
     url.searchParams.set("from", quote.route[0]?.fromToken || "");
     url.searchParams.set("slippage", (slippageBps / 100).toString());
 
-    const res = await fetch(url.toString(), {
-      headers: { Authorization: `Bearer ${this.apiKey}` },
-    });
+    let lastError: Error | null = null;
 
-    if (!res.ok) {
-      throw new Error(`1inch swap failed: ${res.status} ${res.statusText}`);
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), this.timeoutMs);
+
+        const res = await fetch(url.toString(), {
+          headers: { Authorization: `Bearer ${this.apiKey}` },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeout);
+
+        if (!res.ok) {
+          const body = await res.text();
+          throw new Error(`1inch swap failed: ${res.status} ${res.statusText} — ${body}`);
+        }
+
+        const data: OneInchSwapResponse = await res.json();
+
+        return {
+          to: data.tx.to as `0x${string}`,
+          value: BigInt(data.tx.value),
+          data: data.tx.data as `0x${string}`,
+          gasLimit: BigInt(data.tx.gas),
+        };
+      } catch (err) {
+        lastError = err instanceof Error ? err : new Error(String(err));
+        if (attempt < MAX_RETRIES) {
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY_MS * (attempt + 1)));
+        }
+      }
     }
 
-    const data: OneInchSwapResponse = await res.json();
-
-    return {
-      to: data.tx.to as `0x${string}`,
-      value: BigInt(data.tx.value),
-      data: data.tx.data as `0x${string}`,
-      gasLimit: BigInt(data.tx.gas),
-    };
+    throw lastError ?? new Error("1inch swap transaction failed after retries");
   }
 
   async getSupportedTokens(chainId: number): Promise<TokenInfo[]> {
@@ -174,6 +239,26 @@ export class OneInchExecutor implements SwapExecutor {
       decimals: t.decimals,
       logoURI: t.logoURI,
     }));
+  }
+
+  /**
+   * Execute a 1inch swap transaction on-chain.
+   *
+   * The 1inch API returns a fully-formed transaction in getTransaction().
+   * We send it via viem walletClient.sendTransaction.
+   */
+  async executeTransaction(
+    tx: SwapTransaction,
+    walletClient: WalletClient<Transport, Chain, Account>,
+  ): Promise<`0x${string}`> {
+    const txHash = await walletClient.sendTransaction({
+      to: tx.to,
+      value: tx.value,
+      data: tx.data,
+      gas: tx.gasLimit,
+    });
+
+    return txHash;
   }
 
   // ============================================================

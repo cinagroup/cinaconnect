@@ -1,0 +1,19 @@
+# wrangler.toml - Cloudflare Pages configuration for CinaConnect Health Status
+# https://developers.cloudflare.com/pages/configuration/
+
+name = "cinaconnect-health-status"
+compatibility_date = "2025-01-01"
+
+[build]
+# Build using the workspace's pnpm command from repo root
+command = "pnpm --filter health-status build"
+# Static export output directory (Next.js output: "export" produces out/)
+output_directory = "apps/health-status/out"
+
+# ── Pages-specific settings ───────────────────────────────────
+# Deploy production on main branch pushes
+[env.production]
+# Custom domain: status.cinaconnect.com (configured in Cloudflare Pages dashboard)
+
+# Deploy previews on PRs / branch pushes
+[env.preview]

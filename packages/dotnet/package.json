@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/dotnet",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect SDK — TypeScript types matching the CinaConnect .NET client API surface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,10 +8,21 @@
     "build": "tsc",
     "clean": "rm -rf dist"
   },
-  "keywords": ["web3", "wallet", "blockchain", "dotnet"],
+  "keywords": [
+    "web3",
+    "wallet",
+    "blockchain",
+    "dotnet"
+  ],
   "license": "MIT",
   "author": "CinaConnect Team",
   "devDependencies": {
     "typescript": "^5.3.0"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -8,6 +8,7 @@
  */
 
 import type { GoogleLoginParams, SocialLoginResult, OAuth2TokenResponse, OAuth2UserProfile } from '../types.js';
+import { TokenVerifier, type TokenVerifyResult } from '../token-verifier.js';
 
 /** Google OAuth2 authorization endpoint. */
 const GOOGLE_AUTH_URL = 'https://accounts.google.com/o/oauth2/v2/auth';
@@ -116,6 +117,15 @@ export async function loginWithGoogle(
 ): Promise<SocialLoginResult> {
   // Exchange code for tokens
   const tokens = await exchangeCodeForTokens(code, params, params.clientSecret);
+
+  // Server-side token verification
+  if (tokens.idToken) {
+    const verifier = new TokenVerifier({ googleClientId: params.clientId });
+    const verification: TokenVerifyResult = await verifier.verify('google', tokens.idToken);
+    if (!verification.valid) {
+      throw new Error(`Google ID token verification failed: ${verification.error}`);
+    }
+  }
 
   // Get user profile
   const profile = await fetchGoogleUserProfile(tokens.accessToken);

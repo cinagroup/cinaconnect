@@ -8,7 +8,7 @@ import {
   type CinaConnectAngularConfig,
 } from './cinaconnect.tokens.js';
 
-// Components
+// Standalone Components
 import { ConnectButtonComponent } from './components/connect-button.component.js';
 import { AccountButtonComponent } from './components/account-button.component.js';
 import { NetworkButtonComponent } from './components/network-button.component.js';
@@ -19,6 +19,9 @@ import { BalancePipe } from './pipes/balance.pipe.js';
 
 // Directives
 import { ConnectDirective } from './directives/connect.directive.js';
+
+// EIP-5792
+export { Eip5792Service } from './eip5792/eip5792.service.js';
 
 /**
  * Angular module for CinaConnect.
@@ -39,20 +42,26 @@ import { ConnectDirective } from './directives/connect.directive.js';
  * ```
  */
 @NgModule({
-  imports: [CommonModule],
-  declarations: [
+  imports: [
+    CommonModule,
+    // Standalone components imported directly
     ConnectButtonComponent,
     AccountButtonComponent,
     NetworkButtonComponent,
+  ],
+  declarations: [
+    // Non-standalone declarations still need to be declared
     AddressPipe,
     BalancePipe,
     ConnectDirective,
   ],
   providers: [CinaConnectService],
   exports: [
+    // Standalone components re-exported
     ConnectButtonComponent,
     AccountButtonComponent,
     NetworkButtonComponent,
+    // Non-standalone declarations
     AddressPipe,
     BalancePipe,
     ConnectDirective,

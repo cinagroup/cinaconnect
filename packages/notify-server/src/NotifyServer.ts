@@ -134,6 +134,18 @@ export class NotifyServer {
     return Array.from(this.subscriptions.values());
   }
 
+  /**
+   * Get server metrics.
+   */
+  getMetrics(): unknown {
+    return {
+      service: "cinaconnect-notify-server",
+      subscriptions_count: this.subscriptions.size,
+      delivery_log_size: this.deliveryLog.length,
+      timestamp: Date.now(),
+    };
+  }
+
   // ── Private helpers ──────────────────────────────────────
 
   private async deliver(

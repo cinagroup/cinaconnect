@@ -1,4 +1,5 @@
 import { defineWorkspace } from 'vitest/config';
+import path from 'node:path';
 
 export default defineWorkspace([
   {
@@ -7,6 +8,12 @@ export default defineWorkspace([
       include: ['packages/core-sdk/**/*.test.ts'],
       environment: 'jsdom',
       globals: true,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html', 'lcov'],
+        include: ['packages/core-sdk/src/**/*.ts'],
+        exclude: ['packages/core-sdk/src/executors/**/*.ts', 'packages/core-sdk/src/transports/**/*.ts', '**/node_modules/**', '**/dist/**'],
+      },
     },
   },
   {
@@ -36,9 +43,15 @@ export default defineWorkspace([
   {
     test: {
       name: 'react',
-      include: ['packages/react/**/*.test.ts'],
+      include: ['packages/react/**/*.test.ts', 'packages/react/**/*.test.tsx'],
       environment: 'jsdom',
       globals: true,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html', 'lcov'],
+        include: ['packages/react/src/**/*.ts', 'packages/react/src/**/*.tsx'],
+        exclude: ['**/node_modules/**', '**/dist/**'],
+      },
     },
   },
   {
@@ -95,6 +108,12 @@ export default defineWorkspace([
       include: ['packages/siwe/**/*.test.ts'],
       environment: 'node',
       globals: true,
+      coverage: {
+        provider: 'v8',
+        reporter: ['text', 'json', 'html', 'lcov'],
+        include: ['packages/siwe/src/**/*.ts'],
+        exclude: ['**/node_modules/**', '**/dist/**'],
+      },
     },
   },
   {
@@ -142,6 +161,31 @@ export default defineWorkspace([
       name: 'cdn',
       include: ['packages/cdn/**/*.test.ts'],
       environment: 'jsdom',
+      globals: true,
+    },
+  },
+  {
+    test: {
+      name: 'backend-integration',
+      include: ['tests/backend-integration/**/*.test.ts'],
+      environment: 'node',
+      globals: true,
+      testTimeout: 30_000,
+      hookTimeout: 10_000,
+      alias: {
+        '@cinaconnect/rpc-proxy': path.resolve(__dirname, 'packages/rpc-proxy/src'),
+        '@cinaconnect/keys-server': path.resolve(__dirname, 'packages/keys-server/src'),
+        '@cinaconnect/relay-server': path.resolve(__dirname, 'packages/relay-server/src'),
+        '@cinaconnect/notify-server': path.resolve(__dirname, 'packages/notify-server/src'),
+        '@cinaconnect/push-server': path.resolve(__dirname, 'packages/push-server/src'),
+      },
+    },
+  },
+  {
+    test: {
+      name: 'aa-sdk',
+      include: ['packages/aa-sdk/tests/smartAccount.test.ts'],
+      environment: 'node',
       globals: true,
     },
   },

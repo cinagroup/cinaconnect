@@ -69,3 +69,20 @@ export function useDisconnect() {
   const { disconnect } = useCinaConnectContext();
   return { disconnect };
 }
+
+// EIP-5792 hooks
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useAtomicBatch,
+  useCallsStatus,
+} from './hooks/useEIP5792.js';
+
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  UseAtomicBatchReturn,
+  UseCallsStatusReturn,
+  SendCallsOptions,
+  AtomicBatchOptions,
+} from './hooks/useEIP5792.js';

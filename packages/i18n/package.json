@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/i18n",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Internationalization package for CinaConnect wallet",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,5 +28,8 @@
   "files": [
     "dist",
     "src"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

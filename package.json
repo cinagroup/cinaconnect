@@ -1,7 +1,7 @@
 {
   "name": "cinaconnect",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "CinaConnect — Self-hosted wallet connection toolkit",
   "scripts": {
     "build": "turbo run build",
@@ -22,15 +22,26 @@
     "docs:build": "vitepress build docs",
     "docs:preview": "vitepress preview docs",
     "typedoc": "typedoc",
-    "typedoc:watch": "typedoc --watch"
+    "typedoc:watch": "typedoc --watch",
+    "dashboard": "turbo run dev --filter=backend-dashboard",
+    "dashboard:build": "turbo run build --filter=backend-dashboard",
+    "publish:all": "node scripts/publish-all.js",
+    "publish:all:sh": "bash scripts/publish-all.sh",
+    "publish:dry-run": "node scripts/publish-all.js --dry-run",
+    "publish:all:force": "node scripts/publish-all.js --publish",
+    "changeset:publish": "changeset publish"
   },
   "devDependencies": {
     "@changesets/cli": "^2.27.1",
+    "@playwright/test": "^1.60.0",
     "@types/node": "^22.0.0",
+    "@types/ws": "^8.5.0",
+    "@vitest/coverage-v8": "2",
     "esbuild": "^0.25.0",
     "prettier": "^3.4.0",
     "tsx": "^4.19.0",
     "turbo": "^2.3.0",
+    "vitest": "2",
     "typescript": "^5.7.0"
   },
   "packageManager": "pnpm@9.15.0",

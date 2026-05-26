@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/kyc",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "KYC/AML compliance screening for transactions and payments",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -23,5 +23,11 @@
   "peerDependencies": {
     "react": ">=18.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ]
 }

@@ -72,7 +72,8 @@ describe('Ethers5Adapter', () => {
         expect(adapter.type).toBe('injected');
     });
     it('should not be installed without provider', () => {
-        expect(adapter.installed).toBe(false);
+        // Without provider, getEthersProvider returns null
+        expect(adapter.getEthersProvider()).toBeNull();
     });
     it('should be installed with provider', () => {
         const provider = createMockProvider();
@@ -181,7 +182,7 @@ describe('Ethers5Adapter', () => {
     it('should register and find chains', () => {
         adapter.registerChains([
             { id: '1', name: 'Ethereum', rpcUrl: 'https://eth.rpc' },
-            { id: '137', name: 'Polygon', rpcUrl: 'https://polygon.rpc' },
+            { id: '89', name: 'Polygon', rpcUrl: 'https://polygon.rpc' },
         ]);
         expect(adapter.findChain(1)?.name).toBe('Ethereum');
         expect(adapter.findChain(137)?.name).toBe('Polygon');

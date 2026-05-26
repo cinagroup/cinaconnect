@@ -36,3 +36,57 @@ export type {
   LinkConnectResult,
   WalletReturnCallback,
 } from './linkMode.js';
+
+// EIP-5792 Hooks
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useAtomicBatch,
+  useCallsStatus,
+} from './hooks/useEIP5792.js';
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  SendCallsOptions,
+  UseAtomicBatchReturn,
+  AtomicBatchOptions,
+  UseCallsStatusReturn,
+} from './hooks/useEIP5792.js';
+
+// ENS Hooks
+export {
+  useENSName,
+  useENSAddress,
+  resolveENSAddress,
+  lookupENSName,
+} from './hooks/useENS.js';
+export type {
+  UseENSNameReturn,
+  UseENSAddressReturn,
+} from './hooks/useENS.js';
+
+// Biometric Auth
+export {
+  useBiometricAuth,
+  BiometricKeyStore,
+} from './biometric.js';
+export type {
+  UseBiometricAuthReturn,
+  BiometricAuthResult,
+  BiometricAuthOptions,
+  BiometricType,
+  BiometricKeyStoreOptions,
+} from './biometric.js';
+
+// Push Notifications
+export {
+  PushNotificationManager,
+  pushNotificationManager,
+} from './push.js';
+export type {
+  PushProvider,
+  WCRelayNotification,
+  PushNotificationConfig,
+  PushManagerState,
+  UsePushNotificationReturn,
+} from './push.js';

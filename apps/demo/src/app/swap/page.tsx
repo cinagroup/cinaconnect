@@ -1,48 +1,27 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import DemoLayout from '@/components/DemoLayout';
-
-// ─── Token Data ───────────────────────────────────────────────────────────
-
-interface Token {
-  symbol: string;
-  name: string;
-  icon: string;
-  balance: number;
-  decimals: number;
-  price: number; // USD
-  chain: string;
-}
-
-const TOKENS: Token[] = [
-  { symbol: 'ETH', name: 'Ethereum', icon: '⟠', balance: 12.4831, decimals: 18, price: 3245.67, chain: 'Ethereum' },
-  { symbol: 'USDC', name: 'USD Coin', icon: '◎', balance: 8420.50, decimals: 6, price: 1.00, chain: 'Ethereum' },
-  { symbol: 'SOL', name: 'Solana', icon: '✦', balance: 154.22, decimals: 9, price: 178.43, chain: 'Solana' },
-  { symbol: 'BTC', name: 'Bitcoin', icon: '₿', balance: 0.8765, decimals: 8, price: 67234.12, chain: 'Bitcoin' },
-];
-
-// ─── Mock Recent Swaps ────────────────────────────────────────────────────
-
-interface SwapRecord {
-  id: string;
-  from: string;
-  to: string;
-  fromAmount: string;
-  toAmount: string;
-  rate: string;
-  timestamp: string;
-  status: 'completed' | 'pending' | 'failed';
-  route: string;
-}
-
-const RECENT_SWAPS: SwapRecord[] = [
-  { id: '0x1a2b', from: 'ETH', to: 'USDC', fromAmount: '2.5000', toAmount: '8,114.18', rate: '1 ETH = 3,245.67 USDC', timestamp: '2 min ago', status: 'completed', route: 'ETH → Uniswap V3 → USDC' },
-  { id: '0x3c4d', from: 'SOL', to: 'ETH', fromAmount: '50.0000', toAmount: '2.7563', rate: '1 SOL = 0.0551 ETH', timestamp: '15 min ago', status: 'completed', route: 'SOL → Jupiter → Wormhole → ETH' },
-  { id: '0x5e6f', from: 'USDC', to: 'BTC', fromAmount: '10,000.00', toAmount: '0.1487', rate: '1 BTC = 67,234.12 USDC', timestamp: '1 hr ago', status: 'completed', route: 'USDC → ThorChain → BTC' },
-  { id: '0x7g8h', from: 'BTC', to: 'SOL', fromAmount: '0.0500', toAmount: '18.8371', rate: '1 BTC = 376.74 SOL', timestamp: '3 hr ago', status: 'pending', route: 'BTC → ThorChain → SOL' },
-  { id: '0x9i0j', from: 'ETH', to: 'SOL', fromAmount: '1.0000', toAmount: '18.1893', rate: '1 ETH = 18.19 SOL', timestamp: '5 hr ago', status: 'failed', route: 'ETH → Wormhole → SOL' },
-];
+import { useWallet, shortenAddress } from '@/lib/useWallet';
+import { useToast } from '@/lib/toast';
+import {
+  getTokensForChain,
+  SUPPORTED_CHAINS,
+  CHAIN_BY_ID,
+  type TokenInfo,
+} from '@/lib/swapTokens';
+import {
+  getSwapQuote,
+  getSwapTransaction,
+  getApprovalTransaction,
+  executeSwap,
+  getMockQuote,
+  getSwapHistory,
+  saveSwapHistory,
+  updateSwapStatus,
+  type PriceQuote,
+  type SwapHistoryEntry,
+} from '@/lib/swap';
 
 // ─── Token Selector Dropdown ──────────────────────────────────────────────
 
@@ -51,13 +30,20 @@ function TokenSelector({
   selected,
   onSelect,
   label,
+  nativeBalance,
 }: {
-  tokens: Token[];
-  selected: Token;
-  onSelect: (t: Token) => void;
+  tokens: TokenInfo[];
+  selected: TokenInfo;
+  onSelect: (t: TokenInfo) => void;
   label: string;
+  nativeBalance?: string;
 }) {
   const [open, setOpen] = useState(false);
+
+  const getBalance = useCallback((t: TokenInfo): string => {
+    if (t.symbol === 'ETH' && nativeBalance) return nativeBalance;
+    return '—';
+  }, [nativeBalance]);
 
   return (
     <div className="relative">
@@ -82,10 +68,10 @@ function TokenSelector({
             </div>
             {tokens.map((t) => (
               <button
-                key={t.symbol}
+                key={t.symbol + t.address}
                 onClick={() => { onSelect(t); setOpen(false); }}
                 className={`w-full flex items-center gap-3 px-3 py-2.5 hover:bg-gray-700/60 transition-colors ${
-                  t.symbol === selected.symbol ? 'bg-gray-700/40' : ''
+                  t.address === selected.address ? 'bg-gray-700/40' : ''
                 }`}
               >
                 <span className="text-2xl leading-none">{t.icon}</span>
@@ -94,8 +80,7 @@ function TokenSelector({
                   <div className="text-xs text-gray-400 truncate">{t.name}</div>
                 </div>
                 <div className="text-right">
-                  <div className="text-sm text-white">{t.balance.toLocaleString()}</div>
-                  <div className="text-xs text-gray-500">{t.chain}</div>
+                  <div className="text-sm text-white">{getBalance(t)}</div>
                 </div>
               </button>
             ))}
@@ -136,88 +121,312 @@ function DetailRow({
 // ─── Main Page ────────────────────────────────────────────────────────────
 
 export default function SwapPage() {
-  const [fromToken, setFromToken] = useState<Token>(TOKENS[0]); // ETH
-  const [toToken, setToToken] = useState<Token>(TOKENS[1]);   // USDC
+  const { account, status, error, connectors, connect, disconnect } = useWallet();
+  const { success, error: toastErr, info } = useToast();
+
+  // Chain selection
+  const [chainId, setChainId] = useState<number>(1);
+  const tokens = useMemo(() => getTokensForChain(chainId), [chainId]);
+
+  const [fromToken, setFromToken] = useState<TokenInfo>(() => tokens[0] ?? {
+    symbol: 'ETH', name: 'Ethereum', icon: '⟠', address: 'native', decimals: 18, chainId: 1,
+  });
+  const [toToken, setToToken] = useState<TokenInfo>(() => tokens[1] ?? {
+    symbol: 'USDC', name: 'USD Coin', icon: '◎', address: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', decimals: 6, chainId: 1,
+  });
+
   const [fromAmount, setFromAmount] = useState('');
   const [slippage, setSlippage] = useState(0.5);
-  const [walletConnected, setWalletConnected] = useState(false);
-  const [swapState, setSwapState] = useState<'idle' | 'swapping' | 'success'>('idle');
 
-  // Computed values
-  const toAmount = useMemo(() => {
+  // Swap state: idle → quoting → quoting_done → approving → swapping → success
+  const [swapState, setSwapState] = useState<'idle' | 'quoting' | 'approving' | 'swapping' | 'success'>('idle');
+  const [quote, setQuote] = useState<PriceQuote | null>(null);
+  const [swapRoute, setSwapRoute] = useState<string>('');
+  const [swapHistory, setSwapHistory] = useState<SwapHistoryEntry[]>([]);
+
+  const quoteAbortRef = useRef<AbortController | null>(null);
+
+  const isConnected = status === 'connected';
+  const primaryConnector = connectors.find((c) => c.id === 'io.metamask') ?? connectors[0];
+
+  // Load swap history from localStorage on mount
+  useEffect(() => {
+    setSwapHistory(getSwapHistory());
+  }, []);
+
+  // Reset swap state when tokens or chain change
+  useEffect(() => {
+    setQuote(null);
+    setSwapRoute('');
+    setSwapState('idle');
+    if (quoteAbortRef.current) {
+      quoteAbortRef.current.abort();
+    }
+  }, [chainId, fromToken.address, toToken.address]);
+
+  // Keep tokens in sync when chain changes
+  useEffect(() => {
+    const chainTokens = getTokensForChain(chainId);
+    if (chainTokens.length >= 2) {
+      // If current tokens aren't on the new chain, switch
+      const fromOnChain = chainTokens.find((t) => t.address === fromToken.address);
+      const toOnChain = chainTokens.find((t) => t.address === toToken.address);
+      if (!fromOnChain) setFromToken(chainTokens[0]);
+      if (!toOnChain) setToToken(chainTokens[1]);
+    }
+  }, [chainId]);
+
+  // Fetch real quote from 1inch API when amount changes
+  useEffect(() => {
+    const amt = parseFloat(fromAmount);
+    if (!isConnected || isNaN(amt) || amt <= 0 || fromToken.address === toToken.address) {
+      setQuote(null);
+      setSwapRoute('');
+      return;
+    }
+
+    let cancelled = false;
+    quoteAbortRef.current?.abort();
+    const controller = new AbortController();
+    quoteAbortRef.current = controller;
+
+    setSwapState('quoting');
+
+    // Convert amount to atomic units
+    const atomicAmount = (amt * 10 ** fromToken.decimals).toFixed(0).split('.')[0];
+
+    getSwapQuote(fromToken.symbol, toToken.symbol, atomicAmount, chainId, slippage)
+      .then((result) => {
+        if (cancelled) return;
+        if ('error' in result) {
+          // Fallback to mock quote
+          const mock = getMockQuote(fromToken.symbol, toToken.symbol, fromAmount);
+          setQuote(mock);
+          setSwapRoute(`${fromToken.symbol} → ${fromToken.chainId === toToken.chainId ? 'Uniswap V3' : 'Cross-chain'} → ${toToken.symbol} (simulated)`);
+        } else {
+          setQuote(result);
+          setSwapRoute(`${fromToken.symbol} → 1inch Router (${result.protocolsCount} protocol${result.protocolsCount !== 1 ? 's' : ''}) → ${toToken.symbol}`);
+        }
+        setSwapState('idle');
+      })
+      .catch(() => {
+        if (cancelled) return;
+        const mock = getMockQuote(fromToken.symbol, toToken.symbol, fromAmount);
+        setQuote(mock);
+        setSwapRoute(`${fromToken.symbol} → Simulated DEX → ${toToken.symbol}`);
+        setSwapState('idle');
+      });
+
+    return () => { cancelled = true; };
+  }, [fromAmount, fromToken, toToken, chainId, slippage, isConnected]);
+
+  // Computed values for display
+  const displayToAmount = useMemo(() => {
+    if (quote) return quote.toTokenAmountFormatted;
     const amt = parseFloat(fromAmount);
     if (isNaN(amt) || amt <= 0) return '';
-    const rate = fromToken.price / toToken.price;
-    const result = amt * rate;
-    return result.toLocaleString(undefined, { maximumFractionDigits: 6 });
-  }, [fromAmount, fromToken, toToken]);
+    return '';
+  }, [quote, fromAmount]);
 
-  const rate = useMemo(() => {
-    const r = fromToken.price / toToken.price;
-    return `1 ${fromToken.symbol} = ${r.toLocaleString(undefined, { maximumFractionDigits: 6 })} ${toToken.symbol}`;
-  }, [fromToken, toToken]);
+  const displayRate = useMemo(() => {
+    if (quote) return quote.rate;
+    return '';
+  }, [quote]);
 
-  const priceImpact = useMemo(() => {
-    const amt = parseFloat(fromAmount);
-    if (isNaN(amt) || amt <= 0) return '0.00';
-    // Simulate: larger amounts = higher impact
-    const usdValue = amt * fromToken.price;
-    const impact = Math.min(usdValue / 500000, 2.5); // caps at 2.5%
-    return impact.toFixed(2);
-  }, [fromAmount, fromToken]);
-
-  const feeUsd = useMemo(() => {
-    return (parseFloat(fromAmount || '0') * fromToken.price * 0.003).toFixed(2);
-  }, [fromAmount, fromToken]);
+  const displayPriceImpact = useMemo(() => {
+    if (quote) return quote.priceImpact;
+    return '0.00';
+  }, [quote]);
 
   const minReceived = useMemo(() => {
-    const amt = parseFloat(toAmount.replace(/,/g, ''));
+    if (!quote) return '';
+    const amt = parseFloat(quote.toTokenAmountFormatted.replace(/,/g, ''));
     if (isNaN(amt) || amt <= 0) return '';
     return (amt * (1 - slippage / 100)).toLocaleString(undefined, { maximumFractionDigits: 6 });
-  }, [toAmount, slippage]);
+  }, [quote, slippage]);
 
   const usdValue = useMemo(() => {
     const amt = parseFloat(fromAmount);
     if (isNaN(amt) || amt <= 0) return '$0.00';
-    return `$${(amt * fromToken.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  }, [fromAmount, fromToken]);
+    // Approximate USD value from quote
+    if (quote) {
+      // Try to estimate from the toToken if it's a stablecoin
+      const toSymbol = toToken.symbol.toUpperCase();
+      if (['USDC', 'USDT', 'DAI', 'BUSD'].includes(toSymbol)) {
+        return `~$${parseFloat(quote.toTokenAmountFormatted.replace(/,/g, '')).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      }
+    }
+    return `$${amt.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }, [fromAmount, quote, toToken]);
 
-  const canSwap = walletConnected && parseFloat(fromAmount) > 0 && fromToken.symbol !== toToken.symbol;
+  const canSwap = isConnected && parseFloat(fromAmount) > 0 && fromToken.symbol !== toToken.symbol;
 
   const insufficientBalance = useMemo(() => {
     const amt = parseFloat(fromAmount);
-    return !isNaN(amt) && amt > fromToken.balance;
-  }, [fromAmount, fromToken]);
+    if (isNaN(amt)) return false;
+    if (fromToken.address === 'native' && isConnected) {
+      return amt > parseFloat(account.balance);
+    }
+    return false;
+  }, [fromAmount, fromToken.address, isConnected, account.balance]);
 
   const handleSwapTokens = useCallback(() => {
     setFromToken(toToken);
     setToToken(fromToken);
-    setFromAmount(toAmount.replace(/,/g, ''));
-  }, [fromToken, toToken, toAmount]);
+    setFromAmount(displayToAmount.replace(/,/g, '') || '');
+  }, [fromToken, toToken, displayToAmount]);
 
-  const handleSwap = useCallback(() => {
-    if (!canSwap) return;
+  const handleChainChange = useCallback((newChainId: number) => {
+    setChainId(newChainId);
+    setFromAmount('');
+    setQuote(null);
+    setSwapRoute('');
+  }, []);
+
+  const handleSwap = useCallback(async () => {
+    if (!canSwap || !account.address) return;
+
     setSwapState('swapping');
-    setTimeout(() => setSwapState('success'), 2000);
-    setTimeout(() => setSwapState('idle'), 4500);
-  }, [canSwap]);
+    info('Swap Initiated', `Swapping ${fromAmount} ${fromToken.symbol} → ${toToken.symbol}`);
+
+    try {
+      // Convert amount to atomic units
+      const amt = parseFloat(fromAmount);
+      const atomicAmount = (amt * 10 ** fromToken.decimals).toFixed(0).split('.')[0];
+
+      // Get swap transaction data from 1inch
+      const result = await getSwapTransaction(
+        fromToken.symbol,
+        toToken.symbol,
+        atomicAmount,
+        chainId,
+        account.address,
+        slippage,
+      );
+
+      if ('error' in result) {
+        toastErr('Swap Failed', result.description || result.error);
+        setSwapState('idle');
+
+        // Save failed entry
+        saveSwapHistory({
+          id: `0x${Date.now().toString(16)}`,
+          from: fromToken.symbol,
+          to: toToken.symbol,
+          fromAmount,
+          toAmount: '0',
+          rate: displayRate || 'N/A',
+          timestamp: new Date().toISOString(),
+          status: 'failed',
+          route: swapRoute || 'N/A',
+          chainId,
+        });
+        setSwapHistory(getSwapHistory());
+        return;
+      }
+
+      // Check if we need to approve the token first (for ERC20, not native)
+      if (fromToken.address !== 'native') {
+        setSwapState('approving');
+        info('Approval Required', `Approving ${fromToken.symbol} for swap...`);
+
+        const approvalTx = await getApprovalTransaction(fromToken.address, chainId);
+        if (approvalTx) {
+          try {
+            // getApprovalTransaction returns partial tx; send directly via provider
+            const eth = window.ethereum as { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> } | undefined;
+            if (!eth) throw new Error('No wallet provider');
+            const approvalHash = (await eth.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: account.address, ...approvalTx }],
+            })) as string;
+            info('Approval Sent', `Tx: ${shortenAddress(approvalHash)}`);
+            // Wait a moment for approval to process
+            await new Promise((r) => setTimeout(r, 3000));
+          } catch (approvalErr: unknown) {
+            const msg = approvalErr instanceof Error ? approvalErr.message : 'Approval rejected';
+            toastErr('Approval Failed', msg);
+            setSwapState('idle');
+
+            saveSwapHistory({
+              id: `0x${Date.now().toString(16)}`,
+              from: fromToken.symbol,
+              to: toToken.symbol,
+              fromAmount,
+              toAmount: '0',
+              rate: displayRate || 'N/A',
+              timestamp: new Date().toISOString(),
+              status: 'failed',
+              route: swapRoute || 'N/A',
+              chainId,
+            });
+            setSwapHistory(getSwapHistory());
+            return;
+          }
+        }
+      }
+
+      // Execute the swap
+      const txHash = await executeSwap(result.tx);
+      info('Swap Sent', `Tx: ${shortenAddress(txHash)}`);
+
+      // Save pending entry
+      const entryId = `0x${Date.now().toString(16)}`;
+      saveSwapHistory({
+        id: entryId,
+        from: fromToken.symbol,
+        to: toToken.symbol,
+        fromAmount,
+        toAmount: quote?.toTokenAmountFormatted ?? displayToAmount,
+        rate: quote?.rate ?? displayRate ?? 'N/A',
+        timestamp: new Date().toISOString(),
+        status: 'pending',
+        route: swapRoute || '1inch Router',
+        chainId,
+        txHash,
+      });
+      setSwapHistory(getSwapHistory());
+
+      setSwapState('success');
+      success('Swap Complete', `${fromAmount} ${fromToken.symbol} → ${quote?.toTokenAmountFormatted ?? displayToAmount} ${toToken.symbol}`);
+
+      // Update status after a delay (in real app, would poll for tx receipt)
+      setTimeout(() => {
+        updateSwapStatus(txHash, 'completed');
+        setSwapHistory(getSwapHistory());
+      }, 15000);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : 'Transaction failed';
+      toastErr('Swap Failed', message);
+      setSwapState('idle');
+    }
+  }, [
+    canSwap, account.address, fromAmount, fromToken, toToken, chainId,
+    slippage, quote, displayRate, displayToAmount, swapRoute, info, success, toastErr,
+  ]);
 
   const handleMax = useCallback(() => {
-    setFromAmount(fromToken.balance.toString());
-  }, [fromToken]);
+    if (fromToken.address === 'native' && isConnected) {
+      setFromAmount(account.balance);
+    } else {
+      setFromAmount('0');
+    }
+  }, [fromToken.address, isConnected, account.balance]);
 
   // Button text & state
   const buttonText = useMemo(() => {
-    if (!walletConnected) return 'Connect Wallet';
+    if (status === 'disconnected') return 'Connect Wallet';
     if (swapState === 'success') return '✓ Swap Successful!';
     if (swapState === 'swapping') return 'Swapping...';
+    if (swapState === 'approving') return 'Approving Token...';
+    if (swapState === 'quoting') return 'Fetching Best Rate...';
     if (insufficientBalance) return 'Insufficient Balance';
     if (!fromAmount || parseFloat(fromAmount) === 0) return 'Enter an amount';
     if (fromToken.symbol === toToken.symbol) return 'Select different tokens';
     return 'Swap';
-  }, [walletConnected, swapState, insufficientBalance, fromAmount, fromToken, toToken]);
+  }, [status, swapState, insufficientBalance, fromAmount, fromToken, toToken]);
 
-  const buttonDisabled = !canSwap || swapState !== 'idle';
+  const buttonDisabled = !canSwap || (swapState !== 'idle' && swapState !== 'success');
 
   return (
     <DemoLayout>
@@ -228,22 +437,49 @@ export default function SwapPage() {
           <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
             Token Swap
           </h1>
-          <p className="text-gray-400 text-sm">Swap tokens across chains with the best rates</p>
+          <p className="text-gray-400 text-sm">Swap tokens with real DEX aggregator rates</p>
         </div>
 
-        {/* ── Wallet Connect ─────────────────────────────── */}
-        <div className="flex justify-end">
-          <button
-            onClick={() => setWalletConnected(!walletConnected)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all ${
-              walletConnected
-                ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30'
-                : 'bg-blue-600 hover:bg-blue-500 text-white'
-            }`}
+        {/* ── Wallet Connect + Chain Selector ────────────── */}
+        <div className="flex items-center justify-end gap-3 flex-wrap">
+          {/* Chain selector */}
+          <select
+            value={chainId}
+            onChange={(e) => handleChainChange(Number(e.target.value))}
+            className="bg-gray-700/80 text-white text-sm rounded-xl px-3 py-2 border border-gray-600/50 outline-none cursor-pointer"
           >
-            {walletConnected ? '● 0x1a2...f8e3' : 'Connect Wallet'}
-          </button>
+            {SUPPORTED_CHAINS.map((c) => (
+              <option key={c.chainId} value={c.chainId}>{c.name}</option>
+            ))}
+          </select>
+
+          {isConnected ? (
+            <div className="flex items-center gap-3">
+              <span className="text-xs text-gray-400">
+                Balance: <span className="text-white font-semibold">{account.balance} {account.chainSymbol}</span>
+              </span>
+              <span className="text-xs text-gray-500">{account.chainName} · {shortenAddress(account.address ?? '')}</span>
+              <button
+                onClick={() => disconnect()}
+                className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-gray-700/60 text-gray-300 border border-gray-600/40 hover:text-white hover:border-gray-500 transition-all"
+              >
+                Disconnect
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => connect(primaryConnector?.id ?? 'io.metamask')}
+              className="px-4 py-2 rounded-xl text-sm font-semibold bg-blue-600 hover:bg-blue-500 text-white transition-all"
+            >
+              Connect Wallet
+            </button>
+          )}
         </div>
+        {error && (
+          <div className="text-center text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-2">
+            {error}
+          </div>
+        )}
 
         {/* ── Swap Card ──────────────────────────────────── */}
         <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 shadow-2xl shadow-black/30 overflow-hidden">
@@ -254,7 +490,7 @@ export default function SwapPage() {
               <span className="text-sm font-medium text-gray-400">From</span>
               <div className="flex items-center gap-2">
                 <span className="text-xs text-gray-500">
-                  Balance: <span className="text-gray-300">{fromToken.balance.toLocaleString()}</span>
+                  Balance: <span className="text-gray-300">{fromToken.address === 'native' && isConnected ? account.balance : '—'}</span>
                 </span>
                 <button
                   onClick={handleMax}
@@ -266,10 +502,11 @@ export default function SwapPage() {
             </div>
             <div className="flex items-center gap-3">
               <TokenSelector
-                tokens={TOKENS}
+                tokens={tokens}
                 selected={fromToken}
                 onSelect={setFromToken}
                 label="From"
+                nativeBalance={isConnected ? account.balance : undefined}
               />
               <input
                 type="text"
@@ -309,23 +546,24 @@ export default function SwapPage() {
             <div className="flex justify-between items-center mb-3">
               <span className="text-sm font-medium text-gray-400">To</span>
               <span className="text-xs text-gray-500">
-                Balance: <span className="text-gray-300">{toToken.balance.toLocaleString()}</span>
+                Balance: <span className="text-gray-300">—</span>
               </span>
             </div>
             <div className="flex items-center gap-3">
               <TokenSelector
-                tokens={TOKENS}
+                tokens={tokens}
                 selected={toToken}
                 onSelect={setToToken}
                 label="To"
+                nativeBalance={isConnected ? account.balance : undefined}
               />
               <div className="flex-1 text-right text-3xl font-bold text-white truncate">
-                {toAmount || <span className="text-gray-600">0.0</span>}
+                {displayToAmount || <span className="text-gray-600">0.0</span>}
               </div>
             </div>
             <div className="text-right mt-1">
               <span className="text-xs text-gray-500">
-                {toAmount ? `$${(parseFloat(toAmount.replace(/,/g, '')) * toToken.price).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00'}
+                {displayToAmount ? `$${parseFloat(displayToAmount.replace(/,/g, '')).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : '$0.00'}
               </span>
             </div>
           </div>
@@ -353,44 +591,48 @@ export default function SwapPage() {
           </div>
 
           {/* ── Swap Details ───────────────────────────── */}
-          {fromAmount && parseFloat(fromAmount) > 0 && (
+          {(fromAmount && parseFloat(fromAmount) > 0) && (
             <div className="mx-5 p-4 bg-gray-900/50 rounded-xl space-y-0.5 border border-gray-700/30">
-              <DetailRow label="Rate" value={rate} />
-              <DetailRow label="Fee (0.3%)" value={`~$${feeUsd}`} />
-              <DetailRow
-                label="Slippage Tolerance"
-                value={`${slippage}%`}
-              />
+              {displayRate && <DetailRow label="Rate" value={displayRate} />}
               <DetailRow
                 label="Price Impact"
-                value={`${priceImpact}%`}
-                highlight={parseFloat(priceImpact) > 2 ? 'red' : parseFloat(priceImpact) > 1 ? 'yellow' : 'green'}
+                value={`${displayPriceImpact}%`}
+                highlight={parseFloat(displayPriceImpact) > 2 ? 'red' : parseFloat(displayPriceImpact) > 1 ? 'yellow' : 'green'}
               />
-              <DetailRow label="Minimum Received" value={`${minReceived} ${toToken.symbol}`} />
+              <DetailRow label="Slippage Tolerance" value={`${slippage}%`} />
+              {minReceived && <DetailRow label="Minimum Received" value={`${minReceived} ${toToken.symbol}`} />}
               <div className="border-t border-gray-700/50 my-1" />
-              <DetailRow
-                label="Route"
-                value={`${fromToken.symbol} → ${fromToken.chain === toToken.chain ? 'Direct' : 'Cross-chain'} → ${toToken.symbol}`}
-              />
+              {swapRoute && <DetailRow label="Route" value={swapRoute} />}
+              {swapState === 'quoting' && (
+                <div className="flex items-center gap-2 py-1">
+                  <svg className="animate-spin h-3 w-3 text-blue-400" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  <span className="text-xs text-blue-400">Fetching best rate from 1inch...</span>
+                </div>
+              )}
             </div>
           )}
 
           {/* ── Swap Button ────────────────────────────── */}
           <div className="p-5 pt-3">
             <button
-              onClick={walletConnected ? handleSwap : () => setWalletConnected(true)}
+              onClick={isConnected ? handleSwap : () => connect(primaryConnector?.id ?? 'io.metamask')}
               disabled={buttonDisabled}
               className={`w-full py-4 rounded-xl font-bold text-lg transition-all ${
                 swapState === 'success'
                   ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/30'
-                  : swapState === 'swapping'
+                  : swapState === 'swapping' || swapState === 'approving'
                   ? 'bg-blue-500/80 text-white cursor-wait'
+                  : swapState === 'quoting'
+                  ? 'bg-purple-500/60 text-white cursor-wait'
                   : canSwap
                   ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white shadow-lg shadow-blue-600/25 hover:shadow-blue-500/40 active:scale-[0.98]'
                   : 'bg-gray-700/60 text-gray-500 cursor-not-allowed'
               }`}
             >
-              {swapState === 'swapping' && (
+              {(swapState === 'swapping' || swapState === 'approving' || swapState === 'quoting') && (
                 <span className="inline-flex items-center gap-2">
                   <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
@@ -399,7 +641,7 @@ export default function SwapPage() {
                   {buttonText}
                 </span>
               )}
-              {swapState !== 'swapping' && buttonText}
+              {swapState !== 'swapping' && swapState !== 'approving' && swapState !== 'quoting' && buttonText}
             </button>
           </div>
         </div>
@@ -407,77 +649,137 @@ export default function SwapPage() {
         {/* ── Recent Swaps History ─────────────────────── */}
         <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
           <div className="px-5 py-4 border-b border-gray-700/50">
-            <h2 className="text-lg font-bold text-white">Recent Swaps</h2>
+            <h2 className="text-lg font-bold text-white">
+              Swap History
+              {swapHistory.length > 0 && (
+                <span className="ml-2 text-xs text-gray-500 font-normal">({swapHistory.length})</span>
+              )}
+            </h2>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="text-gray-500 text-xs uppercase tracking-wider">
-                  <th className="text-left px-5 py-3 font-semibold">Tx</th>
-                  <th className="text-left px-5 py-3 font-semibold">From → To</th>
-                  <th className="text-right px-5 py-3 font-semibold">Amount</th>
-                  <th className="text-right px-5 py-3 font-semibold hidden sm:table-cell">Route</th>
-                  <th className="text-center px-5 py-3 font-semibold">Status</th>
-                  <th className="text-right px-5 py-3 font-semibold">Time</th>
-                </tr>
-              </thead>
-              <tbody>
-                {RECENT_SWAPS.map((swap) => (
-                  <tr key={swap.id} className="border-t border-gray-700/30 hover:bg-gray-700/20 transition-colors">
-                    <td className="px-5 py-3">
-                      <span className="text-blue-400 font-mono text-xs">{swap.id}</span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="text-white font-medium">{swap.from}</span>
-                      <span className="text-gray-500 mx-1">→</span>
-                      <span className="text-white font-medium">{swap.to}</span>
-                    </td>
-                    <td className="px-5 py-3 text-right">
-                      <div className="text-white">{swap.fromAmount} {swap.from}</div>
-                      <div className="text-gray-500 text-xs">→ {swap.toAmount} {swap.to}</div>
-                    </td>
-                    <td className="px-5 py-3 text-right text-gray-400 text-xs hidden sm:table-cell">
-                      {swap.route}
-                    </td>
-                    <td className="px-5 py-3 text-center">
-                      <span
-                        className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
-                          swap.status === 'completed'
-                            ? 'bg-emerald-500/15 text-emerald-400'
-                            : swap.status === 'pending'
-                            ? 'bg-amber-500/15 text-amber-400'
-                            : 'bg-red-500/15 text-red-400'
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full ${
-                            swap.status === 'completed'
-                              ? 'bg-emerald-400'
-                              : swap.status === 'pending'
-                              ? 'bg-amber-400 animate-pulse'
-                              : 'bg-red-400'
-                          }`}
-                        />
-                        {swap.status}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-right text-gray-500 text-xs">{swap.timestamp}</td>
+          {swapHistory.length === 0 ? (
+            <div className="px-5 py-8 text-center text-gray-500 text-sm">
+              No swaps yet. Connect your wallet and make your first swap!
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-gray-500 text-xs uppercase tracking-wider">
+                    <th className="text-left px-5 py-3 font-semibold">Tx</th>
+                    <th className="text-left px-5 py-3 font-semibold">From → To</th>
+                    <th className="text-right px-5 py-3 font-semibold">Amount</th>
+                    <th className="text-right px-5 py-3 font-semibold hidden sm:table-cell">Route</th>
+                    <th className="text-center px-5 py-3 font-semibold">Status</th>
+                    <th className="text-right px-5 py-3 font-semibold">Time</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody>
+                  {swapHistory.map((swap) => {
+                    const timeAgo = getTimeAgo(swap.timestamp);
+                    return (
+                      <tr key={swap.id} className="border-t border-gray-700/30 hover:bg-gray-700/20 transition-colors">
+                        <td className="px-5 py-3">
+                          {swap.txHash ? (
+                            <a
+                              href={getBlockExplorerUrl(chainId, swap.txHash!)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 font-mono text-xs hover:underline"
+                            >
+                              {shortenAddress(swap.txHash)}
+                            </a>
+                          ) : (
+                            <span className="text-blue-400 font-mono text-xs">{swap.id.slice(0, 8)}</span>
+                          )}
+                        </td>
+                        <td className="px-5 py-3">
+                          <span className="text-white font-medium">{swap.from}</span>
+                          <span className="text-gray-500 mx-1">→</span>
+                          <span className="text-white font-medium">{swap.to}</span>
+                        </td>
+                        <td className="px-5 py-3 text-right">
+                          <div className="text-white">{swap.fromAmount} {swap.from}</div>
+                          <div className="text-gray-500 text-xs">→ {swap.toAmount} {swap.to}</div>
+                        </td>
+                        <td className="px-5 py-3 text-right text-gray-400 text-xs hidden sm:table-cell">
+                          {swap.route}
+                        </td>
+                        <td className="px-5 py-3 text-center">
+                          <span
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold ${
+                              swap.status === 'completed'
+                                ? 'bg-emerald-500/15 text-emerald-400'
+                                : swap.status === 'pending'
+                                ? 'bg-amber-500/15 text-amber-400'
+                                : 'bg-red-500/15 text-red-400'
+                            }`}
+                          >
+                            <span
+                              className={`w-1.5 h-1.5 rounded-full ${
+                                swap.status === 'completed'
+                                  ? 'bg-emerald-400'
+                                  : swap.status === 'pending'
+                                  ? 'bg-amber-400 animate-pulse'
+                                  : 'bg-red-400'
+                              }`}
+                            />
+                            {swap.status}
+                          </span>
+                        </td>
+                        <td className="px-5 py-3 text-right text-gray-500 text-xs">{timeAgo}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         {/* ── Footer ───────────────────────────────────── */}
         <div className="text-center space-y-1">
           <div className="flex items-center justify-center gap-2 text-gray-500 text-xs">
             <span className="inline-block w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500" />
-            <span>Powered by <span className="text-gray-300 font-semibold">CinaConnect Swap SDK</span></span>
+            <span>Powered by <span className="text-gray-300 font-semibold">1inch DEX Aggregator</span></span>
           </div>
-          <p className="text-gray-600 text-xs">Cross-chain liquidity aggregation • Best execution guaranteed</p>
+          <p className="text-gray-600 text-xs">
+            Best execution across Uniswap, SushiSwap, Curve, Balancer & more
+          </p>
         </div>
       </div>
     </DemoLayout>
   );
+}
+
+/** Get block explorer URL for a tx on a given chain. */
+function getBlockExplorerUrl(chainId: number, txHash: string): string {
+  const explorers: Record<number, string> = {
+    1: 'https://etherscan.io',
+    137: 'https://polygonscan.com',
+    42161: 'https://arbiscan.io',
+    8453: 'https://basescan.org',
+    56: 'https://bscscan.com',
+    10: 'https://optimistic.etherscan.io',
+  };
+  const base = explorers[chainId] ?? 'https://etherscan.io';
+  return `${base}/tx/${txHash}`;
+}
+
+/** Format ISO timestamp to relative time string. */
+function getTimeAgo(isoString: string): string {
+  try {
+    const then = new Date(isoString).getTime();
+    const now = Date.now();
+    const diff = Math.max(0, now - then);
+    const seconds = Math.floor(diff / 1000);
+    if (seconds < 60) return 'Just now';
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  } catch {
+    return '';
+  }
 }

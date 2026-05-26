@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CinaConnectService, type Account } from '../cinaconnect.service.js';
 import { Subscription } from 'rxjs';
 
@@ -12,6 +13,8 @@ import { Subscription } from 'rxjs';
  */
 @Component({
   selector: 'cina-account-button',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <div
       *ngIf="account && account.address; else connectPrompt"

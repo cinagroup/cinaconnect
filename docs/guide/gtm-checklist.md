@@ -28,6 +28,19 @@
 | Rate limiting | Auth and API endpoints rate-limited | ☐ |
 | Secret management | No secrets in code; using env vars or secret manager | ☐ |
 | Dependency audit | `npm audit` or `pnpm audit` — no critical vulnerabilities | ☐ |
+| API key rotation | All API keys have rotation schedule documented | ☐ |
+| XSS protection | Auto-escaping verified; no `dangerouslySetInnerHTML` without sanitization | ☐ |
+| CSRF protection | State-changing endpoints require CSRF tokens | ☐ |
+| Input validation | All user inputs validated (addresses, amounts, URLs) | ☐ |
+| Private key hygiene | No private keys in code, storage, logs, or error reports | ☐ |
+| Phishing prevention | Domain registered with CinaConnect Verify API | ☐ |
+| HTTPS everywhere | No mixed content; HSTS enabled | ☐ |
+| SRI hashes | External CDN scripts include Subresource Integrity | ☐ |
+| Error message safety | Errors don't leak internal state or stack traces | ☐ |
+| Incident response plan | Documented response procedure for security events | ☐ |
+| Secret scanning | CI/CD pipeline includes gitleaks or similar | ☐ |
+| CORS configuration | Only known origins allowed | ☐ |
+| TLS version | TLS 1.3 enforced on all endpoints | ☐ |
 
 ### Testing
 

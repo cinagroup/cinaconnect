@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/angular",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Angular 17+ adapter for CinaConnect Core SDK",
   "license": "MIT",
   "repository": {
@@ -33,7 +33,7 @@
     "rxjs": "^7.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "^0.1.0",
+    "@cinaconnect/core-sdk": "^0.2.0",
     "tslib": "^2.6.0"
   },
   "devDependencies": {
@@ -48,5 +48,8 @@
   "files": [
     "dist"
   ],
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

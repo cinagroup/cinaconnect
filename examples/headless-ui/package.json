@@ -1,6 +1,6 @@
 {
   "name": "cinaconnect-headless-ui-example",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "Headless UI examples for CinaConnect — build completely custom UI using the headless SDK",

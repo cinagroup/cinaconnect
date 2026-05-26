@@ -29,6 +29,7 @@ mod mempool;
 mod metrics;
 mod reputation;
 mod rpc;
+mod signer;
 mod types;
 mod validation;
 

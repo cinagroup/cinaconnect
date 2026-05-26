@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/embedded-wallet",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Embedded wallet system with email, social, and phone authentication",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -45,5 +45,8 @@
     "secp256k1",
     "web3",
     "auth"
-  ]
+  ],
+  "publishConfig": {
+    "access": "public"
+  }
 }

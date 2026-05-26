@@ -1,0 +1,369 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import DemoLayout from '@/components/DemoLayout';
+import { useToast } from '@/lib/toast';
+import { clearConnectionHistory, getConnectionHistory } from '@/lib/connectionHistory';
+
+const LANGUAGES = [
+  { code: 'en', label: 'English', flag: '🇺🇸' },
+  { code: 'zh', label: '中文', flag: '🇨🇳' },
+  { code: 'ja', label: '日本語', flag: '🇯🇵' },
+  { code: 'ko', label: '한국어', flag: '🇰🇷' },
+  { code: 'es', label: 'Español', flag: '🇪🇸' },
+  { code: 'fr', label: 'Français', flag: '🇫🇷' },
+  { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+  { code: 'ru', label: 'Русский', flag: '🇷🇺' },
+];
+
+const CHAINS_PREF = [
+  'Ethereum', 'Polygon', 'Arbitrum', 'Base', 'Optimism',
+  'BNB Chain', 'Solana', 'Avalanche', 'TON', 'Cosmos',
+];
+
+const SETTINGS_SECTIONS = [
+  { id: 'appearance', label: 'Appearance', icon: '🎨' },
+  { id: 'language', label: 'Language', icon: '🌐' },
+  { id: 'debug', label: 'Debug', icon: '🐛' },
+  { id: 'storage', label: 'Storage', icon: '💾' },
+  { id: 'connection', label: 'Connection', icon: '🔗' },
+] as const;
+
+type SectionId = (typeof SETTINGS_SECTIONS)[number]['id'];
+
+function ToggleSwitch({ checked, onChange }: { checked: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <button
+      onClick={() => onChange(!checked)}
+      className={`relative w-12 h-6 rounded-full transition-colors duration-200 ${
+        checked ? 'bg-blue-500' : 'bg-gray-700'
+      }`}
+      role="switch"
+      aria-checked={checked}
+    >
+      <span
+        className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow-md transition-transform duration-200 ${
+          checked ? 'translate-x-6' : 'translate-x-0'
+        }`}
+      />
+    </button>
+  );
+}
+
+export default function SettingsPage() {
+  const { success, error, info } = useToast();
+
+  // Theme
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const [autoConnect, setAutoConnect] = useState(true);
+  const [preferredChain, setPreferredChain] = useState('Ethereum');
+  const [language, setLanguage] = useState('en');
+  const [debugMode, setDebugMode] = useState(false);
+  const [compactMode, setCompactMode] = useState(false);
+  const [activeSection, setActiveSection] = useState<SectionId>('appearance');
+  const [historyCount, setHistoryCount] = useState(0);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('cinaconnect_settings');
+      if (saved) {
+        const s = JSON.parse(saved);
+        if (s.theme) setTheme(s.theme);
+        if (s.language) setLanguage(s.language);
+        if (typeof s.autoConnect === 'boolean') setAutoConnect(s.autoConnect);
+        if (typeof s.debugMode === 'boolean') setDebugMode(s.debugMode);
+        if (typeof s.compactMode === 'boolean') setCompactMode(s.compactMode);
+        if (s.preferredChain) setPreferredChain(s.preferredChain);
+      }
+    } catch { /* ignore */ }
+    setHistoryCount(getConnectionHistory().length);
+  }, []);
+
+  useEffect(() => {
+    const settings = { theme, language, autoConnect, debugMode, compactMode, preferredChain };
+    localStorage.setItem('cinaconnect_settings', JSON.stringify(settings));
+  }, [theme, language, autoConnect, debugMode, compactMode, preferredChain]);
+
+  useEffect(() => {
+    if (theme === 'light') {
+      document.documentElement.classList.remove('dark');
+      document.body.style.backgroundColor = '#f5f5f5';
+      document.body.style.color = '#1a1a1a';
+    } else {
+      document.documentElement.classList.add('dark');
+      document.body.style.backgroundColor = '';
+      document.body.style.color = '';
+    }
+    return () => {
+      document.documentElement.classList.remove('dark');
+      document.body.style.backgroundColor = '';
+      document.body.style.color = '';
+    };
+  }, [theme]);
+
+  const handleClearStorage = () => {
+    try {
+      const keys = Object.keys(localStorage).filter((k) => k.startsWith('cinaconnect_'));
+      keys.forEach((k) => localStorage.removeItem(k));
+      clearConnectionHistory();
+      setHistoryCount(0);
+      setTheme('dark');
+      setAutoConnect(true);
+      setDebugMode(false);
+      setCompactMode(false);
+      setPreferredChain('Ethereum');
+      setLanguage('en');
+      success('Storage Cleared', `Removed ${keys.length} keys`);
+    } catch (e) {
+      error('Failed', 'Could not clear storage');
+    }
+  };
+
+  const handleClearHistory = () => {
+    clearConnectionHistory();
+    setHistoryCount(0);
+    success('History Cleared', 'Connection history removed');
+  };
+
+  const SectionNav = () => (
+    <div className="flex flex-wrap gap-2 mb-8">
+      {SETTINGS_SECTIONS.map((s) => (
+        <button
+          key={s.id}
+          onClick={() => setActiveSection(s.id)}
+          className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+            activeSection === s.id
+              ? 'bg-blue-500/15 text-blue-400 border border-blue-500/30'
+              : 'bg-gray-800/40 text-gray-400 border border-gray-700/40 hover:text-white hover:border-gray-600'
+          }`}
+        >
+          <span>{s.icon}</span>
+          {s.label}
+        </button>
+      ))}
+    </div>
+  );
+
+  return (
+    <DemoLayout>
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
+            Settings
+          </h1>
+          <p className="text-gray-400 text-sm mt-2">Customize your demo experience</p>
+        </div>
+
+        <SectionNav />
+
+        {/* ── Appearance ── */}
+        {activeSection === 'appearance' && (
+          <div className="space-y-6">
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-700/50">
+                <h2 className="text-lg font-bold text-white">🎨 Theme</h2>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-200">Theme Mode</p>
+                    <p className="text-xs text-gray-500">Choose between dark and light mode</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => { setTheme('dark'); success('Theme Updated', 'Switched to dark mode'); }}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        theme === 'dark'
+                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                          : 'bg-gray-700/50 text-gray-400 border border-gray-600/40 hover:text-white'
+                      }`}
+                    >
+                      🌙 Dark
+                    </button>
+                    <button
+                      onClick={() => { setTheme('light'); success('Theme Updated', 'Switched to light mode'); }}
+                      className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
+                        theme === 'light'
+                          ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                          : 'bg-gray-700/50 text-gray-400 border border-gray-600/40 hover:text-white'
+                      }`}
+                    >
+                      ☀️ Light
+                    </button>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-200">Compact Mode</p>
+                    <p className="text-xs text-gray-500">Reduce spacing and padding</p>
+                  </div>
+                  <ToggleSwitch checked={compactMode} onChange={(v) => { setCompactMode(v); info('Compact Mode', v ? 'Enabled' : 'Disabled'); }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Language ── */}
+        {activeSection === 'language' && (
+          <div className="space-y-6">
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-700/50">
+                <h2 className="text-lg font-bold text-white">🌐 Language</h2>
+              </div>
+              <div className="p-5 space-y-2">
+                {LANGUAGES.map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => { setLanguage(lang.code); success('Language Updated', lang.label); }}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                      language === lang.code
+                        ? 'bg-blue-500/15 border border-blue-500/30'
+                        : 'bg-gray-800/40 border border-gray-700/40 hover:border-gray-600'
+                    }`}
+                  >
+                    <span className="text-xl">{lang.flag}</span>
+                    <span className={`text-sm font-medium ${language === lang.code ? 'text-blue-400' : 'text-gray-300'}`}>
+                      {lang.label}
+                    </span>
+                    {language === lang.code && (
+                      <span className="ml-auto text-blue-400 text-sm">✓</span>
+                    )}
+                  </button>
+                ))}
+                <p className="text-xs text-gray-500 mt-4 text-center">
+                  Note: Language selection is saved but not fully implemented in this demo.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Debug ── */}
+        {activeSection === 'debug' && (
+          <div className="space-y-6">
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-700/50">
+                <h2 className="text-lg font-bold text-white">🐛 Debug Options</h2>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-200">Debug Mode</p>
+                    <p className="text-xs text-gray-500">Enable verbose logging in browser console</p>
+                  </div>
+                  <ToggleSwitch checked={debugMode} onChange={(v) => { setDebugMode(v); info('Debug Mode', v ? 'Enabled' : 'Disabled'); }} />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-200">Auto-Connect</p>
+                    <p className="text-xs text-gray-500">Automatically reconnect on page load</p>
+                  </div>
+                  <ToggleSwitch checked={autoConnect} onChange={(v) => { setAutoConnect(v); info('Auto-Connect', v ? 'Enabled' : 'Disabled'); }} />
+                </div>
+
+                {debugMode && (
+                  <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-700/40">
+                    <p className="text-xs text-gray-400 font-mono">
+                      {/* Simulated debug info */}
+                      Debug: ON — Verbose logging enabled<br />
+                      localStorage keys: {Object.keys(typeof window !== 'undefined' ? localStorage : {}).filter((k) => k.startsWith('cinaconnect_')).length} found<br />
+                      Connection history: {historyCount} records<br />
+                      Theme: {theme} | Language: {language}<br />
+                      Auto-connect: {autoConnect ? 'YES' : 'NO'}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Storage ── */}
+        {activeSection === 'storage' && (
+          <div className="space-y-6">
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-700/50">
+                <h2 className="text-lg font-bold text-white">💾 Storage Management</h2>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-700/40">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-200">Connection History</p>
+                      <p className="text-xs text-gray-500">{historyCount} records stored</p>
+                    </div>
+                    <button
+                      onClick={handleClearHistory}
+                      disabled={historyCount === 0}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-red-500/15 text-red-400 border border-red-500/25 hover:bg-red-500/25 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                    >
+                      Clear History
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-xl bg-gray-900/60 border border-gray-700/40">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-200">All App Data</p>
+                      <p className="text-xs text-gray-500">Settings, history, wallet state</p>
+                    </div>
+                    <button
+                      onClick={handleClearStorage}
+                      className="px-4 py-2 rounded-xl text-sm font-medium bg-red-500/15 text-red-400 border border-red-500/25 hover:bg-red-500/25 transition-all"
+                    >
+                      Clear All Data
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ── Connection ── */}
+        {activeSection === 'connection' && (
+          <div className="space-y-6">
+            <div className="bg-gray-800/60 backdrop-blur-xl rounded-2xl border border-gray-700/60 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-700/50">
+                <h2 className="text-lg font-bold text-white">🔗 Connection Preferences</h2>
+              </div>
+              <div className="p-5 space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-200">Auto-Connect</p>
+                    <p className="text-xs text-gray-500">Reconnect last wallet on page load</p>
+                  </div>
+                  <ToggleSwitch checked={autoConnect} onChange={(v) => { setAutoConnect(v); info('Auto-Connect', v ? 'Enabled' : 'Disabled'); }} />
+                </div>
+
+                <div>
+                  <p className="text-sm font-medium text-gray-200 mb-3">Preferred Chain</p>
+                  <div className="flex flex-wrap gap-2">
+                    {CHAINS_PREF.map((chain) => (
+                      <button
+                        key={chain}
+                        onClick={() => { setPreferredChain(chain); success('Preferred Chain', chain); }}
+                        className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                          preferredChain === chain
+                            ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
+                            : 'bg-gray-700/50 text-gray-400 border border-gray-600/40 hover:text-white'
+                        }`}
+                      >
+                        {chain}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </DemoLayout>
+  );
+}

@@ -4,7 +4,7 @@
  * Defines the core types for the CinaConnect Swap Aggregator SDK.
  */
 
-import type { Address } from "viem";
+import type { Address, WalletClient, PublicClient, Transport, Chain, Account } from "viem";
 
 // ============================================================
 // Core Types
@@ -78,6 +78,8 @@ export interface SwapQuote {
   expiresAt: number;
   /** Encoded transaction data for execution */
   tx?: SwapTransaction;
+  /** Chain ID the quote is valid on */
+  chainId: number;
 }
 
 /**
@@ -114,6 +116,8 @@ export interface SwapReceipt {
   blockNumber: bigint;
   /** Whether the swap succeeded */
   success: boolean;
+  /** Transaction hash of the approval transaction (if one was needed and sent before the swap) */
+  approveTxHash?: `0x${string}`;
 }
 
 /**
@@ -159,15 +163,37 @@ export interface BestQuote {
 }
 
 /**
+ * Private RPC (MEV protection) configuration.
+ */
+export interface PrivateRpcConfig {
+  /** Flashbots Protect / Eden endpoint URL */
+  url: string;
+  /** Optional API key for the private RPC provider */
+  apiKey?: string;
+}
+
+/**
  * Parameters for executing a swap.
  */
 export interface SwapExecuteParams {
   /** The quote to execute */
   quote: SwapQuote;
+  /** viem WalletClient used to sign and send the transaction */
+  walletClient: WalletClient<Transport, Chain, Account>;
+  /** viem PublicClient for gas price lookup, receipt polling, and allowance checks (required for approve flow) */
+  publicClient?: PublicClient<Transport, Chain>;
   /** Override slippage (defaults to quote's original) */
   slippageBps?: number;
   /** Max gas price to accept (wei) */
   maxGasPrice?: bigint;
   /** Transaction timeout (ms) */
   timeoutMs?: number;
+  /** Use private RPC for MEV protection (Flashbots Protect / Eden) */
+  usePrivateRpc?: boolean;
+  /** Private RPC configuration (required when usePrivateRpc is true) */
+  privateRpc?: PrivateRpcConfig;
+  /** Override transaction value (useful for native token swaps) */
+  valueOverride?: bigint;
+  /** When approving, approve exactly `amount` (true) or `amount * 2` (false, default) to reduce future approves */
+  approveExact?: boolean;
 }

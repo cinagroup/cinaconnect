@@ -1,0 +1,37 @@
+name = "cinaconnect-push-server"
+main = "cloudflare/worker.ts"
+compatibility_date = "2024-01-01"
+
+[vars]
+LOG_LEVEL = "info"
+MAX_QUEUE_SIZE = "1000"
+DEFAULT_RETRY_ATTEMPTS = "3"
+DEFAULT_TIMEOUT_MS = "5000"
+
+# Secrets (set with: wrangler secret put <name>)
+# FCM_API_KEY - Firebase Cloud Messaging API key
+# FCM_PROJECT_ID - Firebase project ID
+# APNS_KEY_ID - Apple Push Notification Service key ID
+# APNS_TEAM_ID - Apple developer team ID
+# APNS_P8_KEY - Apple P8 private key
+# APNS_PRODUCTION - boolean (true for production, false for sandbox)
+
+# Rate limiting
+[limits]
+cpu_ms = 50
+
+# KV namespace for device tokens
+[[kv_namespaces]]
+binding = "DEVICE_TOKENS"
+id = "PLACEHOLDER_REPLACE_AFTER_CREATE"
+
+# D1 database for push log (optional)
+[[d1_databases]]
+binding = "PUSH_LOG_DB"
+database_name = "cinaconnect-push"
+database_id = "PLACEHOLDER_REPLACE_AFTER_CREATE"
+
+# Queues for background processing (optional)
+[[queues.producers]]
+binding = "PUSH_QUEUE"
+queue = "cinaconnect-push-queue"

@@ -361,11 +361,6 @@ export class TRONChainAdapter {
     }
 
     // Fallback: raw API call
-    const response = await fetch(`${this.rpcUrl}/v1/accounts/${address}/transactions/trc20`, {
-      method: 'GET',
-    });
-
-    // Use the accounts endpoint for balance
     const resp = await fetch(`${this.rpcUrl}/wallet/getaccount`, {
       method: 'POST',
       headers: {

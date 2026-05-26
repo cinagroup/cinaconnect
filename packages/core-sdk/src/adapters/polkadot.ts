@@ -6,6 +6,7 @@
  * queries and transaction broadcasting. Supports DOT transfers and asset transfers.
  */
 
+import { blake2b } from '@noble/hashes/blake2.js';
 import type { Connector } from '../connector.js';
 import type { Chain, TransactionRequest } from '../types.js';
 
@@ -655,38 +656,325 @@ export class PolkadotChainAdapter {
     return '0x' + Array.from(bytes).map((b) => b.toString(16).padStart(2, '0')).join('');
   }
 
-  /** Query balance via JSON-RPC over WebSocket. */
+  /* ------------------------------------------------------------------ */
+  /*  SCALE codec helpers (minimal, no external dependency)               */
+  /* ------------------------------------------------------------------ */
+
+  /**
+   * Twox128 hash — first 16 bytes of Twox256.
+   * Used for Polkadot storage map key construction.
+   */
+  private _twox128(input: Uint8Array): Uint8Array {
+    const full = this._twox256(input);
+    return full.slice(0, 16);
+  }
+
+  /**
+   * Twox256 — four XXH64 hashes with seeds 0,1,2,3 concatenated.
+   * Each XXH64 takes 8 bytes, giving 32 bytes total.
+   */
+  private _twox256(input: Uint8Array): Uint8Array {
+    const out = new Uint8Array(32);
+    for (let i = 0; i < 4; i++) {
+      const h = this._xxh64(input, i);
+      out.set(this._u64ToLittleEndianBytes(h), i * 8);
+    }
+    return out;
+  }
+
+  /* ---- XXH64 implementation (portable JS) ---- */
+
+  private static readonly _XXH64_PRIME1 = 11400714785074694791n;
+  private static readonly _XXH64_PRIME2 = 14029467366897019727n;
+  private static readonly _XXH64_PRIME3 = 1609587929392839161n;
+  private static readonly _XXH64_PRIME4 = 9650029242287828579n;
+  private static readonly _XXH64_PRIME5 = 2870177450012600261n;
+  private static readonly _MASK64 = 0xffffffffffffffffn;
+
+  private _rotl64(v: bigint, n: number): bigint {
+    return ((v << BigInt(n)) | (v >> BigInt(64 - n))) & PolkadotChainAdapter._MASK64;
+  }
+
+  private _xxh64Round(acc: bigint, input: bigint): bigint {
+    acc = (acc + input * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+    acc = this._rotl64(acc, 31);
+    acc = (acc * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+    return acc;
+  }
+
+  private _xxh64(buf: Uint8Array, seed: number): bigint {
+    let h64: bigint = BigInt(seed);
+    const len = buf.length;
+    let i = 0;
+
+    if (len >= 32) {
+      // Process 32-byte stripes (4 × 8 bytes)
+      let v1 = (h64 + PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      let v2 = (h64 + PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      let v3 = h64 & PolkadotChainAdapter._MASK64;
+      let v4 = (h64 - PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+
+      const limit = len - 31;
+      while (i < limit) {
+        v1 = this._xxh64Round(v1, this._readLE64(buf, i));
+        v2 = this._xxh64Round(v2, this._readLE64(buf, i + 8));
+        v3 = this._xxh64Round(v3, this._readLE64(buf, i + 16));
+        v4 = this._xxh64Round(v4, this._readLE64(buf, i + 24));
+        i += 32;
+      }
+
+      h64 = (this._rotl64(v1, 1) + this._rotl64(v2, 7) + this._rotl64(v3, 12) + this._rotl64(v4, 18)) & PolkadotChainAdapter._MASK64;
+      // Merge stripe accumulators
+      v1 = (v1 * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      v1 = this._rotl64(v1, 31);
+      v1 = (v1 * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+      h64 = ((h64 ^ v1) * PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME4) & PolkadotChainAdapter._MASK64;
+
+      v2 = (v2 * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      v2 = this._rotl64(v2, 31);
+      v2 = (v2 * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+      h64 = ((h64 ^ v2) * PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME4) & PolkadotChainAdapter._MASK64;
+
+      v3 = (v3 * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      v3 = this._rotl64(v3, 31);
+      v3 = (v3 * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+      h64 = ((h64 ^ v3) * PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME4) & PolkadotChainAdapter._MASK64;
+
+      v4 = (v4 * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+      v4 = this._rotl64(v4, 31);
+      v4 = (v4 * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+      h64 = ((h64 ^ v4) * PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME4) & PolkadotChainAdapter._MASK64;
+    } else {
+      h64 = (h64 + PolkadotChainAdapter._XXH64_PRIME5 + BigInt(len)) & PolkadotChainAdapter._MASK64;
+    }
+
+    // Process remaining bytes
+    h64 = (h64 + BigInt(len)) & PolkadotChainAdapter._MASK64;
+    while (i + 8 <= len) {
+      const k1 = this._readLE64(buf, i);
+      h64 = ((h64 ^ this._xxh64Round(0n, k1)) * PolkadotChainAdapter._XXH64_PRIME1 + PolkadotChainAdapter._XXH64_PRIME4) & PolkadotChainAdapter._MASK64;
+      i += 8;
+    }
+    while (i + 4 <= len) {
+      const k2 = this._readLE32(buf, i);
+      h64 = ((h64 ^ BigInt(k2) * PolkadotChainAdapter._XXH64_PRIME1) * PolkadotChainAdapter._XXH64_PRIME2 + PolkadotChainAdapter._XXH64_PRIME3) & PolkadotChainAdapter._MASK64;
+      i += 4;
+    }
+    while (i < len) {
+      h64 = ((h64 ^ BigInt(buf[i]) * PolkadotChainAdapter._XXH64_PRIME5) * PolkadotChainAdapter._XXH64_PRIME1) & PolkadotChainAdapter._MASK64;
+      i++;
+    }
+
+    // Finalization
+    h64 = h64 ^ (h64 >> 33n);
+    h64 = (h64 * PolkadotChainAdapter._XXH64_PRIME2) & PolkadotChainAdapter._MASK64;
+    h64 = h64 ^ (h64 >> 29n);
+    h64 = (h64 * PolkadotChainAdapter._XXH64_PRIME3) & PolkadotChainAdapter._MASK64;
+    h64 = h64 ^ (h64 >> 32n);
+    return h64;
+  }
+
+  private _readLE64(buf: Uint8Array, offset: number): bigint {
+    return (BigInt(buf[offset]) |
+      (BigInt(buf[offset + 1]) << 8n) |
+      (BigInt(buf[offset + 2]) << 16n) |
+      (BigInt(buf[offset + 3]) << 24n) |
+      (BigInt(buf[offset + 4]) << 32n) |
+      (BigInt(buf[offset + 5]) << 40n) |
+      (BigInt(buf[offset + 6]) << 48n) |
+      (BigInt(buf[offset + 7]) << 56n)) & PolkadotChainAdapter._MASK64;
+  }
+
+  private _readLE32(buf: Uint8Array, offset: number): number {
+    return (buf[offset] | (buf[offset + 1] << 8) | (buf[offset + 2] << 16) | (buf[offset + 3] << 24)) >>> 0;
+  }
+
+  private _u64ToLittleEndianBytes(v: bigint): Uint8Array {
+    const out = new Uint8Array(8);
+    for (let i = 0; i < 8; i++) {
+      out[i] = Number(v & 0xffn);
+      v = v >> 8n;
+    }
+    return out;
+  }
+
+  /**
+   * Blake2b-128 hash (first 16 bytes of Blake2b-512 output).
+   * Uses @noble/hashes/blake2b — already a dependency.
+   */
+  private _blake2b128(input: Uint8Array): Uint8Array {
+    return blake2b(input, { dkLen: 16 });
+  }
+
+  /**
+   * Blake2b-128 concat — Blake2b-128 hash of input concatenated with the input itself.
+   */
+  private _blake2b128Concat(input: Uint8Array): Uint8Array {
+    const hash = this._blake2b128(input);
+    const out = new Uint8Array(hash.length + input.length);
+    out.set(hash);
+    out.set(input, hash.length);
+    return out;
+  }
+
+  /**
+   * Twox64 concat — Twox64 hash of input concatenated with the input itself.
+   */
+  private _twox64Concat(input: Uint8Array): Uint8Array {
+    const hash = this._twox256(input);
+    const out = new Uint8Array(8 + input.length);
+    out.set(hash.slice(0, 8));
+    out.set(input, 8);
+    return out;
+  }
+
+  /**
+   * Generate the storage key for System.Account(address).
+   *
+   * Format:
+   *   Twox128("System") ++ Twox128("Account") ++ Blake2b128Concat(SS58 raw bytes)
+   *
+   * Returns the hex-encoded storage key for use with state_getStorage RPC.
+   */
+  private _buildStorageKey(address: string): string {
+    // Decode SS58 to get raw public key bytes
+    const info = decodeSS58(address);
+    if (!info) throw new Error(`Cannot build storage key: invalid SS58 address`);
+    const pubKeyBytes = this._hexToBytes(info.publicKey);
+
+    const systemHash = this._twox128(new TextEncoder().encode('System'));
+    const accountHash = this._twox128(new TextEncoder().encode('Account'));
+    const keyHash = this._blake2b128Concat(pubKeyBytes);
+
+    const combined = new Uint8Array(systemHash.length + accountHash.length + keyHash.length);
+    combined.set(systemHash, 0);
+    combined.set(accountHash, systemHash.length);
+    combined.set(keyHash, systemHash.length + accountHash.length);
+
+    return '0x' + Array.from(combined).map((b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  /** Convert hex string (without 0x prefix) to Uint8Array. */
+  private _hexToBytes(hex: string): Uint8Array {
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+    }
+    return bytes;
+  }
+
+  /**
+   * SCALE-decode a u128 value (little-endian, up to 16 bytes).
+   */
+  private _scaleDecodeU128(bytes: Uint8Array, offset: number = 0): bigint {
+    let value = 0n;
+    for (let i = 0; i < 16 && (offset + i) < bytes.length; i++) {
+      value |= BigInt(bytes[offset + i]) << BigInt(i * 8);
+    }
+    return value;
+  }
+
+  /**
+   * SCALE-decode a compact u32/VarInt (used for nonce and reference counters).
+   */
+  private _scaleDecodeCompact(bytes: Uint8Array, offset: number = 0): { value: number; bytesRead: number } {
+    const first = bytes[offset];
+    const mode = first & 0b11;
+    if (mode === 0b00) {
+      // Single byte, value >> 2
+      return { value: first >> 2, bytesRead: 1 };
+    } else if (mode === 0b01) {
+      // 2-byte little-endian, value >> 2
+      const val = (bytes[offset] | (bytes[offset + 1] << 8)) >> 2;
+      return { value: val, bytesRead: 2 };
+    } else if (mode === 0b10) {
+      // 4-byte little-endian, value >> 2
+      const val = (bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16) | (bytes[offset + 3] << 24)) >> 2;
+      return { value: val, bytesRead: 4 };
+    } else {
+      // mode == 0b11: big int prefix, next byte tells length
+      const lenExp = (first >> 2) & 0b111111;
+      const byteCount = 4 + lenExp;
+      let value = 0n;
+      for (let i = 0; i < byteCount; i++) {
+        value |= BigInt(bytes[offset + 1 + i]) << BigInt(i * 8);
+      }
+      return { value: Number(value), bytesRead: 1 + byteCount };
+    }
+  }
+
+  /**
+   * Decode SCALE-encoded AccountInfo storage value.
+   *
+   * AccountInfo structure (current Polkadot runtime):
+   *   nonce: Compact<u32>
+   *   consumers: Compact<u32>
+   *   providers: Compact<u32>
+   *   sufficients: Compact<u32>
+   *   data: AccountData {
+   *     free: u128
+   *     reserved: u128
+   *     frozen: u128  (or misc_frozen + fee_frozen in older runtimes)
+   *   }
+   *
+   * After the 4 compact fields, the free balance is at byte offset of the
+   * accumulated compact sizes (typically 4–8 bytes total for small values).
+   */
+  private _decodeAccountInfo(scaleBytes: Uint8Array): { free: string } {
+    let offset = 0;
+    // Skip nonce
+    const nonce = this._scaleDecodeCompact(scaleBytes, offset);
+    offset += nonce.bytesRead;
+    // Skip consumers
+    const consumers = this._scaleDecodeCompact(scaleBytes, offset);
+    offset += consumers.bytesRead;
+    // Skip providers
+    const providers = this._scaleDecodeCompact(scaleBytes, offset);
+    offset += providers.bytesRead;
+    // Skip sufficients
+    const sufficients = this._scaleDecodeCompact(scaleBytes, offset);
+    offset += sufficients.bytesRead;
+
+    // Now we're at AccountData.free (u128 = 16 bytes)
+    const free = this._scaleDecodeU128(scaleBytes, offset);
+    return { free: free.toString() };
+  }
+
+  /** Query balance via JSON-RPC over HTTP gateway. */
   private async _rpcQueryBalance(address: string): Promise<string> {
-    // For non-browser environments, use fetch to a gateway
-    const wsUrl = this.rpcUrl.replace('wss://', 'https://');
+    // For non-browser environments, use fetch to an HTTP gateway
+    const httpUrl = this.rpcUrl.replace('wss://', 'https://');
     try {
-      const resp = await fetch(wsUrl, {
+      const storageKey = this._buildStorageKey(address);
+      const resp = await fetch(httpUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           jsonrpc: '2.0',
           id: 1,
           method: 'state_getStorage',
-          params: [this._storageKeyForBalance(address)],
+          params: [storageKey],
         }),
       });
       const data = await resp.json();
       if (data.error) throw new Error(data.error.message);
       if (data.result) {
-        // Decode the storage value (simplified)
-        return '0'; // Requires SCALE decoding — return 0 for now
+        // Decode the SCALE-encoded AccountInfo storage value
+        const scaleBytes = this._hexToBytes((data.result as string).slice(2)); // strip 0x
+        const decoded = this._decodeAccountInfo(scaleBytes);
+        return decoded.free;
       }
     } catch {
-      // WebSocket unavailable in this context
+      // Gateway unavailable or decoding failed
     }
     return '0';
   }
 
   /** Generate storage key for balance query. */
-  private _storageKeyForBalance(address: string): string {
-    // System.Account storage key (simplified)
-    // Twox128(System) ++ Twox128(Account) ++ Blake2_128Concat(address)
-    return ''; // Placeholder — full implementation needs SCALE codec
+  private async _storageKeyForBalance(address: string): Promise<string> {
+    // System.Account storage key:
+    //   Twox128("System") ++ Twox128("Account") ++ Blake2b128Concat(SS58 raw pubkey)
+    return this._buildStorageKey(address);
   }
 
   /** Send asset transfer via API. */
@@ -721,14 +1009,24 @@ export class PolkadotChainAdapter {
     });
   }
 
-  /** Send transfer via JSON-RPC (fallback). */
+  /**
+   * Send transfer via JSON-RPC (fallback).
+   *
+   * NOTE: Direct RPC submission requires building a fully SCALE-encoded
+   * extrinsic (including nonce, era, tip, and signature). Without a signing
+   * key this adapter cannot produce a valid extrinsic.
+   *
+   * In production, use the injected wallet API path (api.tx.balances.transfer)
+   * which handles encoding and signing via the extension.
+   */
   private async _rpcSendTransfer(
     from: string,
     to: string,
     value: string,
   ): Promise<string> {
+    // Cannot send without a signer — require wallet connection.
     throw new Error(
-      'Direct RPC transfers require SCALE encoding. Connect a wallet for signing.',
+      'Direct RPC transfer is not supported. Please connect a Polkadot wallet (Polkadot.js Extension, Talisman, or SubWallet) to send transactions.',
     );
   }
 }

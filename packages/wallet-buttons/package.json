@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/wallet-buttons",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Direct wallet connection buttons — no modal, no bloat. Connect wallets individually with beautiful, customizable buttons.",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -39,8 +39,8 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "^0.1.0",
-    "@cinaconnect/explorer": "^0.1.0"
+    "@cinaconnect/core-sdk": "^0.2.0",
+    "@cinaconnect/explorer": "^0.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.0",
@@ -52,5 +52,8 @@
     "type": "git",
     "url": "https://github.com/hainai-group/cinaconnect.git",
     "directory": "packages/wallet-buttons"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

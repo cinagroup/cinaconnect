@@ -8,7 +8,24 @@
  */
 
 // Core recovery manager
-export { WalletRecovery, hexToBytes, bytesToHex } from './WalletRecovery.js';
+export {
+  WalletRecovery,
+  hexToBytes,
+  bytesToHex,
+  gfMul,
+  gfInv,
+  gfDiv,
+  evalPolynomial,
+  lagrangeInterpolate,
+  splitSecret,
+  combineShares,
+  encryptShare,
+  decryptShare,
+  deriveKeyFromPassword,
+} from './WalletRecovery.js';
+
+// React hook
+export { useWalletRecovery } from './useWalletRecovery.js';
 
 // Types
 export type {
@@ -25,4 +42,5 @@ export type {
   PasswordStrengthResult,
   SetPasswordParams,
   ChangePasswordParams,
+  EncryptedShareBundle,
 } from './types.js';

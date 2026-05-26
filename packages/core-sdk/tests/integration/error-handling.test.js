@@ -51,7 +51,9 @@ class NetworkErrorConnector extends Connector {
             connectorId: this.id,
         };
     }
-    async disconnect() { }
+    async disconnect() {
+        this.emit('disconnect');
+    }
     async getAccounts() {
         if (this._shouldFail)
             throw new Error('Network error');
@@ -132,11 +134,15 @@ describe('Network error handling', () => {
 describe('Timeout handling', () => {
     it('throws TimeoutError on connection timeout', async () => {
         vi.useFakeTimers();
-        const connector = new TimeoutConnector();
-        const connectPromise = connector.connect();
-        await vi.advanceTimersByTimeAsync(5000);
-        await expect(connectPromise).rejects.toThrow('Connection timed out');
-        vi.useRealTimers();
+        try {
+            const connector = new TimeoutConnector();
+            const connectPromise = connector.connect();
+            connectPromise.catch(() => {});
+            await vi.advanceTimersByTimeAsync(5000);
+            await expect(connectPromise).rejects.toThrow('Connection timed out');
+        } finally {
+            vi.useRealTimers();
+        }
     });
 });
 describe('Error event emission', () => {

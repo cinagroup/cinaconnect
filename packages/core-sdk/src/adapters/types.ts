@@ -85,8 +85,8 @@ export interface ChainAdapterMethods {
  * Adapter factory configuration.
  */
 export interface AdapterFactoryConfig {
-  /** Adapter type ('viem' | 'wagmi' | 'ethers5' | 'ethers6'). */
-  type: 'viem' | 'wagmi' | 'ethers5' | 'ethers6';
+  /** Adapter type ('viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos'). */
+  type: 'viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos' | 'sui' | 'starknet' | 'xrpl' | 'near';
 
   /** Underlying client/provider. */
   client?: unknown;

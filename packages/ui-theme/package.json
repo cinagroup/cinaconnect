@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/ui-theme",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect UI theme tokens, animations, and base components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -24,6 +24,11 @@
     "tsup": "^8.3.0",
     "typescript": "^5.3.0"
   },
-  "files": ["dist"],
-  "license": "MIT"
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

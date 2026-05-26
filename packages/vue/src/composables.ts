@@ -61,3 +61,20 @@ export function useDisconnect() {
   const { disconnect } = useCinaConnect();
   return { disconnect };
 }
+
+// EIP-5792 composables
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useAtomicBatch,
+  useCallsStatus,
+} from './composables/useEIP5792.js';
+
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  UseAtomicBatchReturn,
+  UseCallsStatusReturn,
+  SendCallsOptions,
+  AtomicBatchOptions,
+} from './composables/useEIP5792.js';

@@ -263,7 +263,9 @@ describe('QRTransport', () => {
     await uriPromise;
 
     const connectPromise = transport.connect();
-    vi.advanceTimersByTime(3001);
+    // Pre-attach catch to avoid unhandled rejection if timing is off
+    connectPromise.catch(() => {});
+    await vi.advanceTimersByTimeAsync(3001);
 
     await expect(connectPromise).rejects.toThrow('QR connection timed out');
   });

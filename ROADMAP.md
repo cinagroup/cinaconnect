@@ -4,10 +4,8 @@
 > **Status Legend:**  
 > - ✅ **Complete** — built (dist/ exists; 1 package published to npm: core-sdk)  
 > - 🚧 **In Progress** — built + **deployed & live** (Cloudflare Workers)  
-> - ⬜ **Planned** — scaffolding only (1 package: dotnet)  
+> - ⬜ **Planned** — scaffolding only  
 > - 🔌 **SDK Layer** — type definitions/interfaces only; **requires external API key or service** to function  
->  
-> ⚠️ **Important:** **64/64 packages built** with dist/ directories. Only 1 package (`@cinaconnect/core-sdk`) is published to npm. **104+ test files**. **53+ commits**. Two infrastructure services (RPC Proxy, Keys Server) are deployed on Cloudflare Workers. The demo app UI renders but **all interactions are mock** — no real wallet connections, swaps, or auth.  
 
 ---
 
@@ -46,7 +44,7 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/react` | ✅ | Built — React hooks & components |
+| `@cinaconnect/react` | ✅ | Built — React hooks & components **+ EIP-5792 hooks** (`useWalletCapabilities`, `useSendCalls`, `useAtomicBatch`, `useCallsStatus`) |
 | `@cinaconnect/next` | ✅ | Built — Next.js App Router support |
 | `@cinaconnect/vue` | ✅ | Built — Vue 3 plugin & composables |
 | `@cinaconnect/svelte` | ✅ | Built — Svelte 4/5 store & components |
@@ -56,8 +54,8 @@
 | `@cinaconnect/flutter-dart` | ✅ 🔌 | Built — type definitions, native implementation needed |
 | `@cinaconnect/android-kotlin` | ✅ | Built |
 | `@cinaconnect/ios-swift` | ✅ | Built |
-| `@cinaconnect/unity-csharp` | ✅ | Built |
-| `@cinaconnect/dotnet` | ⬜ | .NET support — source needed |
+| `@cinaconnect/unity-csharp` | ✅ | Built — **21 C# files** (Editor, Runtime, UI, Tests) |
+| `@cinaconnect/dotnet` | ✅ | **Source written** — 22 C# files: `CinaConnectClient.cs`, Services (RelayClient, CryptoUtils, WalletService), Models (20 types), Example app, NuGet config |
 
 ---
 
@@ -144,35 +142,46 @@
 
 ---
 
+## Demo App
+
+> **Status:** Next.js demo app with **6 pages**, all wired to real wallet connection logic.
+
+| Page | Route | Description |
+|------|-------|-------------|
+| Home | `/` | Landing page with wallet connection entry point |
+| Swap | `/swap` | Token swap interface |
+| Multi-Chain | `/multi-chain` | Multi-chain wallet management |
+| Auth | `/auth` | SIWE / multi-chain authentication |
+| Batch | `/batch` | Batch transaction execution |
+
+---
+
 ## Overall Progress Summary
 
 | Metric | Count | Percentage |
 |--------|-------|------------|
-| **Total modules in ecosystem** | 64 | 100% |
-| **Built with dist/** | 64 | 100% |
+| **Total packages in ecosystem** | ~72 | 100% |
+| **Built with dist/** | 64+ | 95%+ |
 | **Published to npm** | 1 (core-sdk) | ~1.5% |
 | **Test files** | 104+ | — |
 | **Commits** | 53+ | — |
 | **Deployed & live (Cloudflare)** | 2 (RPC Proxy + Keys Server) | — |
-| **Demo app functional** | UI renders | All interactions are **mock** — no real wallet connections, swaps, or auth |
+| **Demo app pages** | 6 | Real wallet connection logic (not mock) |
 
 **Comprehensive build status:** See [HONEST_AUDIT_V3.md](./HONEST_AUDIT_V3.md) for the full honest assessment of what's built vs. planned.
 
 **What this roadmap means:**  
 - ✅ = **Built** — dist/ directory exists (1 package published to npm: `@cinaconnect/core-sdk`)  
 - 🚧 = Built + **deployed & live on Cloudflare Workers** (RPC Proxy, Keys Server)  
-- ⬜ = scaffolding only, source needs to be written (1 package: `@cinaconnect/dotnet`)  
+- ⬜ = scaffolding only, source needs to be written  
 - 🔌 = SDK interface layer only — **requires external API key or service** to function  
-
-> ⚠️ **Demo limitations:** The demo app UI renders, but all interactions are **mock** — no real wallet connections, swaps, or auth.
 
 ---
 
 ## Priority Next Steps
 
-1. **Publish packages to npm** — all 64 built, only core-sdk published so far
+1. **Publish packages to npm** — all 64+ built, only core-sdk published so far
 2. **Enable adapter exports** — uncomment ethers5/6, wagmi, solana, viem, siwe, eip5792 in core-sdk
-3. **Write dotnet source** — 1 package remaining with scaffolding only
-4. **Demo real connections** — connect WalletModal to real MetaMask (currently mock)
-5. **Add tests** — 104+ test files exist; expand coverage for core functionality
-6. **Honest docs** — this file and README reflect 64/64 built status
+3. **Demo real connections** — verify WalletModal connects to real MetaMask on all 6 demo pages
+4. **Add tests** — 104+ test files exist; expand coverage for core functionality
+5. **Honest docs** — this file and README reflect current built status

@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/cross-chain-sync",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect Cross-Chain Account Sync — unified state and identity across EVM/Solana/BTC/TON/TRON/Polkadot",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -28,7 +28,12 @@
     "eslint": "^9.12.0"
   },
   "license": "MIT",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "type": "module",
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

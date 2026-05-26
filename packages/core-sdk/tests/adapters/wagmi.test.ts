@@ -113,7 +113,19 @@ describe('WagmiConnector', () => {
   });
 
   it('should throw when signing without connecting', async () => {
-    await expect(connector.signMessage('test')).rejects.toThrow();
+    // Create a mock connector that returns empty accounts (not connected)
+    const noAccountInstance: WagmiConnectorInstance = {
+      id: 'no-account',
+      name: 'No Account Wallet',
+      type: 'injected',
+      connect: async () => ({ accounts: [], chainId: 1 }),
+      disconnect: async () => {},
+      getAccounts: async () => [],
+      getChainId: async () => 1,
+      switchChain: async () => {},
+    };
+    const c = new WagmiConnector(noAccountInstance, config);
+    await expect(c.signMessage('test')).rejects.toThrow();
   });
 
   it('should get wagmi config', () => {

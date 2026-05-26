@@ -13,3 +13,13 @@ export { BalancePipe } from './lib/pipes/balance.pipe';
 
 // Directives
 export { ConnectDirective } from './lib/directives/connect.directive';
+
+// EIP-5792
+export {
+  Eip5792Service,
+  type SendCallsResultObs,
+  type SendCallsOptions,
+  type AtomicBatchOptions,
+  type GetCallsStatusOptions,
+  type CallsStatusObs,
+} from './lib/eip5792/eip5792.service';

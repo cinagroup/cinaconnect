@@ -1,16 +1,25 @@
 {
   "name": "@cinaconnect/cdn",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect CDN package — script-tag usage for ConnectButton, ConnectModal",
   "type": "module",
   "main": "dist/cdn.js",
   "module": "dist/cdn.mjs",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rollup -c rollup.config.js",
+    "build:cdn": "rollup -c rollup.config.js && node scripts/versioned-urls.js",
     "dev": "rollup -c rollup.config.js --watch",
     "lint": "eslint src/",
-    "test": "vitest run"
+    "test": "vitest run",
+    "sri": "node scripts/sri-hash.js dist/cdn.js",
+    "sri:all": "node scripts/sri-hash.js dist/cdn.js sha384 && node scripts/sri-hash.js dist/cdn.mjs sha384",
+    "versioned": "node scripts/versioned-urls.js",
+    "deploy:pages": "npm run build:cdn && npx wrangler pages deploy cdn-dist",
+    "deploy:r2": "npm run build:cdn && node scripts/r2-upload.js",
+    "deploy": "npm run build:cdn && echo 'Run npm run deploy:pages or npm run deploy:r2'"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.3.0",
@@ -22,5 +31,9 @@
     "jsdom": "^24.0.0",
     "eslint": "^9.12.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "types": "dist/cdn.d.ts"
 }

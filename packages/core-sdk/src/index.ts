@@ -174,6 +174,233 @@ export type {
   PolkadotWalletInfo as PolkadotWalletInfoType,
 } from './adapters/polkadot.js';
 
+// Cosmos Adapter (optional)
+export {
+  CosmosChainAdapter,
+  COSMOS_CHAINS,
+  COSMOS_WALLETS,
+  bech32Encode,
+  bech32Decode,
+  bech32FromBytes,
+  bech32ToBytes,
+  isValidCosmosAddress,
+} from './adapters/cosmos.js';
+export type {
+  CosmosMsg,
+  CosmosFee,
+  CosmosCoin,
+  CosmosTransaction,
+  CosmosTransfer,
+  CosmWasmExecute,
+  CosmosWalletInfo as CosmosWalletInfoType,
+} from './adapters/cosmos.js';
+
+// Hedera Adapter (optional)
+export {
+  HederaChainAdapter,
+  HEDERA_CHAINS,
+  HEDERA_WALLETS,
+  isValidHederaAccountId,
+  isValidHederaEvmAddress,
+  normalizeHederaAddress,
+  isValidHederaTokenId,
+  isValidHederaContractId,
+  accountIdToEvmAddress,
+  parseAccountId,
+  formatHbar,
+  parseHbarAmount,
+  HederaTxType,
+  encodeFunctionCall,
+  decodeUint256,
+  decodeAddress,
+  decodeString,
+} from './adapters/hedera.js';
+export type {
+  HederaAccountBalance,
+  HederaAccountInfo,
+  HederaTransactionRecord,
+  HederaTokenInfo,
+  HederaTokenBalance,
+  HederaNftInfo,
+  HederaWalletProvider,
+  HederaWalletInfo as HederaWalletInfoType,
+  HederaTransactionRequest,
+  HederaSignedTransaction,
+  HashPackProvider,
+  BladeProvider,
+  KaibanProvider,
+} from './adapters/hedera.js';
+
+// Sui Adapter (optional)
+export {
+  SuiChainAdapter,
+  SUI_CHAINS,
+  SUI_WALLETS,
+  isValidSuiAddress,
+  normalizeSuiAddress,
+  isValidSuiObjectId,
+  formatSuiBalance,
+  parseSuiAmount,
+  BcsWriter,
+  BcsReader,
+  encodeTypeTag,
+  TransactionBuilder,
+  CommandKind,
+  bytesToBase58,
+} from './adapters/sui.js';
+export type {
+  SuiObject,
+  SuiCoinBalance,
+  SuiTransactionResponse,
+  SuiGasBudget,
+  SuiTransactionRequest,
+  SuiWalletProvider,
+  SuiWalletInfo as SuiWalletInfoType,
+  SuiTransactionInput,
+  BuiltTransactionBlock,
+  SuiCommand,
+  TransferObjectsCommand,
+  SplitCoinCommand,
+  MergeCoinsCommand,
+  MoveCallCommand,
+  PublishCommand,
+} from './adapters/sui.js';
+
+// XRPL Adapter (optional)
+export {
+  XrplChainAdapter,
+  XRPL_CHAINS,
+  XRPL_WALLETS,
+  isValidXrplAddress,
+  isValidXAddress,
+  isValidAnyXrplAddress,
+  normalizeXrplAddress,
+  bytesToBase58 as xrplBytesToBase58,
+  encodeDrops,
+  decodeDrops,
+  parseXrpAmount,
+  buildPayment,
+  buildOfferCreate,
+  buildOfferCancel,
+  buildTrustSet,
+  buildNftMint,
+  buildNftBurn,
+  buildNftCreateOffer,
+  XrplBinaryWriter,
+  XrplFieldType,
+  XrplTxType,
+} from './adapters/xrpl.js';
+export type {
+  XrplAccountBalance,
+  XrplAccountInfo,
+  XrplTrustLine,
+  XrplIssuedAmount,
+  XrplOffer,
+  XrplNft,
+  XrplNftOffer,
+  XrplTransactionResponse,
+  XrplFeeEstimate,
+  XrplTransactionRequest,
+  XrplWalletProvider,
+  XrplWalletInfo as XrplWalletInfoType,
+} from './adapters/xrpl.js';
+
+// NEAR Adapter (optional)
+export {
+  NearChainAdapter,
+  NEAR_CHAINS,
+  NEAR_WALLETS,
+  isValidNearAccount,
+  normalizeNearAccount,
+  isSubAccount,
+  getParentAccount,
+  formatNearBalance,
+  parseNearAmount,
+  BorshWriter,
+  BorshReader,
+  base58Encode,
+  base58Decode,
+  sha256,
+  AccessKeyPermission,
+  KeyKind,
+  ActionKind,
+  createTransferAction,
+  createFunctionCallAction,
+  createAccountAction,
+  buildNearFunctionCall,
+  buildNearTransfer,
+  buildFtTransferCall,
+  buildFtTransferCallWithCallback,
+  buildNftTransferCall,
+  buildNftMintCall,
+  DEFAULT_NEAR_GAS,
+  DEFAULT_FT_GAS,
+  DEFAULT_NFT_GAS,
+  MIN_TRANSFER_DEPOSIT,
+} from './adapters/near.js';
+export type {
+  NearAccountInfo,
+  NearAccessKeyInfo,
+  NearBlockInfo,
+  NearTxStatusResult,
+  NearViewStateResult,
+  NearCallResult,
+  NearAction,
+  NearTransactionRequest,
+  NearFunctionCall,
+  NearFtTransfer,
+  NearFtMetadata,
+  NearNftMetadata,
+  NearNftToken,
+  NearNftTransfer,
+  NearNftMint,
+  NearSignedTransaction,
+  NearTransactionResponse,
+  NearWalletProvider,
+  NearWalletSelector,
+  NearWalletInfo as NearWalletInfoType,
+} from './adapters/near.js';
+
+// Starknet Adapter (optional)
+export {
+  StarknetChainAdapter,
+  STARKNET_CHAINS,
+  STARKNET_WALLETS,
+  isValidStarknetAddress,
+  normalizeStarknetAddress,
+  isValidFelt,
+  padHex,
+  encodeFelt252,
+  encodeCalldata,
+  encodeStruct,
+  encodeCairoArray,
+  encodeByteArray,
+  encodeSnip12Message,
+  encodeMultiCall,
+  buildInvokeTx,
+  buildMultiInvokeTx,
+  formatStarknetBalance,
+  parseStarknetAmount,
+  buildErc20BalanceCalldata,
+  buildErc20TransferCalldata,
+  buildErc20ApproveCalldata,
+  STRK_TOKEN_ADDRESS,
+  ETH_TOKEN_ADDRESS,
+  STRK_DECIMALS,
+  ETH_DECIMALS,
+} from './adapters/starknet.js';
+export type {
+  StarknetAccount,
+  StarknetWalletProvider,
+  StarknetWalletInfo as StarknetWalletInfoType,
+  StarknetTokenInfo,
+  StarknetTxStatus,
+  StarknetCall,
+  StarknetInvokeTransaction,
+  BlockReference,
+  CairoCalldataItem,
+} from './adapters/starknet.js';
+
 // Crypto
 export {
   generateKeypair,
@@ -235,6 +462,36 @@ export async function createAdapter(
       if (config.chains) adapter.registerChains(config.chains);
       return adapter;
     }
+    case 'cosmos': {
+      const mod = await import('./adapters/cosmos.js');
+      const adapter = new mod.CosmosChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
+    case 'hedera': {
+      const mod = await import('./adapters/hedera.js');
+      const adapter = new mod.HederaChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
+    case 'sui': {
+      const mod = await import('./adapters/sui.js');
+      const adapter = new mod.SuiChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
+    case 'starknet': {
+      const mod = await import('./adapters/starknet.js');
+      const adapter = new mod.StarknetChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
+    case 'near': {
+      const mod = await import('./adapters/near.js');
+      const adapter = new mod.NearChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
     case 'solana': {
       const mod = await import('./adapters/solana.js');
       return new mod.SolanaChainAdapter();
@@ -248,7 +505,7 @@ export async function createAdapter(
  * Factory configuration for new chain adapters (TON, TRON, Polkadot).
  */
 export interface NewChainAdapterFactoryConfig {
-  type: 'ton' | 'tron' | 'polkadot' | 'solana';
+  type: 'ton' | 'tron' | 'polkadot' | 'solana' | 'cosmos' | 'sui' | 'hedera' | 'starknet' | 'near';
   client?: unknown;
   connector?: import('./connector.js').Connector;
   chains?: import('./types.js').Chain[];
@@ -278,4 +535,43 @@ export type {
  * SDK version.
  */
 export const VERSION = '0.1.0';
-export * from './eip5792';
+// EIP-5792: Wallet Call API (atomic batch transactions)
+export {
+  // Types
+  type WalletCapabilities,
+  type ChainCapabilities,
+  type Call,
+  type SendCallsParams,
+  type SendCallsResult,
+  type CallsStatus,
+  type GetCallsStatusResult,
+  type CallReceipt,
+  type GetCapabilitiesParams,
+  type AtomicBatchConfig,
+  type AtomicBatchResult,
+  // Capabilities
+  walletGetCapabilities,
+  hasCapability,
+  getChainCapabilities,
+  getSupportedChains,
+  filterByCapability,
+  // Send Calls
+  walletSendCalls,
+  sendSingleCall,
+  sendErc20Transfer,
+  sendBatch,
+  // Get Calls Status
+  walletGetCallsStatus,
+  waitForCallsStatus,
+  allCallsSucceeded,
+  getFailedReceipts,
+  // Atomic Batch
+  supportsAtomicBatch,
+  buildAtomicBatch,
+  executeAtomicBatch,
+  createEthTransferCall,
+  createContractCall,
+  createErc20ApproveCall,
+  createApproveAndSwapCalls,
+  validateBatchConfig,
+} from './eip5792/index.js';

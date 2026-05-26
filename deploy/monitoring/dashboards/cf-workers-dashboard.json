@@ -1,0 +1,133 @@
+{
+  "_comment": "CinaConnect — Cloudflare Workers Production Dashboard Template",
+  "_description": "Import into Cloudflare Dashboard → Workers → Manage → Analytics → Create Custom Dashboard",
+  "version": "1.0.0",
+  "updated": "2026-05-18",
+  "title": "CinaConnect Workers — Production",
+  "time_range": "24h",
+  "refresh_interval": "5m",
+  "variables": [
+    {
+      "name": "service",
+      "label": "Service",
+      "type": "dropdown",
+      "multi_select": true,
+      "default": ["cinaconnect-rpc-proxy", "cinaconnect-keys-server", "cinaconnect-relay-server", "cinaconnect-notify-server", "cinaconnect-push-server"],
+      "query": "SELECT DISTINCT scriptName FROM workersInvocationsAdaptive"
+    }
+  ],
+  "widgets": [
+    {
+      "id": "w1",
+      "title": "🔢 Total Requests (24h)",
+      "type": "timeseries",
+      "position": { "row": 0, "col": 0, "width": 6, "height": 2 },
+      "query": "SELECT sum(requests) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY scriptName",
+      "visualization": {
+        "type": "bar",
+        "y_axis": { "label": "Requests", "format": "short" },
+        "legend": { "show": true, "position": "bottom" },
+        "stacked": true
+      }
+    },
+    {
+      "id": "w2",
+      "title": "📈 Request Rate",
+      "type": "timeseries",
+      "position": { "row": 0, "col": 6, "width": 6, "height": 2 },
+      "query": "SELECT sum(requests) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour, scriptName",
+      "visualization": {
+        "type": "line",
+        "y_axis": { "label": "Requests/hour", "format": "short" },
+        "legend": { "show": true, "position": "bottom" },
+        "smooth": true
+      }
+    },
+    {
+      "id": "w3",
+      "title": "❌ Error Rate (5xx %)",
+      "type": "timeseries",
+      "position": { "row": 2, "col": 0, "width": 4, "height": 2 },
+      "query": "SELECT sum(errors) / sum(requests) * 100 FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour, scriptName",
+      "visualization": {
+        "type": "area",
+        "y_axis": { "label": "Error %", "format": "percent", "min": 0, "max": 100 },
+        "legend": { "show": true, "position": "bottom" },
+        "thresholds": [
+          { "value": 1, "color": "#FFA500", "label": "Warning" },
+          { "value": 5, "color": "#FF0000", "label": "Critical" }
+        ]
+      }
+    },
+    {
+      "id": "w4",
+      "title": "⏱️ P50 Latency",
+      "type": "timeseries",
+      "position": { "row": 2, "col": 4, "width": 4, "height": 2 },
+      "query": "SELECT quantile(0.50, responseTime) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour, scriptName",
+      "visualization": {
+        "type": "line",
+        "y_axis": { "label": "ms", "format": "ms" },
+        "legend": { "show": true, "position": "bottom" },
+        "smooth": true
+      }
+    },
+    {
+      "id": "w5",
+      "title": "⏱️ P95 / P99 Latency",
+      "type": "timeseries",
+      "position": { "row": 2, "col": 8, "width": 4, "height": 2 },
+      "query": "SELECT quantile(0.95, responseTime), quantile(0.99, responseTime) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour",
+      "visualization": {
+        "type": "line",
+        "y_axis": { "label": "ms", "format": "ms" },
+        "legend": { "show": true, "position": "bottom" },
+        "smooth": true,
+        "thresholds": [
+          { "value": 500, "color": "#FFA500", "label": "Warning" },
+          { "value": 2000, "color": "#FF0000", "label": "Critical" }
+        ]
+      }
+    },
+    {
+      "id": "w6",
+      "title": "🔥 CPU Time by Service",
+      "type": "timeseries",
+      "position": { "row": 4, "col": 0, "width": 6, "height": 2 },
+      "query": "SELECT sum(cpuTime) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour, scriptName",
+      "visualization": {
+        "type": "area",
+        "y_axis": { "label": "CPU ms", "format": "ms" },
+        "legend": { "show": true, "position": "bottom" },
+        "stacked": true
+      }
+    },
+    {
+      "id": "w7",
+      "title": "🔄 Subrequests",
+      "type": "timeseries",
+      "position": { "row": 4, "col": 6, "width": 6, "height": 2 },
+      "query": "SELECT sum(subrequests) FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY datetimeHour, scriptName",
+      "visualization": {
+        "type": "bar",
+        "y_axis": { "label": "Subrequests", "format": "short" },
+        "legend": { "show": true, "position": "bottom" },
+        "stacked": true
+      }
+    },
+    {
+      "id": "w8",
+      "title": "📊 Service Health Summary",
+      "type": "table",
+      "position": { "row": 6, "col": 0, "width": 12, "height": 2 },
+      "query": "SELECT scriptName, sum(requests) as total_requests, sum(errors) as total_errors, sum(cpuTime) as total_cpu_ms, quantile(0.95, responseTime) as p95_ms FROM workersInvocationsAdaptive WHERE scriptName IN $service GROUP BY scriptName",
+      "columns": [
+        { "key": "scriptName", "label": "Service", "width": 3 },
+        { "key": "total_requests", "label": "Requests", "format": "short", "width": 2 },
+        { "key": "total_errors", "label": "Errors", "format": "short", "width": 2 },
+        { "key": "total_cpu_ms", "label": "CPU Time", "format": "ms", "width": 2 },
+        { "key": "p95_ms", "label": "P95 Latency", "format": "ms", "width": 3 }
+      ]
+    }
+  ]
+}

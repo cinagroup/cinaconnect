@@ -1,0 +1,75 @@
+name: Deploy Dashboard to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/backend-dashboard/**"
+      - "packages/**"
+      - ".github/workflows/deploy-dashboard.yml"
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Target environment"
+        required: true
+        default: production
+        type: choice
+        options:
+          - staging
+          - production
+
+env:
+  NODE_VERSION: "20"
+  PNPM_VERSION: "9"
+
+jobs:
+  # ── Build & Deploy ────────────────────────────────────────────
+  deploy:
+    name: Build & Deploy Dashboard
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    concurrency:
+      group: deploy-dashboard-${{ github.event.inputs.environment || 'production' }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build dashboard
+        run: pnpm dashboard:build
+        env:
+          NODE_ENV: production
+
+      - name: Verify static output
+        run: |
+          if [ -d "apps/backend-dashboard/out" ]; then
+            echo "✓ Static output directory exists"
+            echo "Files generated:"
+            find apps/backend-dashboard/out -type f | wc -l
+          else
+            echo "✗ Static output directory not found"
+            exit 1
+          fi
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy apps/backend-dashboard/out --project-name=backend-dashboard
+        env:
+          NODE_ENV: production

@@ -8,3 +8,7 @@ CACHE_TTL = "300"
 [[kv_namespaces]]
 binding = "RPC_CACHE"
 id = "f91dde2603b44c2f830d42330be9778a"
+
+routes = [
+  { pattern = "rpc.cinacoin.com", custom_domain = true }
+]

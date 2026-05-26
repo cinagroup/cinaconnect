@@ -7,8 +7,8 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/dist/**', 'packages/**'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      include: ['packages/**/src/**/*.ts'],
+      reporter: ['text', 'json', 'html', 'lcov'],
+      include: ['packages/**/src/**/*.ts', 'packages/**/src/**/*.tsx'],
       exclude: [
         'packages/**/src/executors/**/*.ts',
         'packages/**/src/transports/**/*.ts',

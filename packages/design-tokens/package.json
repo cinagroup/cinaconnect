@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/design-tokens",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Design tokens for CinaConnect white-label UI toolkit",
   "type": "module",
   "main": "dist/index.js",
@@ -27,5 +27,8 @@
   "devDependencies": {
     "tsx": "^4.19.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

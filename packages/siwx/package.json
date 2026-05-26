@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/siwx",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "CinaConnect Sign-In with Cross-chain (SIWX) — unified authentication across EVM, Solana, and Bitcoin",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -31,5 +31,8 @@
   "files": [
     "dist"
   ],
-  "sideEffects": false
+  "sideEffects": false,
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -8,6 +8,7 @@
  */
 
 import type { TwitterLoginParams, SocialLoginResult, OAuth2UserProfile } from '../types.js';
+import { TokenVerifier, type TokenVerifyResult } from '../token-verifier.js';
 
 /** Twitter OAuth2 authorization endpoint. */
 const TWITTER_AUTH_URL = 'https://twitter.com/i/oauth2/authorize';
@@ -152,6 +153,13 @@ export async function loginWithTwitter(
 ): Promise<SocialLoginResult> {
   // Exchange code for tokens
   const tokens = await exchangeTwitterCode(code, params, codeVerifier);
+
+  // Server-side token verification via Twitter API v2
+  const verifier = new TokenVerifier({ twitterBearerToken: params.clientSecret });
+  const verification: TokenVerifyResult = await verifier.verify('twitter', tokens.accessToken);
+  if (!verification.valid) {
+    throw new Error(`Twitter access token verification failed: ${verification.error}`);
+  }
 
   // Get user profile
   const profile = await fetchTwitterUserProfile(tokens.accessToken);

@@ -3,9 +3,30 @@
  *
  * These are auto-imported into every Nuxt page/component when
  * `@cinaconnect/nuxt` is installed.
+ *
+ * Includes:
+ * - useCinaConnect, useCinaConnectAccount, useCinaConnectNetwork (base)
+ * - useWalletCapabilities, useSendCalls, useCallsStatus, useAtomicBatch (EIP-5792)
  */
 import type { CinaConnect } from '@cinaconnect/vue'
 import { useNuxtApp } from '#imports'
+
+// Re-export EIP-5792 composables from @cinaconnect/vue for auto-import in Nuxt
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useCallsStatus,
+  useAtomicBatch,
+} from '@cinaconnect/vue'
+
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  UseCallsStatusReturn,
+  UseAtomicBatchReturn,
+  SendCallsOptions,
+  AtomicBatchOptions,
+} from '@cinaconnect/vue'
 
 /**
  * Access the CinaConnect application instance.

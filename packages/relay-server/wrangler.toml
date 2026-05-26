@@ -1,0 +1,23 @@
+name = "cinaconnect-relay-server"
+main = "cloudflare/worker.ts"
+compatibility_date = "2024-01-01"
+
+[durable_objects]
+bindings = [
+  { name = "RELAY_SESSION", class_name = "RelaySession" }
+]
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["RelaySession"]
+
+[[kv_namespaces]]
+binding = "RELAY_CACHE"
+id = "1a8dc90cb91c423695be43ce74028c88"
+
+[vars]
+RELAY_URL = "wss://relay.walletconnect.com"
+
+routes = [
+  { pattern = "relay.cinacoin.com", custom_domain = true }
+]

@@ -1,4 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CinaConnectService } from '../cinaconnect.service.js';
 import { Observable, Subscription } from 'rxjs';
 
@@ -12,6 +13,8 @@ import { Observable, Subscription } from 'rxjs';
  */
 @Component({
   selector: 'cina-connect-button',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <button
       class="cina-connect-button"

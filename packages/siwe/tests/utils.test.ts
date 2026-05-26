@@ -11,7 +11,7 @@ import {
   isValidUri,
   normalizeAddress,
   getOrigin,
-} from '../../src/utils.js';
+} from '../src/utils.js';
 
 describe('SIWE Utils', () => {
   describe('generateNonce', () => {

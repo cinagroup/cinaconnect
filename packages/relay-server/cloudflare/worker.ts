@@ -10,9 +10,61 @@ interface Env {
   RELAY_CACHE: KVNamespace;
 }
 
+interface Metrics {
+  requestCount: number;
+  errorCount: number;
+  messageStoreCount: number;
+  messageRetrieveCount: number;
+  activeSessions: number;
+  startTime: number;
+}
+
+// Global metrics storage
+let metrics: Metrics = {
+  requestCount: 0,
+  errorCount: 0,
+  messageStoreCount: 0,
+  messageRetrieveCount: 0,
+  activeSessions: 0,
+  startTime: Date.now(),
+};
+
+function formatUptime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
+
+  if (days > 0) return `${days}d ${hours % 24}h`;
+  if (hours > 0) return `${hours}h ${minutes % 60}m`;
+  if (minutes > 0) return `${minutes}m ${seconds % 60}s`;
+  return `${seconds}s`;
+}
+
+function handleMetrics(): Response {
+  const uptime = Date.now() - metrics.startTime;
+  const errorRate = metrics.requestCount > 0
+    ? ((metrics.errorCount / metrics.requestCount) * 100).toFixed(2)
+    : "0.00";
+
+  return jsonResponse({
+    service: "cinaconnect-relay-server",
+    uptime_ms: uptime,
+    uptime_readable: formatUptime(uptime),
+    request_count: metrics.requestCount,
+    error_count: metrics.errorCount,
+    error_rate_percent: parseFloat(errorRate),
+    message_store_count: metrics.messageStoreCount,
+    message_retrieve_count: metrics.messageRetrieveCount,
+    active_sessions: metrics.activeSessions,
+    timestamp: new Date().toISOString(),
+  });
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    metrics.requestCount++;
 
     // Route to Durable Object by session ID
     if (url.pathname.startsWith('/relay/')) {
@@ -27,8 +79,14 @@ export default {
       return jsonResponse({ status: 'ok', timestamp: Date.now() });
     }
 
+    // Metrics endpoint
+    if (url.pathname === '/metrics') {
+      return handleMetrics();
+    }
+
     // Store message in KV
     if (url.pathname === '/api/v1/messages' && request.method === 'POST') {
+      metrics.messageStoreCount++;
       const body = await request.json();
       const key = `msg:${body.topic}:${body.messageId}`;
       await env.RELAY_CACHE.put(key, JSON.stringify(body), {
@@ -39,9 +97,11 @@ export default {
 
     // Retrieve message from KV
     if (url.pathname.startsWith('/api/v1/messages/')) {
+      metrics.messageRetrieveCount++;
       const messageId = url.pathname.split('/').pop();
       const msg = await env.RELAY_CACHE.get(messageId);
       if (msg) return jsonResponse(JSON.parse(msg));
+      metrics.errorCount++;
       return jsonResponse({ error: 'Not found' }, 404);
     }
 
@@ -69,6 +129,14 @@ export class RelaySession {
     const [client, server] = Object.freeze(new WebSocketPair());
 
     this.state.acceptWebSocket(server);
+
+    // Increment active sessions counter
+    metrics.activeSessions++;
+
+    // Decrement on close
+    server.addEventListener('close', () => {
+      metrics.activeSessions--;
+    });
 
     return new Response(null, {
       status: 101,

@@ -94,6 +94,17 @@ export class SwapQuoter {
   }
 
   /**
+   * Explicitly fetch quotes from all providers.
+   *
+   * This is the public version of the internal fetchAllQuotes method.
+   * Returns raw quotes without filtering or sorting — useful when the caller
+   * wants to inspect all quotes before picking one.
+   */
+  async fetchQuotes(params: SwapQuoteParams): Promise<SwapQuote[]> {
+    return this.fetchAllQuotes(params);
+  }
+
+  /**
    * Fetch quotes from all providers concurrently.
    */
   private async fetchAllQuotes(params: SwapQuoteParams): Promise<SwapQuote[]> {

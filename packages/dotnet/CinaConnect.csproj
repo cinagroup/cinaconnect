@@ -1,22 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>8.0</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RootNamespace>CinaConnect</RootNamespace>
 
     <!-- NuGet Package Metadata -->
     <PackageId>CinaConnect</PackageId>
     <Version>1.0.0</Version>
     <Authors>Hainai Group</Authors>
     <Company>Hainai Group</Company>
-    <Description>Official .NET SDK for the CinaConnect enterprise content security and communication platform. Provides client interfaces for account management, transaction processing, and network operations.</Description>
+    <Description>Official .NET SDK for the CinaConnect wallet connectivity platform. Provides client interfaces for account management, transaction signing, session management, and multi-chain network operations.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/cinaconnect/dotnet</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageTags>cinaconnect;csp;security;webrtc;enterprise;sdk</PackageTags>
+    <PackageTags>cinaconnect;web3;wallet;blockchain;walletconnect;sdk</PackageTags>
     <RepositoryUrl>https://github.com/cinaconnect/dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
 
@@ -28,15 +30,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Net.Http.Json" Version="7.0.1" />
-    <PackageReference Include="System.Text.Json" Version="7.0.3" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
+    <PackageReference Include="System.Text.Json" Version="8.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md" Pack="true" PackagePath="\" />
-    <None Include="icon.png" Pack="true" PackagePath="\" />
+    <None Include="icon.png" Pack="true" PackagePath="\" Condition="Exists('icon.png')" />
   </ItemGroup>
 
 </Project>

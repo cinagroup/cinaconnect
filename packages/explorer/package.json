@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/explorer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Explorer API — wallet/dApp discovery, logo fetching, registry",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -12,7 +12,9 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch"
@@ -27,5 +29,8 @@
     "react": {
       "optional": true
     }
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

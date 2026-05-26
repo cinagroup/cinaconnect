@@ -13,7 +13,7 @@ new_classes = ["RelaySession"]
 
 [[kv_namespaces]]
 binding = "RELAY_CACHE"
-id = "PLACEHOLDER_REPLACE_AFTER_CREATE"
+id = "1a8dc90cb91c423695be43ce74028c88"
 
 [vars]
 RELAY_URL = "wss://relay.walletconnect.com"

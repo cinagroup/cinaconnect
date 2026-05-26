@@ -537,6 +537,104 @@ The relay server **never** sees decrypted message contents — it only routes en
 | **SIWE messages** | EIP-191 / EIP-712 structured signatures |
 | **Session keys** | Ephemeral key pairs, rotated per session |
 
+### Where should I store API keys and secrets?
+
+**Never** put secrets in frontend code or client-side environment variables (anything prefixed `NEXT_PUBLIC_`). Instead:
+
+- **Cloudflare Workers:** Use `wrangler secret put` — secrets are encrypted and accessible only server-side
+- **Vercel/Netlify:** Use platform secret management (dashboard or CLI)
+- **Self-hosted:** Use `.env` files on the server, or a secret manager (HashiCorp Vault, AWS Secrets Manager)
+- **CI/CD pipelines:** Inject secrets via GitHub Actions secrets, GitLab CI variables, etc.
+
+See the full [Security Best Practices](./security.md) guide for details on API key rotation, secret classification, and automated secret scanning.
+
+### How do I protect against phishing attacks?
+
+1. **Register your dApp** with the CinaConnect Verify API so users see a verified badge
+2. **Use HTTPS everywhere** — never serve your dApp over plain HTTP
+3. **Configure strict CSP headers** to prevent script injection
+4. **Educate users** to bookmark your URL and check the domain in wallet prompts
+5. **Monitor for typosquatting** — register common misspellings of your domain
+
+### How do I handle SIWE verification failures?
+
+Common SIWE failure causes and fixes:
+
+| Issue | Fix |
+|-------|-----|
+| Domain mismatch | Ensure `domain` in SIWE message matches `window.location.host` |
+| Nonce reused | Generate a fresh cryptographically random nonce for each login attempt |
+| Message expired | Set a reasonable `expirationTime` (5–10 minutes) |
+| Invalid signature | Check message integrity; user may have cancelled signing |
+
+See [Troubleshooting: SIWE Verification Failures](./troubleshooting.md#siwe-verification-failures) for detailed implementation.
+
+### What should I do if a private key is compromised?
+
+1. **Immediately rotate** the compromised key
+2. **Revoke all active sessions** using the compromised key
+3. **Notify affected users** if user-facing keys are involved
+4. **Audit logs** to determine the scope of compromise
+5. **Document the incident** for post-mortem analysis
+
+Never store private keys in browser storage, transmit them over any network, or include them in error reports.
+
+---
+
+## Troubleshooting
+
+### Why won't MetaMask connect?
+
+Check these common issues:
+
+1. **User gesture required** — `eth_requestAccounts` must be called from a click handler, not on page load
+2. **EIP-6963 vs window.ethereum** — try both detection methods for compatibility
+3. **Popup blocked** — inform users to allow popups for your domain
+4. **Multiple accounts** — MetaMask may show account selection; handle `accountsChanged` events
+
+See [Troubleshooting: MetaMask Compatibility](./troubleshooting.md#metamask-compatibility-issues) for details.
+
+### Why does chain switching fail?
+
+Chain switching fails when:
+
+1. **User rejects** the switch prompt — show a friendly message explaining why the switch is needed
+2. **Chain not added** — use `wallet_addEthereumChain` to add it first
+3. **Race conditions** — multiple rapid switches conflict; debounce your chain switch calls
+
+See [Troubleshooting: Chain Switching Failures](./troubleshooting.md#chain-switching-failures) for patterns and code.
+
+### How do I handle EIP-5792 batch call errors?
+
+Not all wallets support EIP-5792 (`wallet_sendCalls`). Check capability first with `wallet_getCapabilities` and fall back to sequential `eth_sendTransaction` if unsupported. Also chunk large batches (max ~10 calls per batch) and poll `wallet_getCallsStatus` for confirmation.
+
+See [Troubleshooting: EIP-5792 Batch Call Errors](./troubleshooting.md#eip-5792-batch-call-errors) for full implementation.
+
+### How do I enable debug mode?
+
+```typescript
+const config = {
+  projectId: 'your-project-id',
+  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  chains: [mainnet],
+  debug: true,
+  logger: {
+    level: 'trace',
+    output: 'console',
+  },
+}
+```
+
+**Never enable debug mode in production** — it may expose internal state. Use conditional logging instead:
+
+```typescript
+const logger = {
+  debug: (...args: any[]) => process.env.NODE_ENV === 'development' && console.debug(...args),
+}
+```
+
+See [Troubleshooting: Debug Mode and Logging](./troubleshooting.md#debug-mode-and-logging) for network inspection and error boundary setup.
+
 ---
 
 *FAQ — CinaConnect Documentation*

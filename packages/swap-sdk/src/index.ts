@@ -40,6 +40,7 @@ export type {
   PriceImpact,
   BestQuote,
   SwapExecuteParams,
+  PrivateRpcConfig,
 } from "./types.js";
 
 // Quoter
@@ -66,3 +67,38 @@ export {
   percentDiff,
   adjustSlippageForVolatility,
 } from "./slippage.js";
+
+// MEV Protection
+export {
+  FLASHBOTS_RPC_URL,
+  FLASHBOTS_FAST_RPC_URL,
+  EDEN_RPC_URL,
+  resolvePrivateRpcUrl,
+  sendViaPrivateRpc,
+  waitForTxReceiptViaRpc,
+  buildLegacyTxRequest,
+} from "./mev.js";
+export type { PrivateRpcProvider } from "./mev.js";
+
+// ERC-20 Approval
+export {
+  checkAllowance,
+  checkAllowanceFor,
+  buildApproveTx,
+  approve,
+  ensureAllowance,
+  getPermitDomain,
+  getPermitNonce,
+  buildPermitTypedData,
+  signPermit,
+  buildPermitCalldata,
+  executePermit,
+  buildBatchApproveAndSwap,
+  buildInfiniteApproveTx,
+  MAX_UINT256,
+} from "./approve.js";
+export type {
+  PermitParams,
+  PermitSignature,
+  AllowanceResult,
+} from "./approve.js";

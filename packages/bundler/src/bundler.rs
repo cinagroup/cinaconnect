@@ -5,6 +5,7 @@ use crate::gas_oracle::GasOracle;
 use crate::mempool::UserOpPool;
 use crate::metrics::Metrics;
 use crate::reputation::ReputationStatus;
+use crate::signer::{BundlerSigner, SignerError};
 use crate::types::{GasEstimation, TrackedUserOp, UserOpStatus, UserOperation};
 use crate::validation::{UserOpValidator, ValidationResult};
 use alloy_primitives::{keccak256, Address, B256, U256};
@@ -19,6 +20,7 @@ pub struct Bundler {
     gas_oracle: GasOracle,
     validator: Arc<UserOpValidator>,
     metrics: Arc<Metrics>,
+    signer: BundlerSigner,
 }
 
 impl Bundler {
@@ -30,6 +32,13 @@ impl Bundler {
         metrics: Arc<Metrics>,
     ) -> Result<Self, BundlerError> {
         let validator = Arc::new(UserOpValidator::new(&config));
+        let signer = BundlerSigner::new(&config)
+            .map_err(|e| BundlerError::SignerInit(e.to_string()))?;
+
+        info!(
+            signer_address = %signer.address,
+            "Bundler signer initialised"
+        );
 
         Ok(Self {
             config,
@@ -37,6 +46,7 @@ impl Bundler {
             gas_oracle,
             validator,
             metrics,
+            signer,
         })
     }
 
@@ -161,11 +171,50 @@ impl Bundler {
         // Simulate handleOps with state override before sending
         self.simulate_handle_ops_with_override(&user_ops).await?;
 
-        debug!(ops = user_ops.len(), max_fee = %max_fee, priority_fee = %priority_fee,
-            "handleOps transaction would be sent");
+        // Estimate gas for the handleOps call
+        let beneficiary = self.config.beneficiary();
+        let gas_limit = self
+            .signer
+            .estimate_handle_ops_gas(&user_ops, beneficiary, self.config.entry_point_address)
+            .await
+            .map_err(|e| BundlerError::GasEstimationFailed(e.to_string()))?;
 
-        // Placeholder — in production, encode and send via signer
-        Ok(B256::ZERO)
+        // Add a safety margin (20%) to the gas estimate
+        let gas_limit = (gas_limit as f64 * 1.2) as u64;
+
+        // Get the bundler's current nonce
+        let nonce = self
+            .signer
+            .get_nonce()
+            .await
+            .map_err(|e| BundlerError::NonceFetchFailed(e.to_string()))?;
+
+        // Build, sign, and send the transaction
+        let tx_hash = self
+            .signer
+            .send_handle_ops(
+                &user_ops,
+                max_fee,
+                priority_fee,
+                gas_limit,
+                nonce,
+                beneficiary,
+                self.config.entry_point_address,
+            )
+            .await
+            .map_err(|e| BundlerError::TxSendFailed(e.to_string()))?;
+
+        debug!(
+            tx_hash = %tx_hash,
+            ops = user_ops.len(),
+            gas_limit = gas_limit,
+            max_fee = %max_fee,
+            priority_fee = %priority_fee,
+            nonce = nonce,
+            "handleOps transaction sent successfully"
+        );
+
+        Ok(tx_hash)
     }
 
     /// Simulate handleOps with full state override.
@@ -285,4 +334,12 @@ pub enum BundlerError {
     SenderBanned(Address),
     #[error("sender is throttled: {0}")]
     SenderThrottled(Address),
+    #[error("signer initialisation failed: {0}")]
+    SignerInit(String),
+    #[error("gas estimation failed: {0}")]
+    GasEstimationFailed(String),
+    #[error("nonce fetch failed: {0}")]
+    NonceFetchFailed(String),
+    #[error("transaction send failed: {0}")]
+    TxSendFailed(String),
 }

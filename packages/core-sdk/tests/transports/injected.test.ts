@@ -271,6 +271,6 @@ describe('InjectedProvider', () => {
     });
     const injected = new InjectedProvider('io.metamask', 'MetaMask', 'icon.svg', provider);
 
-    await expect(injected.connect()).rejects.toThrow('"string error"');
+    await expect(injected.connect()).rejects.toThrow('string error');
   });
 });

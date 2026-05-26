@@ -5,11 +5,8 @@
  * multi-chain support, and Chain type validation.
  */
 
+import { describe, it, expect } from 'vitest';
 import type { Chain, ChainNamespace, ChainReference } from '../src/types.js';
-
-function assert(condition: boolean, msg: string) {
-  if (!condition) throw new Error(`Assertion failed: ${msg}`);
-}
 
 // ---------------------------------------------------------------------------
 // Fixtures: common chain definitions
@@ -90,150 +87,99 @@ const BITCOIN: Chain = {
 // Tests
 // ---------------------------------------------------------------------------
 
-function testEthMainnet() {
-  assert(ETH_MAINNET.name === 'Ethereum', 'name');
-  assert(ETH_MAINNET.rpcUrl.startsWith('https'), 'rpcUrl should be https');
-  assert(ETH_MAINNET.nativeCurrency?.symbol === 'ETH', 'symbol should be ETH');
-  assert(ETH_MAINNET.nativeCurrency?.decimals === 18, 'decimals should be 18');
-  assert(ETH_MAINNET.id === 'eip155:1', 'CAIP-2 id');
-  assert(ETH_MAINNET.explorerUrl?.includes('etherscan'), 'explorer URL');
-  console.log('✓ ETH mainnet');
-}
+describe('Chain configurations', () => {
+  it('ETH mainnet', () => {
+    expect(ETH_MAINNET.name).toBe('Ethereum');
+    expect(ETH_MAINNET.rpcUrl.startsWith('https')).toBe(true);
+    expect(ETH_MAINNET.nativeCurrency?.symbol).toBe('ETH');
+    expect(ETH_MAINNET.nativeCurrency?.decimals).toBe(18);
+    expect(ETH_MAINNET.id).toBe('eip155:1');
+    expect(ETH_MAINNET.explorerUrl?.includes('etherscan')).toBe(true);
+  });
 
-function testArbitrum() {
-  assert(ARBITRUM.id === 'eip155:42161', 'Arbitrum chain id');
-  assert(ARBITRUM.name === 'Arbitrum One', 'Arbitrum name');
-  assert(ARBITRUM.nativeCurrency?.symbol === 'ETH', 'Arb uses ETH');
-  console.log('✓ Arbitrum');
-}
+  it('Arbitrum', () => {
+    expect(ARBITRUM.id).toBe('eip155:42161');
+    expect(ARBITRUM.name).toBe('Arbitrum One');
+    expect(ARBITRUM.nativeCurrency?.symbol).toBe('ETH');
+  });
 
-function testBase() {
-  assert(BASE.id === 'eip155:8453', 'Base chain id');
-  assert(BASE.rpcUrl.includes('base.org'), 'Base RPC URL');
-  assert(BASE.nativeCurrency?.symbol === 'ETH', 'Base uses ETH');
-  console.log('✓ Base');
-}
+  it('Base', () => {
+    expect(BASE.id).toBe('eip155:8453');
+    expect(BASE.rpcUrl.includes('base.org')).toBe(true);
+    expect(BASE.nativeCurrency?.symbol).toBe('ETH');
+  });
 
-function testPolygon() {
-  assert(POLYGON.id === 'eip155:137', 'Polygon chain id');
-  assert(POLYGON.nativeCurrency?.symbol === 'MATIC', 'Polygon uses MATIC');
-  console.log('✓ Polygon');
-}
+  it('Polygon', () => {
+    expect(POLYGON.id).toBe('eip155:137');
+    expect(POLYGON.nativeCurrency?.symbol).toBe('MATIC');
+  });
 
-function testOptimism() {
-  assert(OPTIMISM.id === 'eip155:10', 'Optimism chain id');
-  assert(OPTIMISM.nativeCurrency?.symbol === 'ETH', 'Optimism uses ETH');
-  console.log('✓ Optimism');
-}
+  it('Optimism', () => {
+    expect(OPTIMISM.id).toBe('eip155:10');
+    expect(OPTIMISM.nativeCurrency?.symbol).toBe('ETH');
+  });
 
-function testBSC() {
-  assert(BSC.id === 'eip155:56', 'BSC chain id');
-  assert(BSC.nativeCurrency?.symbol === 'BNB', 'BSC uses BNB');
-  console.log('✓ BSC');
-}
+  it('BSC', () => {
+    expect(BSC.id).toBe('eip155:56');
+    expect(BSC.nativeCurrency?.symbol).toBe('BNB');
+  });
 
-function testAvalanche() {
-  assert(AVALANCHE.id === 'eip155:43114', 'Avalanche chain id');
-  assert(AVALANCHE.nativeCurrency?.symbol === 'AVAX', 'AVAX uses AVAX');
-  console.log('✓ Avalanche');
-}
+  it('Avalanche', () => {
+    expect(AVALANCHE.id).toBe('eip155:43114');
+    expect(AVALANCHE.nativeCurrency?.symbol).toBe('AVAX');
+  });
 
-function testNonEVMChains() {
-  assert(SOLANA.id.startsWith('solana:'), 'Solana CAIP-2 namespace');
-  assert(BITCOIN.id.startsWith('bip122:'), 'Bitcoin CAIP-2 namespace');
-  console.log('✓ Non-EVM chains');
-}
+  it('Non-EVM chains', () => {
+    expect(SOLANA.id.startsWith('solana:')).toBe(true);
+    expect(BITCOIN.id.startsWith('bip122:')).toBe(true);
+  });
 
-function testChainNamespace() {
-  const namespaces: ChainNamespace[] = [
-    'eip155', 'solana', 'bip121', 'bip122', 'tron', 'ton', 'polkadot',
-  ];
-  assert(namespaces.length === 7, '7 namespaces defined');
-  assert(namespaces.includes('eip155'), 'eip155 present');
-  assert(namespaces.includes('solana'), 'solana present');
-  assert(namespaces.includes('ton'), 'ton present');
-  console.log('✓ ChainNamespace types');
-}
+  it('ChainNamespace types', () => {
+    const namespaces: ChainNamespace[] = [
+      'eip155', 'solana', 'bip121', 'bip122', 'tron', 'ton', 'polkadot',
+    ];
+    expect(namespaces.length).toBe(7);
+    expect(namespaces.includes('eip155')).toBe(true);
+    expect(namespaces.includes('solana')).toBe(true);
+    expect(namespaces.includes('ton')).toBe(true);
+  });
 
-function testChainReference() {
-  const ref: ChainReference = { namespace: 'eip155', reference: '1' };
-  assert(ref.namespace === 'eip155', 'namespace');
-  assert(ref.reference === '1', 'reference');
-  console.log('✓ ChainReference');
-}
+  it('ChainReference', () => {
+    const ref: ChainReference = { namespace: 'eip155', reference: '1' };
+    expect(ref.namespace).toBe('eip155');
+    expect(ref.reference).toBe('1');
+  });
 
-function testChainRegistryLookup() {
-  // Simulate a chain registry lookup
-  const registry: Record<string, Chain> = {
-    '1': ETH_MAINNET,
-    '42161': ARBITRUM,
-    '8453': BASE,
-    '137': POLYGON,
-    '10': OPTIMISM,
-    '56': BSC,
-    '43114': AVALANCHE,
-  };
+  it('Chain registry lookup', () => {
+    const registry: Record<string, Chain> = {
+      '1': ETH_MAINNET,
+      '42161': ARBITRUM,
+      '8453': BASE,
+      '137': POLYGON,
+      '10': OPTIMISM,
+      '56': BSC,
+      '43114': AVALANCHE,
+    };
 
-  // Extract numeric chainId from CAIP-2 id
-  function getChainById(chainId: string): Chain | undefined {
-    const num = chainId.split(':').pop();
-    return registry[num!];
-  }
-
-  assert(getChainById('eip155:1')?.name === 'Ethereum', 'lookup ETH');
-  assert(getChainById('eip155:42161')?.name === 'Arbitrum One', 'lookup ARB');
-  assert(getChainById('eip155:8453')?.name === 'Base', 'lookup BASE');
-  assert(getChainById('eip155:999') === undefined, 'unknown chain');
-  console.log('✓ Chain registry lookup');
-}
-
-function testAllChainsHaveRequiredFields() {
-  const chains = [ETH_MAINNET, ARBITRUM, BASE, POLYGON, OPTIMISM, BSC, AVALANCHE, SOLANA, BITCOIN];
-  for (const chain of chains) {
-    assert(!!chain.id, `${chain.name} should have id`);
-    assert(!!chain.name, `${chain.name} should have name`);
-    assert(!!chain.rpcUrl || chain.rpcUrl === '', `${chain.name} should have rpcUrl`);
-    assert(!!chain.nativeCurrency, `${chain.name} should have nativeCurrency`);
-    assert(typeof chain.nativeCurrency!.decimals === 'number', `${chain.name} decimals should be number`);
-  }
-  console.log('✓ All chains have required fields');
-}
-
-// ---------------------------------------------------------------------------
-// Runner
-// ---------------------------------------------------------------------------
-
-async function run() {
-  const tests = [
-    testEthMainnet,
-    testArbitrum,
-    testBase,
-    testPolygon,
-    testOptimism,
-    testBSC,
-    testAvalanche,
-    testNonEVMChains,
-    testChainNamespace,
-    testChainReference,
-    testChainRegistryLookup,
-    testAllChainsHaveRequiredFields,
-  ];
-
-  let passed = 0;
-  let failed = 0;
-
-  for (const fn of tests) {
-    try {
-      fn();
-      passed++;
-    } catch (e: any) {
-      console.error(`✗ ${fn.name}: ${e.message}`);
-      failed++;
+    function getChainById(chainId: string): Chain | undefined {
+      const num = chainId.split(':').pop();
+      return registry[num!];
     }
-  }
 
-  console.log(`\nResults: ${passed} passed, ${failed} failed (${tests.length} total)`);
-  if (failed > 0) process.exit(1);
-}
+    expect(getChainById('eip155:1')?.name).toBe('Ethereum');
+    expect(getChainById('eip155:42161')?.name).toBe('Arbitrum One');
+    expect(getChainById('eip155:8453')?.name).toBe('Base');
+    expect(getChainById('eip155:999')).toBeUndefined();
+  });
 
-run();
+  it('All chains have required fields', () => {
+    const chains = [ETH_MAINNET, ARBITRUM, BASE, POLYGON, OPTIMISM, BSC, AVALANCHE, SOLANA, BITCOIN];
+    for (const chain of chains) {
+      expect(!!chain.id).toBe(true);
+      expect(!!chain.name).toBe(true);
+      expect(chain.rpcUrl !== undefined).toBe(true);
+      expect(!!chain.nativeCurrency).toBe(true);
+      expect(typeof chain.nativeCurrency!.decimals).toBe('number');
+    }
+  });
+});

@@ -19,3 +19,20 @@ export {
   useConnect,
   useDisconnect,
 } from './composables.js';
+
+// EIP-5792 Wallet Call API composables
+export {
+  useWalletCapabilities,
+  useSendCalls,
+  useAtomicBatch,
+  useCallsStatus,
+} from './composables.js';
+
+export type {
+  UseWalletCapabilitiesReturn,
+  UseSendCallsReturn,
+  UseAtomicBatchReturn,
+  UseCallsStatusReturn,
+  SendCallsOptions,
+  AtomicBatchOptions,
+} from './composables.js';

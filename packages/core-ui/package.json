@@ -1,6 +1,6 @@
 {
   "name": "@cinaconnect/core-ui",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Web Components core for CinaConnect — built with Lit",
   "type": "module",
   "main": "dist/index.js",
@@ -12,23 +12,24 @@
       "types": "./dist/index.d.ts"
     }
   },
-  "files": ["dist"],
-  "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf dist"
-  },
-  "dependencies": {
-    "lit": "^3.2.0"
-  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "clean": "rm -rf dist",
     "test": "vitest run"
+  },
+  "dependencies": {
+    "lit": "^3.2.0"
   },
   "devDependencies": {
     "typescript": "^5.6.0",
     "vitest": "^2.1.0",
     "jsdom": "^24.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }

@@ -1,3 +1,13 @@
+/**
+ * PaymasterClient — Real HTTP JSON-RPC client for ERC-4337 paymaster services.
+ *
+ * Communicates with a paymaster endpoint over HTTP POST to:
+ *   - Sponsor user operations (return paymasterAndData)
+ *   - Get gas limits
+ *   - Check sponsorship eligibility
+ */
+
+import type { Hex, Address } from 'viem';
 import type {
   PaymasterConfig,
   PaymasterRequest,
@@ -5,62 +15,140 @@ import type {
   UserOperation,
 } from './types.js';
 
-/**
- * PaymasterClient — Client for interacting with ERC-4337 paymaster services.
- */
 export class PaymasterClient {
-  readonly config: PaymasterConfig;
+  private readonly url: string;
+  private readonly apiKey?: string;
+  readonly sponsorType: 'gasless' | 'partial' | 'post-pay';
 
   constructor(config: PaymasterConfig) {
-    this.config = config;
+    this.url = config.url;
+    this.apiKey = config.apiKey;
+    this.sponsorType = config.sponsorType;
   }
 
   /**
-   * Sponsor a user operation by returning paymasterAndData.
+   * Sponsor a user operation.
+   * Sends a POST request to the paymaster endpoint with the UserOperation
+   * and returns paymasterAndData to embed in the UserOperation.
    */
   async sponsor(request: PaymasterRequest): Promise<PaymasterResponse> {
-    // In production, this would call the paymaster API
-    const paymasterAndData = this.generatePaymasterData(request);
-    return {
-      paymasterAndData,
-      preVerificationGas: 50_000n,
-      verificationGasLimit: 100_000n,
-      callGasLimit: 200_000n,
+    const result = await this.rpc<{
+      paymasterAndData: Hex;
+      preVerificationGas?: Hex;
+      verificationGasLimit?: Hex;
+      callGasLimit?: Hex;
+    }>('pm_sponsorUserOperation', [
+      serializeUserOp(request.userOperation),
+      request.entryPoint,
+      request.chainId,
+    ]);
+
+    const response: PaymasterResponse = {
+      paymasterAndData: result.paymasterAndData,
     };
+    if (result.preVerificationGas)
+      response.preVerificationGas = BigInt(result.preVerificationGas);
+    if (result.verificationGasLimit)
+      response.verificationGasLimit = BigInt(result.verificationGasLimit);
+    if (result.callGasLimit)
+      response.callGasLimit = BigInt(result.callGasLimit);
+    return response;
   }
 
   /**
    * Get paymaster gas limits for a user operation.
    */
   async getGasLimits(
-    _userOp: UserOperation,
-  ): Promise<{ verificationGasLimit: bigint; callGasLimit: bigint; preVerificationGas: bigint }> {
+    userOp: UserOperation,
+    entryPoint: Address,
+    chainId: number,
+  ): Promise<{
+    verificationGasLimit: bigint;
+    callGasLimit: bigint;
+    preVerificationGas: bigint;
+  }> {
+    const result = await this.rpc<{
+      preVerificationGas: Hex;
+      verificationGasLimit: Hex;
+      callGasLimit: Hex;
+    }>('pm_getGasLimits', [
+      serializeUserOp(userOp),
+      entryPoint,
+      chainId,
+    ]);
     return {
-      verificationGasLimit: 100_000n,
-      callGasLimit: 200_000n,
-      preVerificationGas: 50_000n,
+      preVerificationGas: BigInt(result.preVerificationGas),
+      verificationGasLimit: BigInt(result.verificationGasLimit),
+      callGasLimit: BigInt(result.callGasLimit),
     };
   }
 
   /**
-   * Get the paymaster balance.
+   * Check whether the paymaster can sponsor a given operation.
    */
-  async getBalance(): Promise<bigint> {
-    // In production, this would query the paymaster contract
-    return 1_000_000_000_000_000_000n; // 1 ETH
+  canSponsor(request: PaymasterRequest): boolean {
+    return this.sponsorType !== undefined;
   }
 
-  /**
-   * Verify if the paymaster can sponsor a given operation.
-   */
-  canSponsor(_request: PaymasterRequest): boolean {
-    return this.config.sponsorType !== undefined;
-  }
+  // ── Helpers ─────────────────────────────────────────────────────
 
-  private generatePaymasterData(request: PaymasterRequest): string {
-    // Simplified paymaster data encoding
-    const paymaster = '0x0000000000000000000000000000000000000001';
-    const validity = '0x' + Date.now().toString(16).padStart(16, '0');
-    return paymaster + validity;
+  private async rpc<T>(method: string, params: unknown[]): Promise<T> {
+    const headers: Record<string, string> = {
+      'Content-Type': 'application/json',
+    };
+    if (this.apiKey) {
+      headers['Authorization'] = `Bearer ${this.apiKey}`;
+    }
+
+    const response = await fetch(this.url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method,
+        params,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(
+        `Paymaster HTTP ${response.status} ${response.statusText}`,
+      );
+    }
+
+    const json = (await response.json()) as {
+      result?: T;
+      error?: { code: number; message: string; data?: unknown };
+    };
+
+    if (json.error) {
+      throw new Error(
+        `Paymaster RPC error [${json.error.code}]: ${json.error.message}`,
+      );
+    }
+
+    if (json.result === undefined) {
+      throw new Error(`Paymaster RPC returned no result for ${method}`);
+    }
+
+    return json.result;
   }
+}
+
+/** Convert a UserOperation to the hex-serialised shape the paymaster expects. */
+function serializeUserOp(op: UserOperation): Record<string, string> {
+  return {
+    sender: op.sender,
+    nonce: `0x${op.nonce.toString(16)}`,
+    initCode: op.initCode,
+    callData: op.callData,
+    callGasLimit: `0x${op.callGasLimit.toString(16)}`,
+    verificationGasLimit: `0x${op.verificationGasLimit.toString(16)}`,
+    preVerificationGas: `0x${op.preVerificationGas.toString(16)}`,
+    maxFeePerGas: `0x${op.maxFeePerGas.toString(16)}`,
+    maxPriorityFeePerGas: `0x${op.maxPriorityFeePerGas.toString(16)}`,
+    paymasterAndData: op.paymasterAndData,
+    signature: op.signature,
+  };
 }

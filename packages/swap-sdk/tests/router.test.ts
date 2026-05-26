@@ -7,6 +7,33 @@ import { SwapRouter } from '../src/router.js';
 import { SwapQuoter } from '../src/quoter.js';
 import type { SwapQuote, SwapQuoteParams, SwapTransaction, TokenInfo } from '../src/types.js';
 import type { SwapExecutor } from '../src/router.js';
+import type { WalletClient, PublicClient, Transport, Chain, Account } from 'viem';
+
+function createMockWalletClient(): WalletClient<Transport, Chain, Account> {
+  return {
+    account: {
+      address: '0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18',
+      type: 'json-rpc',
+    } as Account,
+    chain: { id: 1, name: 'Ethereum' } as Chain,
+    transport: { type: 'http' } as Transport,
+    sendTransaction: vi.fn().mockResolvedValue('0xmock_tx_hash_abc123'),
+    getGasPrice: vi.fn().mockResolvedValue(20_000_000_000n),
+  } as unknown as WalletClient<Transport, Chain, Account>;
+}
+
+function createMockPublicClient(): PublicClient<Transport, Chain> {
+  return {
+    getGasPrice: vi.fn().mockResolvedValue(20_000_000_000n),
+    getTransactionCount: vi.fn().mockResolvedValue(42),
+    waitForTransactionReceipt: vi.fn().mockResolvedValue({
+      status: 'success',
+      gasUsed: 150_000n,
+      effectiveGasPrice: 20_000_000_000n,
+      blockNumber: 19_000_000n,
+    }),
+  } as unknown as PublicClient<Transport, Chain>;
+}
 
 function createMockExecutor(
   name: string,
@@ -38,6 +65,7 @@ function createMockExecutor(
       minimumReceived: 0n,
       provider: name,
       expiresAt: Date.now() + 60_000,
+      chainId: params.chainId,
     }),
     getTransaction: async (quote: SwapQuote, slippageBps: number): Promise<SwapTransaction> => ({
       to: quote.toToken as `0x${string}`,
@@ -45,6 +73,7 @@ function createMockExecutor(
       data: '0xmock' as `0x${string}`,
       gasLimit: quote.gasEstimate,
     }),
+    executeTransaction: async (_tx: SwapTransaction, _walletClient: WalletClient<Transport, Chain, Account>): Promise<`0x${string}`> => '0xexecutor_tx_hash',
     getSupportedTokens: async (chainId: number): Promise<TokenInfo[]> => [],
   };
 }
@@ -67,7 +96,7 @@ describe('SwapRouter', () => {
       createMockExecutor('oneinch', 1_020_000n),
     ];
     quoter = new SwapQuoter(executors);
-    router = new SwapRouter(quoter);
+    router = new SwapRouter(quoter, executors);
   });
 
   it('should get best quote via router', async () => {
@@ -81,7 +110,13 @@ describe('SwapRouter', () => {
   });
 
   it('should be disabled for execution by default', async () => {
-    await expect(router.executeSwap(params)).rejects.toThrow(
+    const walletClient = createMockWalletClient();
+    const publicClient = createMockPublicClient();
+    await expect(router.executeSwap(params, {
+      quote: {} as SwapQuote,
+      walletClient,
+      publicClient,
+    })).rejects.toThrow(
       'Swap execution is disabled'
     );
   });
@@ -93,7 +128,13 @@ describe('SwapRouter', () => {
 
   it('should execute swap when enabled', async () => {
     router.setExecutionEnabled(true);
-    const receipt = await router.executeSwap(params);
+    const walletClient = createMockWalletClient();
+    const publicClient = createMockPublicClient();
+    const receipt = await router.executeSwap(params, {
+      quote: {} as SwapQuote,
+      walletClient,
+      publicClient,
+    });
     expect(receipt.success).toBe(true);
     expect(receipt.fromAmount).toBe(1_000n * 1_000_000n);
     expect(receipt.toAmount).toBe(1_020_000n);
@@ -120,6 +161,7 @@ describe('SwapRouter', () => {
         minimumReceived: 0n,
         provider: 'expired',
         expiresAt: Date.now() - 1000, // Expired
+        chainId: p.chainId,
         tx: undefined,
       }),
       getTransaction: async () => ({
@@ -128,6 +170,7 @@ describe('SwapRouter', () => {
         data: '0x' as `0x${string}`,
         gasLimit: 0n,
       }),
+      executeTransaction: async () => '0x' as `0x${string}`,
       getSupportedTokens: async (): Promise<TokenInfo[]> => [],
     };
 
@@ -135,15 +178,28 @@ describe('SwapRouter', () => {
     const expiredRouter = new SwapRouter(expiredQuoter);
     expiredRouter.setExecutionEnabled(true);
 
-    await expect(expiredRouter.executeSwap(params)).rejects.toThrow(
+    const walletClient = createMockWalletClient();
+    const publicClient = createMockPublicClient();
+
+    await expect(expiredRouter.executeSwap(params, {
+      quote: {} as SwapQuote,
+      walletClient,
+      publicClient,
+    })).rejects.toThrow(
       'Quote has expired'
     );
   });
 
   it('should disable execution after enabling', async () => {
+    const walletClient = createMockWalletClient();
+    const publicClient = createMockPublicClient();
     router.setExecutionEnabled(true);
     router.setExecutionEnabled(false);
-    await expect(router.executeSwap(params)).rejects.toThrow(
+    await expect(router.executeSwap(params, {
+      quote: {} as SwapQuote,
+      walletClient,
+      publicClient,
+    })).rejects.toThrow(
       'Swap execution is disabled'
     );
   });
@@ -161,7 +217,12 @@ describe('SwapRouter', () => {
 
   it('should accept partial execute params', async () => {
     router.setExecutionEnabled(true);
+    const walletClient = createMockWalletClient();
+    const publicClient = createMockPublicClient();
     const receipt = await router.executeSwap(params, {
+      quote: {} as SwapQuote,
+      walletClient,
+      publicClient,
       slippageBps: 100,
       maxGasPrice: 100_000_000_000n,
     });
