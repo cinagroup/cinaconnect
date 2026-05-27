@@ -5,8 +5,7 @@
  * wallet_sendCalls.
  */
 
-import type { WalletClient } from 'viem';
-import type { GetCallsStatusResult, CallsStatus } from './types.js';
+import type { EIP5792Client, GetCallsStatusResult, CallsStatus } from './types.js';
 
 /**
  * Get the status of a batch of calls by batch ID.
@@ -14,12 +13,12 @@ import type { GetCallsStatusResult, CallsStatus } from './types.js';
  * Calls the `wallet_getCallsStatus` JSON-RPC method to check
  * whether a batch is pending or confirmed.
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param batchId - The batch ID returned by wallet_sendCalls.
  * @returns GetCallsStatusResult with status and optional receipts.
  */
 export async function walletGetCallsStatus(
-  client: WalletClient,
+  client: EIP5792Client,
   batchId: string,
 ): Promise<GetCallsStatusResult> {
   try {
@@ -44,13 +43,13 @@ export async function walletGetCallsStatus(
  * Polls wallet_getCallsStatus at regular intervals until the
  * batch status is CONFIRMED or a timeout is reached.
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param batchId - The batch ID to wait for.
  * @param options - Polling options.
  * @returns GetCallsStatusResult with CONFIRMED status and receipts.
  */
 export async function waitForCallsStatus(
-  client: WalletClient,
+  client: EIP5792Client,
   batchId: string,
   options: {
     /** Polling interval in milliseconds. Default: 2000. */

@@ -5,8 +5,9 @@
  * atomic batch transactions and capabilities like paymaster.
  */
 
-import type { Address, WalletClient } from 'viem';
+import type { Address } from 'viem';
 import type {
+  EIP5792Client,
   Call,
   SendCallsParams,
   SendCallsResult,
@@ -19,15 +20,15 @@ import type {
  * The wallet will execute all calls atomically (or sequentially
  * depending on wallet support). Returns a batch ID for status polling.
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param params - Send calls parameters.
  * @returns SendCallsResult containing the batch ID.
  */
 export async function walletSendCalls(
-  client: WalletClient,
+  client: EIP5792Client,
   params: SendCallsParams,
 ): Promise<SendCallsResult> {
-  const account = params.from ?? (client.account as Address | undefined);
+  const account = params.from;
   if (!account) {
     throw new Error('wallet_sendCalls requires a "from" address');
   }
@@ -43,9 +44,7 @@ export async function walletSendCalls(
   ];
 
   try {
-    // viem WalletClient.request doesn't natively know about wallet_sendCalls,
-    // so we bypass its strict type checking with (client as any).
-    const result = await (client as any).request({
+    const result = await client.request({
       method: 'wallet_sendCalls',
       params: requestParams,
     });
@@ -63,7 +62,7 @@ export async function walletSendCalls(
 /**
  * Send a single call (convenience wrapper around walletSendCalls).
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param call - A single call to execute.
  * @param account - Sender address.
  * @param chainId - Optional chain ID (hex).
@@ -71,7 +70,7 @@ export async function walletSendCalls(
  * @returns SendCallsResult with batch ID.
  */
 export async function sendSingleCall(
-  client: WalletClient,
+  client: EIP5792Client,
   call: Call,
   account: Address,
   chainId?: string,
@@ -89,7 +88,7 @@ export async function sendSingleCall(
 /**
  * Build and send an ERC-20 transfer call.
  *
- * @param client - Viem WalletClient.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param tokenAddress - ERC-20 token contract address.
  * @param recipient - Recipient address.
  * @param amount - Amount in token's smallest unit (bigint or hex string).
@@ -98,7 +97,7 @@ export async function sendSingleCall(
  * @returns SendCallsResult with batch ID.
  */
 export async function sendErc20Transfer(
-  client: WalletClient,
+  client: EIP5792Client,
   tokenAddress: Address,
   recipient: Address,
   amount: bigint | string,
@@ -126,7 +125,7 @@ export async function sendErc20Transfer(
 /**
  * Build and send multiple calls in a batch.
  *
- * @param client - Viem WalletClient.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param calls - Array of calls to execute.
  * @param account - Sender address.
  * @param chainId - Optional chain ID (hex).
@@ -135,7 +134,7 @@ export async function sendErc20Transfer(
  * @returns SendCallsResult with batch ID.
  */
 export async function sendBatch(
-  client: WalletClient,
+  client: EIP5792Client,
   calls: Call[],
   account: Address,
   chainId?: string,

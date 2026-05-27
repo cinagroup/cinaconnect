@@ -115,3 +115,17 @@ export interface SIWEValidationError {
   /** Description of the validation failure. */
   message: string;
 }
+
+/**
+ * Minimal provider interface for SIWE signature verification.
+ * Supports viem/ethers v6 (recoverAddress), ethers v5 (verifyMessage),
+ * and raw EIP-1193 providers (request).
+ */
+export interface SIWEProvider {
+  /** viem / ethers v6: recover address from message + signature */
+  recoverAddress?(args: { message: string; signature: string }): Promise<string>;
+  /** ethers v5: verify a signed message */
+  verifyMessage?(message: string, signature: string): Promise<string>;
+  /** EIP-1193 raw request method */
+  request?(args: { method: string; params?: unknown[] }): Promise<unknown>;
+}

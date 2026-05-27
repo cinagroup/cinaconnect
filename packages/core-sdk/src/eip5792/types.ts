@@ -11,6 +11,15 @@
 import type { Hex, Address } from 'viem';
 
 // ---------------------------------------------------------------------------
+// Client Abstraction
+// ---------------------------------------------------------------------------
+
+/** Minimal EIP-5792 client interface — any object with a JSON-RPC request method. */
+export interface EIP5792Client {
+  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
+}
+
+// ---------------------------------------------------------------------------
 // Capabilities
 // ---------------------------------------------------------------------------
 

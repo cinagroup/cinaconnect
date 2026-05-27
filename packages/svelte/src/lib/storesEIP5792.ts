@@ -25,6 +25,7 @@ import {
   type Writable,
 } from 'svelte/store';
 import type {
+  EIP5792Client,
   WalletCapabilities,
   ChainCapabilities,
   Call,
@@ -125,11 +126,11 @@ export interface AtomicBatchStore {
 // Internal helpers
 // ---------------------------------------------------------------------------
 
-/** Build a minimal wallet client wrapper from an EIP-1193 provider. */
+/** Build a minimal client wrapper from an EIP-1193 provider. */
 function toWalletClient(
   provider: EIP1193Provider,
   _address: string,
-): { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> } {
+): EIP5792Client {
   return {
     request: (args) => provider!.request(args),
   };
@@ -228,7 +229,7 @@ export async function fetchWalletCapabilities(): Promise<WalletCapabilities | nu
   try {
     const client = toWalletClient(ctx.provider, ctx.address!);
     const caps = await walletGetCapabilities(
-      client as any,
+      client,
       ctx.address as `0x${string}`,
     );
     _capabilitiesWritable.set(caps);
@@ -367,7 +368,7 @@ export function sendCalls(): SendCallsStore {
         ...(options?.capabilities ? { capabilities: options.capabilities } : {}),
       };
 
-      const result: SendCallsResult = await walletSendCalls(client as any, params);
+      const result: SendCallsResult = await walletSendCalls(client, params);
       callId.set(result.id);
       return result.id;
     } catch (err) {
@@ -458,7 +459,7 @@ export function atomicBatch(): AtomicBatchStore {
         simulate: options?.simulate,
       };
 
-      const result: SendCallsResult = await executeAtomicBatch(client as any, config);
+      const result: SendCallsResult = await executeAtomicBatch(client, config);
       callId.set(result.id);
       return result.id;
     } catch (err) {
@@ -560,7 +561,7 @@ export function callsStatus(
       if (!ctx.provider) return;
 
       const client = toWalletClient(ctx.provider, ctx.address ?? '0x0');
-      const res = await walletGetCallsStatus(client as any, currentCallId);
+      const res = await walletGetCallsStatus(client, currentCallId);
       resultStore.set(res);
       statusStore.set(res.status);
       errorStore.set(null);

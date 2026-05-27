@@ -7,7 +7,7 @@
  * Reference: https://eips.ethereum.org/EIPS/eip-4361
  */
 
-import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from './types.js';
+import type { SIWEParams, ParsedSIWE, SIWEVerificationResult, SIWEProvider } from './types.js';
 import { generateTimestamp, normalizeAddress } from './utils.js';
 import { validateSIWEParams, fullValidation } from './validator.js';
 
@@ -234,7 +234,7 @@ export function parseMessage(message: string): ParsedSIWE {
 export async function verifyMessage(
   message: string,
   signature: string,
-  provider: any
+  provider: SIWEProvider
 ): Promise<SIWEVerificationResult> {
   try {
     // Parse the message first

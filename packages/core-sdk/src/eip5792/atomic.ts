@@ -5,8 +5,9 @@
  * calls in a single on-chain operation.
  */
 
-import type { Address, Hex, WalletClient, PublicClient } from 'viem';
+import type { Address, Hex } from 'viem';
 import type {
+  EIP5792Client,
   AtomicBatchConfig,
   AtomicBatchResult,
   Call,
@@ -65,12 +66,12 @@ export function buildAtomicBatch(
 /**
  * Build and execute an atomic batch.
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param config - Atomic batch configuration.
  * @returns SendCallsResult with batch ID.
  */
 export async function executeAtomicBatch(
-  client: WalletClient,
+  client: EIP5792Client,
   config: AtomicBatchConfig,
 ): Promise<SendCallsResult> {
   const { params } = buildAtomicBatch(config);

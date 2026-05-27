@@ -78,7 +78,7 @@ export declare function getCinacoinAccount(): {
     /** Readable: current connection status. */
     status: Readable<ConnectionStatus>;
     /** Readable: current balance (string, in wei). */
-    balance: any;
+    balance: Readable<string>;
 };
 /**
  * Access network-related stores and methods.

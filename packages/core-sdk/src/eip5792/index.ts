@@ -11,6 +11,7 @@
 
 // Types
 export type {
+  EIP5792Client,
   WalletCapabilities,
   ChainCapabilities,
   Call,

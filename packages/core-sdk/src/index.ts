@@ -549,6 +549,7 @@ export const VERSION = '0.1.0';
 // EIP-5792: Wallet Call API (atomic batch transactions)
 export {
   // Types
+  type EIP5792Client,
   type WalletCapabilities,
   type ChainCapabilities,
   type Call,

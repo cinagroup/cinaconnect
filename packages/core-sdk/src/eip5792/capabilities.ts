@@ -5,28 +5,27 @@
  * such as paymasterService, sessionKeys, atomicBatch, etc.
  */
 
-import type { Address, WalletClient } from 'viem';
-import type { WalletCapabilities, ChainCapabilities, GetCapabilitiesParams } from './types.js';
+import type { Address } from 'viem';
+import type { EIP5792Client, WalletCapabilities, ChainCapabilities, GetCapabilitiesParams } from './types.js';
 
 /**
  * Request wallet capabilities from a connected wallet provider.
  *
  * Calls the `wallet_getCapabilities` JSON-RPC method.
  *
- * @param client - Viem WalletClient connected to the wallet.
+ * @param client - Minimal client with a JSON-RPC request method.
  * @param account - Optional account address to query.
  * @returns WalletCapabilities keyed by chain ID (hex).
  */
 export async function walletGetCapabilities(
-  client: WalletClient,
+  client: EIP5792Client,
   account?: Address,
 ): Promise<WalletCapabilities> {
-  const accountParam = account ?? client.account;
-  if (!accountParam) {
+  if (!account) {
     throw new Error('wallet_getCapabilities requires an account address');
   }
 
-  const params: GetCapabilitiesParams = { address: accountParam as Address };
+  const params: GetCapabilitiesParams = { address: account };
 
   try {
     const result = await client.request({
