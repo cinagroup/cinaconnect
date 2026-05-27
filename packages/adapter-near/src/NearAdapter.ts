@@ -78,7 +78,7 @@ class MeteorWalletConnector implements NearWalletConnector {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
+      } catch (err) { console.warn('[Near] Operation failed:', err instanceof Error ? err.message : String(err));
         // Already disconnected
       }
       this.provider = null;

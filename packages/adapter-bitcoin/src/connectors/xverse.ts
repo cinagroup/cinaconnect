@@ -97,7 +97,8 @@ export class XverseConnector implements BitcoinConnector {
 
     try {
       accounts = await this._requestAccounts(provider);
-    } catch {
+    } catch (err) {
+      console.warn('[Xverse] _requestAccounts failed, using _getAccount fallback:', err instanceof Error ? err.message : String(err));
       // Fallback: getAccount returns structured address info
       const account = await this._getAccount(provider);
       accounts = account.addresses

@@ -97,7 +97,7 @@ export class HereWalletConnector implements NearWalletConnector {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
+      } catch (err) { console.warn('[here] Operation failed:', err instanceof Error ? err.message : String(err));
         // May already be disconnected
       }
       this.provider = null;

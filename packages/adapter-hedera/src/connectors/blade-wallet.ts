@@ -100,7 +100,7 @@ export class BladeWalletConnector implements HederaConnector {
     if (provider) {
       try {
         await provider.request({ method: 'disconnect' });
-      } catch {
+      } catch (err) { console.warn('[blade] Operation failed:', err instanceof Error ? err.message : String(err));
         // Blade may not support programmatic disconnect
       }
     }

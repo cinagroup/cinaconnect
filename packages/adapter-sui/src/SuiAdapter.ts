@@ -284,7 +284,7 @@ export class SuiChainAdapter implements ChainAdapter {
         coin,
       ]);
       return mistToSui(result.totalBalance);
-    } catch {
+    } catch (err) { console.warn('[Sui] Operation failed:', err instanceof Error ? err.message : String(err));
       return '0';
     }
   }

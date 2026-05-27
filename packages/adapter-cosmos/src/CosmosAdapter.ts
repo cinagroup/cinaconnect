@@ -336,7 +336,7 @@ export class CosmosAdapter {
           const data = await response.json();
           return (data.balances ?? []) as Coin[];
         }
-      } catch {
+      } catch (err) { console.warn('[Cosmos] Operation failed:', err instanceof Error ? err.message : String(err));
         // Fall through to RPC
       }
     }
@@ -594,7 +594,7 @@ export class CosmosAdapter {
             sequence: parseInt(account.sequence ?? '0', 10),
           };
         }
-      } catch {
+      } catch (err) { console.warn('[Cosmos] Operation failed:', err instanceof Error ? err.message : String(err));
         // Fall through
       }
     }
@@ -661,7 +661,7 @@ export class CosmosAdapter {
       try {
         const parsed = JSON.parse(decoded);
         return (parsed.balances ?? []) as Coin[];
-      } catch {
+      } catch (err) { console.warn('[Cosmos] Operation failed:', err instanceof Error ? err.message : String(err));
         return [];
       }
     }

@@ -102,7 +102,7 @@ export class HashPackConnector implements HederaConnector {
     if (provider) {
       try {
         await provider.request({ method: 'disconnect' });
-      } catch {
+      } catch (err) { console.warn('[hashpack] Operation failed:', err instanceof Error ? err.message : String(err));
         // HashPack may not support programmatic disconnect
       }
     }

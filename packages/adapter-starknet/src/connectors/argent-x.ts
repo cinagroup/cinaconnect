@@ -84,7 +84,7 @@ export class ArgentXConnector implements StarknetWalletConnector {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
+      } catch (err) { console.warn('[argent-x] Operation failed:', err instanceof Error ? err.message : String(err));
         // Wallet may already be disconnected
       }
       this.provider = null;

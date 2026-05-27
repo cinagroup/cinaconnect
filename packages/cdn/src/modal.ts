@@ -18,6 +18,18 @@ import type { CinacoinConfig } from "./config.js";
 
 export type ModalView = "connect" | "connecting" | "connected" | "networks";
 
+// ── XSS Prevention ───────────────────────────────────────
+/** Escape HTML entities to prevent DOM XSS */
+function escapeHtml(str: string | null | undefined): string {
+  if (!str) return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#x27;');
+}
+
 export interface ConnectModalOptions {
   /** WalletConnect Project ID */
   projectId?: string;
@@ -186,7 +198,7 @@ function getModalContent(config: CinacoinConfig & ConnectModalOptions, view: Mod
       <div style="text-align:center;padding:40px 24px;">
         <div style="font-size:32px;margin-bottom:16px;">✅</div>
         <h3 style="margin:0 0 8px;color:${getTextColor(config.theme)};">Connected</h3>
-        <p style="margin:0 0 16px;color:${getTextSecondary(config.theme)};font-size:14px;">${_address}</p>
+        <p style="margin:0 0 16px;color:${getTextSecondary(config.theme)};font-size:14px;">${escapeHtml(_address)}</p>
         <button class="ocx-disconnect-btn" style="padding:8px 16px;background:transparent;border:1px solid ${getBorderColor(config.theme)};border-radius:8px;color:${getTextColor(config.theme)};cursor:pointer;">Disconnect</button>
       </div>
     `;
@@ -201,10 +213,10 @@ function getModalContent(config: CinacoinConfig & ConnectModalOptions, view: Mod
         <button class="ocx-modal-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:${getTextSecondary(config.theme)};">✕</button>
       </div>
       ${wallets.map((w) => `
-        <button class="ocx-wallet-btn" data-wallet-id="${w.id}" style="display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid ${getBorderColor(config.theme)};border-radius:12px;background:${getSurfaceColor(config.theme)};cursor:pointer;margin-bottom:8px;">
-          <div style="width:32px;height:32px;border-radius:8px;background:${config.primaryColor || "#6366F1"};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:bold;">${w.name[0]}</div>
+        <button class="ocx-wallet-btn" data-wallet-id="${escapeHtml(w.id)}" style="display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid ${getBorderColor(config.theme)};border-radius:12px;background:${getSurfaceColor(config.theme)};cursor:pointer;margin-bottom:8px;">
+          <div style="width:32px;height:32px;border-radius:8px;background:${config.primaryColor || "#6366F1"};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:bold;">${escapeHtml(w.name[0])}</div>
           <div style="text-align:left;">
-            <div style="font-weight:600;font-size:14px;color:${getTextColor(config.theme)};">${w.name}</div>
+            <div style="font-weight:600;font-size:14px;color:${getTextColor(config.theme)};">${escapeHtml(w.name)}</div>
             <div style="font-size:12px;color:${getTextSecondary(config.theme)};">${w.installed ? "Detected" : "Browser extension"}</div>
           </div>
         </button>
