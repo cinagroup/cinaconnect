@@ -56,7 +56,7 @@ jobs:
         run: npx typedoc
 
       - name: Upload typedoc output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: typedoc-output
           path: docs/.vitepress/dist/api/typedoc/
@@ -96,7 +96,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Restore TypeDoc output
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: typedoc-output
           path: docs/public/api/typedoc/
@@ -111,7 +111,7 @@ jobs:
         run: echo "${{ vars.DOCS_CUSTOM_DOMAIN }}" > docs/.vitepress/dist/CNAME
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/.vitepress/dist
 
@@ -125,7 +125,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
       - name: Verify deployment
         run: |

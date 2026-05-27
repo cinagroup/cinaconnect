@@ -52,7 +52,7 @@ jobs:
           git log $(git describe --tags --abbrev=0 HEAD^)..HEAD --pretty=format:"- %s (%h)" >> CHANGELOG-v${VERSION}.md
 
       - name: Upload changelog artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: changelog
           path: CHANGELOG-*.md

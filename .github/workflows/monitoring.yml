@@ -52,7 +52,7 @@ jobs:
           bash scripts/monitoring-health-check.sh --json > health-report.json || true
 
       - name: Upload health report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: always()
         with:
           name: health-report-${{ github.run_id }}
@@ -160,7 +160,7 @@ jobs:
           cat weekly-report.md
 
       - name: Upload weekly report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: weekly-report-${{ github.run_id }}
           path: weekly-report.md

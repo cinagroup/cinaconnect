@@ -52,7 +52,7 @@ jobs:
           fi
 
       - name: Build and push relay-server
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/relay-server/Dockerfile
@@ -64,7 +64,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push rpc-proxy
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/rpc-proxy/Dockerfile
@@ -76,7 +76,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push bundler
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: deploy/docker/bundler/Dockerfile
@@ -88,7 +88,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push push-server
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./packages/push-server
           file: packages/push-server/Dockerfile
@@ -100,7 +100,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push keys-server
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./packages/keys-server
           file: packages/keys-server/Dockerfile
@@ -130,7 +130,7 @@ jobs:
           fi
 
       - name: Set up kubeconfig
-        uses: azure/setup-kubectl@v3
+        uses: azure/setup-kubectl@v5
         with:
           version: "v1.28.0"
 
@@ -140,7 +140,7 @@ jobs:
           echo "${{ secrets.STAGING_KUBECONFIG }}" | base64 -d > $HOME/.kube/config
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v5
         with:
           version: v${{ env.HELM_VERSION }}
 
@@ -220,7 +220,7 @@ jobs:
           echo "version=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
 
       - name: Set up kubeconfig
-        uses: azure/setup-kubectl@v3
+        uses: azure/setup-kubectl@v5
         with:
           version: "v1.28.0"
 
@@ -230,7 +230,7 @@ jobs:
           echo "${{ secrets.PRODUCTION_KUBECONFIG }}" | base64 -d > $HOME/.kube/config
 
       - name: Set up Helm
-        uses: azure/setup-helm@v3
+        uses: azure/setup-helm@v5
         with:
           version: v${{ env.HELM_VERSION }}
 
