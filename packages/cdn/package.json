@@ -42,5 +42,6 @@
       "require": "./dist/cdn.js",
       "types": "./dist/cdn.d.ts"
     }
-  }
+  },
+  "sideEffects": false
 }

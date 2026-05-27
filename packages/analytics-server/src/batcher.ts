@@ -31,7 +31,9 @@ export class EventBatcher {
         const values: (string | number | null)[] = [];
 
         for (const event of batch) {
-          const ipHash = event.properties?.ip_hash ?? GdprAnonymizer.hashIp("");
+          const ipHash = typeof event.properties?.ip_hash === "string"
+            ? event.properties.ip_hash
+            : GdprAnonymizer.hashIp("");
           values.push(
             event.eventId,
             event.appId ?? "default",
@@ -56,7 +58,9 @@ export class EventBatcher {
         // Fall back to individual inserts on batch failure
         for (const event of batch) {
           try {
-            const ipHash = event.properties?.ip_hash ?? GdprAnonymizer.hashIp("");
+            const ipHash = typeof event.properties?.ip_hash === "string"
+              ? event.properties.ip_hash
+              : GdprAnonymizer.hashIp("");
             await this.db.prepare(`
               INSERT OR IGNORE INTO events
               (id, app_id, event_type, user_id, properties, timestamp, ip_hash, created_at)

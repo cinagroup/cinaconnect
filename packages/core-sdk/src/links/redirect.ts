@@ -27,7 +27,7 @@ export function detectPlatform(): Platform {
   // Web browser detection.
   const ua = navigator.userAgent || navigator.vendor || '';
 
-  if (/iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream) {
+  if (/iPad|iPhone|iPod/.test(ua) && !((window as unknown) as Record<string, unknown>).MSStream) {
     return 'ios';
   }
 

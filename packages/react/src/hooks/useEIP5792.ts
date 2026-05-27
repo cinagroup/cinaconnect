@@ -44,6 +44,11 @@ interface EIP1193Provider {
   removeListener?(event: string, handler: (...args: unknown[]) => void): void;
 }
 
+/** Minimal EIP-5792 client interface — any object with a JSON-RPC request method. */
+interface LocalEIP5792Client {
+  request(args: { method: string; params?: unknown[] }): Promise<unknown>;
+}
+
 /**
  * Context shape for EIP-5792 hooks.
  */
@@ -63,14 +68,14 @@ interface EIP5792Context {
 // ---------------------------------------------------------------------------
 
 /** Build a minimal wallet client wrapper.
- *  Cast to `any` at call sites — core-sdk functions only use `.request()`.
+ *  Returns an object matching `EIP5792Client` — core-sdk functions only use `.request()`.
  */
 function toWalletClient(
   provider: EIP1193Provider,
   _address: string,
-): { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> } {
+): LocalEIP5792Client {
   return {
-    request: (args) => provider.request(args),
+    request: (args: { method: string; params?: unknown[] }) => provider.request(args),
   };
 }
 
@@ -127,7 +132,7 @@ export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
     setError(null);
 
     try {
-      const client = toWalletClient(ctx.provider, ctx.address!) as any;
+      const client = toWalletClient(ctx.provider, ctx.address!);
       const caps = await walletGetCapabilities(client, ctx.address as `0x${string}`);
       setCapabilities(caps);
     } catch (err) {
@@ -248,7 +253,7 @@ export function useSendCalls(): UseSendCallsReturn {
       setError(null);
 
       try {
-        const client = toWalletClient(ctx.provider, ctx.address) as any;
+        const client = toWalletClient(ctx.provider, ctx.address);
         const params: SendCallsParams = {
           version: options?.version ?? '1.0.0',
           calls,
@@ -363,7 +368,7 @@ export function useAtomicBatch(): UseAtomicBatchReturn {
       setError(null);
 
       try {
-        const client = toWalletClient(ctx.provider, ctx.address) as any;
+        const client = toWalletClient(ctx.provider, ctx.address);
         const config: AtomicBatchConfig = {
           chainId: (options?.chainId ?? ctx.chainIdHex ?? '0x1') as `0x${string}`,
           from: ctx.address as `0x${string}`,
@@ -465,7 +470,7 @@ export function useCallsStatus(
     if (!callIdRef.current || !ctx.provider) return;
 
     try {
-      const client = toWalletClient(ctx.provider, ctx.address ?? '0x0') as any;
+      const client = toWalletClient(ctx.provider, ctx.address ?? '0x0');
       const res = await walletGetCallsStatus(client, callIdRef.current);
       setResult(res);
       setStatus(res.status);

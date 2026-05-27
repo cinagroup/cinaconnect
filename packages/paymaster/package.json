@@ -1,7 +1,7 @@
 {
   "name": "@cinacoin/paymaster",
   "version": "0.2.0",
-  "description": "Paymaster client for Cinacoin — gas sponsorship and paymaster data",
+  "description": "Paymaster client for Cinacoin \u2014 gas sponsorship and paymaster data",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -18,7 +18,8 @@
   "scripts": {
     "build": "tsc",
     "check": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run"
   },
   "license": "MIT",
   "dependencies": {
@@ -32,5 +33,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "sideEffects": false
 }

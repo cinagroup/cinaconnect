@@ -260,7 +260,7 @@ describe("ERC-20 Approval Flow", () => {
       );
 
       // verify the calldata contains amount * 2 = 10_000_000
-      const callArgs = (walletClient.sendTransaction as any).mock.calls[0][0];
+      const callArgs = (walletClient.sendTransaction as unknown as { mock: { calls: [[{ data: string }]] } }).mock.calls[0][0];
       const data = callArgs.data as string;
       // Last 64 hex chars = the amount (uint256)
       const encodedAmount = data.slice(-64);
@@ -280,7 +280,7 @@ describe("ERC-20 Approval Flow", () => {
         { approveExact: true },
       );
 
-      const callArgs = (walletClient.sendTransaction as any).mock.calls[0][0];
+      const callArgs = (walletClient.sendTransaction as unknown as { mock: { calls: [[{ data: string }]] } }).mock.calls[0][0];
       const data = callArgs.data as string;
       const encodedAmount = data.slice(-64);
       expect(BigInt(`0x${encodedAmount}`)).toBe(5_000_000n);

@@ -6,6 +6,7 @@ export default defineConfig({
     alias: {
       '@cinacoin/core-sdk': path.resolve(__dirname, '../core-sdk/dist/index.js'),
     },
+    conditions: ['import'],
   },
   test: {
     globals: true,

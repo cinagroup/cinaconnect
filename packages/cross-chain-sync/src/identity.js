@@ -3,7 +3,7 @@
  *
  * Unified identity hash, account linking proofs, and verification.
  */
-import { InMemoryStorage } from "./storage.js.js";
+import { InMemoryStorage } from "./storage.js";
 /**
  * Generate a deterministic identity hash from linked accounts.
  */

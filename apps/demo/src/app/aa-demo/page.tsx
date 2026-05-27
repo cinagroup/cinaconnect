@@ -448,6 +448,7 @@ export default function AADemoPage() {
                 <p className="text-[10px] text-gray-500 mt-1">Gasless TXs</p>
               </div>
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50 text-center">
+                {/* TODO: Calculate real gas saved from on-chain data */}
                 <p className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
                   ~$2.40
                 </p>

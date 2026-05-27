@@ -341,6 +341,8 @@ export interface SuiObject {
   owner?: string;
   /** Previous transaction that modified this object. */
   previousTransaction?: string;
+  /** Balance for coin-type objects (string-encoded bigint). */
+  balance?: string;
 }
 
 /** A Sui coin balance. */
@@ -387,6 +389,20 @@ export interface SuiTransactionRequest {
   signatures?: string[];
 }
 
+/** Result from signAndExecuteTransactionBlock. */
+export interface SuiTransactionBlockResult {
+  /** Transaction digest (hex). */
+  digest?: string;
+  /** Transaction effects. */
+  effects?: {
+    transactionDigest?: string;
+    status?: { status?: string };
+    gasUsed?: { computationCost?: string; storageCost?: string; storageRebate?: string };
+  };
+  /** Object changes (if any). */
+  objectChanges?: unknown[];
+}
+
 /** Sui wallet provider (window.suiWallet style). */
 export interface SuiWalletProvider {
   /** Wallet name. */
@@ -417,7 +433,7 @@ export interface SuiWalletProvider {
   signAndExecuteTransactionBlock?(params: {
     transactionBlock: string | Uint8Array;
     requestType?: 'WaitForLocalExecution' | 'WaitForEffectsCert' | 'WaitForLocalExecution';
-  }): Promise<{ effects: unknown; objectChanges?: unknown[] }>;
+  }): Promise<SuiTransactionBlockResult>;
 
   /** EIP-1193 style request. */
   request?(args: { method: string; params?: unknown[] }): Promise<unknown>;
@@ -1238,7 +1254,7 @@ export class SuiChainAdapter {
         let total = 0n;
         for (const coin of coins.data) {
           // In practice, coin objects have balance in content
-          total += BigInt((coin as any).balance ?? 0);
+          total += BigInt(coin.balance ?? 0);
         }
         return total.toString();
       } catch {
@@ -1335,11 +1351,11 @@ export class SuiChainAdapter {
           requestType: 'WaitForLocalExecution',
         });
 
-        const digest = (result as any).digest;
+        const digest = result.digest;
         if (digest) return digest;
 
         // Fallback: get digest from effects
-        const effects = result.effects as any;
+        const effects = result.effects;
         if (effects?.transactionDigest) return effects.transactionDigest;
       } catch {
         // Fall through to manual sign + execute
@@ -1421,7 +1437,7 @@ export class SuiChainAdapter {
         method: 'sui_signMessage',
         params: [this.getAddress(), msgStr],
       });
-      return (result as any)?.signature ?? result as string;
+      return (result as Record<string, unknown>)?.signature as string ?? String(result);
     }
 
     throw new Error('Connected wallet does not support message signing');

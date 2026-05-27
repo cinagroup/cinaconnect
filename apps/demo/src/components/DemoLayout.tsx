@@ -3,6 +3,7 @@
 import { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { DemoDisclaimer } from './DemoDisclaimer';
 
 const NAV_ITEMS = [
   { href: '/', label: 'Home', icon: '🏠' },
@@ -11,6 +12,7 @@ const NAV_ITEMS = [
   { href: '/multi-chain', label: 'Multi-Chain', icon: '🌐' },
   { href: '/batch', label: 'Batch', icon: '📦' },
   { href: '/aa-demo', label: 'AA Demo', icon: '🏦' },
+  { href: '/onramp', label: 'Onramp', icon: '💳' },
   { href: '/auth', label: 'Auth', icon: '🔐' },
   { href: '/activity', label: 'Activity', icon: '📋' },
   { href: '/profile', label: 'Profile', icon: '👤' },
@@ -98,6 +100,7 @@ export default function DemoLayout({ children }: { children: ReactNode }) {
 
       {/* Main Content */}
       <main className="flex-1">
+        <DemoDisclaimer compact />
         {children}
       </main>
 

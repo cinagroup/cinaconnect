@@ -312,7 +312,7 @@ export async function sha256(input: Uint8Array): Promise<Uint8Array> {
   }
   // Node.js fallback
   if (typeof globalThis.process !== 'undefined' && globalThis.process.versions?.node) {
-    const { createHash } = await import('crypto' as any);
+    const { createHash } = await import('crypto' as unknown as string);
     return createHash('sha256').update(input).digest();
   }
   throw new Error('SHA-256 not available');
@@ -1613,10 +1613,10 @@ export class NearChainAdapter {
     const result = await this._getRpcClient().viewCall(normalized, methodName, args);
     // Decode base64 result
     try {
-      const decoded = atob((result as any).result ?? '');
+      const decoded = atob(((result as unknown) as Record<string, unknown>).result as string ?? '');
       return JSON.parse(decoded);
     } catch {
-      return (result as any).result ?? null;
+      return ((result as unknown) as Record<string, unknown>).result ?? null;
     }
   }
 
@@ -1779,7 +1779,7 @@ export class NearChainAdapter {
 
     // Some contracts use nft_tokens_for_owner instead
     if (Array.isArray(result)) {
-      return result.map((t) => String((t as any).token_id ?? t)).slice(0, limit);
+      return result.map((t: string | Record<string, unknown>) => String((t as Record<string, unknown>).token_id ?? t)).slice(0, limit);
     }
 
     // Fallback: try nft_tokens_for_owner with pagination
@@ -1789,7 +1789,7 @@ export class NearChainAdapter {
         limit,
       });
       if (Array.isArray(tokens)) {
-        return tokens.map((t) => String((t as any).token_id ?? t));
+        return (tokens as Array<string | Record<string, unknown>>).map((t) => String((t as Record<string, unknown>).token_id ?? t));
       }
     } catch {
       // Ignore

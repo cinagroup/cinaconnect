@@ -22,7 +22,7 @@ function createMockKV(): KVNamespace {
     },
     async delete(): Promise<void> {},
     async list(): Promise<KVNamespaceListResult<string, string>> {
-      return { keys: [], list_complete: true };
+      return { keys: [], list_complete: true, cacheStatus: null };
     },
   } as unknown as KVNamespace;
 }

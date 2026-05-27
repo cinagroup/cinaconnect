@@ -113,7 +113,7 @@ export class TelegramProvider {
     this.appName = config?.appName ?? 'Cinacoin App';
     this._chainId = config?.defaultChainId ?? config?.chains?.[0] ?? DEFAULT_CHAIN_ID;
     this._rpcUrl = config?.rpcUrl;
-    this._webApp = this._detectWebApp(config?.initDataOverride ?? (config as any)?.webApp);
+    this._webApp = this._detectWebApp(config?.initDataOverride ?? (config as { webApp?: unknown })?.webApp);
   }
 
   // -----------------------------------------------------------------------
@@ -456,11 +456,11 @@ export class TelegramProvider {
     if (initDataOverride && typeof initDataOverride === 'object') {
       return initDataOverride as TelegramWebApp;
     }
-    if (typeof window !== 'undefined' && (window as any).TelegramWebApp) {
-      return (window as any).TelegramWebApp;
+    if (typeof window !== 'undefined' && (window as Window & { TelegramWebApp?: TelegramWebApp }).TelegramWebApp) {
+      return (window as Window & { TelegramWebApp?: TelegramWebApp }).TelegramWebApp;
     }
-    if (typeof window !== 'undefined' && (window as any).Telegram) {
-      return (window as any).Telegram.WebApp;
+    if (typeof window !== 'undefined' && (window as Window & { Telegram?: { WebApp?: TelegramWebApp } }).Telegram) {
+      return (window as Window & { Telegram?: { WebApp?: TelegramWebApp } }).Telegram.WebApp;
     }
     return null;
   }
@@ -468,7 +468,7 @@ export class TelegramProvider {
   private _parseInitData(webApp: TelegramWebApp): TelegramWebAppData {
     const userRaw = webApp.initDataUnsafe?.user as TelegramUser | undefined;
     return {
-      initData: { query: webApp.initData, user: userRaw } as any,
+      initData: { query: webApp.initData, user: userRaw },
       user: userRaw ?? null,
       themeParams: webApp.themeParams || {},
       platform: webApp.platform,

@@ -107,7 +107,7 @@ export async function verifyTonSignature(
     }
 
     return {
-      chainType: 'ton' as any,
+      chainType: 'ton',
       data: {
         address: input.address,
         message: input.message,
@@ -118,14 +118,14 @@ export async function verifyTonSignature(
       valid: isValid,
       error: isValid ? undefined : 'TON signature verification failed',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
-      chainType: 'ton' as any,
+      chainType: 'ton',
       data: {},
       signature: input.signature,
       message: input.message,
       valid: false,
-      error: error?.message || 'Unknown error during TON verification',
+      error: (error as Error)?.message || 'Unknown error during TON verification',
     };
   }
 }
@@ -227,7 +227,7 @@ export function isValidTonAddress(address: string): boolean {
  * @param message - TON sign-in message string.
  * @returns Parsed message fields.
  */
-export function parseTonMessage(message: string): Record<string, any> {
+export function parseTonMessage(message: string): Record<string, unknown> {
   const lines = message.split('\n');
 
   const preambleMatch = lines[0]?.match(

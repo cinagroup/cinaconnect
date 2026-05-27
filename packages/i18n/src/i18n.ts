@@ -8,7 +8,7 @@
  *   i18n.getMessage('common.loading');
  */
 
-import type { Locale, LocaleCode, NamespaceDict, NamespaceMap } from './types';
+import type { NestedLocaleMap } from './types';
 
 /** ------------------------------------------------------------------ */
 /**  Internal lookup helpers                                           */
@@ -19,7 +19,7 @@ import type { Locale, LocaleCode, NamespaceDict, NamespaceMap } from './types';
  * Returns the raw string or `undefined` when not found.
  */
 function resolveKey(
-  locale: NamespaceMap | undefined,
+  locale: NestedLocaleMap | undefined,
   key: string,
 ): string | undefined {
   if (!locale) return undefined;
@@ -70,7 +70,7 @@ export interface I18nInstance {
 }
 
 export interface I18nConfig {
-  locales: Record<string, NamespaceMap>;
+  locales: Record<string, NestedLocaleMap>;
   defaultLocale: string;
   fallbackLocale?: string;
 }
@@ -85,7 +85,7 @@ export interface I18nConfig {
  *   );
  */
 export function createI18n(
-  locales: Record<string, NamespaceMap>,
+  locales: Record<string, NestedLocaleMap>,
   defaultLocale: string,
   fallbackLocale?: string,
 ): I18nInstance {

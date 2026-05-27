@@ -103,14 +103,14 @@ export async function verifySolanaSignature(
       valid: isValid,
       error: isValid ? undefined : 'Solana signature verification failed',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       chainType: 'solana',
       data: {},
       signature: input.signature,
       message: input.message,
       valid: false,
-      error: error?.message || 'Unknown error during Solana verification',
+      error: (error as Error)?.message || 'Unknown error during Solana verification',
     };
   }
 }
@@ -143,7 +143,7 @@ function validateSolanaSignatureFormat(signature: string): boolean {
  * @param message - Solana sign-in message string.
  * @returns Parsed message fields.
  */
-export function parseSolanaMessage(message: string): Record<string, any> {
+export function parseSolanaMessage(message: string): Record<string, unknown> {
   const lines = message.split('\n');
 
   const preambleMatch = lines[0]?.match(/^(.+) wants you to sign in with your Solana account:$/);

@@ -3,7 +3,7 @@
  *
  * All hooks require being used within <CinacoinProvider>.
  */
-import { type CinacoinContextValue } from './CinacoinProvider.js';
+import { type CinacoinContextValue, type AccountState } from './CinacoinProvider.js';
 /**
  * useCinacoin — access the full Cinacoin context.
  *
@@ -19,7 +19,7 @@ export declare function useCinacoin(): CinacoinContextValue;
  * const { address, balance, chainSymbol } = useAccount();
  * ```
  */
-export declare function useAccount(): any;
+export declare function useAccount(): AccountState;
 /**
  * useChainId — access the current chain ID.
  *
@@ -39,9 +39,9 @@ export declare function useChainId(): number | null;
  * ```
  */
 export declare function useConnect(): {
-    connect: any;
-    status: any;
-    isSwitchingChain: any;
+    connect: (connectorId: string) => Promise<void>;
+    status: CinacoinContextValue['status'];
+    isSwitchingChain: boolean;
 };
 /**
  * useDisconnect — disconnect from the current wallet.
@@ -53,6 +53,6 @@ export declare function useConnect(): {
  * ```
  */
 export declare function useDisconnect(): {
-    disconnect: any;
+    disconnect: () => Promise<void>;
 };
 //# sourceMappingURL=hooks.d.ts.map

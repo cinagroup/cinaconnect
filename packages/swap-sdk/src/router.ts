@@ -323,7 +323,7 @@ export class SwapRouter {
       });
     } else {
       // Fallback: use raw RPC requests
-      gasPrice = await (walletClient as any).getGasPrice?.() ?? 20_000_000_000n;
+      gasPrice = await (walletClient as unknown as { getGasPrice?: () => Promise<bigint> }).getGasPrice?.() ?? 20_000_000_000n;
       nonce = 0; // Would need raw RPC call in production
     }
 

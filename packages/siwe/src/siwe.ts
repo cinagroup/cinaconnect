@@ -264,7 +264,8 @@ export async function verifyMessage(
       // This is a weaker check but works with standard providers
       try {
         const accounts = await provider.request({ method: 'eth_accounts' });
-        const hasAddress = accounts.some(
+        const accountArray = Array.isArray(accounts) ? accounts : [];
+        const hasAddress = accountArray.some(
           (addr: string) => normalizeAddress(addr) === normalizedMsgAddress
         );
         if (!hasAddress) {
@@ -313,11 +314,12 @@ export async function verifyMessage(
       valid: true,
       data,
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : 'Unknown error during verification';
     return {
       valid: false,
       data: {} as ParsedSIWE,
-      error: error?.message || 'Unknown error during verification',
+      error: message,
     };
   }
 }

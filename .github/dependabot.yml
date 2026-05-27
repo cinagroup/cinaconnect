@@ -1,0 +1,70 @@
+# Cinacoin — Dependabot Configuration
+#
+# Monitors npm/pnpm dependencies for security updates and version bumps.
+# Creates automatic PRs for outdated or vulnerable packages.
+
+version: 2
+
+updates:
+  # ── npm ecosystem (covers pnpm-managed workspaces) ──────────
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 15
+    reviewers:
+      - "cinagroup/maintainers"
+    labels:
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    # Group minor/patch updates to reduce PR noise
+    groups:
+      production-deps:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
+        exclude-patterns:
+          - "@cinacoin/*"
+      dev-deps:
+        patterns:
+          - "*"
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    ignore:
+      # Let turbo version be managed manually for caching consistency
+      - dependency-name: "turbo"
+        update-types: ["version-update:semver-major"]
+      # Pin major node types
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"]
+
+  # ── GitHub Actions ──────────────────────────────────────────
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "UTC"
+    open-pull-requests-limit: 10
+    labels:
+      - "ci-cd"
+      - "dependencies"
+      - "automated"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      actions:
+        patterns:
+          - "*"

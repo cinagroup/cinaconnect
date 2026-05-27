@@ -72,7 +72,8 @@ export function createSignInMessage(
  */
 export async function verifySignIn(
   input: SIWXVerifyInput,
-  provider?: any
+  // TODO: narrow type — EIP-1193 or ethers/viem provider
+  provider?: unknown
 ): Promise<SIWXResult> {
   switch (input.chainType) {
     case 'evm':
@@ -108,7 +109,8 @@ export interface SIWXAdapter {
   /**
    * Verify a signature for this chain.
    */
-  verify(input: SIWXVerifyInput, provider?: any): Promise<SIWXResult>;
+  // TODO: narrow type — EIP-1193 or ethers/viem provider
+  verify(input: SIWXVerifyInput, provider?: unknown): Promise<SIWXResult>;
 }
 
 /**

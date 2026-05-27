@@ -29,7 +29,7 @@ export function useWalletInfo(): { name: string; icon: string } & ContextInfo {
 export function useBalance(): { balance: string; symbol: string } & ContextInfo {
   const ctx = useCinacoinContext();
   return {
-    balance: (ctx as any)?.balance ?? '0',
+    balance: (ctx as ContextInfo & Record<string, unknown>)?.balance as string ?? '0',
     symbol: 'ETH',
     ...ctx,
   } as { balance: string; symbol: string } & ContextInfo;
@@ -41,9 +41,10 @@ export function useAppKit(): {
   close: () => void;
 } & ContextInfo {
   const ctx = useCinacoinContext();
+  const ctxExt = ctx as ContextInfo & Record<string, unknown>;
   return {
-    open: () => (ctx as any)?.open?.(),
-    close: () => (ctx as any)?.close?.(),
+    open: () => (ctxExt?.open as (() => void) | undefined)?.(),
+    close: () => (ctxExt?.close as (() => void) | undefined)?.(),
     ...ctx,
   } as { open: () => void; close: () => void } & ContextInfo;
 }

@@ -96,7 +96,7 @@ export async function exchangeTwitterCode(
     throw new Error(`Twitter token exchange failed: ${error}`);
   }
 
-  return response.json() as Promise<any>;
+  return response.json() as Promise<{ accessToken: string; tokenType: string; expiresIn: number; scope: string }>;
 }
 
 /**

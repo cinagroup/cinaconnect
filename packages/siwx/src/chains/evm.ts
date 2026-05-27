@@ -40,13 +40,14 @@ export function createEvmSignInMessage(params: SIWXParams): string {
  */
 export async function verifyEvmSignature(
   input: SIWXVerifyInput,
-  provider: any
+  // TODO: narrow type — EIP-1193 or ethers/viem provider
+  provider: unknown
 ): Promise<SIWXResult> {
   const result = await verifyMessage(input.message, input.signature, provider);
 
   return {
     chainType: 'evm',
-    data: result.data,
+    data: result.data as unknown as Record<string, unknown>,
     signature: input.signature,
     message: input.message,
     valid: result.valid,

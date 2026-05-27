@@ -1,4 +1,4 @@
-import { createServer, type Server } from 'http';
+import { createServer, type Server, type ServerResponse } from 'http';
 import { WebSocketServer, WebSocket } from 'ws';
 import type { IncomingMessage } from 'http';
 
@@ -116,7 +116,7 @@ export class RelayServer {
     });
   }
 
-  private handleHttp(req: IncomingMessage, res: any): void {
+  private handleHttp(req: IncomingMessage, res: ServerResponse): void {
     // Security headers on all HTTP responses
     res.setHeader('Content-Security-Policy', "default-src 'none'");
     res.setHeader('X-Frame-Options', 'DENY');

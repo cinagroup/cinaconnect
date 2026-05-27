@@ -59,7 +59,9 @@ export class InjectedConnector implements ConnectorConfig {
   async init(): Promise<void> {
     if (this._initialized) return;
 
-    const win = typeof window !== 'undefined' ? (window as any) : undefined;
+    const win = typeof window !== 'undefined'
+      ? (window as Window & { ethereum?: EthereumProvider })
+      : undefined;
     if (win?.ethereum) {
       this._provider = win.ethereum as EthereumProvider;
     }
@@ -130,7 +132,7 @@ export class InjectedConnector implements ConnectorConfig {
    */
   isAvailable(): boolean {
     if (typeof window === 'undefined') return false;
-    return !!(window as any)?.ethereum || this._eip6963Providers.size > 0;
+    return !!(window as Window & { ethereum?: EthereumProvider })?.ethereum || this._eip6963Providers.size > 0;
   }
 
   // ─── Events ─────────────────────────────────────────────────────

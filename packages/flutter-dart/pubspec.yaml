@@ -1,5 +1,9 @@
 name: cinacoin
 description: Cinacoin Flutter SDK — Self-hosted wallet connection toolkit. A complete replacement for Reown/WalletConnect infrastructure for Flutter apps.
+  
+  Provides wallet connection (WalletConnect v2, injected, deep-link),
+  session management with encrypted persistence, chain adapters (EVM,
+  Solana), SIWE authentication, and a typed event system.
 version: 0.1.0
 homepage: https://github.com/hainai/cinacoin
 repository: https://github.com/hainai/cinacoin
@@ -36,6 +40,10 @@ dev_dependencies:
   mocktail: ^1.0.3
 
 flutter:
-  # Plugin registration if needed
+  # Plugin registration for native wallet deep links
   # assets:
   #   - assets/icons/
+
+# Recommended: add to your app's proguard-rules.pro for release builds:
+# -keep class com.it_nomads.fluttersecurestorage.** { *; }
+# -keep class com.walletconnect.** { *; }

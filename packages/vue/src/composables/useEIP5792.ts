@@ -162,7 +162,7 @@ export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
     try {
       const client = toWalletClient(ctx.provider, ctx.address!);
       const caps = await walletGetCapabilities(
-        client as any,
+        client,
         ctx.address as `0x${string}`,
       );
       capabilities.value = caps;
@@ -291,7 +291,7 @@ export function useSendCalls(): UseSendCallsReturn {
         ...(options?.capabilities ? { capabilities: options.capabilities } : {}),
       };
 
-      const result: SendCallsResult = await walletSendCalls(client as any, params);
+      const result: SendCallsResult = await walletSendCalls(client, params);
       lastCallId.value = result.id;
       return result.id;
     } catch (err) {
@@ -410,7 +410,7 @@ export function useAtomicBatch(): UseAtomicBatchReturn {
         simulate: options?.simulate,
       };
 
-      const result: SendCallsResult = await executeAtomicBatch(client as any, config);
+      const result: SendCallsResult = await executeAtomicBatch(client, config);
       lastCallId.value = result.id;
       return result.id;
     } catch (err) {
@@ -505,7 +505,7 @@ export function useCallsStatus(
       if (!ctx.provider) return;
 
       const client = toWalletClient(ctx.provider, ctx.address ?? '0x0');
-      const res = await walletGetCallsStatus(client as any, currentCallId);
+      const res = await walletGetCallsStatus(client, currentCallId);
       result.value = res;
       status.value = res.status;
       error.value = null;

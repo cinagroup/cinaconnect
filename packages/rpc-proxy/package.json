@@ -32,5 +32,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "sideEffects": false
 }

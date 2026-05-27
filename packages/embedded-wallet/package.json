@@ -16,7 +16,8 @@
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
     "lint": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "test": "vitest run"
   },
   "dependencies": {
     "@noble/secp256k1": "^2.1.0",
@@ -48,5 +49,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "sideEffects": false
 }

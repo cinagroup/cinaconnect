@@ -52,10 +52,10 @@ export class PrivacyManager {
   sanitize(event: AnalyticsEvent): AnalyticsEvent {
     if (!this.config.excludeAddresses) return event;
 
-    const sanitized = { ...event };
+    const sanitized = { ...event } as AnalyticsEvent & { address?: string };
     // Remove or hash sensitive fields
     if ('address' in sanitized) {
-      (sanitized as any).address = this.hashAddress((sanitized as any).address);
+      sanitized.address = this.hashAddress(sanitized.address!);
     }
     return sanitized;
   }

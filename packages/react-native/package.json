@@ -35,5 +35,6 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "sideEffects": false
 }

@@ -272,8 +272,7 @@ export class TxIndexer {
     const allEvents: IndexedEvent[] = [];
     for (const topic of ALL_TOPICS) {
       try {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const rawLogs: RpcLog[] = await (client as any).request({
+        const rawLogs: RpcLog[] = await client.request({
           method: 'eth_getLogs',
           params: [{
             fromBlock: `0x${BigInt(fromBlock).toString(16)}`,

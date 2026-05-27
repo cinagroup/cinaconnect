@@ -18,6 +18,17 @@ export type {
 } from '@sats-connect/core';
 
 /**
+ * Shape of an address entry returned by sats-connect.
+ * The SDK's response typing is `Promise<void>` in v0.2.x,
+ * so we narrow via `unknown` here.
+ */
+interface SatsConnectAddressEntry {
+  purpose?: string;
+  address?: string;
+  publicKey?: string;
+}
+
+/**
  * SatsConnect connector.
  *
  * Uses the `@sats-connect/core` SDK to connect to multiple Bitcoin wallets
@@ -67,22 +78,24 @@ export class SatsConnectConnector implements BitcoinConnector {
   async connect(params?: { accounts?: string[] }): Promise<BitcoinConnectionResult> {
     const { getAddress, AddressPurpose } = await import('@sats-connect/core');
 
-    // Request Bitcoin address(es) from the sats-connect protocol
+    // Request Bitcoin address(es) from the sats-connect protocol.
+    // SDK v0.2.x types getAddress as Promise<void>, so we narrow via unknown.
     const result = await getAddress({
-      paymentType: 'P2WPKH' as any, // Native segwit
+      paymentType: 'P2WPKH' as unknown, // Native segwit; SDK types are incomplete in v0.2.x
       purposes: [AddressPurpose.Payment],
       message: 'Connect to application',
-    });
+    }) as unknown as { address?: string; addresses?: SatsConnectAddressEntry[] };
 
-    if (!result.address || !result.addresses || result.addresses.length === 0) {
+    if (!result.address && (!result.addresses || result.addresses.length === 0)) {
       throw new Error('No addresses returned from SatsConnect wallet');
     }
 
-    const addresses = result.addresses
-      .filter((a: any) => a.purpose === 'payment')
-      .map((a: any) => a.address);
+    const addresses = (result.addresses ?? [])
+      .filter((a: SatsConnectAddressEntry) => a.purpose === 'payment')
+      .map((a: SatsConnectAddressEntry) => a.address)
+      .filter((a): a is string => typeof a === 'string');
 
-    this._connectedAccounts = addresses.length > 0 ? addresses : [result.address];
+    this._connectedAccounts = addresses.length > 0 ? addresses : [result.address!];
     this._network = result.addresses?.[0]?.publicKey ? 'mainnet' : 'mainnet';
 
     this._bindGlobalEvents();

@@ -103,6 +103,8 @@ export interface RestApiConfig {
   host?: string;
   /** Base path prefix (default: '/api/v1'). */
   basePath?: string;
+  /** API key for authentication (optional; if set, requires Bearer token). */
+  apiKey?: string;
 }
 
 export interface ApiHealthStatus {

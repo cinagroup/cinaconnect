@@ -23,6 +23,21 @@ export type NamespaceDict = Record<string, string>;
 export type NamespaceMap = Record<string, NamespaceDict>;
 
 /**
+ * A nested locale value — either a string leaf or another nested object.
+ * Supports arbitrarily deep message hierarchies (e.g. { common: { greeting: 'Hi' } }).
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export interface NestedLocaleDict {
+  [key: string]: string | NestedLocaleDict;
+}
+
+/**
+ * Collection of nested locale dictionaries keyed by namespace name.
+ * Used when locale objects have more than two nesting levels.
+ */
+export type NestedLocaleMap = Record<string, NestedLocaleDict>;
+
+/**
  * Full locale dictionary — every namespace for a single locale.
  */
 export type Locale = Record<string, NamespaceDict>;

@@ -43,15 +43,48 @@ export interface DeliveryResult {
 export class PushServer {
   private readonly config: PushServerConfig;
   private deliveryLog: DeliveryResult[] = [];
+  private registeredDevices: Map<string, { platform: 'ios' | 'android'; userId?: string; registeredAt: number }> = new Map();
 
   constructor(config: PushServerConfig) {
     this.config = config;
   }
 
   /**
+   * Validate a notification request.
+   */
+  private validateNotification(notification: PushNotification): string | null {
+    if (!notification.deviceToken || typeof notification.deviceToken !== 'string') {
+      return 'Missing or invalid deviceToken';
+    }
+    if (notification.deviceToken.length > 4096) {
+      return 'deviceToken too long (max 4096 chars)';
+    }
+    if (!notification.title || typeof notification.title !== 'string') {
+      return 'Missing or invalid title';
+    }
+    if (notification.title.length > 256) {
+      return 'title too long (max 256 chars)';
+    }
+    if (!notification.body || typeof notification.body !== 'string') {
+      return 'Missing or invalid body';
+    }
+    if (notification.body.length > 4096) {
+      return 'body too long (max 4096 chars)';
+    }
+    if (notification.platform !== 'ios' && notification.platform !== 'android') {
+      return 'platform must be "ios" or "android"';
+    }
+    return null;
+  }
+
+  /**
    * Send a push notification to a single device.
    */
   async send(notification: PushNotification): Promise<DeliveryResult> {
+    const validationError = this.validateNotification(notification);
+    if (validationError) {
+      return { success: false, message: validationError, timestamp: Date.now() };
+    }
     try {
       if (notification.platform === 'ios') {
         return await this.sendApns(notification);
@@ -73,7 +106,47 @@ export class PushServer {
    * Send push notifications to multiple devices in batch.
    */
   async sendBatch(notifications: PushNotification[]): Promise<DeliveryResult[]> {
+    // Rate limit: max 100 per batch
+    if (notifications.length > 100) {
+      return notifications.slice(0, 100).map((n) => ({
+        success: false,
+        message: 'Batch size exceeded (max 100)',
+        timestamp: Date.now(),
+      }));
+    }
     return Promise.all(notifications.map((n) => this.send(n)));
+  }
+
+  /**
+   * Register a device token for push notifications.
+   */
+  async registerDevice(req: { deviceToken: string; platform: 'ios' | 'android'; userId?: string }): Promise<{ success: boolean; message: string }> {
+    if (!req.deviceToken || !req.platform) {
+      return { success: false, message: 'Missing required fields: deviceToken, platform' };
+    }
+    if (req.deviceToken.length > 4096) {
+      return { success: false, message: 'deviceToken too long' };
+    }
+    if (!['ios', 'android'].includes(req.platform)) {
+      return { success: false, message: 'Invalid platform' };
+    }
+    this.registeredDevices.set(req.deviceToken, {
+      platform: req.platform,
+      userId: req.userId,
+      registeredAt: Date.now(),
+    });
+    return { success: true, message: 'Device registered' };
+  }
+
+  /**
+   * Unregister a device token.
+   */
+  async unregisterDevice(deviceToken: string): Promise<{ success: boolean; message: string }> {
+    if (!deviceToken) {
+      return { success: false, message: 'Missing deviceToken' };
+    }
+    this.registeredDevices.delete(deviceToken);
+    return { success: true, message: 'Device unregistered' };
   }
 
   /**

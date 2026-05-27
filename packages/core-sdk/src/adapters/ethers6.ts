@@ -218,7 +218,7 @@ export class Ethers6Adapter extends EventEmitter implements Connector {
 
     try {
       await this.provider.send('wallet_switchEthereumChain', [{ chainId: hexChainId }]);
-    } catch (switchError: any) {
+    } catch (switchError: unknown) {
       const chain = this.findChain(chainId);
       if (chain) {
         await this.provider.send('wallet_addEthereumChain', [

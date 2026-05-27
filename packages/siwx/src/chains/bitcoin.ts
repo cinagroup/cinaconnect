@@ -94,14 +94,14 @@ export async function verifyBitcoinSignature(
       valid: isValid,
       error: isValid ? undefined : 'Bitcoin signature verification failed',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
       chainType: 'bitcoin',
       data: {},
       signature: input.signature,
       message: input.message,
       valid: false,
-      error: error?.message || 'Unknown error during Bitcoin verification',
+      error: (error as Error)?.message || 'Unknown error during Bitcoin verification',
     };
   }
 }
@@ -143,7 +143,7 @@ function validateBitcoinSignatureFormat(signature: string, address: string): boo
  * @param message - Bitcoin sign-in message string.
  * @returns Parsed message fields.
  */
-export function parseBitcoinMessage(message: string): Record<string, any> {
+export function parseBitcoinMessage(message: string): Record<string, unknown> {
   const lines = message.split('\n');
 
   const preambleMatch = lines[0]?.match(/^(.+) wants you to sign in with your Bitcoin account:$/);

@@ -28,13 +28,13 @@
  * ```
  */
 // Sync
-export { StateSync } from "./sync.js.js";
+export { StateSync } from "./sync.js";
 // Identity
-export { CrossChainIdentityManager, generateIdentityHash, verifyLinkingProof, createLinkingProof, } from "./identity.js.js";
+export { CrossChainIdentityManager, generateIdentityHash, verifyLinkingProof, createLinkingProof, } from "./identity.js";
 // Adapters
-export { syncEvmState, getEvmSession } from "./adapters/evm.js.js";
-export { syncSolanaState, getSolanaSession } from "./adapters/solana.js.js";
-export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js.js";
+export { syncEvmState, getEvmSession } from "./adapters/evm.js";
+export { syncSolanaState, getSolanaSession } from "./adapters/solana.js";
+export { syncBitcoinState, getBitcoinSession } from "./adapters/bitcoin.js";
 // Storage
-export { InMemoryStorage, LocalStorage } from "./storage.js.js";
+export { InMemoryStorage, LocalStorage } from "./storage.js";
 //# sourceMappingURL=index.js.map

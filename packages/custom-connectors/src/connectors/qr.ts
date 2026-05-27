@@ -1,8 +1,38 @@
 import { ConnectorConfig, ConnectorEvents, ConnectionResult } from '../types';
 
 /**
- * Parameters accepted by QRConnector.connect().
+ * Minimal WalletConnect session shape used by QRConnector.
  */
+interface WCSession {
+  topic: string;
+  namespaces?: {
+    eip155?: {
+      accounts?: string[];
+    };
+  };
+}
+
+/** Minimal SignClient interface matching @cinacoin/core-sdk's shape. */
+interface SignClientInstance {
+  connect: (params: {
+    requiredNamespaces?: Record<string, {
+      methods: string[];
+      chains: string[];
+      events: string[];
+    }>;
+  }) => Promise<{ uri?: string; approval: () => Promise<WCSession> }>;
+  pair: (params: { uri: string }) => Promise<void>;
+  disconnect: (params: { topic: string; reason: { code: number; message: string } }) => Promise<void>;
+  request: (params: {
+    topic: string;
+    request: { method: string; params?: unknown[] };
+    chainId?: string;
+  }) => Promise<unknown>;
+  on: (event: string, callback: (event: Record<string, unknown>) => void) => void;
+  session: { getAll: () => WCSession[] };
+}
+
+/** Parameters accepted by QRConnector.connect(). */
 interface QRConnectParams {
   /** WalletConnect URI (from QR scan or manual paste) */
   uri?: string;
@@ -26,8 +56,6 @@ export class QRConnector implements ConnectorConfig {
   private _handlers: Map<string, Set<(...args: unknown[]) => void>> = new Map();
   /** Current WalletConnect URI */
   private _uri: string | null = null;
-  /** Whether we have an active session */
-  private _connected = false;
   /** Cached accounts */
   private _accounts: string[] = [];
   /** Cached chain ID */
@@ -35,7 +63,7 @@ export class QRConnector implements ConnectorConfig {
   /** WalletConnect relay project ID */
   private _projectId: string;
   /** Core SDK SignClient (lazily initialized) */
-  private _signClient: any = null;
+  private _signClient: SignClientInstance | null = null;
   /** Active session topic */
   private _sessionTopic: string | null = null;
 
@@ -51,7 +79,9 @@ export class QRConnector implements ConnectorConfig {
   async init(): Promise<void> {
     if (this._signClient) return;
 
-    const { SignClient } = await import('@cinacoin/core-sdk');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const coreSdk = await import('@cinacoin/core-sdk') as unknown as { SignClient: { init: (config: Record<string, unknown>) => Promise<SignClientInstance> } };
+    const SignClient = coreSdk.SignClient;
     this._signClient = await SignClient.init({
       projectId: this._projectId,
       metadata: {
@@ -99,10 +129,9 @@ export class QRConnector implements ConnectorConfig {
       // Wait for the remote wallet to approve
       const session = await approval();
       this._sessionTopic = session.topic;
-      this._accounts = session.namespaces?.eip155?.accounts?.map(
-        (a: string) => a.split(':').pop()
-      ) ?? [];
-      this._connected = true;
+      this._accounts = session.namespaces?.eip155?.accounts
+        ?.map((a: string) => a.split(':').pop()!)
+        .filter((a): a is string => a !== undefined) ?? [];
 
       this._bindSessionEvents(session);
 
@@ -135,7 +164,6 @@ export class QRConnector implements ConnectorConfig {
       }
     }
 
-    this._connected = false;
     this._sessionTopic = null;
     this._uri = null;
     this._accounts = [];
@@ -226,7 +254,7 @@ export class QRConnector implements ConnectorConfig {
 
   // ─── Internal ───────────────────────────────────────────────────
 
-  private async _getClientOrThrow(): Promise<any> {
+  private async _getClientOrThrow(): Promise<SignClientInstance> {
     if (!this._signClient) {
       await this.init();
     }
@@ -239,20 +267,24 @@ export class QRConnector implements ConnectorConfig {
   /**
    * Bind session-level events to our internal event system.
    */
-  private _bindSessionEvents(session: any): void {
+  private _bindSessionEvents(_session: WCSession): void {
     if (!this._signClient) return;
 
-    this._signClient.on('session_event', (event: any) => {
-      const { params } = event;
+    this._signClient.on('session_event', (event: Record<string, unknown>) => {
+      const params = event.params as { event: { name: string; data: unknown } };
       if (params.event.name === 'accountsChanged') {
-        this._accounts = params.event.data;
+        const data = params.event.data;
+        this._accounts = Array.isArray(data) ? data.filter((a): a is string => typeof a === 'string') : [];
         const handlers = this._handlers.get('accountsChanged') ?? new Set();
         for (const handler of handlers) {
           handler(this._accounts);
         }
       }
       if (params.event.name === 'chainChanged') {
-        this._chainId = `0x${Number(params.event.data).toString(16)}`;
+        const raw = params.event.data;
+        this._chainId = typeof raw === 'string' && raw.startsWith('0x')
+          ? raw
+          : `0x${Number(raw).toString(16)}`;
         const handlers = this._handlers.get('chainChanged') ?? new Set();
         for (const handler of handlers) {
           handler(this._chainId);
@@ -261,7 +293,6 @@ export class QRConnector implements ConnectorConfig {
     });
 
     this._signClient.on('session_delete', () => {
-      this._connected = false;
       this._sessionTopic = null;
       this._accounts = [];
 

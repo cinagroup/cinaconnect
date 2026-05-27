@@ -219,7 +219,7 @@ export class Ethers5Adapter extends EventEmitter implements Connector {
     try {
       // Try wallet_switchEthereumChain first
       await this.provider.send('wallet_switchEthereumChain', [{ chainId: `0x${chainId.toString(16)}` }]);
-    } catch (switchError: any) {
+    } catch (switchError: unknown) {
       // Chain not added — try wallet_addEthereumChain
       const chain = this.findChain(chainId);
       if (chain) {

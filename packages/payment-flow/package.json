@@ -1,7 +1,7 @@
 {
   "name": "@cinacoin/payment-flow",
   "version": "0.2.0",
-  "description": "Complete payment UI components — Buy, Send, Receive flow",
+  "description": "Complete payment UI components \u2014 Buy, Send, Receive flow",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format cjs,esm --dts",
     "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@cinacoin/core-sdk": "workspace:*"

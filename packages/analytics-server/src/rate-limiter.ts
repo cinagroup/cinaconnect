@@ -48,7 +48,8 @@ export class RateLimiter {
       let entry: RateEntry;
 
       // No entry or expired window — create new
-      if (!raw.value || (now - raw.metadata?.windowStart as number ?? 0) > windowMs) {
+      const metaWindowStart = (raw.metadata as Record<string, unknown> | null)?.windowStart as number | undefined;
+      if (!raw.value || (now - (metaWindowStart ?? 0)) > windowMs) {
         entry = { count: 1, windowStart: now };
         await this.kv.put(cacheKey, JSON.stringify(entry), {
           expirationTtl: this.windowSeconds,

@@ -96,6 +96,20 @@ export interface TelegramWebApp {
   setBackgroundColor: (color: string) => void;
 }
 
+/** Parsed Telegram WebApp data returned by the provider. */
+export interface TelegramWebAppData {
+  /** Parsed init data with query and user. */
+  initData: { query: string; user?: TelegramUser };
+  /** Telegram user from initDataUnsafe. */
+  user: TelegramUser | null;
+  /** Theme parameters from the WebApp. */
+  themeParams: Record<string, string>;
+  /** Platform identifier. */
+  platform: string;
+  /** WebApp version. */
+  version: string;
+}
+
 /** Telegram Main Button. */
 export interface TelegramMainButton {
   text: string;

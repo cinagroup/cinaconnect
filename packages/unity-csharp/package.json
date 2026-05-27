@@ -31,5 +31,6 @@
       "path": "Samples~/ConnectDemo"
     }
   ],
-  "private": true
+  "private": true,
+  "sideEffects": false
 }

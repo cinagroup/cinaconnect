@@ -4,7 +4,7 @@
 
 Cinacoin is an open-source, all-in-one SDK for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
-> **🚧 Project Status:** **64/64 packages built** with dist/ directories. 1 package published to npm (`@cinacoin/core-sdk`). **119+ test files** across the codebase. **53+ commits**. Two infrastructure services (RPC Proxy, Keys Server) are **deployed & live on Cloudflare Workers**. Demo app has **6 pages** with real wallet connection logic. **Overall completion: 98.5%** — see [FINAL_STATUS_REPORT.md](./FINAL_STATUS_REPORT.md) for the full delivery report.
+> **🚧 Project Status:** **75 packages** across 13 categories · **321 test files** · **17 CI/CD workflows** · **69+ packages built** with `dist/` output · 1 package published to npm (`@cinacoin/core-sdk`) · 2 Cloudflare Workers **deployed & live** (RPC Proxy, Keys Server) · Demo app has **6 pages** with real MetaMask connection · **Security: 8.0/10** (3 audit rounds completed) · **Overall completion: ~91-94%** — see [AUDIT_SUMMARY.md](./AUDIT_SUMMARY.md) for the full audit timeline and [FINAL_STATUS_REPORT.md](./FINAL_STATUS_REPORT.md) for the delivery report.
 
 ## Quick Setup
 
@@ -30,7 +30,7 @@ pnpm run dev --filter=demo
 ### 🔗 Wallet Connection
 - **600+ wallets** via WalletConnect Network (EVM, Solana, Bitcoin, TON, TRON)
 - **EIP-6963** multi-wallet discovery
-- **EIP-5792** Wallet Call API — batch calls, atomic transactions, capability discovery (React hooks in `@cinacoin/react`)
+- **EIP-5792** Wallet Call API — batch calls, atomic transactions, capability discovery (hooks in React, Vue, Svelte, Angular, Next, Nuxt)
 - **Email & social login** — Google, X, GitHub, Discord, Apple, Facebook, Farcaster
 - **Smart Accounts** (ERC-4337) — gasless transactions, session keys, batch calls
 
@@ -156,6 +156,8 @@ function BatchDemo() {
 
 ## Package Index
 
+> **75 packages** total across 13 categories. **69+ built** with `dist/` output. See [FINAL_STATUS_REPORT.md](./FINAL_STATUS_REPORT.md) for per-package details.
+
 ### Status Legend
 - ✅ **Built & Published** — compiled, tested, published to npm, ready to install
 - 🚧 **In Development** — source written, actively being built/deployed (e.g., Cloudflare Workers)
@@ -170,7 +172,7 @@ function BatchDemo() {
 | `@cinacoin/walletconnect-v2` | WalletConnect v2 protocol integration | ✅ built; adapter exports commented out in core-sdk |
 | `@cinacoin/chains` | Chain definition registry (300+ chains) | ✅ built |
 
-### Adapters
+### Adapters (11)
 | Package | Description | Status |
 |---------|-------------|--------|
 | `@cinacoin/adapter-ethereum` | EVM chain adapter (Wagmi / Ethers) | ✅ built; export commented out in core-sdk |
@@ -185,7 +187,7 @@ function BatchDemo() {
 | `@cinacoin/adapter-hedera` | Hedera chain adapter | ✅ built |
 | `@cinacoin/adapter-xrpl` | XRPL chain adapter | ✅ built |
 
-### UI & Frameworks
+### UI & Frameworks (8) + Mobile/Game (5)
 | Package | Description | Status |
 |---------|-------------|--------|
 | `@cinacoin/core-ui` | Web Components (Lit-based modal & widgets) | ✅ built |
@@ -195,12 +197,12 @@ function BatchDemo() {
 | `@cinacoin/svelte` | Svelte 4/5 store & components | ✅ built |
 | `@cinacoin/angular` | Angular support | ✅ built |
 | `@cinacoin/nuxt` | Nuxt support | ✅ built |
-| `@cinacoin/react-native` | React Native SDK — type definitions only, native implementation needed | ✅ built 🔌 |
-| `@cinacoin/flutter-dart` | Flutter SDK (Dart) — type definitions only, native implementation needed | ✅ built 🔌 |
-| `@cinacoin/android` | Android SDK (Kotlin) | ✅ built |
-| `@cinacoin/ios` | iOS SDK (Swift) | ✅ built |
-| `@cinacoin/unity-csharp` | Unity SDK (C#) — **21 files** | ✅ built |
-| `@cinacoin/dotnet` | .NET SDK — **22 C# files** | ✅ **source written** |
+| `@cinacoin/react-native` | React Native SDK — type definitions first, native implementation needed | ✅ built 🔌 |
+| `@cinacoin/flutter-dart` | Flutter SDK (Dart) — type definitions first, native implementation needed | ✅ built 🔌 |
+| `@cinacoin/android-kotlin` | Android SDK (Kotlin) | ✅ built |
+| `@cinacoin/ios-swift` | iOS SDK (Swift) | ✅ built |
+| `@cinacoin/unity-csharp` | Unity SDK (C#) — **21 C# files** | ✅ built |
+| `@cinacoin/dotnet` | .NET SDK — **22 C# files** | 📝 source written, build pending |
 
 ### Authentication
 | Package | Description | Status |
@@ -229,14 +231,14 @@ function BatchDemo() {
 | `@cinacoin/batch-transaction` | Batch transaction support | ✅ built |
 | `@cinacoin/bridge-sync` | Cross-chain session synchronization | ✅ built — **Sync layer only; no native cross-chain bridge yet** |
 
-### Infrastructure
+### Infrastructure (6)
 | Package | Description | Status |
 |---------|-------------|--------|
-| `@cinacoin/relay-server` | WebSocket relay server (Rust) | ✅ built |
-| `@cinacoin/rpc-proxy` | RPC proxy server | 🚧 **deployed & running on Cloudflare Workers** |
-| `@cinacoin/keys-server` | Key management server | 🚧 **deployed & running on Cloudflare Workers** |
-| `@cinacoin/notify-server` | Notification server | ✅ built — not deployed |
-| `@cinacoin/push-server` | Push notification server (Rust) | ✅ built |
+| `@cinacoin/relay-server` | WebSocket relay server (Rust + CF Worker) | ✅ built · 🔒 secured (API Key + CORS + validation) |
+| `@cinacoin/rpc-proxy` | RPC proxy server (CF Worker) | 🚧 **deployed & running** · 🔒 secured (write-method block + auth) |
+| `@cinacoin/keys-server` | Key management server (CF Worker + D1) | 🚧 **deployed & running** · 🔒 secured (auth + session expiry) |
+| `@cinacoin/notify-server` | Notification server (CF Worker) | ✅ built · 🔒 secured (API Key + deep validation) |
+| `@cinacoin/push-server` | Push notification server (Rust + CF Worker) | ✅ built · 🔒 secured (auth + validation) |
 | `@cinacoin/cdn` | CDN asset delivery | ✅ built |
 
 ### Developer Tools
@@ -295,26 +297,44 @@ All pages are wired to real wallet connection logic.
 
 ## Architecture
 
+See [ARCHITECTURE.md](./ARCHITECTURE.md) for the complete system architecture, including:
+- Monorepo structure (75 packages, 3 apps)
+- Cloudflare Workers deployment topology
+- Data flow diagrams (wallet connection, relay, indexing)
+- Docker Compose deployment architecture
+- Full technology stack
+
 ```
-┌──────────────────────────────────────────────────────────┐
-│                     Your Application                      │
-├──────────────────────────────────────────────────────────┤
-│  @cinacoin/react │ @cinacoin/next │ @cinacoin/vue│
-├──────────────────────────────────────────────────────────┤
-│                    @cinacoin/core-ui                    │
-│               (Web Components / Modal UI)                  │
-├──────────────────────────────────────────────────────────┤
-│                 @cinacoin/core-sdk                      │
-│   SignClient  │  Pairing API  │  Universal Provider       │
-├──────────────────────────────────────────────────────────┤
-│  @cinacoin/adapter-* (EVM, Solana, BTC, TON, TRON)     │
-├──────────────────────────────────────────────────────────┤
-│              WalletConnect Network (Relay)                 │
-│          wss://relay.walletconnect.com (or self-hosted)    │
-└──────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                     Your Application                          │
+├──────────────────────────────────────────────────────────────┤
+│  @cinacoin/react │ @cinacoin/next │ @cinacoin/vue│ @cinacoin/svelte│
+├──────────────────────────────────────────────────────────────┤
+│                    @cinacoin/core-ui                          │
+│               (Web Components / Modal UI)                      │
+├──────────────────────────────────────────────────────────────┤
+│                 @cinacoin/core-sdk                            │
+│   SignClient  │  Pairing API  │  Universal Provider  │  EIP-5792│
+├──────────────────────────────────────────────────────────────┤
+│  @cinacoin/adapter-* (EVM, Solana, BTC, TON, TRON, Cosmos,  │
+│    Sui, Starknet, NEAR, Hedera, XRPL — 11 adapters)           │
+├──────────────────────────────────────────────────────────────┤
+│              WalletConnect Network / Self-Hosted Relay         │
+│          wss://relay.walletconnect.com or relay-server        │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
+
+## Security
+
+See [SECURITY.md](./SECURITY.md) for our security policy, reporting process, and best practices.
+
+**Security Score: 8.0/10** (after 3 audit rounds + remediation)
+- All Cloudflare Workers: API Key authentication + CORS + input validation ✅
+- Request size limits + security headers on all endpoints ✅
+- CI/CD pipeline with automated security scanning ✅
+- See [AUDIT_SUMMARY.md](./AUDIT_SUMMARY.md) for the full audit timeline
 
 ## Documentation
 

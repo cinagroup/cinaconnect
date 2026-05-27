@@ -25,6 +25,13 @@ import type { Connector } from '../connector.js';
 import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from '@cinacoin/siwe';
 import { generateMessage, parseMessage, verifyMessage, generateNonce, generateTimestamp } from '@cinacoin/siwe';
 
+/** Minimal provider shape for SIWE signature verification (mirrors @cinacoin/siwe internal SIWEProvider). */
+interface SIWEVerifyProvider {
+  recoverAddress?(args: { message: string; signature: string }): Promise<string>;
+  verifyMessage?(message: string, signature: string): Promise<string>;
+  request?(args: { method: string; params?: unknown[] }): Promise<unknown>;
+}
+
 /**
  * Configuration for SIWE authentication.
  */
@@ -242,7 +249,7 @@ export class SIWEAuth {
    * @param signature - Signature hex string.
    * @returns Verification result.
    */
-  static async verify(message: string, signature: string, provider: any): Promise<SIWEVerificationResult> {
+  static async verify(message: string, signature: string, provider: SIWEVerifyProvider): Promise<SIWEVerificationResult> {
     return verifyMessage(message, signature, provider);
   }
 

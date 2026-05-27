@@ -280,8 +280,7 @@ describe('TokenVerifier — Twitter', () => {
 describe('TokenVerifier — unsupported provider', () => {
   it('returns error for unknown providers', async () => {
     const verifier = new TokenVerifier();
-    // @ts-expect-error — testing unsupported provider string at runtime
-    const result = await verifier.verify('facebook' as any, 'some-token');
+    const result = await verifier.verify('facebook' as unknown as TokenProvider, 'some-token');
     expect(result.valid).toBe(false);
     expect(result.error).toContain('Unsupported provider');
   });

@@ -61,6 +61,13 @@ interface SolanaProvider {
   off(event: string, handler: (...args: unknown[]) => void): void;
 }
 
+interface SolanaWindow extends Window {
+  phantom?: { solana?: SolanaProvider };
+  solana?: SolanaProvider;
+  solflare?: SolanaProvider;
+  backpack?: SolanaProvider;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Address validation                                                 */
 /* ------------------------------------------------------------------ */
@@ -470,7 +477,7 @@ export class SolanaChainAdapter {
   private _resolveWallet(walletId?: string): (() => SolanaProvider) | null {
     if (typeof window === 'undefined') return null;
 
-    const win = window as any;
+    const win = window as SolanaWindow;
 
     if (walletId) {
       switch (walletId) {
@@ -486,7 +493,7 @@ export class SolanaChainAdapter {
     }
 
     // Auto-detect: Phantom → Solflare → Backpack
-    if (win.phantom?.solana) return () => win.phantom.solana as SolanaProvider;
+    if (win.phantom?.solana) { const p = win.phantom; return () => p.solana as SolanaProvider; }
     if (win.solflare) return () => win.solflare as SolanaProvider;
     if (win.backpack) return () => win.backpack as SolanaProvider;
     // Fallback to generic solana (may be Phantom or others)

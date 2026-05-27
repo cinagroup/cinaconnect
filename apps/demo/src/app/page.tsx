@@ -7,6 +7,7 @@ import { useToast } from '@/lib/toast';
 import { getConnectionHistory, addConnectionRecord, getLastConnection, type ConnectionRecord } from '@/lib/connectionHistory';
 import { useWorkerHealth } from '@/lib/WorkerHealthProvider';
 import { WORKER_URLS, type WorkerName } from '@/lib/workers';
+import { DemoDisclaimer } from '@/components/DemoDisclaimer';
 
 /* ── chain data ── */
 const CHAINS = [
@@ -264,9 +265,14 @@ export default function HomePage() {
   return (
     <div className="flex flex-col items-center min-h-screen">
       {/* ═══════════════════════════════════════════
+          DEMO DISCLAIMER
+         ═══════════════════════════════════════════ */}
+      <DemoDisclaimer />
+
+      {/* ═══════════════════════════════════════════
           HERO SECTION
          ═══════════════════════════════════════════ */}
-      <section className="w-full max-w-4xl text-center space-y-8 pt-20 pb-12 px-4">
+      <section className="w-full max-w-4xl text-center space-y-8 pt-8 sm:pt-20 pb-12 px-4">
         {/* Version badge + GitHub stars */}
         <div className="flex items-center justify-center gap-3">
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium">

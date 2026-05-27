@@ -57,6 +57,8 @@ export class OnRampWidget {
   private popupWindow: Window | null = null;
   private config: WidgetConfig;
   private widgetUrl: string | null = null;
+  private _popupMessageHandler: ((event: MessageEvent) => void) | null = null;
+  private _embeddedMessageHandler: ((event: MessageEvent) => void) | null = null;
 
   constructor(aggregator: OnRampAggregator, config?: WidgetConfig) {
     this.aggregator = aggregator;
@@ -133,6 +135,7 @@ export class OnRampWidget {
         }
       };
 
+      this._popupMessageHandler = handleMessage;
       window.addEventListener("message", handleMessage);
     });
   }
@@ -171,6 +174,7 @@ export class OnRampWidget {
         }
       };
 
+      this._embeddedMessageHandler = handleMessage;
       window.addEventListener("message", handleMessage);
     });
   }
@@ -179,6 +183,15 @@ export class OnRampWidget {
    * Close the widget.
    */
   close(): void {
+    // Clean up message listeners to prevent memory leaks
+    if (this._popupMessageHandler) {
+      window.removeEventListener("message", this._popupMessageHandler);
+      this._popupMessageHandler = null;
+    }
+    if (this._embeddedMessageHandler) {
+      window.removeEventListener("message", this._embeddedMessageHandler);
+      this._embeddedMessageHandler = null;
+    }
     if (this.popupWindow && !this.popupWindow.closed) {
       this.popupWindow.close();
       this.popupWindow = null;
@@ -187,6 +200,9 @@ export class OnRampWidget {
       this.iframe.remove();
       this.iframe = null;
     }
+    // Clear stale message handlers
+    this._popupMessageHandler = null;
+    this._embeddedMessageHandler = null;
     this.emitEvent({ type: "close" });
   }
 

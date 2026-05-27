@@ -12,10 +12,19 @@ services:
       - NEXT_PUBLIC_PROJECT_ID=${NEXT_PUBLIC_PROJECT_ID:-demo-project-id}
       - NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=${NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID}
     depends_on:
-      - relay
-      - redis
+      relay:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:3000 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
 
-  # Cinacoin Relay Server (self-built)
+  # Cinacoin Relay Server (Rust / distroless)
   relay:
     build:
       context: .
@@ -26,7 +35,15 @@ services:
       - RUST_LOG=info,relay=debug
       - NATS_URL=nats://nats-cluster:4222
     depends_on:
-      - redis
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["/app/relay-server", "--health-check"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   # Redis Cache
   redis:
@@ -36,8 +53,15 @@ services:
     volumes:
       - redis_data:/data
     command: redis-server --appendonly yes
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
-  # RPC Proxy (self-hosted)
+  # RPC Proxy (Go / scratch)
   rpc-proxy:
     build:
       context: .
@@ -47,8 +71,15 @@ services:
     environment:
       - ETHEREUM_RPC_URL=${ETHEREUM_RPC_URL}
       - ARBITRUM_RPC_URL=${ARBITRUM_RPC_URL}
+    restart: unless-stopped
+    healthcheck:
+      test: ["/rpc-proxy", "-health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
-  # Keys Server (for key management)
+  # Keys Server (Rust / distroless)
   keys-server:
     build:
       context: ./packages/keys-server
@@ -59,7 +90,15 @@ services:
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    healthcheck:
+      test: ["/app/keys-server", "--health-check"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
 
   # Database
   db:
@@ -72,6 +111,13 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-cinacoin}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
 
 volumes:
   redis_data:

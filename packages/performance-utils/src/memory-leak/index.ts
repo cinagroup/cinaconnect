@@ -218,9 +218,15 @@ export function createObjectTracker(label: string = 'object') {
  * Note: getEventListeners is a DevTools API, not available in production.
  * This is a development-only utility.
  */
+declare global {
+  interface Window {
+    getEventListeners?(el: Element): Record<string, Array<unknown>>;
+  }
+}
+
 export function detectOrphanedListeners(): { element: string; type: string; count: number }[] | null {
   if (typeof window === 'undefined') return null;
-  if (typeof (window as any).getEventListeners !== 'function') {
+  if (typeof window.getEventListeners !== 'function') {
     return null; // DevTools API not available
   }
 
@@ -229,7 +235,7 @@ export function detectOrphanedListeners(): { element: string; type: string; coun
 
   for (const el of Array.from(allElements)) {
     try {
-      const listeners = (window as any).getEventListeners(el);
+      const listeners = window.getEventListeners(el);
       for (const [type, listenersList] of Object.entries(listeners)) {
         if (Array.isArray(listenersList) && listenersList.length > 0) {
           results.push({

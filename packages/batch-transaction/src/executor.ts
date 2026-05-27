@@ -459,8 +459,8 @@ export class BatchExecutor {
     op: Operation,
     gasOverrides: GasOverrides,
   ): Promise<{ hash: string; gasUsed?: bigint }> {
-    const baseTx: { account: any; gas: bigint } = {
-      account: account as any,
+    const baseTx = {
+      account,
       gas: op.gasEstimate ?? 100000n,
     };
 
@@ -471,7 +471,7 @@ export class BatchExecutor {
           const paddedTo = pad(op.to as Hex, { size: 20, dir: 'right' });
           const paddedAmount = pad(toHex(op.value), { size: 32 });
           const data = `0xa9059cbb${bytesToHex(viemHexToBytes(paddedTo)).slice(2)}${bytesToHex(viemHexToBytes(paddedAmount)).slice(2)}` as Hex;
-          const hash = await (walletClient as any).sendTransaction({
+          const hash = await (walletClient as Eip5792WalletClient).sendTransaction({
             ...baseTx,
             to: op.tokenAddress as Address,
             data,
@@ -481,7 +481,7 @@ export class BatchExecutor {
           return { hash };
         }
         // Native ETH transfer
-        const hash = await (walletClient as any).sendTransaction({
+        const hash = await (walletClient as Eip5792WalletClient).sendTransaction({
           ...baseTx,
           to: op.to as Address,
           value: op.value,
@@ -494,7 +494,7 @@ export class BatchExecutor {
         const paddedSpender = pad(op.spender as Hex, { size: 20, dir: 'right' });
         const paddedAmount = pad(toHex(op.amount), { size: 32 });
         const data = `0x095ea7b3${bytesToHex(viemHexToBytes(paddedSpender)).slice(2)}${bytesToHex(viemHexToBytes(paddedAmount)).slice(2)}` as Hex;
-        const hash = await (walletClient as any).sendTransaction({
+        const hash = await (walletClient as Eip5792WalletClient).sendTransaction({
           ...baseTx,
           to: op.tokenAddress as Address,
           data,
@@ -508,7 +508,7 @@ export class BatchExecutor {
         if (!op.routeData) {
           throw new Error('Swap operation requires routeData');
         }
-        const hash = await (walletClient as any).sendTransaction({
+        const hash = await (walletClient as Eip5792WalletClient).sendTransaction({
           ...baseTx,
           to: (op.routerAddress ?? '0x0000000000000000000000000000000000000000') as Address,
           data: op.routeData as Hex,
@@ -519,7 +519,7 @@ export class BatchExecutor {
       }
 
       case 'custom': {
-        const hash = await (walletClient as any).sendTransaction({
+        const hash = await (walletClient as Eip5792WalletClient).sendTransaction({
           ...baseTx,
           to: op.to as Address,
           data: op.data as Hex,

@@ -55,7 +55,12 @@ export const MotionDiv: React.FC<MotionDivProps> = ({
   };
 
   const chosenVariants = props.variants ?? variantMap[variant];
-  const withDelay = { ...chosenVariants, visible: { ...(chosenVariants.visible || {}), transition: { ...((chosenVariants.visible as any)?.transition || {}), delay: delay / 1000 } } };
+  const visibleState = chosenVariants?.visible as Record<string, unknown> | undefined;
+  const existingTransition = (visibleState?.transition as Record<string, unknown> | undefined) ?? {};
+  const withDelay = {
+    ...chosenVariants,
+    visible: { ...visibleState, transition: { ...existingTransition, delay: delay / 1000 } },
+  };
 
   return (
     <motion.div

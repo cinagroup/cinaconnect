@@ -3,7 +3,7 @@
  *
  * Syncs session state and identity across EVM, Solana, BTC, TON, TRON, and Polkadot.
  */
-import { InMemoryStorage } from "./storage.js.js";
+import { InMemoryStorage } from "./storage.js";
 /**
  * StateSync — cross-chain state synchronization engine.
  */

@@ -10,5 +10,5 @@ export { AddressPipe } from './lib/pipes/address.pipe';
 export { BalancePipe } from './lib/pipes/balance.pipe';
 // Directives
 export { ConnectDirective } from './lib/directives/connect.directive';
-//# sourceMappingURL=index.js.mapexport { Eip5792Service } from './lib/eip5792/eip5792.service.js';
-export { SendCallsResultObs, SendCallsOptions, AtomicBatchOptions, GetCallsStatusOptions, CallsStatusObs } from './lib/eip5792/eip5792.service.js';
+//# sourceMappingURL=index.js.mapexport { Eip5792Service } from './lib/eip5792/eip5792.service.ts';
+export { SendCallsResultObs, SendCallsOptions, AtomicBatchOptions, GetCallsStatusOptions, CallsStatusObs } from './lib/eip5792/eip5792.service.ts';

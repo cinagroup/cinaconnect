@@ -76,7 +76,7 @@ export interface SIWXResult {
   chainType: ChainType;
 
   /** Parsed message data. */
-  data: Record<string, any>;
+  data: Record<string, unknown>;
 
   /** Signature (hex or base58 depending on chain). */
   signature: string;

@@ -158,7 +158,11 @@ export function transformWcV1ToV2(source: string): CodemodResult {
 
   for (const rule of PATTERN_REPLACEMENTS) {
     const before = output;
-    output = output.replace(rule.pattern, rule.replacement as any);
+    if (typeof rule.replacement === 'function') {
+      output = output.replace(rule.pattern, rule.replacement as (substring: string, ...args: string[]) => string);
+    } else {
+      output = output.replace(rule.pattern, rule.replacement);
+    }
     if (output !== before) {
       changes.push(`Transformed: ${rule.description}`);
     }

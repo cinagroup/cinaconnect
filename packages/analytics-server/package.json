@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Cinacoin Analytics Ingestion Server — Cloudflare Worker",
   "scripts": {
+    "build": "esbuild src/index.ts --bundle --outdir=dist --format=esm --platform=browser --target=es2022 --sourcemap",
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest run",
@@ -22,5 +23,6 @@
     "@cloudflare/workers-types": "^4.20241205.0"
   },
   "license": "MIT",
-  "private": true
+  "private": true,
+  "sideEffects": false
 }

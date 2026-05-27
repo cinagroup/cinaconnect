@@ -534,7 +534,7 @@ export class Eip5792Service implements OnDestroy {
   // -- Internal -------------------------------------------------------------
 
   /** Build a minimal wallet client wrapper for core-sdk functions. */
-  private _toWalletClient(): any {
+  private _toWalletClient(): { request: (a: { method: string; params?: unknown[] }) => Promise<unknown> } {
     if (!this._provider) {
       throw new Error('No EIP-1193 provider available');
     }

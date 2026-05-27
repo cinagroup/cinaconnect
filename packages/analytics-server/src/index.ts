@@ -5,7 +5,7 @@
 
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { EventValidator } from "./validator.js";
+import { EventValidator, type AnalyticsEvent } from "./validator.js";
 import { RateLimiter } from "./rate-limiter.js";
 import { GdprAnonymizer } from "./anonymizer.js";
 import { EventDeduplicator } from "./deduplicator.js";
@@ -67,7 +67,7 @@ app.post("/v1/events", async (c) => {
   const rateWindow = parseInt(c.env.RATE_WINDOW ?? "3600", 10);
   const rateLimiter = new RateLimiter(c.env.RATE_LIMIT_KV, rateLimit, rateWindow);
 
-  const appIds = new Set(events.map((e: any) => e?.appId ?? "default"));
+  const appIds = new Set(events.map((e: { appId?: string }) => e?.appId ?? "default"));
   for (const appId of appIds) {
     const limited = await rateLimiter.isLimited(appId);
     if (limited) {
@@ -77,11 +77,11 @@ app.post("/v1/events", async (c) => {
   }
 
   // Validate events
-  const validEvents: any[] = [];
+  const validEvents: AnalyticsEvent[] = [];
   const validationErrors: string[] = [];
   for (const event of events) {
     const result = EventValidator.validate(event);
-    if (result.valid) {
+    if (result.valid && result.event) {
       validEvents.push(result.event);
     } else {
       validationErrors.push(result.error!);

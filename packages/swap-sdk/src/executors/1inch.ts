@@ -232,12 +232,12 @@ export class OneInchExecutor implements SwapExecutor {
     if (!res.ok) return [];
 
     const data = await res.json();
-    return Object.values(data.tokens).map((t: any) => ({
+    return (Object.values(data.tokens) as Array<Record<string, unknown>>).map((t) => ({
       address: t.address as `0x${string}`,
-      symbol: t.symbol,
-      name: t.name,
-      decimals: t.decimals,
-      logoURI: t.logoURI,
+      symbol: t.symbol as string,
+      name: t.name as string,
+      decimals: t.decimals as number,
+      logoURI: t.logoURI as string | undefined,
     }));
   }
 

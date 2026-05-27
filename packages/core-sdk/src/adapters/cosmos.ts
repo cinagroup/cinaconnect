@@ -340,6 +340,8 @@ interface KeplrProvider {
 /** Window type with Keplr. */
 interface KeplrWindow extends Window {
   keplr?: KeplrProvider;
+  leap?: KeplrProvider;
+  cosmostation?: { keplr?: KeplrProvider };
 }
 
 /* ------------------------------------------------------------------ */
@@ -1241,9 +1243,9 @@ export class CosmosChainAdapter {
         case 'keplr':
           return win.keplr ?? null;
         case 'leap':
-          return (win as any).leap ?? win.keplr ?? null;
+          return win.leap ?? win.keplr ?? null;
         case 'cosmostation':
-          return (win as any).cosmostation?.keplr ?? win.keplr ?? null;
+          return win.cosmostation?.keplr ?? win.keplr ?? null;
         default:
           return win.keplr ?? null;
       }
@@ -1251,8 +1253,8 @@ export class CosmosChainAdapter {
 
     // Auto-detect: Keplr → Leap → Cosmostation
     if (win.keplr) return win.keplr;
-    if ((win as any).leap) return (win as any).leap;
-    if ((win as any).cosmostation?.keplr) return (win as any).cosmostation.keplr;
+    if (win.leap) return win.leap;
+    if (win.cosmostation?.keplr) return win.cosmostation.keplr;
 
     return null;
   }

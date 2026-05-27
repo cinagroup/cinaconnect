@@ -1,8 +1,38 @@
 import { ConnectorConfig, ConnectorEvents, ConnectionResult } from '../types';
 
 /**
- * Configuration for WalletConnectConnector.
+ * Minimal WalletConnect session shape used by WalletConnectConnector.
  */
+interface WCSession {
+  topic: string;
+  namespaces?: {
+    eip155?: {
+      accounts?: string[];
+    };
+  };
+}
+
+/** Minimal SignClient interface matching @cinacoin/core-sdk's shape. */
+interface SignClientInstance {
+  connect: (params: {
+    requiredNamespaces?: Record<string, {
+      methods: string[];
+      chains: string[];
+      events: string[];
+    }>;
+  }) => Promise<{ uri?: string; approval: () => Promise<WCSession> }>;
+  pair: (params: { uri: string }) => Promise<void>;
+  disconnect: (params: { topic: string; reason: { code: number; message: string } }) => Promise<void>;
+  request: (params: {
+    topic: string;
+    request: { method: string; params?: unknown[] };
+    chainId?: string;
+  }) => Promise<unknown>;
+  on: (event: string, callback: (event: Record<string, unknown>) => void) => void;
+  session: { getAll: () => WCSession[] };
+}
+
+/** Configuration for WalletConnectConnector. */
 interface WCConnectorOptions {
   /** WalletConnect Cloud relay project ID */
   projectId: string;
@@ -44,15 +74,13 @@ export class WalletConnectConnector implements ConnectorConfig {
   /** Internal event handlers */
   private _handlers: Map<string, Set<(...args: unknown[]) => void>> = new Map();
   /** WalletConnect SignClient instance */
-  private _signClient: any = null;
+  private _signClient: SignClientInstance | null = null;
   /** Active session topic */
   private _sessionTopic: string | null = null;
   /** Cached accounts */
   private _accounts: string[] = [];
   /** Cached chain ID */
   private _chainId = '0x1';
-  /** Whether connected */
-  private _connected = false;
   /** Last generated URI */
   private _uri: string | null = null;
 
@@ -73,7 +101,9 @@ export class WalletConnectConnector implements ConnectorConfig {
   async init(): Promise<void> {
     if (this._signClient) return;
 
-    const { SignClient } = await import('@cinacoin/core-sdk');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const coreSdk = await import('@cinacoin/core-sdk') as unknown as { SignClient: { init: (config: Record<string, unknown>) => Promise<SignClientInstance> } };
+    const SignClient = coreSdk.SignClient;
 
     const metadata = this._options.metadata ?? {
       name: 'Cinacoin',
@@ -120,12 +150,12 @@ export class WalletConnectConnector implements ConnectorConfig {
     // Wait for wallet approval
     const session = await approval();
     this._sessionTopic = session.topic;
-    this._connected = true;
 
     // Extract accounts from session namespace
-    const wcAccounts =
-      session.namespaces?.eip155?.accounts ?? [];
-    this._accounts = wcAccounts.map((a: string) => a.split(':').pop());
+    const wcAccounts = session.namespaces?.eip155?.accounts ?? [];
+    this._accounts = wcAccounts
+      .map((a: string) => a.split(':').pop()!)
+      .filter((a): a is string => a !== undefined);
 
     // Extract chain from first account
     if (wcAccounts.length > 0) {
@@ -157,7 +187,6 @@ export class WalletConnectConnector implements ConnectorConfig {
       }
     }
 
-    this._connected = false;
     this._sessionTopic = null;
     this._uri = null;
     this._accounts = [];
@@ -217,7 +246,7 @@ export class WalletConnectConnector implements ConnectorConfig {
   /**
    * Get the raw SignClient instance for advanced usage.
    */
-  getSignClient(): any {
+  getSignClient(): SignClientInstance | null {
     return this._signClient;
   }
 
@@ -244,7 +273,7 @@ export class WalletConnectConnector implements ConnectorConfig {
 
   // ─── Internal ───────────────────────────────────────────────────
 
-  private async _getClientOrThrow(): Promise<any> {
+  private async _getClientOrThrow(): Promise<SignClientInstance> {
     if (!this._signClient) {
       await this.init();
     }
@@ -266,10 +295,11 @@ export class WalletConnectConnector implements ConnectorConfig {
         // Use the most recently active session
         const session = sessions[sessions.length - 1];
         this._sessionTopic = session.topic;
-        this._connected = true;
 
         const wcAccounts = session.namespaces?.eip155?.accounts ?? [];
-        this._accounts = wcAccounts.map((a: string) => a.split(':').pop());
+        this._accounts = wcAccounts
+          .map((a: string) => a.split(':').pop()!)
+          .filter((a): a is string => a !== undefined);
 
         if (wcAccounts.length > 0) {
           const parts = wcAccounts[0].split(':');
@@ -289,26 +319,24 @@ export class WalletConnectConnector implements ConnectorConfig {
   private _bindSessionEvents(): void {
     if (!this._signClient) return;
 
-    this._signClient.on('session_event', (event: any) => {
-      const { params } = event;
+    this._signClient.on('session_event', (event: Record<string, unknown>) => {
+      const params = event.params as { event: { name: string; data: unknown } };
       if (params.event.name === 'accountsChanged') {
-        const newAccounts = params.event.data ?? [];
-        this._accounts = Array.isArray(newAccounts)
-          ? newAccounts.map((a: string) =>
-              typeof a === 'string' && a.includes(':') ? a.split(':').pop() : a
-            )
-          : newAccounts;
+        const rawAccounts = params.event.data;
+        const newAccounts = Array.isArray(rawAccounts) ? rawAccounts : [];
+        this._accounts = newAccounts
+          .filter((a): a is string => typeof a === 'string')
+          .map((a) => a.includes(':') ? a.split(':').pop()! : a);
         const handlers = this._handlers.get('accountsChanged') ?? new Set();
         for (const handler of handlers) {
           handler(this._accounts);
         }
       }
       if (params.event.name === 'chainChanged') {
-        const raw = params.event.data;
-        this._chainId =
-          typeof raw === 'string' && raw.startsWith('0x')
-            ? raw
-            : `0x${Number(raw).toString(16)}`;
+        const raw = params.event.data as string | number;
+        this._chainId = typeof raw === 'string' && raw.startsWith('0x')
+          ? raw
+          : `0x${Number(raw).toString(16)}`;
         const handlers = this._handlers.get('chainChanged') ?? new Set();
         for (const handler of handlers) {
           handler(this._chainId);
@@ -316,10 +344,9 @@ export class WalletConnectConnector implements ConnectorConfig {
       }
     });
 
-    this._signClient.on('session_delete', (event: any) => {
-      const topic = event?.topic;
+    this._signClient.on('session_delete', (event: Record<string, unknown>) => {
+      const topic = event?.topic as string | undefined;
       if (topic === this._sessionTopic) {
-        this._connected = false;
         this._sessionTopic = null;
         this._accounts = [];
 

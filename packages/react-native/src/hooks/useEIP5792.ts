@@ -110,7 +110,7 @@ export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
     setError(null);
 
     try {
-      const client = toWalletClient(ctxRequest) as any;
+      const client = toWalletClient(ctxRequest);
       const caps = await walletGetCapabilities(client, address as `0x${string}`);
       setCapabilities(caps);
     } catch (err) {
@@ -230,7 +230,7 @@ export function useSendCalls(): UseSendCallsReturn {
       setError(null);
 
       try {
-        const client = toWalletClient(ctxRequest) as any;
+        const client = toWalletClient(ctxRequest);
         const params: SendCallsParams = {
           version: options?.version ?? '1.0.0',
           calls,
@@ -344,7 +344,7 @@ export function useAtomicBatch(): UseAtomicBatchReturn {
       setError(null);
 
       try {
-        const client = toWalletClient(ctxRequest) as any;
+        const client = toWalletClient(ctxRequest);
         const config: AtomicBatchConfig = {
           chainId: (options?.chainId ?? chainIdHex) as `0x${string}`,
           from: address as `0x${string}`,
@@ -447,7 +447,7 @@ export function useCallsStatus(
     if (!callIdRef.current) return;
 
     try {
-      const client = toWalletClient(ctxRequest) as any;
+      const client = toWalletClient(ctxRequest);
       const res = await walletGetCallsStatus(client, callIdRef.current);
       setResult(res);
       setStatus(res.status);

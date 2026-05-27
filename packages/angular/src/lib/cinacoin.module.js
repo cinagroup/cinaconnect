@@ -142,4 +142,4 @@ let CinacoinModule = (() => {
     return CinacoinModule = _classThis;
 })();
 export { CinacoinModule };
-//# sourceMappingURL=cinacoin.module.js.mapexport { Eip5792Service } from './eip5792/eip5792.service.js';
+//# sourceMappingURL=cinacoin.module.js.mapexport { Eip5792Service } from './eip5792/eip5792.service.ts';

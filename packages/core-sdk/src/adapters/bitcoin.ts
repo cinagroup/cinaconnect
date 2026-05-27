@@ -56,6 +56,15 @@ interface BitcoinProvider {
   disconnect?(): Promise<void>;
 }
 
+/** Global window shape for Bitcoin wallet injection. */
+interface BitcoinWindow extends Window {
+  unisat?: BitcoinProvider;
+  xverse?: { bitcoin?: BitcoinProvider };
+  leather?: { bitcoin?: BitcoinProvider };
+  btc?: BitcoinProvider;
+  BitcoinProvider?: BitcoinProvider;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Address validation                                                 */
 /* ------------------------------------------------------------------ */
@@ -498,7 +507,7 @@ export class BitcoinChainAdapter {
   private _resolveWallet(walletId?: string): (() => BitcoinProvider) | null {
     if (typeof window === 'undefined') return null;
 
-    const win = window as any;
+    const win = window as unknown as BitcoinWindow;
 
     if (walletId) {
       switch (walletId) {
@@ -515,8 +524,8 @@ export class BitcoinChainAdapter {
 
     // Auto-detect: Unisat → Xverse → Leather
     if (win.unisat) return () => win.unisat as BitcoinProvider;
-    if (win.xverse?.bitcoin) return () => win.xverse.bitcoin as BitcoinProvider;
-    if (win.leather?.bitcoin) return () => win.leather.bitcoin as BitcoinProvider;
+    if (win.xverse?.bitcoin) { const x = win.xverse; return () => x.bitcoin as BitcoinProvider; }
+    if (win.leather?.bitcoin) { const l = win.leather; return () => l.bitcoin as BitcoinProvider; }
     if (win.btc) return () => win.btc as BitcoinProvider;
 
     return null;

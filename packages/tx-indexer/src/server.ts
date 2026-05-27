@@ -33,6 +33,15 @@ function setCorsHeaders(res: http.ServerResponse, origin?: string): void {
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   res.setHeader('Access-Control-Max-Age', '86400'); // 24h cache preflight
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+}
+
+function verifyApiKey(req: http.IncomingMessage, apiKey: string | undefined): boolean {
+  if (!apiKey) return true; // skip if not configured
+  const auth = req.headers.authorization;
+  if (!auth) return false;
+  return auth === `Bearer ${apiKey}` || auth === apiKey;
 }
 
 // ---------------------------------------------------------------------------
@@ -129,9 +138,17 @@ export class IndexerServer {
     }
 
     try {
-      // Health
+      // Health endpoint is public
       if (pathname === `${basePath}/health`) {
         await this.handleHealth(res, origin);
+        return;
+      }
+
+      // All other endpoints require auth if API key is configured
+      if (!verifyApiKey(req, this.config.apiKey)) {
+        setCorsHeaders(res, origin);
+        res.writeHead(401, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Unauthorized' }));
         return;
       }
 

@@ -478,10 +478,10 @@ export async function signPermit(
   const typedData = buildPermitTypedData(domain, params);
 
   const signature = await walletClient.signTypedData({
-    domain: typedData.domain as any,
-    types: typedData.types as any,
+    domain: typedData.domain as Record<string, unknown>,
+    types: typedData.types as Record<string, unknown>,
     primaryType: typedData.primaryType,
-    message: typedData.message as any,
+    message: typedData.message as Record<string, unknown>,
   });
 
   // Parse signature into r, s, v

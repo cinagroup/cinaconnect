@@ -10,9 +10,19 @@ vi.mock('@angular/core', () => ({
   Injectable: () => (cls: any) => cls,
   Inject: () => (target: any, propertyKey: string, parameterIndex: number) => {},
   NgModule: () => (cls: any) => cls,
-  InjectionToken: (name: string) => name,
+  InjectionToken: class {
+    constructor(public name: string) {}
+  },
   OnDestroy: class {},
   ModuleWithProviders: class {},
+  Component: (meta: any) => (cls: any) => cls,
+  Input: () => (target: any, propertyKey: string) => {},
+  HostListener: () => (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {},
+  Directive: () => (cls: any) => cls,
+  Pipe: () => (cls: any) => cls,
+  PLATFORM_ID: 'platformId',
+  ElementRef: class {},
+  Renderer2: class {},
 }));
 
 vi.mock('@angular/common', () => ({
@@ -103,11 +113,12 @@ describe('CinacoinModule', () => {
 
   it('forRoot should provide CINA_CONNECT_OPTIONS', async () => {
     const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
+    const { CINA_CONNECT_OPTIONS } = await import('../src/lib/cinacoin.tokens.js');
     const config = { projectId: 'abc123' };
     const result = CinacoinModule.forRoot(config as any);
 
     const optionsProvider = result.providers.find(
-      (p: any) => p.provide === 'CINA_CONNECT_OPTIONS'
+      (p: any) => p.provide === CINA_CONNECT_OPTIONS || (p.provide && p.provide.name === 'CINA_CONNECT_OPTIONS')
     );
     expect(optionsProvider).toBeDefined();
     expect(optionsProvider.useValue).toEqual(config);
@@ -115,15 +126,16 @@ describe('CinacoinModule', () => {
 
   it('forRoot factory should create connector from options', async () => {
     const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
+    const { CINA_CONNECT_INSTANCE, CINA_CONNECT_OPTIONS } = await import('../src/lib/cinacoin.tokens.js');
     const config = { projectId: 'abc123', chains: [] };
     const result = CinacoinModule.forRoot(config as any);
 
     const instanceProvider = result.providers.find(
-      (p: any) => p.provide === 'CINA_CONNECT_INSTANCE'
+      (p: any) => p.provide === CINA_CONNECT_INSTANCE || (p.provide && p.provide.name === 'CINA_CONNECT_INSTANCE')
     );
     expect(instanceProvider).toBeDefined();
     expect(typeof instanceProvider.useFactory).toBe('function');
-    expect(instanceProvider.deps).toContain('CINA_CONNECT_OPTIONS');
+    expect(instanceProvider.deps[0]).toBe(CINA_CONNECT_OPTIONS);
   });
 
   it('forRoot factory should return custom connector if provided', async () => {
@@ -132,8 +144,9 @@ describe('CinacoinModule', () => {
     const config = { projectId: 'abc123', connector: customConnector };
     const result = CinacoinModule.forRoot(config as any);
 
+    const { CINA_CONNECT_INSTANCE } = await import('../src/lib/cinacoin.tokens.js');
     const instanceProvider = result.providers.find(
-      (p: any) => p.provide === 'CINA_CONNECT_INSTANCE'
+      (p: any) => p.provide === CINA_CONNECT_INSTANCE || (p.provide && p.provide.name === 'CINA_CONNECT_INSTANCE')
     );
     const factoryResult = instanceProvider.useFactory(config);
     expect(factoryResult).toBe(customConnector);
@@ -261,7 +274,7 @@ describe('Tokens', () => {
 });
 
 describe('Package exports', () => {
-  it('should export module, service, and tokens from index', async () => {
+  it('should export CinacoinModule and CinacoinService from index', async () => {
     const index = await import('../src/index.js');
     expect(index.CinacoinModule).toBeDefined();
     expect(index.CinacoinService).toBeDefined();

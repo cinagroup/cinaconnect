@@ -1,0 +1,32 @@
+{
+  "name": "@cinacoin/travel-rule",
+  "version": "0.1.0",
+  "description": "FATF Travel Rule compliance engine for virtual asset transfers between VASPs. Supports IVMS101 data format, originator/beneficiary validation, Chainalysis/Elliptic screening integration, and automated compliance pipelines.",
+  "main": "dist/TravelRule.js",
+  "module": "dist/TravelRule.js",
+  "types": "dist/TravelRule.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/TravelRule.js",
+      "require": "./dist/TravelRule.js",
+      "types": "./dist/TravelRule.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hainai/cinacoin.git",
+    "directory": "packages/travel-rule"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

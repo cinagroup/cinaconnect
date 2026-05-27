@@ -258,7 +258,7 @@ async function verifyTransactionOnServer(
 
     if (!response.ok) {
       return {
-        status: 'NOT_FOUND' as any,
+        status: 'NOT_FOUND' as const,
         allSucceeded: false,
         receipts: [],
         failedReceipts: [],

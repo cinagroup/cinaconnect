@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import DemoLayout from '@/components/DemoLayout';
 import { useWallet, shortenAddress } from '@/lib/useWallet';
 import { getMultiChainBalances, CHAINS, type ChainBalance } from '@/lib/multiChain';
+import { SimulatedBadge } from '@/components/DemoDisclaimer';
 
 /* ── mock ENS data ── */
 
@@ -55,7 +56,8 @@ function PortfolioSummary({ balances }: { balances: ChainBalance[] }) {
   const loaded = balances.filter((b) => b.status === 'loaded');
   const withBalance = loaded.filter((b) => parseFloat(b.balance) > 0);
 
-  // Mock USD values per chain
+  // TODO: Replace with real prices from a price API (e.g., CoinGecko)
+  // In production, fetch live rates dynamically.
   const usdRates: Record<string, number> = {
     ETH: 3800, POL: 0.58, ARB: 0.85, OP: 1.80, BNB: 620,
     AVAX: 38, SOL: 175, BTC: 98000, ATOM: 7.5, NEAR: 5.2,
@@ -86,10 +88,12 @@ function PortfolioSummary({ balances }: { balances: ChainBalance[] }) {
         {/* Total */}
         <div className="text-center mb-6 p-4 rounded-xl bg-gradient-to-b from-gray-900/60 to-gray-800/40 border border-gray-700/30">
           <p className="text-xs text-gray-500 mb-1">Total Estimated Value</p>
-          <p className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent">
+          <p className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-blue-400 bg-clip-text text-transparent inline-flex items-center gap-2">
             ${totalUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <SimulatedBadge size="xs" />
           </p>
           <p className="text-xs text-gray-600 mt-1">Across {withBalance.length} chains</p>
+          <p className="text-[10px] text-amber-400/70 mt-1">⚠ Simulated values — not from live market data</p>
         </div>
 
         {/* Per-chain breakdown */}

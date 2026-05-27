@@ -14,6 +14,8 @@ export type {
   Namespace,
   NamespaceDict,
   NamespaceMap,
+  NestedLocaleDict,
+  NestedLocaleMap,
   InterpolationParams,
   LocaleInfo,
 } from './types';

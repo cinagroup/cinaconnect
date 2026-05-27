@@ -90,12 +90,15 @@ function extractCookieValue(cookieHeader: string, name: string): string | null {
  */
 export function getCsrfTokenFromCookie(req: NextRequest | Request): string | null {
   if ('cookies' in req) {
-    const reqAsAny = req as any;
-    if (typeof reqAsAny.cookies === 'function') {
-      return reqAsAny.cookies().get(CSRF_COOKIE_NAME)?.value ?? null;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const reqCookies = (req as { cookies: unknown }).cookies;
+    if (typeof reqCookies === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+      return (reqCookies() as { get: (name: string) => { value?: string } | undefined }).get(CSRF_COOKIE_NAME)?.value ?? null;
     }
-    if (reqAsAny.cookies && typeof reqAsAny.cookies.get === 'function') {
-      return reqAsAny.cookies.get(CSRF_COOKIE_NAME)?.value ?? null;
+    if (reqCookies && typeof (reqCookies as Record<string, unknown>).get === 'function') {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      return (reqCookies as { get: (name: string) => { value?: string } | undefined }).get(CSRF_COOKIE_NAME)?.value ?? null;
     }
   }
   if ('headers' in req) {

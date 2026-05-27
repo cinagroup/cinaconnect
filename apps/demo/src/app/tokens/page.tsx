@@ -10,9 +10,14 @@ import {
   type TokenInfo,
 } from '@/lib/swapTokens';
 import { getMockQuote, type PriceQuote } from '@/lib/swap';
+import { isDemoMode } from '@/lib/environment';
+import { SimulatedBadge } from '@/components/DemoDisclaimer';
 
 /* ── mock token prices & history ── */
 
+// TODO: Replace with real prices from a price API (e.g., CoinGecko, DexScreener)
+// In production, fetch live prices via:
+//   GET https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd
 const MOCK_PRICES: Record<string, { usd: number; change24h: number; volume24h: string; marketCap: string }> = {
   ETH: { usd: 3800, change24h: 2.4, volume24h: '$15.2B', marketCap: '$456B' },
   USDC: { usd: 1.00, change24h: 0.01, volume24h: '$8.1B', marketCap: '$33B' },
@@ -100,6 +105,7 @@ function TokenRow({
         </div>
         <div className="flex items-center gap-2 mt-0.5">
           <span className="text-xs text-gray-400">${priceInfo.usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+          <SimulatedBadge size="xs" />
           <span className={`text-xs ${priceInfo.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             {priceInfo.change24h >= 0 ? '+' : ''}{priceInfo.change24h}%
           </span>
@@ -144,8 +150,9 @@ function TokenDetailPanel({ token, onClose }: { token: TokenInfo; onClose: () =>
       <div className="p-5 space-y-4">
         {/* Price */}
         <div className="text-center">
-          <p className="text-4xl font-bold text-white">
+          <p className="text-4xl font-bold text-white inline-flex items-center gap-3">
             ${priceInfo.usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+            <SimulatedBadge size="sm" />
           </p>
           <p className={`text-sm font-semibold ${priceInfo.change24h >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
             {priceInfo.change24h >= 0 ? '▲' : '▼'} {Math.abs(priceInfo.change24h)}% (24h)

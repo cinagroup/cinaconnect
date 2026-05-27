@@ -173,11 +173,11 @@ export class FarcasterProvider {
 
   private _detectFarcaster(): FarcasterContext | null {
     // Check for Farcaster context in browser
-    if (typeof window !== 'undefined') {
-      const fc = (window as any).farcaster;
-      if (fc?.context) {
-        return fc.context;
-      }
+    if (typeof window === 'undefined') return null;
+    const win = window as unknown as Record<string, unknown>;
+    const fc = win.farcaster as { context?: FarcasterContext } | undefined;
+    if (fc?.context) {
+      return fc.context;
     }
     return null;
   }

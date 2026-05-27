@@ -101,7 +101,7 @@ export async function verifyTronSignature(
     }
 
     return {
-      chainType: 'tron' as any,
+      chainType: 'tron',
       data: {
         address: input.address,
         message: input.message,
@@ -112,14 +112,14 @@ export async function verifyTronSignature(
       valid: isValid,
       error: isValid ? undefined : 'TRON signature verification failed',
     };
-  } catch (error: any) {
+  } catch (error: unknown) {
     return {
-      chainType: 'tron' as any,
+      chainType: 'tron',
       data: {},
       signature: input.signature,
       message: input.message,
       valid: false,
-      error: error?.message || 'Unknown error during TRON verification',
+      error: (error as Error)?.message || 'Unknown error during TRON verification',
     };
   }
 }
@@ -212,7 +212,7 @@ export function isValidTronAddress(address: string): boolean {
  * @param message - TRON sign-in message string.
  * @returns Parsed message fields.
  */
-export function parseTronMessage(message: string): Record<string, any> {
+export function parseTronMessage(message: string): Record<string, unknown> {
   const lines = message.split('\n');
 
   const preambleMatch = lines[0]?.match(

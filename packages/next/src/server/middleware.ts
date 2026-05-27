@@ -218,14 +218,14 @@ export async function getSession(
 
   // Handle NextRequest (edge/runtime) — cookies is a getter in Next.js 14+
   if ('cookies' in req) {
-    const reqAsAny = req as any;
-    const reqCookies = reqAsAny.cookies;
+    const reqWithCookies = req as NextRequest | { cookies: () => { get: (name: string) => { value: string } | undefined } | { get: (name: string) => { value: string } | undefined } };
+    const reqCookies = reqWithCookies.cookies;
     if (typeof reqCookies === 'function') {
       // cookies() is a function — call it
       cookieValue = reqCookies().get(cookieName)?.value ?? null;
-    } else if (reqCookies && typeof reqCookies.get === 'function') {
+    } else if (reqCookies && typeof (reqCookies as unknown as Record<string, unknown>).get === 'function') {
       // cookies is an object with .get()
-      cookieValue = reqCookies.get(cookieName)?.value ?? null;
+      cookieValue = (reqCookies as unknown as { get: (name: string) => { value: string } | undefined }).get(cookieName)?.value ?? null;
     }
   }
   // Handle standard Web Request with Cookie header

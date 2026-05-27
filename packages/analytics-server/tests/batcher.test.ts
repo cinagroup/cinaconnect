@@ -14,10 +14,10 @@ function makeD1Mock(): D1Database {
               inserted.push({ sql, values });
               return {
                 success: true,
-                meta: { duration: 1, changes: values.length / 8 },
+                meta: { duration: 1, changes: values.length / 8, size_after: 0, rows_read: 0, rows_written: 0, last_row_id: 0, changed_db: true },
                 results: null as any,
                 error: null,
-              } as D1Result;
+              } as unknown as D1Result;
             },
             async first(): Promise<any> {
               return null;
@@ -25,9 +25,9 @@ function makeD1Mock(): D1Database {
             async all(): Promise<D1Result> {
               return {
                 success: true,
-                meta: { duration: 1 },
+                meta: { duration: 1, size_after: 0, rows_read: 0, rows_written: 0, last_row_id: 0, changed_db: false },
                 results: [],
-              } as D1Result;
+              } as unknown as D1Result;
             },
             async raw(): Promise<any[][]> {
               return [];

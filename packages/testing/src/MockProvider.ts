@@ -57,7 +57,7 @@ export class MockProvider {
   private _chainId: string;
   private _defaultResponse: MockResponseConfig;
   private _responses: Map<RpcMethod, MockResponseConfig>;
-  private _listeners: Map<string, Set<ProviderEventListener<any>>>;
+  private _listeners: Map<string, Set<(...args: unknown[]) => void>>;
   private _callLog: Array<{ method: string; params: RpcParams; ts: number }>;
   private _autoEmit: boolean;
 
@@ -190,14 +190,14 @@ export class MockProvider {
     if (!this._listeners.has(event)) {
       this._listeners.set(event, new Set());
     }
-    this._listeners.get(event)!.add(listener);
+    this._listeners.get(event)!.add(listener as (...args: unknown[]) => void);
   }
 
   removeListener<K extends keyof ProviderEventMap>(
     event: K,
     listener: ProviderEventListener<K>
   ): void {
-    this._listeners.get(event)?.delete(listener);
+    this._listeners.get(event)?.delete(listener as (...args: unknown[]) => void);
   }
 
   once<K extends keyof ProviderEventMap>(
@@ -240,7 +240,7 @@ export class MockProvider {
       case "eth_sendTransaction": {
         const tx = params as Record<string, unknown>;
         return (
-          (tx as any)?.hash ??
+          (tx as Record<string, unknown>)?.hash as string ??
           "0x0000000000000000000000000000000000000000000000000000000000000001"
         );
       }
@@ -259,9 +259,9 @@ export class MockProvider {
         );
 
       case "wallet_switchEthereumChain": {
-        const p = (params as any)?.[0];
+        const p = (params as Record<string, unknown>[])?.[0] as Record<string, unknown> | undefined;
         if (p?.chainId) {
-          this.setChainId(p.chainId);
+          this.setChainId(p.chainId as string);
         }
         return null;
       }

@@ -1,3 +1,6 @@
+import type { Namespace } from '../types.js';
+import type { ConnectionAnalytics } from '../store.js';
+
 /**
  * React hook for multiwallet state management.
  *
@@ -22,11 +25,11 @@
 export declare function useMultiwallet(): {
     connections: Record<string, WalletConnection[]>;
     activeConnection: WalletConnection | null;
-    setActiveConnection: any;
-    addConnection: any;
-    removeConnection: any;
-    switchWallet: any;
-    analyze: any;
+    setActiveConnection: (walletId: string, namespace: Namespace) => void;
+    addConnection: (walletId: string, walletName: string, namespace: Namespace, address: string, provider?: unknown, session?: unknown) => void;
+    removeConnection: (walletId: string, namespace?: Namespace) => void;
+    switchWallet: (namespace: Namespace, walletId: string) => void;
+    analyze: () => ConnectionAnalytics;
 };
 /**
  * Flattened view of a `ConnectionRecord` for React components.

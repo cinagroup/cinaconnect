@@ -113,7 +113,7 @@ export async function exchangeAppleCode(
     throw new Error(`Apple token exchange failed: ${error}`);
   }
 
-  return response.json() as Promise<any>;
+  return response.json() as Promise<{ idToken: string; accessToken?: string; expiresIn: number }>;
 }
 
 /**

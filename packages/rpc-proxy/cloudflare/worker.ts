@@ -2,6 +2,10 @@
 // Routes: POST /rpc/:chainId, GET /health, GET /metrics
 // Caches read-only JSON-RPC calls in KV with configurable TTL.
 
+import { createLogger, extractRequestId } from '@cinacoin/config';
+
+const logger = createLogger('rpc-proxy');
+
 const CHAIN_RPC_URLS: Record<string, string> = {
   "1": "https://rpc.mevblocker.io",
   "42161": "https://arbitrum.llamarpc.com",
@@ -64,14 +68,50 @@ let metrics: Metrics = {
   startTime: Date.now(),
 };
 
-function corsHeaders(origin: string | null): Record<string, string> {
-  const headers: Record<string, string> = {
-    "Access-Control-Allow-Origin": origin || "*",
-    "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Max-Age": "86400",
+interface Env {
+  RPC_CACHE: KVNamespace;
+  CACHE_TTL?: string | number;
+  API_KEY?: string;
+  RATE_LIMIT_RPM?: number;  // requests per minute
+}
+
+// ---------------------------------------------------------------------------
+// Security Configuration
+// ---------------------------------------------------------------------------
+
+const ALLOWED_ORIGINS = [
+  'https://cinacoin.com',
+  'https://dashboard.cinacoin.com',
+  'http://localhost:3000',
+  'http://localhost:5173',
+];
+
+const WRITE_METHODS = new Set([
+  'eth_sendRawTransaction',
+  'eth_sendTransaction',
+  'eth_sign',
+  'eth_signTransaction',
+  'personal_sign',
+  'personal_sendTransaction',
+  'eth_accounts',
+]);
+
+function isAllowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  return ALLOWED_ORIGINS.includes(origin);
+}
+
+function makeCorsHeaders(origin: string | null): Record<string, string> {
+  const allowed = isAllowedOrigin(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allowed,
+    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Max-Age': '86400',
+    'Vary': 'Origin',
+    'X-Content-Type-Options': 'nosniff',
+    'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'",
   };
-  return headers;
 }
 
 function cacheKey(chainId: string, body: JsonRpcRequest): string {
@@ -102,7 +142,7 @@ function handleMetrics(origin: string | null): Response {
     chain_usage: metrics.chainUsage,
     timestamp: new Date().toISOString(),
   }), {
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: { "Content-Type": "application/json", ...makeCorsHeaders(origin), "X-Frame-Options": "DENY" },
   });
 }
 
@@ -120,11 +160,11 @@ function formatUptime(ms: number): string {
 
 async function handleRpc(
   request: Request,
-  env: { RPC_CACHE: KVNamespace; CACHE_TTL?: string | number },
+  env: Env,
   chainId: string
 ): Promise<Response> {
   const origin = request.headers.get("Origin");
-  const headers = { "Content-Type": "application/json", ...corsHeaders(origin) };
+  const headers = { "Content-Type": "application/json", ...makeCorsHeaders(origin) };
 
   // Update metrics
   metrics.requestCount++;
@@ -147,6 +187,8 @@ async function handleRpc(
     body = await request.json<JsonRpcRequest>();
   } catch {
     metrics.errorCount++;
+    const requestId = extractRequestId(request);
+    logger.warn('Invalid JSON in RPC request', { requestId });
     return new Response(
       JSON.stringify({ jsonrpc: "2.0", error: { code: -32700, message: "Invalid JSON" }, id: null } as JsonRpcResponse),
       { status: 400, headers }
@@ -158,6 +200,15 @@ async function handleRpc(
     return new Response(
       JSON.stringify({ jsonrpc: "2.0", error: { code: -32600, message: "Invalid request" }, id: body.id ?? null } as JsonRpcResponse),
       { status: 400, headers }
+    );
+  }
+
+  // Block write methods entirely
+  if (WRITE_METHODS.has(body.method)) {
+    metrics.errorCount++;
+    return new Response(
+      JSON.stringify({ jsonrpc: "2.0", error: { code: -32000, message: "Write methods not supported on this proxy" }, id: body.id ?? null } as JsonRpcResponse),
+      { status: 403, headers }
     );
   }
 
@@ -197,9 +248,10 @@ async function handleRpc(
     });
   } catch (err) {
     metrics.errorCount++;
-    const message = err instanceof Error ? err.message : "Upstream request failed";
+    const requestId = extractRequestId(request);
+    logger.error('Upstream RPC request failed', { requestId, chainId, method: body.method, error: String(err) });
     return new Response(
-      JSON.stringify({ jsonrpc: "2.0", error: { code: -32603, message }, id: body.id ?? null } as JsonRpcResponse),
+      JSON.stringify({ jsonrpc: "2.0", error: { code: -32603, message: "Upstream request failed" }, id: body.id ?? null } as JsonRpcResponse),
       { status: 502, headers }
     );
   }
@@ -207,12 +259,12 @@ async function handleRpc(
 
 function handleHealth(origin: string | null): Response {
   return new Response(JSON.stringify({ status: "ok", timestamp: new Date().toISOString() }), {
-    headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+    headers: { "Content-Type": "application/json", ...makeCorsHeaders(origin), "X-Frame-Options": "DENY" },
   });
 }
 
 export default {
-  async fetch(request: Request, env: { RPC_CACHE: KVNamespace; CACHE_TTL?: string | number }): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
@@ -227,21 +279,28 @@ export default {
     }
 
     // RPC proxy: POST /rpc/:chainId
-    const rpcMatch = url.pathname.match(/^\/rpc\/([\w-]+)$/);
+    const rpcMatch = url.pathname.match(/^\/rpc\/([A-Za-z0-9-]+)$/);
     if (rpcMatch && request.method === "POST") {
-      return handleRpc(request, env, rpcMatch[1]);
+      const chainId = rpcMatch[1];
+      if (!(chainId in CHAIN_RPC_URLS)) {
+        return new Response(
+          JSON.stringify({ jsonrpc: "2.0", error: { code: -32601, message: `Unsupported chain: ${chainId}` }, id: null } as JsonRpcResponse),
+          { status: 400, headers: { "Content-Type": "application/json", ...makeCorsHeaders(origin) } }
+        );
+      }
+      return handleRpc(request, env, chainId);
     }
 
     // Preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
-        headers: { "Content-Length": "0", ...corsHeaders(origin) },
+        headers: { "Content-Length": "0", ...makeCorsHeaders(origin) },
       });
     }
 
     return new Response(JSON.stringify({ error: "Not found" }), {
       status: 404,
-      headers: { "Content-Type": "application/json", ...corsHeaders(origin) },
+      headers: { "Content-Type": "application/json", ...makeCorsHeaders(origin) },
     });
   },
 };
