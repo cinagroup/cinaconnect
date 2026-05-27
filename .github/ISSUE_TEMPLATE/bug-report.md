@@ -1,6 +1,6 @@
 ---
 name: 🐛 Bug Report
-about: Report a bug to help us improve CinaConnect
+about: Report a bug to help us improve Cinacoin
 title: "[BUG] "
 labels: bug
 assignees: ""
@@ -12,13 +12,13 @@ assignees: ""
 
 ## Package(s) Affected
 
-<!-- Which @cinaconnect/* package(s) are affected? e.g. @cinaconnect/react, @cinaconnect/core-sdk, relay-server -->
+<!-- Which @cinacoin/* package(s) are affected? e.g. @cinacoin/react, @cinacoin/core-sdk, relay-server -->
 
-- [ ] `@cinaconnect/core-sdk`
-- [ ] `@cinaconnect/react` (or another UI framework package)
-- [ ] `@cinaconnect/adapter-*` (specify which)
-- [ ] `@cinaconnect/chains`
-- [ ] `@cinaconnect/aa-sdk` / `@cinaconnect/bundler` / `@cinaconnect/paymaster`
+- [ ] `@cinacoin/core-sdk`
+- [ ] `@cinacoin/react` (or another UI framework package)
+- [ ] `@cinacoin/adapter-*` (specify which)
+- [ ] `@cinacoin/chains`
+- [ ] `@cinacoin/aa-sdk` / `@cinacoin/bundler` / `@cinacoin/paymaster`
 - [ ] Infrastructure (relay-server, rpc-proxy, keys-server)
 - [ ] Demo app
 - [ ] Other: _______________
@@ -63,7 +63,7 @@ Paste error output here
 | **Node.js** | <!-- e.g. v20.11.0 (run: node -v) --> |
 | **pnpm** | <!-- e.g. 9.15.0 (run: pnpm -v) --> |
 | **Browser** | <!-- e.g. Chrome 120, Firefox 121 (if UI-related) --> |
-| **Package version** | <!-- e.g. @cinaconnect/core-sdk@0.1.0 --> |
+| **Package version** | <!-- e.g. @cinacoin/core-sdk@0.1.0 --> |
 | **Framework** | <!-- e.g. Next.js 14, React 18, Vanilla JS --> |
 
 ## Additional Context

@@ -588,7 +588,7 @@ export default function AADemoPage() {
             <span className="text-[10px] px-2 py-0.5 rounded bg-gray-700/50 text-gray-400">TypeScript</span>
           </div>
           <pre className="p-5 text-xs text-gray-300 font-mono overflow-x-auto leading-relaxed">
-{`import { createBundlerClient } from '@cinaconnect/aa';
+{`import { createBundlerClient } from '@cinacoin/aa';
 
 // Create smart account
 const bundler = createBundlerClient({

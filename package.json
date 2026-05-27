@@ -1,8 +1,12 @@
 {
-  "name": "cinaconnect",
+  "name": "cinacoin",
   "private": true,
   "version": "1.0.0",
-  "description": "CinaConnect — Self-hosted wallet connection toolkit",
+  "description": "Cinacoin — Self-hosted wallet connection toolkit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cinagroup/Cinacoin.git"
+  },
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --concurrency 20",

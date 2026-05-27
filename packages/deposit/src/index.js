@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/deposit
+ * @cinacoin/deposit
  *
  * Deposit with Exchange feature — initiate, track, and manage
  * crypto deposits via major exchanges (Binance, OKX, Bybit, KuCoin, Coinbase).

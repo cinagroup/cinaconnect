@@ -1,4 +1,4 @@
-# CinaConnect Examples
+# Cinacoin Examples
 
 Complete, copy-paste runnable examples for every major use case.
 
@@ -20,7 +20,7 @@ Complete, copy-paste runnable examples for every major use case.
 
 - **Node.js** ≥ 18.x
 - **npm** ≥ 9.x / **pnpm** ≥ 8.x
-- A **Project ID** from your CinaConnect dashboard
+- A **Project ID** from your Cinacoin dashboard
 
 ## Project Structure
 
@@ -40,26 +40,26 @@ docs/examples/
 
 ## All Packages
 
-The full CinaConnect SDK is published as scoped `@cinaconnect/*` packages. Install only what you need:
+The full Cinacoin SDK is published as scoped `@cinacoin/*` packages. Install only what you need:
 
 ```bash
 # Core (always required)
-npm install @cinaconnect/core-sdk
+npm install @cinacoin/core-sdk
 
 # React bindings
-npm install @cinaconnect/react
+npm install @cinacoin/react
 
 # SIWE authentication
-npm install @cinaconnect/siwe
+npm install @cinacoin/siwe
 
 # Batch transactions (EIP-5792)
-npm install @cinaconnect/batch-transaction
+npm install @cinacoin/batch-transaction
 
 # Bitcoin adapter
-npm install @cinaconnect/adapter-bitcoin
+npm install @cinacoin/adapter-bitcoin
 
 # .NET (NuGet)
-dotnet add package CinaConnect
+dotnet add package Cinacoin
 ```
 
 ## Related Docs

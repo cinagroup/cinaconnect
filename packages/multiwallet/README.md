@@ -1,17 +1,17 @@
-# @cinaconnect/multiwallet
+# @cinacoin/multiwallet
 
 Multi-wallet linking: manage multiple wallet connections simultaneously across namespaces.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/multiwallet
+npm install @cinacoin/multiwallet
 ```
 
 ## Usage
 
 ```ts
-import { MultiwalletManager, MultiwalletSwitcher } from '@cinaconnect/multiwallet';
+import { MultiwalletManager, MultiwalletSwitcher } from '@cinacoin/multiwallet';
 
 const manager = new MultiwalletManager();
 await manager.connect('eip155', 'metamask');

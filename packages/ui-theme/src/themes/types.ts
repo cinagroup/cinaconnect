@@ -1,5 +1,5 @@
 /**
- * Theme token types for @cinaconnect/ui-theme.
+ * Theme token types for @cinacoin/ui-theme.
  *
  * Defines the `ThemeConfig` interface used across all themes and components.
  */

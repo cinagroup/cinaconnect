@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/vue",
+  "name": "@cinacoin/vue",
   "version": "0.2.0",
-  "description": "Vue adapter for CinaConnect white-label UI toolkit",
+  "description": "Vue adapter for Cinacoin white-label UI toolkit",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "vue": "^3.5.0",
-    "@cinaconnect/core-sdk": "^0.2.0"
+    "@cinacoin/core-sdk": "^0.2.0"
   },
   "peerDependencies": {
     "vue": ">=3.4.0"

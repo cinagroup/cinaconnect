@@ -1,29 +1,29 @@
 # Core SDK API
 
-> `@cinaconnect/core-sdk` — CinaConnect 核心 SDK 参考。
+> `@cinacoin/core-sdk` — Cinacoin 核心 SDK 参考。
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk
+npm install @cinacoin/core-sdk
 ```
 
-## Main Entry — CinaConnect
+## Main Entry — Cinacoin
 
 主入口类，管理钱包连接、链切换、会话等核心功能。
 
 ### 构造函数
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core-sdk'
+import { Cinacoin } from '@cinacoin/core-sdk'
 
-const cinaconnect = new CinaConnect(config: CinaConnectConfig)
+const cinacoin = new Cinacoin(config: CinacoinConfig)
 ```
 
-### CinaConnectConfig
+### CinacoinConfig
 
 ```typescript
-interface CinaConnectConfig {
+interface CinacoinConfig {
   projectId: string          // 项目唯一标识
   relayUrl: string           // Relay WebSocket URL
   chains: Chain[]            // 支持的链
@@ -63,7 +63,7 @@ interface CinaConnectConfig {
 所有钱包连接方式（injected, QR, relay/WC）都实现此接口。
 
 ```typescript
-import { Connector, RedirectHandler } from '@cinaconnect/core-sdk'
+import { Connector, RedirectHandler } from '@cinacoin/core-sdk'
 
 abstract class Connector extends EventEmitter {
   readonly id: string          // 唯一标识符
@@ -92,7 +92,7 @@ abstract class Connector extends EventEmitter {
 处理 deep link 跳转逻辑（deep link → timeout → universal link → QR code）：
 
 ```typescript
-import { RedirectHandler } from '@cinaconnect/core-sdk'
+import { RedirectHandler } from '@cinacoin/core-sdk'
 
 const handler = new RedirectHandler()
 await handler.openDeepLink('metamask', 'wc://...')
@@ -103,7 +103,7 @@ await handler.openDeepLink('metamask', 'wc://...')
 管理钱包连接生命周期状态机。
 
 ```typescript
-import { SessionManager } from '@cinaconnect/core-sdk'
+import { SessionManager } from '@cinacoin/core-sdk'
 
 const sessionManager = new SessionManager()
 
@@ -253,7 +253,7 @@ interface PairingData {
 通过自建 Relay 进行 WebSocket 通信：
 
 ```typescript
-import { RelayTransport, type RelayTransportConfig } from '@cinaconnect/core-sdk'
+import { RelayTransport, type RelayTransportConfig } from '@cinacoin/core-sdk'
 
 const transport = new RelayTransport({
   url: 'wss://relay.yourdomain.com/v1',
@@ -265,7 +265,7 @@ const transport = new RelayTransport({
 通过浏览器注入的 EIP-1193 Provider 通信：
 
 ```typescript
-import { InjectedProvider } from '@cinaconnect/core-sdk'
+import { InjectedProvider } from '@cinacoin/core-sdk'
 
 const provider = new InjectedProvider(window.ethereum!)
 ```
@@ -275,7 +275,7 @@ const provider = new InjectedProvider(window.ethereum!)
 通过扫码连接：
 
 ```typescript
-import { QRTransport, type QRTransportConfig } from '@cinaconnect/core-sdk'
+import { QRTransport, type QRTransportConfig } from '@cinacoin/core-sdk'
 
 const transport = new QRTransport(config)
 ```
@@ -287,7 +287,7 @@ The SDK includes adapters for multiple blockchain ecosystems, all available thro
 ### createAdapter
 
 ```typescript
-import { createAdapter, type NewChainAdapterFactoryConfig } from '@cinaconnect/core-sdk'
+import { createAdapter, type NewChainAdapterFactoryConfig } from '@cinacoin/core-sdk'
 
 // Create adapters by type
 const tonAdapter = await createAdapter({ type: 'ton' })
@@ -316,7 +316,7 @@ Supported adapter types: `'viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'ton' | 'tr
 ## EIP-6963 Wallet Discovery
 
 ```typescript
-import { discoverWallets, watchWallets, findWalletByRdns } from '@cinaconnect/core-sdk'
+import { discoverWallets, watchWallets, findWalletByRdns } from '@cinacoin/core-sdk'
 
 // One-time discovery
 const wallets = await discoverWallets()
@@ -362,7 +362,7 @@ import {
   createApproveAndSwapCalls,
   supportsAtomicBatch,
   validateBatchConfig,
-} from '@cinaconnect/core-sdk'
+} from '@cinacoin/core-sdk'
 ```
 
 ### Key Functions
@@ -428,7 +428,7 @@ import {
   smartRedirect,
   detectPlatform,
   WALLET_DEEP_LINKS,
-} from '@cinaconnect/core-sdk'
+} from '@cinacoin/core-sdk'
 ```
 
 | Function | Description |
@@ -456,7 +456,7 @@ import {
   generateNonce,
   bytesToHex,
   hexToBytes,
-} from '@cinaconnect/core-sdk'
+} from '@cinacoin/core-sdk'
 ```
 
 | Function | Description |
@@ -474,9 +474,9 @@ import {
 ## State Management
 
 ```typescript
-import { createCinaConnectStore, initializeStore } from '@cinaconnect/core-sdk'
+import { createCinacoinStore, initializeStore } from '@cinacoin/core-sdk'
 
-const store = createCinaConnectStore({
+const store = createCinacoinStore({
   chains: [...],
   projectId: '...',
 })
@@ -485,10 +485,10 @@ const store = createCinaConnectStore({
 initializeStore(store, persistedState)
 ```
 
-### CinaConnectState
+### CinacoinState
 
 ```typescript
-interface CinaConnectState {
+interface CinacoinState {
   connection: ConnectionStatus
   accounts: string[]
   chainId: number
@@ -500,10 +500,10 @@ type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error'
 
 ## SIWE Authentication
 
-Optional SIWE integration (requires `@cinaconnect/siwe`):
+Optional SIWE integration (requires `@cinacoin/siwe`):
 
 ```typescript
-import { SIWEAuth } from '@cinaconnect/core-sdk'
+import { SIWEAuth } from '@cinacoin/core-sdk'
 
 const siweAuth = new SIWEAuth({
   domain: 'mydapp.com',
@@ -536,7 +536,7 @@ interface SIWESignInResult {
 ## Version
 
 ```typescript
-import { VERSION } from '@cinaconnect/core-sdk'
+import { VERSION } from '@cinacoin/core-sdk'
 
 console.log(VERSION) // '0.1.0'
 ```

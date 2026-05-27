@@ -1,8 +1,8 @@
 /**
- * @cinaconnect/cdn
+ * @cinacoin/cdn
  *
  * CDN bundle entry point.
- * Exposes global window.CinaConnect namespace for script-tag usage.
+ * Exposes global window.Cinacoin namespace for script-tag usage.
  */
 import { getConfig, validateConfig } from "./config.js.js";
 import { renderConnectButton, getConnectButtonState, getConnectedAddress as getButtonAddress, disconnect, } from "./connect.js.js";
@@ -29,7 +29,7 @@ const api = {
     version: "0.1.0",
 };
 if (typeof window !== "undefined") {
-    window.CinaConnect = api;
+    window.Cinacoin = api;
 }
 export { getConfig, validateConfig };
 export { renderConnectButton, getConnectButtonState, disconnect };

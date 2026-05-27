@@ -13,16 +13,16 @@ using Firebase;
 using Unity.Notifications.iOS;
 #endif
 
-namespace CinaConnect.Push
+namespace Cinacoin.Push
 {
     // ═══════════════════════════════════════════════════════════════════
     // PushNotificationHandler — Cross-platform push notification manager
-    // for CinaConnect Unity SDK (Android/iOS).
+    // for Cinacoin Unity SDK (Android/iOS).
     //
     // Android: Firebase Cloud Messaging via Unity Firebase SDK
     // iOS: APNs via Unity Notification Services
     //
-    // Integrates with the CinaConnect push-server for device token
+    // Integrates with the Cinacoin push-server for device token
     // registration and WC relay events (pairing requests, session updates).
     // ═══════════════════════════════════════════════════════════════════
 
@@ -73,17 +73,17 @@ namespace CinaConnect.Push
         public long Timestamp;
     }
 
-    /// Configuration for CinaConnect push-server.
+    /// Configuration for Cinacoin push-server.
     [Serializable]
     public class PushServerConfig
     {
-        /// Base URL of the push-server (e.g. https://push.cinaconnect.com).
-        public string ServerUrl = "https://push.cinaconnect.com";
+        /// Base URL of the push-server (e.g. https://push.cinacoin.com).
+        public string ServerUrl = "https://push.cinacoin.com";
         /// Project ID for push-server authentication.
         public string ProjectId;
     }
 
-    /// Cross-platform push notification handler for CinaConnect Unity SDK.
+    /// Cross-platform push notification handler for Cinacoin Unity SDK.
     ///
     /// Usage:
     ///   var pushHandler = new PushNotificationHandler();
@@ -185,7 +185,7 @@ namespace CinaConnect.Push
 
             // Detect platform
             _platform = DetectPlatform();
-            Debug.Log($"[CinaConnect:Push] Initialized on {_platform}");
+            Debug.Log($"[Cinacoin:Push] Initialized on {_platform}");
 
             // Auto-register for push after initialization
             if (_platform != TargetPlatform.Unsupported)
@@ -206,7 +206,7 @@ namespace CinaConnect.Push
                     RegisterIosPush();
                     break;
                 case TargetPlatform.Unsupported:
-                    Debug.LogWarning("[CinaConnect:Push] Push notifications not supported on this platform");
+                    Debug.LogWarning("[Cinacoin:Push] Push notifications not supported on this platform");
                     break;
             }
         }
@@ -257,7 +257,7 @@ namespace CinaConnect.Push
                             else
                             {
                                 var error = tokenTask.Exception?.GetBaseException()?.Message ?? "Unknown FCM error";
-                                Debug.LogError($"[CinaConnect:Push] FCM token error: {error}");
+                                Debug.LogError($"[Cinacoin:Push] FCM token error: {error}");
                                 OnTokenRegistrationFailed?.Invoke(error);
                             }
                         });
@@ -267,23 +267,23 @@ namespace CinaConnect.Push
                         _firebaseMessaging.MessageReceived += OnFirebaseMessageReceived;
 
                         IsRegistered = true;
-                        Debug.Log("[CinaConnect:Push] Android push registered successfully");
+                        Debug.Log("[Cinacoin:Push] Android push registered successfully");
                     }
                     else
                     {
                         var error = $"Firebase dependencies unavailable: {dependencyStatus}";
-                        Debug.LogError($"[CinaConnect:Push] {error}");
+                        Debug.LogError($"[Cinacoin:Push] {error}");
                         OnTokenRegistrationFailed?.Invoke(error);
                     }
                 });
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[CinaConnect:Push] Android push registration error: {ex.Message}");
+                Debug.LogError($"[Cinacoin:Push] Android push registration error: {ex.Message}");
                 OnTokenRegistrationFailed?.Invoke(ex.Message);
             }
 #else
-            Debug.LogWarning("[CinaConnect:Push] Firebase SDK not available (not building for Android or in Editor)");
+            Debug.LogWarning("[Cinacoin:Push] Firebase SDK not available (not building for Android or in Editor)");
 #endif
         }
 
@@ -302,7 +302,7 @@ namespace CinaConnect.Push
         private void OnAndroidTokenReceived(string token)
         {
             DeviceToken = token;
-            Debug.Log($"[CinaConnect:Push] Android FCM token received: {token.Substring(0, Math.Min(12, token.Length))}...");
+            Debug.Log($"[Cinacoin:Push] Android FCM token received: {token.Substring(0, Math.Min(12, token.Length))}...");
             OnTokenRegistered?.Invoke(token);
 
             // Register token with push-server
@@ -336,7 +336,7 @@ namespace CinaConnect.Push
                 catch { }
             }
 #endif
-            Debug.Log("[CinaConnect:Push] Android push unregistered");
+            Debug.Log("[Cinacoin:Push] Android push unregistered");
         }
 
         private WalletNotification ParseAndroidNotification(string jsonPayload)
@@ -364,7 +364,7 @@ namespace CinaConnect.Push
             return new WalletNotification
             {
                 Type = type,
-                Title = GetOrDefault(data, "title", "CinaConnect Notification"),
+                Title = GetOrDefault(data, "title", "Cinacoin Notification"),
                 Body = GetOrDefault(data, "body", ""),
                 SessionId = GetOrDefault(data, "sessionId", null),
                 TransactionData = ExtractTransactionData(data),
@@ -394,12 +394,12 @@ namespace CinaConnect.Push
                         _iosPushRequested = true;
                         // The device token will be received via native iOS callback.
                         // Call SetIosDeviceToken() from your iOS native code.
-                        Debug.Log("[CinaConnect:Push] iOS push authorization granted");
+                        Debug.Log("[Cinacoin:Push] iOS push authorization granted");
                     }
                     else
                     {
                         var error = info?.Error ?? "Push notification authorization denied";
-                        Debug.LogError($"[CinaConnect:Push] iOS push auth failed: {error}");
+                        Debug.LogError($"[Cinacoin:Push] iOS push auth failed: {error}");
                         OnTokenRegistrationFailed?.Invoke(error);
                     }
                 });
@@ -408,11 +408,11 @@ namespace CinaConnect.Push
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[CinaConnect:Push] iOS push registration error: {ex.Message}");
+                Debug.LogError($"[Cinacoin:Push] iOS push registration error: {ex.Message}");
                 OnTokenRegistrationFailed?.Invoke(ex.Message);
             }
 #else
-            Debug.LogWarning("[CinaConnect:Push] iOS Notification Services not available (not building for iOS or in Editor)");
+            Debug.LogWarning("[Cinacoin:Push] iOS Notification Services not available (not building for iOS or in Editor)");
 #endif
         }
 
@@ -422,7 +422,7 @@ namespace CinaConnect.Push
         public void SetIosDeviceToken(string tokenString)
         {
             DeviceToken = tokenString;
-            Debug.Log($"[CinaConnect:Push] iOS APNs token received: {tokenString.Substring(0, Math.Min(12, tokenString.Length))}...");
+            Debug.Log($"[Cinacoin:Push] iOS APNs token received: {tokenString.Substring(0, Math.Min(12, tokenString.Length))}...");
             IsRegistered = true;
             OnTokenRegistered?.Invoke(tokenString);
 
@@ -461,7 +461,7 @@ namespace CinaConnect.Push
             // We just clear our state and unregister from remote notifications.
             // Native code should call UIApplication.shared.unregisterForRemoteNotifications()
 #endif
-            Debug.Log("[CinaConnect:Push] iOS push unregistered");
+            Debug.Log("[Cinacoin:Push] iOS push unregistered");
         }
 
         private WalletNotification ParseIosNotification(string userInfoJson)
@@ -485,7 +485,7 @@ namespace CinaConnect.Push
             var type = ParseNotificationType(typeStr);
 
             // Extract from aps.alert if present
-            var title = GetOrDefault(data, "title", "CinaConnect Notification");
+            var title = GetOrDefault(data, "title", "Cinacoin Notification");
             var body = GetOrDefault(data, "body", "");
 
             // Check for nested aps.alert structure
@@ -520,13 +520,13 @@ namespace CinaConnect.Push
 
         // ─── Push-Server Integration ───────────────────────────────────
 
-        /// Register device token with the CinaConnect push-server.
+        /// Register device token with the Cinacoin push-server.
         /// This enables wallet-specific push notifications.
         public void RegisterTokenWithServer(string token, string platform)
         {
             if (Config == null || string.IsNullOrEmpty(Config.ServerUrl))
             {
-                Debug.LogWarning("[CinaConnect:Push] Push server not configured, skipping token registration");
+                Debug.LogWarning("[Cinacoin:Push] Push server not configured, skipping token registration");
                 return;
             }
 
@@ -564,11 +564,11 @@ namespace CinaConnect.Push
             if (!request.isNetworkError && !request.isHttpError)
 #endif
             {
-                Debug.Log("[CinaConnect:Push] Device token registered with push-server");
+                Debug.Log("[Cinacoin:Push] Device token registered with push-server");
             }
             else
             {
-                Debug.LogWarning($"[CinaConnect:Push] Push-server registration failed: {request.error}");
+                Debug.LogWarning($"[Cinacoin:Push] Push-server registration failed: {request.error}");
             }
         }
 
@@ -581,25 +581,25 @@ namespace CinaConnect.Push
             {
                 case WalletNotificationType.TransactionRequest:
                     // Notify wallet manager about pending transaction
-                    Debug.Log($"[CinaConnect:Push] Transaction request: {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Transaction request: {notification.Body}");
                     break;
 
                 case WalletNotificationType.ConnectionRequest:
                     // Notify WC protocol about new connection request
-                    Debug.Log($"[CinaConnect:Push] Connection request: {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Connection request: {notification.Body}");
                     break;
 
                 case WalletNotificationType.TransactionConfirmed:
-                    Debug.Log($"[CinaConnect:Push] Transaction confirmed: {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Transaction confirmed: {notification.Body}");
                     break;
 
                 case WalletNotificationType.SessionExpired:
                     // Notify WC protocol to trigger reconnection
-                    Debug.Log($"[CinaConnect:Push] Session expired: {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Session expired: {notification.Body}");
                     break;
 
                 case WalletNotificationType.Other:
-                    Debug.Log($"[CinaConnect:Push] Generic notification: {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Generic notification: {notification.Body}");
                     break;
             }
         }
@@ -614,12 +614,12 @@ namespace CinaConnect.Push
                 if (Application.isFocused)
                 {
                     // Create a simple in-game notification via Debug or custom UI
-                    Debug.Log($"[CinaConnect:Push] Foreground notification: {notification.Title} - {notification.Body}");
+                    Debug.Log($"[Cinacoin:Push] Foreground notification: {notification.Title} - {notification.Body}");
                 }
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[CinaConnect:Push] Failed to show local notification: {ex.Message}");
+                Debug.LogWarning($"[Cinacoin:Push] Failed to show local notification: {ex.Message}");
             }
         }
 
@@ -687,17 +687,17 @@ namespace CinaConnect.Push
                 {
                     case "wc_pairing_request":
                         // New WC pairing request received via push
-                        Debug.Log($"[CinaConnect:Push] WC pairing request on topic: {topic}");
+                        Debug.Log($"[Cinacoin:Push] WC pairing request on topic: {topic}");
                         break;
 
                     case "wc_session_update":
                         // WC session state update via push
-                        Debug.Log($"[CinaConnect:Push] WC session update on topic: {topic}");
+                        Debug.Log($"[Cinacoin:Push] WC session update on topic: {topic}");
                         break;
 
                     case "wc_session_delete":
                         // WC session deleted via push
-                        Debug.Log($"[CinaConnect:Push] WC session deleted on topic: {topic}");
+                        Debug.Log($"[Cinacoin:Push] WC session deleted on topic: {topic}");
                         break;
 
                     default:
@@ -708,7 +708,7 @@ namespace CinaConnect.Push
             }
             catch (Exception ex)
             {
-                Debug.LogWarning($"[CinaConnect:Push] Failed to handle WC push: {ex.Message}");
+                Debug.LogWarning($"[Cinacoin:Push] Failed to handle WC push: {ex.Message}");
             }
         }
     }

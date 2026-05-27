@@ -24,7 +24,7 @@ test.describe('Mobile Deep Link Fallback E2E', () => {
 
     // Deep link generation is typically handled by the SDK
     // Verify the page loads correctly on mobile viewport
-    await expect(page).toHaveTitle(/CinaConnect/i);
+    await expect(page).toHaveTitle(/Cinacoin/i);
 
     await context.close();
   });

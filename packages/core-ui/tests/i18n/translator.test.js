@@ -51,11 +51,11 @@ describe('Translation Engine', () => {
         });
         it('should interpolate parameters', () => {
             registerLocale('en', { powered_by: 'Powered by {brand}' });
-            expect(t('powered_by', { brand: 'CinaConnect' })).toBe('Powered by CinaConnect');
+            expect(t('powered_by', { brand: 'Cinacoin' })).toBe('Powered by Cinacoin');
         });
         it('should handle multiple parameters', () => {
             registerLocale('en', { greeting: 'Hello, {name}! Welcome to {place}.' });
-            expect(t('greeting', { name: 'Alice', place: 'CinaConnect' })).toBe('Hello, Alice! Welcome to CinaConnect.');
+            expect(t('greeting', { name: 'Alice', place: 'Cinacoin' })).toBe('Hello, Alice! Welcome to Cinacoin.');
         });
         it('should leave unmatched params as-is', () => {
             registerLocale('en', { msg: 'Value: {value}' });

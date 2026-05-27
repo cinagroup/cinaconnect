@@ -1,4 +1,4 @@
-# CinaAuth/CinaConnect vs Reown — 最终对比综合报告
+# CinaAuth/Cinacoin vs Reown — 最终对比综合报告
 
 > **生成时间**: 2026-05-16 12:18 UTC  
 > **分析方法**: 5 个子 agent 并行深度对比  
@@ -8,7 +8,7 @@
 
 ## 📊 最终评分
 
-| 维度 | CinaConnect | Reown | 差距 | 变化 |
+| 维度 | Cinacoin | Reown | 差距 | 变化 |
 |------|:---------:|:-----:|:----:|:----:|
 | 整体功能完整性 | **42%** | ~85% | 🔴 大 | ↑6%（从 36%） |
 | 移动端 SDK | iOS 5.9/10, Android 4.1/10, RN 3.1/10 | 8-9/10 | 🔴 大 | 新增 |
@@ -21,9 +21,9 @@
 
 ---
 
-## ✅ CinaConnect 领先 Reown 的领域
+## ✅ Cinacoin 领先 Reown 的领域
 
-| 领域 | CinaConnect | Reown | 说明 |
+| 领域 | Cinacoin | Reown | 说明 |
 |------|:---------:|:-----:|------|
 | 自建 Relay 服务器 | ✅ 完整（虽投递损坏） | ❌ 依赖 Reown Relay | 消除中心化依赖 |
 | 自建 RPC 代理 | ✅ 完整（多 Provider + 2 层缓存） | ❌ 使用第三方 RPC | 降低成本 |
@@ -195,7 +195,7 @@
 
 ## 🏆 结论
 
-**CinaConnect 在基础设施广度和智能账户深度上超越 Reown**，但在核心 WalletConnect 协议、测试覆盖、开发者生态方面仍有差距。
+**Cinacoin 在基础设施广度和智能账户深度上超越 Reown**，但在核心 WalletConnect 协议、测试覆盖、开发者生态方面仍有差距。
 
 **关键阻塞**：WalletConnect v2 协议缺失是生产阻塞项，必须优先修复。
 

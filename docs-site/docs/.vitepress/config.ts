@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 const isProd = process.env.NODE_ENV === 'production'
 
 export default defineConfig({
-  title: 'CinaConnect',
+  title: 'Cinacoin',
   description: '自有品牌链上 UX 工具包 — Self-hosted Wallet Connection Toolkit',
   base: '/',
   lang: 'zh-CN',
@@ -17,7 +17,7 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/logo.svg',
-    siteTitle: 'CinaConnect',
+    siteTitle: 'Cinacoin',
 
     nav: [
       { text: '指南', link: '/guide/quick-start' },
@@ -81,7 +81,7 @@ export default defineConfig({
         items: [
           { text: 'Core UI', link: '/api/core-ui' },
           { text: 'UI Theme', link: '/api/ui-theme' },
-          { text: 'CinaConnect UI Theme', link: '/api/cinaconnect-ui-theme' },
+          { text: 'Cinacoin UI Theme', link: '/api/cinacoin-ui-theme' },
           { text: 'Design Tokens', link: '/api/design-tokens' },
           { text: 'Pay UI', link: '/api/pay-ui' },
           { text: 'Wallet Buttons', link: '/api/wallet-buttons' },
@@ -186,7 +186,7 @@ export default defineConfig({
         items: [
           { text: 'Analytics', link: '/api/analytics' },
           { text: 'i18n', link: '/api/i18n' },
-          { text: 'i18n React', link: '/api/cinaconnect-i18n' },
+          { text: 'i18n React', link: '/api/cinacoin-i18n' },
         ],
       },
 
@@ -210,16 +210,16 @@ export default defineConfig({
     ],
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/cinagroup/cinaconnect' },
+      { icon: 'github', link: 'https://github.com/cinagroup/cinacoin' },
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 CinaConnect',
+      copyright: 'Copyright © 2026 Cinacoin',
     },
 
     editLink: {
-      pattern: 'https://github.com/cinagroup/cinaconnect/edit/main/docs/:path',
+      pattern: 'https://github.com/cinagroup/cinacoin/edit/main/docs/:path',
       text: '在 GitHub 上编辑此页',
     },
 

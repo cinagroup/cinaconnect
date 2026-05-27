@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/ui-theme",
+  "name": "@cinacoin/ui-theme",
   "version": "0.2.0",
-  "description": "CinaConnect UI theme tokens, animations, and base components",
+  "description": "Cinacoin UI theme tokens, animations, and base components",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -30,5 +30,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

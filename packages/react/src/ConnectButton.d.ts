@@ -25,7 +25,7 @@ export interface ConnectButtonProps {
 /**
  * ConnectButton — React wrapper for the OCX ConnectButton Web Component.
  *
- * Automatically reads connection state from CinaConnectProvider context.
+ * Automatically reads connection state from CinacoinProvider context.
  *
  * ```tsx
  * <ConnectButton variant="primary" size="md" />

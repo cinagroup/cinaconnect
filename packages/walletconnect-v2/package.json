@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/walletconnect-v2",
+  "name": "@cinacoin/walletconnect-v2",
   "version": "0.2.0",
-  "description": "WalletConnect v2 protocol implementation for CinaConnect — pairing, session, crypto, relay, and RPC methods",
+  "description": "WalletConnect v2 protocol implementation for Cinacoin — pairing, session, crypto, relay, and RPC methods",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
     "@noble/ciphers": "^2.2.0",
     "@noble/curves": "^2.2.0",
     "@noble/hashes": "^2.2.0",

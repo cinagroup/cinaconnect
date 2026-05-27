@@ -103,16 +103,16 @@ describe('Multi-Chain Support', () => {
             cy.get('[data-testid="add-network-btn"]').should('exist').click();
             // Fill in custom network details
             cy.get('[data-testid="custom-network-form"]').should('be.visible');
-            cy.get('[data-testid="network-name-input"]').type('CinaConnect Testnet');
-            cy.get('[data-testid="network-rpc-input"]').type('https://testnet.cinaconnect.io/rpc');
+            cy.get('[data-testid="network-name-input"]').type('Cinacoin Testnet');
+            cy.get('[data-testid="network-rpc-input"]').type('https://testnet.cinacoin.io/rpc');
             cy.get('[data-testid="network-chain-id-input"]').type('900001');
             cy.get('[data-testid="network-currency-input"]').type('CIN');
-            cy.get('[data-testid="network-explorer-input"]').type('https://testnet.cinaconnect.io');
+            cy.get('[data-testid="network-explorer-input"]').type('https://testnet.cinacoin.io');
             // Submit
             cy.get('[data-testid="add-network-submit"]').click();
             // Verify network was added and selected
             cy.get('[data-testid="network-selector"]').should('have.attr', 'data-active-chain-id', '900001');
-            cy.get('[data-testid="network-selector"]').should('contain.text', 'CinaConnect Testnet');
+            cy.get('[data-testid="network-selector"]').should('contain.text', 'Cinacoin Testnet');
         });
         it('should validate custom network RPC URL', () => {
             cy.get('[data-testid="network-selector"]').click();

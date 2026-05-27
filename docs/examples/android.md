@@ -1,13 +1,13 @@
 # Android 示例
 
-> Android 原生 Kotlin 示例，展示 CinaConnect Android SDK 集成。
+> Android 原生 Kotlin 示例，展示 Cinacoin Android SDK 集成。
 
 ## 目录结构
 
 ```
 examples/android/
 ├── app/src/main/
-│   ├── java/com/cinaconnect/example/
+│   ├── java/com/cinacoin/example/
 │   │   └── MainActivity.kt         # 主 Activity
 │   └── res/layout/
 │       ├── activity_main.xml       # 主布局
@@ -55,11 +55,11 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 ## Android SDK 使用
 
 ```kotlin
-import com.cinaconnect.core.CinaConnect
-import com.cinaconnect.core.config.CinaConnectConfig
+import com.cinacoin.core.Cinacoin
+import com.cinacoin.core.config.CinacoinConfig
 
 // 初始化
-val config = CinaConnectConfig(
+val config = CinacoinConfig(
     projectId = "your-project-id",
     relayUrl = "wss://relay.yourdomain.com/v1",
     chains = listOf(
@@ -68,11 +68,11 @@ val config = CinaConnectConfig(
     )
 )
 
-val cinaconnect = CinaConnect(config, applicationContext)
+val cinacoin = Cinacoin(config, applicationContext)
 
 // 连接
 lifecycleScope.launch {
-    val result = cinaconnect.connect(walletId = "metamask")
+    val result = cinacoin.connect(walletId = "metamask")
     result.fold(
         onSuccess = { connection ->
             Toast.makeText(this@MainActivity, "Connected: ${connection.address}", Toast.LENGTH_SHORT).show()
@@ -84,8 +84,8 @@ lifecycleScope.launch {
 }
 
 // 监听状态
-cinaconnect.onAccountChange { address ->
-    Log.d("CinaConnect", "Account changed: $address")
+cinacoin.onAccountChange { address ->
+    Log.d("Cinacoin", "Account changed: $address")
 }
 ```
 
@@ -99,7 +99,7 @@ cinaconnect.onAccountChange { address ->
         <action android:name="android.intent.action.VIEW" />
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
-        <data android:scheme="cinaconnect-example" />
+        <data android:scheme="cinacoin-example" />
     </intent-filter>
 </activity>
 ```
@@ -108,8 +108,8 @@ cinaconnect.onAccountChange { address ->
 
 ```gradle
 dependencies {
-    implementation "com.cinaconnect:core:0.1.0"
-    implementation "com.cinaconnect:android:0.1.0"
+    implementation "com.cinacoin:core:0.1.0"
+    implementation "com.cinacoin:android:0.1.0"
     
     // 可选：扫码功能
     implementation "com.google.mlkit:barcode-scanning:17.2.0"

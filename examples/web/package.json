@@ -1,5 +1,5 @@
 {
-  "name": "cinaconnect-web-example",
+  "name": "cinacoin-web-example",
   "version": "0.1.1",
   "private": true,
   "type": "module",
@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/react": "workspace:*",
-    "@cinaconnect/swap-sdk": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/react": "workspace:*",
+    "@cinacoin/swap-sdk": "workspace:*",
     "ethers": "^6.13.0",
     "react": "^18.3.0",
     "react-dom": "^18.3.0",

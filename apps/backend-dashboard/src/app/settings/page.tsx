@@ -109,11 +109,11 @@ export default function SettingsPage() {
         </p>
         <div className="space-y-3">
           {[
-            { label: "RPC Proxy", env: "SERVICE_URL_RPC_PROXY", default: "https://rpc-proxy.cinaconnect.workers.dev" },
-            { label: "Keys Server", env: "SERVICE_URL_KEYS_SERVER", default: "https://keys-server.cinaconnect.workers.dev" },
-            { label: "Relay Server", env: "SERVICE_URL_RELAY_SERVER", default: "https://relay-server.cinaconnect.workers.dev" },
-            { label: "Notify Server", env: "SERVICE_URL_NOTIFY_SERVER", default: "https://notify-server.cinaconnect.workers.dev" },
-            { label: "Push Server", env: "SERVICE_URL_PUSH_SERVER", default: "https://push-server.cinaconnect.workers.dev" },
+            { label: "RPC Proxy", env: "SERVICE_URL_RPC_PROXY", default: "https://rpc-proxy.cinacoin.workers.dev" },
+            { label: "Keys Server", env: "SERVICE_URL_KEYS_SERVER", default: "https://keys-server.cinacoin.workers.dev" },
+            { label: "Relay Server", env: "SERVICE_URL_RELAY_SERVER", default: "https://relay-server.cinacoin.workers.dev" },
+            { label: "Notify Server", env: "SERVICE_URL_NOTIFY_SERVER", default: "https://notify-server.cinacoin.workers.dev" },
+            { label: "Push Server", env: "SERVICE_URL_PUSH_SERVER", default: "https://push-server.cinacoin.workers.dev" },
           ].map((svc) => (
             <div key={svc.env} className="flex items-center gap-3">
               <span className="text-sm text-dashboard-muted w-28">{svc.label}</span>

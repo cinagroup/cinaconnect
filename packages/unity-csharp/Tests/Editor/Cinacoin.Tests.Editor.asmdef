@@ -1,0 +1,24 @@
+{
+  "name": "CinaConnect.Tests.Editor",
+  "rootNamespace": "CinaConnect.Tests.Editor",
+  "references": [
+    "CinaConnect.Runtime",
+    "CinaConnect.Editor",
+    "CinaConnect.Tests.Runtime",
+    "UnityEditor.TestRunner",
+    "UnityEngine.TestRunner"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

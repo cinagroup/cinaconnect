@@ -44,7 +44,7 @@ curl -I https://mainnet.infura.io/v3/demo
 ### Step 4: Check RPC Proxy Logs
 
 ```bash
-kubectl logs -l app=rpc-proxy -n cinaconnect --tail=200 | grep -i error
+kubectl logs -l app=rpc-proxy -n cinacoin --tail=200 | grep -i error
 ```
 
 ---
@@ -56,7 +56,7 @@ kubectl logs -l app=rpc-proxy -n cinaconnect --tail=200 | grep -i error
 Update RPC proxy config to include fallback public nodes:
 
 ```bash
-kubectl edit configmap rpc-proxy-config -n cinaconnect
+kubectl edit configmap rpc-proxy-config -n cinacoin
 # Add public node endpoints to providers list
 ```
 
@@ -64,14 +64,14 @@ kubectl edit configmap rpc-proxy-config -n cinaconnect
 
 ```bash
 # Increase Erigon replicas for more capacity
-kubectl scale statefulset erigon-ethereum -n cinaconnect --replicas=3
+kubectl scale statefulset erigon-ethereum -n cinacoin --replicas=3
 ```
 
 ### Step 3: Route Traffic to Healthy Providers
 
 ```bash
 # Update provider priority in RPC proxy
-kubectl exec -it deploy/rpc-proxy -n cinaconnect -- curl -X POST http://localhost:8545/admin/update-providers \
+kubectl exec -it deploy/rpc-proxy -n cinacoin -- curl -X POST http://localhost:8545/admin/update-providers \
   -H "Content-Type: application/json" \
   -d '{"providers": [{"name": "alchemy", "weight": 80}, {"name": "local", "weight": 20}]}'
 ```

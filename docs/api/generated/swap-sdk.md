@@ -1,6 +1,6 @@
 # Swap SDK API Documentation
 
-> Generated API reference for `@cinaconnect/swap-sdk`.
+> Generated API reference for `@cinacoin/swap-sdk`.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The Swap SDK provides a cross-DEX swap aggregation engine that finds the best pr
 ## Installation
 
 ```bash
-npm install @cinaconnect/swap-sdk viem
+npm install @cinacoin/swap-sdk viem
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install @cinaconnect/swap-sdk viem
 The main entry point for finding optimal swap routes.
 
 ```typescript
-import { SwapQuoter } from '@cinaconnect/swap-sdk'
+import { SwapQuoter } from '@cinacoin/swap-sdk'
 
 const quoter = new SwapQuoter({
   chainId: 1,
@@ -94,7 +94,7 @@ allQuotes.forEach(q => console.log(q.provider, q.amountOut, q.priceImpact))
 Executes approved swap transactions.
 
 ```typescript
-import { SwapExecutor } from '@cinaconnect/swap-sdk'
+import { SwapExecutor } from '@cinacoin/swap-sdk'
 
 const executor = new SwapExecutor({
   chainId: 1,
@@ -200,7 +200,7 @@ interface SwapHop {
 ### Basic Token Swap
 
 ```typescript
-import { SwapQuoter, SwapExecutor } from '@cinaconnect/swap-sdk'
+import { SwapQuoter, SwapExecutor } from '@cinacoin/swap-sdk'
 
 const quoter = new SwapQuoter({ chainId: 1, providers: ['uniswap-v3', 'sushiswap'] })
 const executor = new SwapExecutor({ chainId: 1, publicClient, walletClient })

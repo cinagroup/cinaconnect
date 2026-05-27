@@ -54,7 +54,9 @@ export class TransakProvider implements OnRampProviderAdapter {
     try {
       const url = new URL(`${TRANSAK_API_BASE}/api/v1/currencies/crypto-currencies`);
       const res = await fetch(url.toString());
-      // In production, parse response for token-specific pricing
+      if (res.ok) {
+        // In production, parse response for token-specific pricing
+      }
     } catch {
       // Continue to estimate
     }

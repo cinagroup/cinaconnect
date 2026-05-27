@@ -1,5 +1,5 @@
 /**
- * Rollup configuration for @cinaconnect/core-ui
+ * Rollup configuration for @cinacoin/core-ui
  *
  * Component-level tree shaking optimized build with:
  * - Separate bundles per component for granular imports

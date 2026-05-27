@@ -1,4 +1,4 @@
-import type { SessionState } from "@cinaconnect/core-sdk";
+import type { SessionState } from "@cinacoin/core-sdk";
 import type { ConnectionRecord, Namespace } from "./types.js";
 import { MultiwalletStore } from "./store.js";
 /** Event callback signature for connection lifecycle events. */

@@ -1,25 +1,25 @@
 /**
- * Vue composables for CinaConnect.
+ * Vue composables for Cinacoin.
  *
- * All composables require being used within <CinaConnectProvider>.
+ * All composables require being used within <CinacoinProvider>.
  */
 
 import { inject } from 'vue';
-import { ONCHAINUX_KEY, type CinaConnectContext } from './types.js';
+import { ONCHAINUX_KEY, type CinacoinContext } from './types.js';
 
 /**
- * useCinaConnect — access the full CinaConnect context.
+ * useCinacoin — access the full Cinacoin context.
  *
  * ```vue
  * <script setup>
- * const { connect, disconnect, account, status } = useCinaConnect()
+ * const { connect, disconnect, account, status } = useCinacoin()
  * </script>
  * ```
  */
-export function useCinaConnect(): CinaConnectContext {
-  const ctx = inject<CinaConnectContext | null>(ONCHAINUX_KEY, null);
+export function useCinacoin(): CinacoinContext {
+  const ctx = inject<CinacoinContext | null>(ONCHAINUX_KEY, null);
   if (!ctx) {
-    throw new Error('useCinaConnect must be used within <CinaConnectProvider>');
+    throw new Error('useCinacoin must be used within <CinacoinProvider>');
   }
   return ctx;
 }
@@ -34,7 +34,7 @@ export function useCinaConnect(): CinaConnectContext {
  * ```
  */
 export function useAccount() {
-  const { account } = useCinaConnect();
+  const { account } = useCinacoin();
   return account;
 }
 
@@ -42,7 +42,7 @@ export function useAccount() {
  * useChainId — access the current chain ID.
  */
 export function useChainId() {
-  const { account } = useCinaConnect();
+  const { account } = useCinacoin();
   return account.value.chainId;
 }
 
@@ -50,7 +50,7 @@ export function useChainId() {
  * useConnect — connect to a wallet.
  */
 export function useConnect() {
-  const { connect, status, isSwitchingChain } = useCinaConnect();
+  const { connect, status, isSwitchingChain } = useCinacoin();
   return { connect, status, isSwitchingChain };
 }
 
@@ -58,7 +58,7 @@ export function useConnect() {
  * useDisconnect — disconnect from the current wallet.
  */
 export function useDisconnect() {
-  const { disconnect } = useCinaConnect();
+  const { disconnect } = useCinacoin();
   return { disconnect };
 }
 

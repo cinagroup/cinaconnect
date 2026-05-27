@@ -1,5 +1,5 @@
 /**
- * Rollup configuration for @cinaconnect/core-sdk
+ * Rollup configuration for @cinacoin/core-sdk
  *
  * Tree-shaking optimized build with:
  * - Multiple output formats (ESM, CJS)
@@ -45,7 +45,7 @@ function createConfig(format, options = {}) {
       format,
       sourcemap: true,
       exports: 'named',
-      banner: `/**\n * @cinaconnect/core-sdk v${pkg.version}\n * Built: ${new Date().toISOString()}\n */`,
+      banner: `/**\n * @cinacoin/core-sdk v${pkg.version}\n * Built: ${new Date().toISOString()}\n */`,
     },
     external,
     plugins: [

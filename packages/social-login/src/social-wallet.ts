@@ -6,7 +6,7 @@
  * 2. Links multiple social providers to the same wallet
  * 3. Supports wallet recovery via any linked social provider
  *
- * Depends on `@cinaconnect/embedded-wallet`.
+ * Depends on `@cinacoin/embedded-wallet`.
  *
  * @packageDocumentation
  */
@@ -77,7 +77,7 @@ export interface SocialWalletManagerConfig {
 
 /**
  * Re-exports from embedded-wallet for downstream use.
- * In production, import directly from `@cinaconnect/embedded-wallet`.
+ * In production, import directly from `@cinacoin/embedded-wallet`.
  * These are re-exported here to avoid a hard peer dependency at build time.
  */
 export {
@@ -131,7 +131,7 @@ export class SocialWalletManager {
       secret: config.sessionSecret,
     });
     this.tokenVerifier = new TokenVerifier(config.tokenVerifier);
-    this.walletId = config.walletId || 'cinaconnect-social-wallet';
+    this.walletId = config.walletId || 'cinacoin-social-wallet';
   }
 
   /**

@@ -1,14 +1,14 @@
 import { useNuxtApp } from '#imports';
 /**
- * Access the CinaConnect application instance.
+ * Access the Cinacoin application instance.
  *
  * @example
  * ```ts
- * const { cinaConnect } = useCinaConnect()
+ * const { cinaConnect } = useCinacoin()
  * await cinaConnect.connect()
  * ```
  */
-export function useCinaConnect() {
+export function useCinacoin() {
     const nuxtApp = useNuxtApp();
     const cinaConnect = nuxtApp.$cinaConnect;
     return { cinaConnect };
@@ -18,11 +18,11 @@ export function useCinaConnect() {
  *
  * @example
  * ```ts
- * const { address, isConnected } = useCinaConnectAccount()
+ * const { address, isConnected } = useCinacoinAccount()
  * ```
  */
-export function useCinaConnectAccount() {
-    const { cinaConnect } = useCinaConnect();
+export function useCinacoinAccount() {
+    const { cinaConnect } = useCinacoin();
     return {
         /** Connected address, or `undefined`. */
         get address() {
@@ -47,12 +47,12 @@ export function useCinaConnectAccount() {
  *
  * @example
  * ```ts
- * const { networks, switchNetwork } = useCinaConnectNetwork()
+ * const { networks, switchNetwork } = useCinacoinNetwork()
  * switchNetwork('arbitrum')
  * ```
  */
-export function useCinaConnectNetwork() {
-    const { cinaConnect } = useCinaConnect();
+export function useCinacoinNetwork() {
+    const { cinaConnect } = useCinacoin();
     /**
      * Switch the connected wallet to the given network.
      */

@@ -233,7 +233,7 @@ export function decodeDrops(drops: string | number): string {
 /** Parse XRP amount to drops. */
 export function parseXrpAmount(xrp: string): bigint {
   const parts = xrp.split('.');
-  const intPart = BigInt(parts[0]);
+  const intPart = BigInt(parts[0] || '0');
   let fracPart = 0n;
   if (parts.length > 1) {
     const frac = parts[1].padEnd(6, '0').slice(0, 6);
@@ -303,6 +303,8 @@ export interface XrplAccountInfo {
   sequence: number;
   /** Owner count. */
   ownerCount: number;
+  /** Ledger index of this account info. */
+  ledgerIndex: number;
   /** Previous sequence. */
   previousAffectingTransactionID?: string;
   /** Regular key (if set). */
@@ -1044,7 +1046,7 @@ export class XrplChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }
@@ -1207,7 +1209,7 @@ export class XrplChainAdapter {
         ownerCount: result.account_data.OwnerCount,
         flags: result.account_data.Flags,
         regularKey: result.account_data.RegularKey,
-        ledgerIndex: result.ledger_index ?? result.ledger_current_index ?? 0,
+        ledgerIndex: Number(result.ledger_index ?? result.ledger_current_index ?? 0),
       };
     } catch {
       return null;
@@ -1855,7 +1857,7 @@ export class XrplChainAdapter {
   private _resolveWallet(walletId?: string): XrplWalletProvider | null {
     if (typeof window === 'undefined') return null;
 
-    const win = window as Record<string, unknown>;
+    const win = window as unknown as Record<string, unknown>;
 
     if (walletId) {
       switch (walletId) {

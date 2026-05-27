@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useRef, useEffect } from 'react';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 /**
  * ChainSwitcher — React wrapper for the OCX ChainSwitcher Web Component.
  *
@@ -12,7 +12,7 @@ import { useCinaConnectContext } from './CinaConnectProvider.js';
  */
 export function ChainSwitcher({ className, style, onChainChange, }) {
     const ref = useRef(null);
-    const { config, account, switchChain } = useCinaConnectContext();
+    const { config, account, switchChain } = useCinacoinContext();
     const chains = config.chains ?? [];
     const activeChainId = account.chainId ?? chains[0]?.id ?? 1;
     useEffect(() => {

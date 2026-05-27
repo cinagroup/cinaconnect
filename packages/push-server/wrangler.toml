@@ -1,4 +1,4 @@
-name = "cinaconnect-push-server"
+name = "cinacoin-push-server"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-01-01"
 
@@ -10,7 +10,7 @@ DEFAULT_TIMEOUT_MS = "5000"
 
 [[kv_namespaces]]
 binding = "DEVICE_TOKENS"
-id = "e4c457a74fdf465dada283af98a4a992"
+id = "9ab61f92afc3485da73fef3b2e730260"
 
 routes = [
   { pattern = "push.cinacoin.com", custom_domain = true }

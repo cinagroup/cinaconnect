@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "CinaConnect — Service Status",
-  description: "Public health status page for CinaConnect services",
+  title: "CinaCoin — Service Status",
+  description: "Public health status page for CinaCoin services",
 };
 
 export default function RootLayout({

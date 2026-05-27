@@ -1,26 +1,26 @@
 # React API
 
-> `@cinaconnect/react` — React hooks, provider, and UI components for CinaConnect.
+> `@cinacoin/react` — React hooks, provider, and UI components for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/react @cinaconnect/core-sdk
+npm install @cinacoin/react @cinacoin/core-sdk
 ```
 
 ## Provider
 
-### CinaConnectProvider
+### CinacoinProvider
 
-Wrap your app (or a subtree) with `CinaConnectProvider` to give all child components access to the CinaConnect context.
+Wrap your app (or a subtree) with `CinacoinProvider` to give all child components access to the Cinacoin context.
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 function App() {
   return (
-    <CinaConnectProvider
+    <CinacoinProvider
       projectId="your-project-id"
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://eth.llamarpc.com' },
@@ -30,12 +30,12 @@ function App() {
       themeMode="dark"
     >
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
 
-#### CinaConnectConfig
+#### CinacoinConfig
 
 | Prop | Type | Required | Default | Description |
 |------|------|----------|---------|-------------|
@@ -48,9 +48,9 @@ function App() {
 | `onConnect` | `(result: ConnectionResult) => void` | ❌ | — | Connection callback |
 | `onDisconnect` | `() => void` | ❌ | — | Disconnection callback |
 
-#### CinaConnectContextValue
+#### CinacoinContextValue
 
-The object returned by `useCinaConnectContext()`:
+The object returned by `useCinacoinContext()`:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -83,15 +83,15 @@ type ThemeMode = 'light' | 'dark' | 'auto'
 
 ## Core Hooks
 
-### useCinaConnect
+### useCinacoin
 
-Access the full CinaConnect context.
+Access the full Cinacoin context.
 
 ```tsx
-import { useCinaConnect } from '@cinaconnect/react'
+import { useCinacoin } from '@cinacoin/react'
 
 function MyComponent() {
-  const { connect, disconnect, account, status } = useCinaConnect()
+  const { connect, disconnect, account, status } = useCinacoin()
 
   return (
     <div>
@@ -108,14 +108,14 @@ function MyComponent() {
 }
 ```
 
-**Returns:** `CinaConnectContextValue` (see table above)
+**Returns:** `CinacoinContextValue` (see table above)
 
 ### useAccount
 
 Get the current account state.
 
 ```tsx
-import { useAccount } from '@cinaconnect/react'
+import { useAccount } from '@cinacoin/react'
 
 function AccountInfo() {
   const account = useAccount()
@@ -148,7 +148,7 @@ interface AccountState {
 Get the current chain ID.
 
 ```tsx
-import { useChainId } from '@cinaconnect/react'
+import { useChainId } from '@cinacoin/react'
 
 function ChainBadge() {
   const chainId = useChainId()
@@ -166,7 +166,7 @@ function ChainBadge() {
 Connect to a wallet, with status tracking.
 
 ```tsx
-import { useConnect } from '@cinaconnect/react'
+import { useConnect } from '@cinacoin/react'
 
 function ConnectWallet() {
   const { connect, status, isSwitchingChain } = useConnect()
@@ -205,7 +205,7 @@ function ConnectWallet() {
 Disconnect from the current wallet.
 
 ```tsx
-import { useDisconnect } from '@cinaconnect/react'
+import { useDisconnect } from '@cinacoin/react'
 
 function DisconnectButton() {
   const { disconnect } = useDisconnect()
@@ -229,7 +229,7 @@ These hooks provide React-friendly access to [EIP-5792](https://eips.ethereum.or
 Discover what a connected wallet can do per chain.
 
 ```tsx
-import { useWalletCapabilities } from '@cinaconnect/react'
+import { useWalletCapabilities } from '@cinacoin/react'
 
 function CapabilityCheck() {
   const { capabilities, has, supportedChains, isLoading } = useWalletCapabilities()
@@ -268,7 +268,7 @@ function CapabilityCheck() {
 Send multiple calls as a batch.
 
 ```tsx
-import { useSendCalls } from '@cinaconnect/react'
+import { useSendCalls } from '@cinacoin/react'
 
 function BatchTransfer() {
   const { sendCalls, isExecuting, error } = useSendCalls()
@@ -308,7 +308,7 @@ function BatchTransfer() {
 Build and execute atomic batch transactions.
 
 ```tsx
-import { useAtomicBatch } from '@cinaconnect/react'
+import { useAtomicBatch } from '@cinacoin/react'
 
 function AtomicSwap() {
   const {
@@ -366,7 +366,7 @@ function AtomicSwap() {
 Poll the status of an async call batch.
 
 ```tsx
-import { useCallsStatus } from '@cinaconnect/react'
+import { useCallsStatus } from '@cinacoin/react'
 
 function BatchStatus({ batchId }: { batchId: string }) {
   const {
@@ -425,7 +425,7 @@ function BatchStatus({ batchId }: { batchId: string }) {
 A ready-to-use connect/disconnect button.
 
 ```tsx
-import { ConnectButton } from '@cinaconnect/react'
+import { ConnectButton } from '@cinacoin/react'
 
 function Header() {
   return <ConnectButton label="Connect Wallet" />
@@ -447,7 +447,7 @@ function Header() {
 A modal dialog for selecting and connecting wallets.
 
 ```tsx
-import { ConnectModal } from '@cinaconnect/react'
+import { ConnectModal } from '@cinacoin/react'
 import { useState } from 'react'
 
 function App() {
@@ -480,7 +480,7 @@ function App() {
 Dropdown for switching between configured chains.
 
 ```tsx
-import { ChainSwitcher } from '@cinaconnect/react'
+import { ChainSwitcher } from '@cinacoin/react'
 
 function Navbar() {
   return <ChainSwitcher />

@@ -1,9 +1,9 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, ScrollView, Alert, TouchableOpacity, ActivityIndicator, } from 'react-native';
-import { useCinaConnect, ConnectButton, ConnectModal } from '@cinaconnect/react-native';
+import { useCinacoin, ConnectButton, ConnectModal } from '@cinacoin/react-native';
 import { defaultWallets } from '../utils/walletConfig';
-import { QRScanner } from '@cinaconnect/react-native';
+import { QRScanner } from '@cinacoin/react-native';
 import { ethers } from 'ethers';
 /**
  * Real ConnectScreen with:
@@ -17,7 +17,7 @@ const RPC_ENDPOINTS = {
     42161: 'https://arb1.arbitrum.io/rpc',
 };
 export function ConnectScreen() {
-    const { account, status, connectors, disconnect, chainId } = useCinaConnect();
+    const { account, status, connectors, disconnect, chainId } = useCinacoin();
     const [showModal, setShowModal] = useState(false);
     const [showQRScanner, setShowQRScanner] = useState(false);
     const [balance, setBalance] = useState(null);

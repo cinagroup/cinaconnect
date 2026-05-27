@@ -1,8 +1,8 @@
 [package]
-name = "cinaconnect-bundler"
+name = "cinacoin-bundler"
 version = "0.1.0"
 edition = "2021"
-description = "ERC-4337 Bundler for CinaConnect"
+description = "ERC-4337 Bundler for Cinacoin"
 
 [dependencies]
 alloy-primitives = { version = "0.8", features = ["serde"] }

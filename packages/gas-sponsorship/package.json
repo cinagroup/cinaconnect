@@ -1,5 +1,5 @@
 {
-  "name": "@cinaconnect/gas-sponsorship",
+  "name": "@cinacoin/gas-sponsorship",
   "version": "0.2.0",
   "description": "Enterprise gas sponsorship for smart accounts via paymaster integration.",
   "main": "dist/index.js",
@@ -24,13 +24,13 @@
     "viem": ">=2.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/aa-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/aa-sdk": "workspace:*"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cinaconnect/onux.git",
+    "url": "https://github.com/cinagroup/Cinacoin.git",
     "directory": "packages/gas-sponsorship"
   },
   "publishConfig": {

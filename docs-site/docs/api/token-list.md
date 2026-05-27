@@ -1,11 +1,11 @@
 # Token List
 
-> `@cinaconnect/token-list` — Token registry and management for CinaConnect.
+> `@cinacoin/token-list` — Token registry and management for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/token-list
+npm install @cinacoin/token-list
 ```
 
 ## Overview

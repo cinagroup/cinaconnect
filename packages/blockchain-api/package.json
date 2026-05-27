@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/blockchain-api",
+  "name": "@cinacoin/blockchain-api",
   "version": "0.2.0",
-  "description": "Managed Blockchain API (ENS, balance history, tx lookup) for CinaConnect",
+  "description": "Managed Blockchain API (ENS, balance history, tx lookup) for Cinacoin",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -29,7 +29,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
     "viem": "^2.21.0"
   },
   "devDependencies": {

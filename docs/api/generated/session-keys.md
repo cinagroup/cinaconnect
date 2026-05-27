@@ -1,6 +1,6 @@
 # Session Keys API Documentation
 
-> Generated API reference for `@cinaconnect/session-keys`.
+> Generated API reference for `@cinacoin/session-keys`.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The Session Keys SDK implements ERC-7715 / EIP-5792 for creating and managing se
 ## Installation
 
 ```bash
-npm install @cinaconnect/session-keys viem
+npm install @cinacoin/session-keys viem
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install @cinaconnect/session-keys viem
 Creates, stores, and manages session keys for smart accounts.
 
 ```typescript
-import { SessionKeyManager } from '@cinaconnect/session-keys'
+import { SessionKeyManager } from '@cinacoin/session-keys'
 
 const manager = new SessionKeyManager({
   client: walletClient,
@@ -192,7 +192,7 @@ interface SessionMetadata {
 ### Create a Session for Token Swaps
 
 ```typescript
-import { SessionKeyManager } from '@cinaconnect/session-keys'
+import { SessionKeyManager } from '@cinacoin/session-keys'
 
 const manager = new SessionKeyManager({ client, smartAccount })
 
@@ -217,7 +217,7 @@ const swapSession = await manager.createSession({
     },
   ],
   duration: 7 * 24 * 3600000,  // 7 days
-  metadata: { dappName: 'CinaConnect Swap', origin: 'https://swap.cinaconnect.io' },
+  metadata: { dappName: 'Cinacoin Swap', origin: 'https://swap.cinacoin.io' },
 })
 
 // Use session key for swap without wallet popup

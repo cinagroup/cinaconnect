@@ -259,7 +259,7 @@ export class TRONChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. Required by ChainAdapter interface. */
+  /** Set the Cinacoin connector. Required by ChainAdapter interface. */
   setConnector(_connector: Connector): void {
     // TRON adapter uses TRON Link protocol; connector is optional.
   }
@@ -308,7 +308,7 @@ export class TRONChainAdapter {
     const accounts = await provider.request({
       method: 'tron_requestAccounts',
       params: {
-        websiteName: 'CinaConnect',
+        websiteName: 'Cinacoin',
       },
     });
 
@@ -372,6 +372,10 @@ export class TRONChainAdapter {
       }),
     });
 
+    if (!resp.ok) {
+      throw new Error(`TRON RPC error: HTTP ${resp.status} ${resp.statusText}`);
+    }
+
     const data = await resp.json();
     if (data.Error) throw new Error(data.Error);
     return (data.balance ?? 0).toString();
@@ -416,6 +420,9 @@ export class TRONChainAdapter {
     const resp = await fetch(
       `${this.rpcUrl}/v1/accounts/${address}/transactions/trc20?contract_address=${base58ToHex(contractAddress)}`,
     );
+    if (!resp.ok) {
+      throw new Error(`TRON RPC error: HTTP ${resp.status} ${resp.statusText}`);
+    }
     const data = await resp.json();
     // This gives transfers, not balance — use provider when possible
     // Return "0" as safe default
@@ -538,7 +545,7 @@ export class TRONChainAdapter {
   /** Convert TRX to sun. */
   static trxToSun(trx: string | number): string {
     const parts = String(trx).split('.');
-    const intPart = BigInt(parts[0]);
+    const intPart = BigInt(parts[0] || '0');
     let fracPart = 0n;
     if (parts.length > 1) {
       const frac = parts[1].padEnd(6, '0').slice(0, 6);

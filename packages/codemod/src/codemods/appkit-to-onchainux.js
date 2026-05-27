@@ -1,59 +1,59 @@
 /**
- * appkit-to-cinaconnect codemod
+ * appkit-to-cinacoin codemod
  *
  * Transforms:
- *   - @reown/appkit*     → @cinaconnect/*
- *   - @web3modal/*       → @cinaconnect/*
- *   - Web3Modal           → CinaConnect
- *   - createWeb3Modal     → createCinaConnect
- *   - AppKit              → CinaConnect
- *   - useWeb3Modal        → useCinaConnect
- *   - W3mButton           → CinaConnectButton
- *   - W3mNetworkSelect    → CinaConnectNetworkSelect
- *   - Config object keys  → CinaConnectConfig keys
+ *   - @reown/appkit*     → @cinacoin/*
+ *   - @web3modal/*       → @cinacoin/*
+ *   - Web3Modal           → Cinacoin
+ *   - createWeb3Modal     → createCinacoin
+ *   - AppKit              → Cinacoin
+ *   - useWeb3Modal        → useCinacoin
+ *   - W3mButton           → CinacoinButton
+ *   - W3mNetworkSelect    → CinacoinNetworkSelect
+ *   - Config object keys  → CinacoinConfig keys
  */
 // ── Import / require path rewrites ──────────────────────────────────────────
 const PACKAGE_RENAMES = [
-    [/@reown\/appkit-([a-z0-9-]+)/g, "@cinaconnect/$1"],
-    [/@reown\/appkit/g, "@cinaconnect/core-sdk"],
-    [/@web3modal\/([a-z0-9-]+)/g, "@cinaconnect/$1"],
-    [/@web3modal\/ethereum/g, "@cinaconnect/ethereum"],
-    [/@web3modal\/wagmi/g, "@cinaconnect/wagmi"],
-    [/@web3modal\/react/g, "@cinaconnect/react"],
-    [/@web3modal\/ui/g, "@cinaconnect/ui"],
-    [/@web3modal\/core/g, "@cinaconnect/core-sdk"],
-    [/@web3modal\/html/g, "@cinaconnect/html"],
+    [/@reown\/appkit-([a-z0-9-]+)/g, "@cinacoin/$1"],
+    [/@reown\/appkit/g, "@cinacoin/core-sdk"],
+    [/@web3modal\/([a-z0-9-]+)/g, "@cinacoin/$1"],
+    [/@web3modal\/ethereum/g, "@cinacoin/ethereum"],
+    [/@web3modal\/wagmi/g, "@cinacoin/wagmi"],
+    [/@web3modal\/react/g, "@cinacoin/react"],
+    [/@web3modal\/ui/g, "@cinacoin/ui"],
+    [/@web3modal\/core/g, "@cinacoin/core-sdk"],
+    [/@web3modal\/html/g, "@cinacoin/html"],
 ];
 // ── Component / function name rewrites ──────────────────────────────────────
 const IDENTIFIER_RENAMES = [
     // Core classes / factories
-    [/Web3Modal\b/g, "CinaConnect"],
-    [/createWeb3Modal\b/g, "createCinaConnect"],
-    [/createAppKit\b/g, "createCinaConnect"],
-    [/AppKit\b/g, "CinaConnect"],
+    [/Web3Modal\b/g, "Cinacoin"],
+    [/createWeb3Modal\b/g, "createCinacoin"],
+    [/createAppKit\b/g, "createCinacoin"],
+    [/AppKit\b/g, "Cinacoin"],
     // Hooks
-    [/useWeb3Modal\b/g, "useCinaConnect"],
-    [/useWeb3ModalState\b/g, "useCinaConnectState"],
-    [/useWeb3ModalTheme\b/g, "useCinaConnectTheme"],
-    [/useAppKit\b/g, "useCinaConnect"],
-    [/useAppKitState\b/g, "useCinaConnectState"],
-    [/useAppKitTheme\b/g, "useCinaConnectTheme"],
-    [/useAppKitAccount\b/g, "useCinaConnectAccount"],
-    [/useAppKitNetwork\b/g, "useCinaConnectNetwork"],
+    [/useWeb3Modal\b/g, "useCinacoin"],
+    [/useWeb3ModalState\b/g, "useCinacoinState"],
+    [/useWeb3ModalTheme\b/g, "useCinacoinTheme"],
+    [/useAppKit\b/g, "useCinacoin"],
+    [/useAppKitState\b/g, "useCinacoinState"],
+    [/useAppKitTheme\b/g, "useCinacoinTheme"],
+    [/useAppKitAccount\b/g, "useCinacoinAccount"],
+    [/useAppKitNetwork\b/g, "useCinacoinNetwork"],
     // Components
-    [/w3m-button\b/gi, "cinaconnect-button"],
-    [/W3mButton\b/g, "CinaConnectButton"],
-    [/w3m-network-select\b/gi, "cinaconnect-network-select"],
-    [/W3mNetworkSelect\b/g, "CinaConnectNetworkSelect"],
-    [/w3m-modal\b/gi, "cinaconnect-modal"],
-    [/W3mModal\b/g, "CinaConnectModal"],
-    [/app-kit-button\b/gi, "cinaconnect-button"],
-    [/AppKitButton\b/g, "CinaConnectButton"],
+    [/w3m-button\b/gi, "cinacoin-button"],
+    [/W3mButton\b/g, "CinacoinButton"],
+    [/w3m-network-select\b/gi, "cinacoin-network-select"],
+    [/W3mNetworkSelect\b/g, "CinacoinNetworkSelect"],
+    [/w3m-modal\b/gi, "cinacoin-modal"],
+    [/W3mModal\b/g, "CinacoinModal"],
+    [/app-kit-button\b/gi, "cinacoin-button"],
+    [/AppKitButton\b/g, "CinacoinButton"],
     // Type names
-    [/Web3ModalConfig\b/g, "CinaConnectConfig"],
-    [/AppKitConfig\b/g, "CinaConnectConfig"],
-    [/Web3ModalTheme\b/g, "CinaConnectTheme"],
-    [/AppKitTheme\b/g, "CinaConnectTheme"],
+    [/Web3ModalConfig\b/g, "CinacoinConfig"],
+    [/AppKitConfig\b/g, "CinacoinConfig"],
+    [/Web3ModalTheme\b/g, "CinacoinTheme"],
+    [/AppKitTheme\b/g, "CinacoinTheme"],
 ];
 // ── Config key rewrites ────────────────────────────────────────────────────
 const CONFIG_KEY_RENAMES = [
@@ -71,9 +71,9 @@ const CONFIG_KEY_RENAMES = [
 ];
 // ── Main transform ──────────────────────────────────────────────────────────
 /**
- * Apply the AppKit/Web3Modal → CinaConnect transformation to source text.
+ * Apply the AppKit/Web3Modal → Cinacoin transformation to source text.
  */
-export function transformAppKitToCinaConnect(source) {
+export function transformAppKitToCinacoin(source) {
     let output = source;
     const changes = [];
     // 1. Package imports/requires

@@ -5,7 +5,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: relay-prometheus-scaler
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: relay-server
     component: scaling
@@ -20,7 +20,7 @@ spec:
     # Scale based on active WebSocket connections
     - type: prometheus
       metadata:
-        serverAddress: http://prometheus-server.cinaconnect.svc:9090
+        serverAddress: http://prometheus-server.cinacoin.svc:9090
         metricName: relay_active_connections
         threshold: "5000"
         query: sum(relay_active_connections{region="us-east-1"})
@@ -28,7 +28,7 @@ spec:
     # Scale based on NATS JetStream consumer pending
     - type: prometheus
       metadata:
-        serverAddress: http://prometheus-server.cinaconnect.svc:9090
+        serverAddress: http://prometheus-server.cinacoin.svc:9090
         metricName: nats_jetstream_consumer_pending
         threshold: "10000"
         query: sum(nats_jetstream_consumer_pending)
@@ -38,7 +38,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: relay-time-based-scaler
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: relay-server
     component: scaling
@@ -62,7 +62,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: rpc-proxy-prometheus-scaler
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: rpc-proxy
     component: scaling
@@ -76,7 +76,7 @@ spec:
   triggers:
     - type: prometheus
       metadata:
-        serverAddress: http://prometheus-server.cinaconnect.svc:9090
+        serverAddress: http://prometheus-server.cinacoin.svc:9090
         metricName: rpc_request_rate
         threshold: "2000"
         query: sum(rate(rpc_requests_total[1m]))

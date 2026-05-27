@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: push-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: push-server
+    component: push
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.pushServer.replicaCount }}
+  selector:
+    matchLabels:
+      app: push-server
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: push-server
+        component: push
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.pushServer.ports.metrics }}"
+        prometheus.io/path: "/v1/metrics"
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 45
+      containers:
+        - name: push-server
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.pushServer.image.repository }}:{{ .Values.pushServer.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pushServer.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.pushServer.ports.http }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.pushServer.ports.metrics }}
+              protocol: TCP
+          env:
+            - name: RUST_LOG
+              value: {{ .Values.pushServer.env.RUST_LOG | quote }}
+            - name: NATS_URL
+              value: {{ .Values.pushServer.env.NATS_URL | quote }}
+            - name: REDIS_URL
+              value: {{ .Values.pushServer.env.REDIS_URL | quote }}
+            - name: APNS_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: push-apns
+                  key: key-id
+            - name: APNS_TEAM_ID
+              valueFrom:
+                secretKeyRef:
+                  name: push-apns
+                  key: team-id
+            - name: FCM_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: push-fcm
+                  key: project-id
+          {{- with .Values.pushServer.envFromSecrets }}
+          envFrom:
+            {{- range . }}
+            - secretRef:
+                name: {{ .name }}
+            {{- end }}
+          {{- end }}
+          {{- with .Values.pushServer.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.pushServer.livenessProbe.path }}
+              port: {{ .Values.pushServer.livenessProbe.port }}
+            initialDelaySeconds: {{ .Values.pushServer.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.pushServer.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.pushServer.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.pushServer.readinessProbe.path }}
+              port: {{ .Values.pushServer.readinessProbe.port }}
+            initialDelaySeconds: {{ .Values.pushServer.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.pushServer.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.pushServer.readinessProbe.failureThreshold }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

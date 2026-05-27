@@ -1,5 +1,5 @@
 import { OnInit, OnDestroy } from '@angular/core';
-import { CinaConnectService, type Network } from '../cinaconnect.service.js';
+import { CinacoinService, type Network } from '../cinacoin.service.js';
 /**
  * Button component showing the currently connected network/chain.
  *
@@ -13,7 +13,7 @@ export declare class NetworkButtonComponent implements OnInit, OnDestroy {
     size: 'sm' | 'md' | 'lg';
     network: Network | null;
     private _subscription?;
-    constructor(_service: CinaConnectService);
+    constructor(_service: CinacoinService);
     ngOnInit(): void;
     ngOnDestroy(): void;
 }

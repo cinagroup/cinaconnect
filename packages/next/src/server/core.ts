@@ -1,12 +1,12 @@
 /**
- * @cinaconnect/next/server — Core server client.
+ * @cinacoin/next/server — Core server client.
  *
- * Provides `createServerClient` and `getCinaConnectServer` for creating
- * server-side CinaConnect SDK instances.
+ * Provides `createServerClient` and `getCinacoinServer` for creating
+ * server-side Cinacoin SDK instances.
  */
 
 import type { NextRequest, NextResponse } from 'next/server';
-import type { ChainConfig } from '@cinaconnect/react';
+import type { ChainConfig } from '@cinacoin/react';
 import { getSession, verifySiweMessage } from './middleware.js';
 
 // Re-export types so consumers of core.ts get the full type surface
@@ -18,7 +18,7 @@ export type { ServerClientOptions } from './middleware.js';
 // ---------------------------------------------------------------------------
 
 /**
- * Server-side CinaConnect client instance.
+ * Server-side Cinacoin client instance.
  */
 export interface ServerClient {
   /**
@@ -74,13 +74,13 @@ const defaultChain: ChainConfig = {
 // ---------------------------------------------------------------------------
 
 /**
- * Create a server-side CinaConnect client for use in API routes, middleware,
+ * Create a server-side Cinacoin client for use in API routes, middleware,
  * and server components.
  *
  * ```ts
  * const client = createServerClient({
- *   projectId: process.env.CINACONNECT_PROJECT_ID!,
- *   secret: process.env.CINACONNECT_SECRET,
+ *   projectId: process.env.CINACOIN_PROJECT_ID!,
+ *   secret: process.env.CINACOIN_SECRET,
  * });
  *
  * const session = await client.getSession(req);
@@ -93,7 +93,7 @@ export function createServerClient(options: import('./middleware.js').ServerClie
   const resolvedOptions: import('./middleware.js').ServerClientOptions = {
     projectId: options.projectId,
     chains: options.chains ?? [defaultChain],
-    cookieName: options.cookieName ?? 'cinaconnect-session',
+    cookieName: options.cookieName ?? 'cinacoin-session',
     domain: options.domain ?? process.env.NEXT_PUBLIC_URL ?? 'localhost',
     secret: options.secret ?? '',
   };
@@ -136,16 +136,16 @@ export function createServerClient(options: import('./middleware.js').ServerClie
 let _serverClient: ServerClient | null = null;
 
 /**
- * Get (or lazily create) the singleton server-side CinaConnect client.
+ * Get (or lazily create) the singleton server-side Cinacoin client.
  *
  * Call this once during initialization. Subsequent calls return the same instance.
  *
  * ```ts
- * import { getCinaConnectServer } from '@cinaconnect/next/server';
+ * import { getCinacoinServer } from '@cinacoin/next/server';
  *
  * // In an API route:
  * export async function GET(req: Request) {
- *   const client = getCinaConnectServer({ projectId: 'your-id' });
+ *   const client = getCinacoinServer({ projectId: 'your-id' });
  *   const session = await client.getSession(req);
  *   return Response.json({ address: session?.address });
  * }
@@ -154,7 +154,7 @@ let _serverClient: ServerClient | null = null;
  * @param options - Configuration options (used only on first call).
  * @returns The singleton ServerClient instance.
  */
-export function getCinaConnectServer(options: import('./middleware.js').ServerClientOptions): ServerClient {
+export function getCinacoinServer(options: import('./middleware.js').ServerClientOptions): ServerClient {
   if (!_serverClient) {
     _serverClient = createServerClient(options);
   }

@@ -6,24 +6,24 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react
+npm install @cinacoin/core-sdk @cinacoin/react
 ```
 
 ## Quick Start: Multi-Chain Provider
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { ConnectButton, ChainSwitcher, useAccount, useChainId } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
+import { ConnectButton, ChainSwitcher, useAccount, useChainId } from '@cinacoin/react'
 
-<CinaConnectProvider
+<CinacoinProvider
   config={{
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
     chains: [
       // Ethereum
       {
@@ -68,7 +68,7 @@ import { ConnectButton, ChainSwitcher, useAccount, useChainId } from '@cinaconne
   }}
 >
   <App />
-</CinaConnectProvider>
+</CinacoinProvider>
 ```
 
 ## Complete Example
@@ -78,19 +78,19 @@ import { ConnectButton, ChainSwitcher, useAccount, useChainId } from '@cinaconne
 ```tsx
 // src/App.tsx
 import {
-  useCinaConnect,
+  useCinacoin,
   useAccount,
   useChainId,
   useDisconnect,
   useConnect,
   ChainSwitcher,
   ConnectButton,
-} from '@cinaconnect/react'
+} from '@cinacoin/react'
 
 function MultiChainApp() {
   const account = useAccount()
   const chainId = useChainId()
-  const { disconnect, status } = useCinaConnect()
+  const { disconnect, status } = useCinacoin()
   const { connect, isSwitchingChain } = useConnect()
 
   if (!account.address) {
@@ -137,10 +137,10 @@ export default MultiChainApp
 ### 2. Manual Chain Switching
 
 ```tsx
-import { useCinaConnect } from '@cinaconnect/react'
+import { useCinacoin } from '@cinacoin/react'
 
 function ManualChainSwitcher() {
-  const { connect, switchChain, account } = useCinaConnect()
+  const { connect, switchChain, account } = useCinacoin()
 
   const chains = [
     { id: 1, name: 'Ethereum', symbol: 'ETH' },
@@ -173,12 +173,12 @@ function ManualChainSwitcher() {
 
 ```tsx
 import { useState, useEffect } from 'react'
-import { useCinaConnect, useAccount } from '@cinaconnect/react'
-import { Connector } from '@cinaconnect/core-sdk'
+import { useCinacoin, useAccount } from '@cinacoin/react'
+import { Connector } from '@cinacoin/core-sdk'
 
 function CrossChainBalance() {
   const account = useAccount()
-  const { switchChain } = useCinaConnect()
+  const { switchChain } = useCinacoin()
   const [balances, setBalances] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
 
@@ -236,12 +236,12 @@ function CrossChainBalance() {
 ### 4. Low-Level Multi-Chain Connection
 
 ```ts
-import { Connector, SessionManager } from '@cinaconnect/core-sdk'
+import { Connector, SessionManager } from '@cinacoin/core-sdk'
 
 async function connectMultiChain() {
   const connector = new Connector({
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
   })
 
   // Connect with multiple chains specified
@@ -264,7 +264,7 @@ async function connectMultiChain() {
 ### 5. Chain-Aware Components
 
 ```tsx
-import { useChainId, useAccount } from '@cinaconnect/react'
+import { useChainId, useAccount } from '@cinacoin/react'
 
 function ChainAwareUI() {
   const chainId = useChainId()

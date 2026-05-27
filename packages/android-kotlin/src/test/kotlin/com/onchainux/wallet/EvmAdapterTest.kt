@@ -1,6 +1,6 @@
-package com.cinaconnect.wallet
+package com.cinacoin.wallet
 
-import com.cinaconnect.core.*
+import com.cinacoin.core.*
 import org.junit.Test
 import org.junit.Assert.*
 

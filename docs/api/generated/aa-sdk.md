@@ -1,15 +1,15 @@
 # Account Abstraction SDK API Documentation
 
-> Generated API reference for `@cinaconnect/aa-sdk`.
+> Generated API reference for `@cinacoin/aa-sdk`.
 
 ## Overview
 
-The Account Abstraction (AA) SDK provides a complete implementation of ERC-4337 (Account Abstraction Using Single Transaction Contract) for CinaConnect. It enables smart account creation, UserOperation building, bundler interaction, and paymaster integration — all through a unified TypeScript API.
+The Account Abstraction (AA) SDK provides a complete implementation of ERC-4337 (Account Abstraction Using Single Transaction Contract) for Cinacoin. It enables smart account creation, UserOperation building, bundler interaction, and paymaster integration — all through a unified TypeScript API.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/aa-sdk viem
+npm install @cinacoin/aa-sdk viem
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install @cinaconnect/aa-sdk viem
 Create and manage ERC-4337 smart accounts.
 
 ```typescript
-import { SmartAccountFactory } from '@cinaconnect/aa-sdk'
+import { SmartAccountFactory } from '@cinacoin/aa-sdk'
 
 const factory = new SmartAccountFactory({
   chainId: 1,
@@ -161,7 +161,7 @@ account.setPaymaster({
 Direct interaction with the ERC-4337 bundler.
 
 ```typescript
-import { BundlerClient } from '@cinaconnect/aa-sdk'
+import { BundlerClient } from '@cinacoin/aa-sdk'
 
 const bundler = new BundlerClient({
   url: 'https://bundler.yourdomain.com/v1',
@@ -268,7 +268,7 @@ interface UserOperationReceipt {
 ### Create and Use a Smart Account
 
 ```typescript
-import { SmartAccountFactory } from '@cinaconnect/aa-sdk'
+import { SmartAccountFactory } from '@cinacoin/aa-sdk'
 
 const factory = new SmartAccountFactory({
   chainId: 1,

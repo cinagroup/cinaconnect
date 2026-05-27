@@ -13,7 +13,7 @@ interface ThemeStore {
   toggle: () => void;
 }
 
-const STORAGE_KEY = 'cinaconnect-ui-theme';
+const STORAGE_KEY = 'cinacoin-ui-theme';
 
 /**
  * Load persisted theme state from localStorage.

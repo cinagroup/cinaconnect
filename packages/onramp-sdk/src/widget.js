@@ -50,7 +50,7 @@ export class OnRampWidget {
         return new Promise((resolve) => {
             const left = (window.screen.width - this.config.popupWidth) / 2;
             const top = (window.screen.height - this.config.popupHeight) / 2;
-            this.popupWindow = window.open(url, "CinaConnect OnRamp", `width=${this.config.popupWidth},height=${this.config.popupHeight},left=${left},top=${top},scrollbars=yes`);
+            this.popupWindow = window.open(url, "Cinacoin OnRamp", `width=${this.config.popupWidth},height=${this.config.popupHeight},left=${left},top=${top},scrollbars=yes`);
             this.emitEvent({ type: "open" });
             // Poll for popup close
             const checkInterval = setInterval(() => {

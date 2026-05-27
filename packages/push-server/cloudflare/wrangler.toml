@@ -1,4 +1,4 @@
-name = "cinaconnect-push-server"
+name = "cinacoin-push-server"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-01-01"
 
@@ -23,15 +23,15 @@ cpu_ms = 50
 # KV namespace for device tokens
 [[kv_namespaces]]
 binding = "DEVICE_TOKENS"
-id = "PLACEHOLDER_REPLACE_AFTER_CREATE"
+id = "9ab61f92afc3485da73fef3b2e730260"
 
 # D1 database for push log (optional)
 [[d1_databases]]
 binding = "PUSH_LOG_DB"
-database_name = "cinaconnect-push"
+database_name = "cinacoin-push"
 database_id = "PLACEHOLDER_REPLACE_AFTER_CREATE"
 
 # Queues for background processing (optional)
 [[queues.producers]]
 binding = "PUSH_QUEUE"
-queue = "cinaconnect-push-queue"
+queue = "cinacoin-push-queue"

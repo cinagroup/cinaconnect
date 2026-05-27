@@ -1,5 +1,5 @@
 [package]
-name = "cinaconnect-paymaster"
+name = "cinacoin-paymaster"
 version = "0.1.0"
 edition = "2021"
-description = "ERC-7677 Paymaster for CinaConnect"
+description = "ERC-7677 Paymaster for Cinacoin"

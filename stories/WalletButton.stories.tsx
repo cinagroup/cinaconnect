@@ -136,7 +136,7 @@ function MockWalletButton({
 /* ── Meta ─────────────────────────────────────────────────────────── */
 
 const meta: Meta<typeof MockWalletButton> = {
-  title: 'CinaConnect/WalletButton',
+  title: 'CinaCoin/WalletButton',
   component: MockWalletButton,
   argTypes: {
     walletId: {

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/custom-connectors",
+  "name": "@cinacoin/custom-connectors",
   "version": "0.2.0",
-  "description": "Custom wallet connector interface and built-in connectors for CinaConnect",
+  "description": "Custom wallet connector interface and built-in connectors for Cinacoin",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -18,8 +18,8 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/explorer": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/explorer": "workspace:*"
   },
   "devDependencies": {
     "@types/react": ">=18.0.0",
@@ -30,5 +30,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

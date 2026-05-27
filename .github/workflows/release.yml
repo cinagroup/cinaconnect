@@ -1,4 +1,4 @@
-# CinaConnect Release Workflow
+# Cinacoin Release Workflow
 #
 # Triggered when a version tag (v*) is pushed to the repository.
 # This workflow:

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CinaConnect.Models;
+namespace Cinacoin.Models;
 
 /// <summary>
 /// Relayer protocol specification for session proposals.

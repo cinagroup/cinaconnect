@@ -322,7 +322,7 @@ export class BlockchainApiClient {
     // -- internal helpers ---------------------------------------------------
     /** Default token list per chain (extendable). */
     _defaultTokens(_chainId) {
-        // Return a minimal set; wire to @cinaconnect/token-list in production.
+        // Return a minimal set; wire to @cinacoin/token-list in production.
         return [];
     }
 }

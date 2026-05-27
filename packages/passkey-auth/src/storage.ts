@@ -34,7 +34,7 @@ export class MemoryStorage implements PasskeyStorage {
 export class BrowserStorage implements PasskeyStorage {
   private prefix: string;
 
-  constructor(prefix = 'cinaconnect:passkey:') {
+  constructor(prefix = 'cinacoin:passkey:') {
     this.prefix = prefix;
   }
 

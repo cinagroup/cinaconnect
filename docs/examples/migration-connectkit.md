@@ -1,6 +1,6 @@
-# Migration Example: ConnectKit → CinaConnect
+# Migration Example: ConnectKit → Cinacoin
 
-> Full before/after example showing a typical ConnectKit + wagmi dApp migrated to CinaConnect.
+> Full before/after example showing a typical ConnectKit + wagmi dApp migrated to Cinacoin.
 
 ## Scenario
 
@@ -141,25 +141,25 @@ function Dashboard() {
 }
 ```
 
-## After (CinaConnect)
+## After (Cinacoin)
 
 ```tsx
 // App.tsx
 import {
-  CinaConnectProvider,
+  CinacoinProvider,
   ConnectButton,
   useAccount,
   useConnect,
   useDisconnect,
-  useCinaConnect,
-} from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
-import '@cinaconnect/design-tokens/base.css'
+  useCinacoin,
+} from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
+import '@cinacoin/design-tokens/base.css'
 
 export default function App() {
   return (
-    <CinaConnectProvider
-      projectId={process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!}
+    <CinacoinProvider
+      projectId={process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!}
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
         { id: 'eip155:137', name: 'Polygon', rpcUrl: 'https://rpc.yourdomain.com/polygon' },
@@ -177,7 +177,7 @@ export default function App() {
       <main style={{ maxWidth: 600, margin: '0 auto', padding: 24 }}>
         <Dashboard />
       </main>
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 
@@ -202,7 +202,7 @@ function Header() {
 function Dashboard() {
   const account = useAccount()
   const { disconnect } = useDisconnect()
-  const { ensName, ensAvatar } = useCinaConnect()
+  const { ensName, ensAvatar } = useCinacoin()
 
   if (!account) {
     return <p>Connect your wallet to view your portfolio.</p>
@@ -255,14 +255,14 @@ function Dashboard() {
 
 ## Key Changes Summary
 
-| Area | ConnectKit | CinaConnect |
+| Area | ConnectKit | Cinacoin |
 |------|-----------|-------------|
-| Provider | `WagmiProvider` + `ConnectKitProvider` + `QueryClientProvider` | Single `CinaConnectProvider` |
+| Provider | `WagmiProvider` + `ConnectKitProvider` + `QueryClientProvider` | Single `CinacoinProvider` |
 | Connect Button | `<ConnectKitButton />` | `<ConnectButton />` |
 | Config | `createConfig()` with connectors + transports | Inline provider props |
 | Balance | `useBalance({ address })` hook | `account.balance` from `useAccount()` |
-| ENS | `useEnsName()` + `useEnsAvatar()` | `ensName` + `ensAvatar` from `useCinaConnect()` |
-| Theming | `customTheme` CSS variables | `@cinaconnect/design-tokens` |
+| ENS | `useEnsName()` + `useEnsAvatar()` | `ensName` + `ensAvatar` from `useCinacoin()` |
+| Theming | `customTheme` CSS variables | `@cinacoin/design-tokens` |
 | Dependencies | 6+ packages | 3 packages |
 | QueryClient | Required | Not needed |
 | Infrastructure | Reown Cloud for WC | Self-hosted Relay |
@@ -270,9 +270,9 @@ function Dashboard() {
 ## Automated Migration
 
 ```bash
-npx cinaconnect-codemod \
+npx cinacoin-codemod \
   --src-dir ./src \
-  --transform connectkit-to-cinaconnect \
+  --transform connectkit-to-cinacoin \
   --verbose
 ```
 
@@ -281,10 +281,10 @@ Manual steps after codemod:
 - Remove `QueryClient` boilerplate (codemod comments it out)
 - Replace `customTheme` with design token imports
 - Update `useBalance` → `account.balance`
-- Update ENS access → `useCinaConnect().ensName`
+- Update ENS access → `useCinacoin().ensName`
 
 ## Next Steps
 
 - [Migrate from ConnectKit Guide](/guide/migrate-from-connectkit) — Full migration reference
-- [Quick Start](/guide/quick-start) — CinaConnect basics
+- [Quick Start](/guide/quick-start) — Cinacoin basics
 - [React API](/api/react) — Hook documentation

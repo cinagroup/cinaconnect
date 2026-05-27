@@ -1,4 +1,4 @@
-# CinaConnect v0.2.0 — Connect Everything On-Chain
+# Cinacoin v0.2.0 — Connect Everything On-Chain
 
 **Published:** 2026-05-18  
 **Version:** 0.2.0  
@@ -8,9 +8,9 @@
 
 ## 🎉 Executive Summary
 
-CinaConnect v0.2.0 is here — and it's big.
+Cinacoin v0.2.0 is here — and it's big.
 
-We've **published 72 packages** to npm, bringing the entire CinaConnect ecosystem from a single published package to a complete, installable, multi-platform Web3 SDK. From React to Unity, from EVM to XRPL, CinaConnect now covers every chain, every framework, and every platform developers need to build on-chain applications.
+We've **published 72 packages** to npm, bringing the entire Cinacoin ecosystem from a single published package to a complete, installable, multi-platform Web3 SDK. From React to Unity, from EVM to XRPL, Cinacoin now covers every chain, every framework, and every platform developers need to build on-chain applications.
 
 This release represents **64+ built packages**, **104+ test files**, **53+ commits**, and **2 live infrastructure services** (RPC Proxy and Keys Server running on Cloudflare Workers). The demo app ships with 6 fully functional pages wired to real wallet connection logic.
 
@@ -28,7 +28,7 @@ Full React hooks support for the Wallet Call API — batch transactions, atomic 
 - `useCallsStatus` — track async call status
 
 ```tsx
-import { useAtomicBatch, useWalletCapabilities } from '@cinaconnect/react';
+import { useAtomicBatch, useWalletCapabilities } from '@cinacoin/react';
 
 const { capabilities } = useWalletCapabilities();
 const { executeBatch } = useAtomicBatch();
@@ -37,11 +37,11 @@ const { executeBatch } = useAtomicBatch();
 // multiple calls in a single approval.
 ```
 
-### .NET SDK (`@cinaconnect/dotnet`)
+### .NET SDK (`@cinacoin/dotnet`)
 
 A full .NET SDK written in C# with 22 source files:
 
-- **CinaConnectClient** — main entry point
+- **CinacoinClient** — main entry point
 - **RelayClient** — WebSocket relay communication
 - **CryptoUtils** — cryptographic operations
 - **WalletService** — wallet management
@@ -100,31 +100,31 @@ Every major blockchain ecosystem, now with a dedicated adapter:
 ### Web & Framework SDKs
 
 ```bash
-npm install @cinaconnect/react        # React + EIP-5792 hooks
-npm install @cinaconnect/next         # Next.js App Router
-npm install @cinaconnect/vue          # Vue 3 composables
-npm install @cinaconnect/svelte       # Svelte 4/5
-npm install @cinaconnect/angular      # Angular
-npm install @cinaconnect/nuxt         # Nuxt
+npm install @cinacoin/react        # React + EIP-5792 hooks
+npm install @cinacoin/next         # Next.js App Router
+npm install @cinacoin/vue          # Vue 3 composables
+npm install @cinacoin/svelte       # Svelte 4/5
+npm install @cinacoin/angular      # Angular
+npm install @cinacoin/nuxt         # Nuxt
 ```
 
 ### Mobile & Game Engine SDKs
 
 ```bash
-npm install @cinaconnect/react-native # React Native
-npm install @cinaconnect/flutter-dart # Flutter/Dart
-npm install @cinaconnect/android-kotlin  # Android (Kotlin)
-npm install @cinaconnect/ios-swift    # iOS (Swift)
-npm install @cinaconnect/unity-csharp # Unity (C#)
-npm install @cinaconnect/dotnet       # .NET (C#)
+npm install @cinacoin/react-native # React Native
+npm install @cinacoin/flutter-dart # Flutter/Dart
+npm install @cinacoin/android-kotlin  # Android (Kotlin)
+npm install @cinacoin/ios-swift    # iOS (Swift)
+npm install @cinacoin/unity-csharp # Unity (C#)
+npm install @cinacoin/dotnet       # .NET (C#)
 ```
 
 ### Chain Adapters
 
 ```bash
-npm install @cinaconnect/adapter-ethereum
-npm install @cinaconnect/adapter-solana
-npm install @cinaconnect/adapter-bitcoin
+npm install @cinacoin/adapter-ethereum
+npm install @cinacoin/adapter-solana
+npm install @cinacoin/adapter-bitcoin
 # ... and 8 more
 ```
 
@@ -135,14 +135,14 @@ npm install @cinaconnect/adapter-bitcoin
 ### Quick Install
 
 ```bash
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 ```
 
 ### Basic Setup (React)
 
 ```tsx
-import { OnuxProvider, useOnuxAccount, useOnuxNetwork } from '@cinaconnect/react';
-import { mainnet, arbitrum, base } from '@cinaconnect/chains';
+import { OnuxProvider, useOnuxAccount, useOnuxNetwork } from '@cinacoin/react';
+import { mainnet, arbitrum, base } from '@cinacoin/chains';
 
 function App() {
   return (
@@ -167,8 +167,8 @@ function App() {
 Run the included demo app to see it in action:
 
 ```bash
-git clone https://github.com/cinaconnect/cinaconnect.git
-cd cinaconnect
+git clone https://github.com/cinacoin/cinacoin.git
+cd cinacoin
 pnpm install
 pnpm run dev --filter=demo
 # → http://localhost:3000
@@ -185,14 +185,14 @@ The demo includes **6 pages**: Home, Swap, Multi-Chain, Auth, and Batch — all 
 We provide an automated migration tool:
 
 ```bash
-npx @cinaconnect/codemod migrate-from-reown ./src
+npx @cinacoin/codemod migrate-from-reown ./src
 ```
 
 See the [full migration guide](../guide/migrate-from-reown.md) for step-by-step instructions.
 
 ### From v0.1.0
 
-- `encrypt()` and `decrypt()` in `@cinaconnect/core-sdk` are now **synchronous** (no longer `async`)
+- `encrypt()` and `decrypt()` in `@cinacoin/core-sdk` are now **synchronous** (no longer `async`)
 - X25519 key exchange uses real `@noble/curves` (no longer placeholder)
 - Encryption uses real ChaCha20-Poly1305 via `@noble/ciphers` (no longer AES-GCM fallback)
 - New `generateNonce()` utility for 12-byte random nonces
@@ -219,11 +219,11 @@ See the [full migration guide](../guide/migrate-from-reown.md) for step-by-step 
 
 ## 🙏 Thank You
 
-CinaConnect is built by [CinaGroup](https://github.com/cinagroup) and the open-source community. Thank you to every contributor, tester, and early adopter.
+Cinacoin is built by [CinaGroup](https://github.com/cinagroup) and the open-source community. Thank you to every contributor, tester, and early adopter.
 
-- **Full Documentation:** [docs.cinaconnect.io](https://docs.cinaconnect.io)
-- **GitHub:** [github.com/cinaconnect/cinaconnect](https://github.com/cinaconnect/cinaconnect)
-- **npm:** [npmjs.com/org/cinaconnect](https://npmjs.com/org/cinaconnect)
+- **Full Documentation:** [docs.cinacoin.io](https://docs.cinacoin.io)
+- **GitHub:** [github.com/cinacoin/cinacoin](https://github.com/cinacoin/cinacoin)
+- **npm:** [npmjs.com/org/cinacoin](https://npmjs.com/org/cinacoin)
 
 ---
 

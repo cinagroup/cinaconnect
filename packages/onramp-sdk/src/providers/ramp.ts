@@ -55,6 +55,9 @@ export class RampProvider implements OnRampProviderAdapter {
 
     try {
       const res = await fetch(url.toString());
+      if (!res.ok) {
+        return this.estimateQuote(params, info);
+      }
       const data = await res.json();
       const exchangeRate = data.price || 0;
       const cryptoAmount = params.fiatAmount / exchangeRate;

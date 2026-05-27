@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-> Common issues and solutions for CinaConnect development, deployment, and production.
+> Common issues and solutions for Cinacoin development, deployment, and production.
 
 ---
 
@@ -21,7 +21,7 @@
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   debug: true, // verbose console logging
   logger: {
@@ -38,7 +38,7 @@ If the connection takes more than 10 seconds:
 // Test relay latency
 const start = performance.now()
 try {
-  await cinaconnect.connect({ timeout: 10000 })
+  await cinacoin.connect({ timeout: 10000 })
 } catch (error) {
   const latency = performance.now() - start
   console.log(`Connection took ${latency}ms`)
@@ -77,7 +77,7 @@ QR code rendering requires canvas or SVG support. Test in:
 **2. URI is empty or undefined:**
 
 ```typescript
-const uri = await cinaconnect.core.pairing.create()
+const uri = await cinacoin.core.pairing.create()
 if (!uri) {
   console.error('Failed to generate pairing URI')
   // Check relay connection
@@ -94,7 +94,7 @@ function QRDisplay() {
 
   useEffect(() => {
     const refresh = async () => {
-      const newUri = await cinaconnect.core.pairing.create()
+      const newUri = await cinacoin.core.pairing.create()
       setUri(newUri)
     }
 
@@ -241,7 +241,7 @@ Ensure OAuth credentials are correctly configured in the Magic.link dashboard:
 
 ```typescript
 useEffect(() => {
-  cinaconnect.on('accountsChanged', (accounts) => {
+  cinacoin.on('accountsChanged', (accounts) => {
     setAccounts(accounts)
   })
   // Missing cleanup! Listener persists after unmount
@@ -256,10 +256,10 @@ useEffect(() => {
     setAccounts(accounts)
   }
 
-  cinaconnect.on('accountsChanged', handleAccountsChanged)
+  cinacoin.on('accountsChanged', handleAccountsChanged)
 
   return () => {
-    cinaconnect.off('accountsChanged', handleAccountsChanged)
+    cinacoin.off('accountsChanged', handleAccountsChanged)
   }
 }, [])
 ```
@@ -276,13 +276,13 @@ useEffect(() => {
 
   // Register all listeners
   Object.entries(handlers).forEach(([event, handler]) => {
-    cinaconnect.on(event, handler)
+    cinacoin.on(event, handler)
   })
 
   // Cleanup all listeners
   return () => {
     Object.entries(handlers).forEach(([event, handler]) => {
-      cinaconnect.off(event, handler)
+      cinacoin.off(event, handler)
     })
   }
 }, [])
@@ -294,10 +294,10 @@ In development, React 18+ StrictMode renders components twice. Ensure your provi
 
 ```typescript
 // Use useRef to prevent double initialization
-const providerRef = useRef<CinaConnect | null>(null)
+const providerRef = useRef<Cinacoin | null>(null)
 
 if (!providerRef.current) {
-  providerRef.current = new CinaConnect(config)
+  providerRef.current = new Cinacoin(config)
 }
 ```
 
@@ -307,7 +307,7 @@ if (!providerRef.current) {
 
 ### Lazy Loading
 
-Only load CinaConnect when needed:
+Only load Cinacoin when needed:
 
 ```tsx
 import dynamic from 'next/dynamic'
@@ -331,7 +331,7 @@ function Header() {
 
 ### Code Splitting
 
-Split CinaConnect into its own chunk:
+Split Cinacoin into its own chunk:
 
 ```typescript
 // vite.config.ts
@@ -340,7 +340,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          cinaconnect: ['@cinaconnect/react', '@cinaconnect/core'],
+          cinacoin: ['@cinacoin/react', '@cinacoin/core'],
         },
       },
     },
@@ -354,14 +354,14 @@ export default defineConfig({
 # Analyze bundle
 npx vite-bundle-visualizer
 
-# Check which CinaConnect packages are pulling in dependencies
-npm ls @cinaconnect/core
+# Check which Cinacoin packages are pulling in dependencies
+npm ls @cinacoin/core
 ```
 
 **Tips:**
-- Only import what you need: `import { useOnux } from '@cinaconnect/react'` not `import * as CinaConnect from '@cinaconnect/react'`
+- Only import what you need: `import { useOnux } from '@cinacoin/react'` not `import * as Cinacoin from '@cinacoin/react'`
 - Use tree-shaking friendly imports
-- Consider using the lightweight `@cinaconnect/core` without UI components if building custom UI
+- Consider using the lightweight `@cinacoin/core` without UI components if building custom UI
 
 ---
 
@@ -371,32 +371,32 @@ npm ls @cinaconnect/core
 
 ```bash
 # Lint the chart before installing
-helm lint ./deploy/helm/cinaconnect
+helm lint ./deploy/helm/cinacoin
 
 # Dry-run to see what would be deployed
-helm install cinaconnect ./deploy/helm/cinaconnect \
-  --namespace cinaconnect \
+helm install cinacoin ./deploy/helm/cinacoin \
+  --namespace cinacoin \
   --create-namespace \
   --dry-run
 
 # Check required values
-helm show values ./deploy/helm/cinaconnect
+helm show values ./deploy/helm/cinacoin
 ```
 
 ### Pods Not Starting
 
 ```bash
 # Check pod status
-kubectl get pods -n cinaconnect
+kubectl get pods -n cinacoin
 
 # Describe for events
-kubectl describe pod <pod-name> -n cinaconnect
+kubectl describe pod <pod-name> -n cinacoin
 
 # View logs
-kubectl logs <pod-name> -n cinaconnect --tail=100
+kubectl logs <pod-name> -n cinacoin --tail=100
 
 # View previous container logs (CrashLoopBackOff)
-kubectl logs <pod-name> -n cinaconnect --previous
+kubectl logs <pod-name> -n cinacoin --previous
 ```
 
 | Status | Cause | Fix |
@@ -411,13 +411,13 @@ kubectl logs <pod-name> -n cinaconnect --previous
 
 ```bash
 # Check relay pods
-kubectl logs -l app=relay -n cinaconnect --tail=100
+kubectl logs -l app=relay -n cinacoin --tail=100
 
 # Verify NATS connectivity
-kubectl exec -it <nats-pod> -n cinaconnect -- nats-server --version
+kubectl exec -it <nats-pod> -n cinacoin -- nats-server --version
 
 # Check relay config
-kubectl get configmap relay-config -n cinaconnect -o yaml
+kubectl get configmap relay-config -n cinacoin -o yaml
 ```
 
 ---
@@ -429,11 +429,11 @@ kubectl get configmap relay-config -n cinaconnect -o yaml
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   analytics: {
     enabled: true,
-    endpoint: 'https://analytics.cinaconnect.com/v1',
+    endpoint: 'https://analytics.cinacoin.com/v1',
   },
 }
 ```
@@ -444,13 +444,13 @@ const config = {
 
 ```typescript
 import * as Sentry from '@sentry/react'
-import { CinaConnect } from '@cinaconnect/core'
+import { Cinacoin } from '@cinacoin/core'
 
-cinaconnect.on('error', (error) => {
+cinacoin.on('error', (error) => {
   Sentry.captureException(error, {
     tags: {
       error_code: error.code,
-      component: 'cinaconnect',
+      component: 'cinacoin',
     },
   })
 })
@@ -459,7 +459,7 @@ cinaconnect.on('error', (error) => {
 **Custom Event Tracking:**
 
 ```typescript
-cinaconnect.on('connect', (session) => {
+cinacoin.on('connect', (session) => {
   analytics.track('wallet_connected', {
     wallet: session.wallet.name,
     chain: session.chain.id,
@@ -575,7 +575,7 @@ This is normal MetaMask behavior when `eth_requestAccounts` is called and the us
 
 ```typescript
 // MetaMask may return different accounts than previously connected
-cinaconnect.on('accountsChanged', (accounts: string[]) => {
+cinacoin.on('accountsChanged', (accounts: string[]) => {
   if (accounts.length === 0) {
     // User disconnected all accounts
     setConnected(false)
@@ -924,7 +924,7 @@ async function createSiweMessage(address: string) {
   const message = new SiweMessage({
     domain: window.location.host,
     address,
-    statement: 'Sign in to CinaConnect',
+    statement: 'Sign in to Cinacoin',
     uri: window.location.origin,
     version: '1',
     chainId: 1,
@@ -958,7 +958,7 @@ async function createSiweMessage(address: string) {
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   debug: true,
   logger: {
@@ -975,10 +975,10 @@ const config = {
 const isDev = process.env.NODE_ENV === 'development'
 
 const logger = {
-  debug: (...args: any[]) => isDev && console.debug('[CinaConnect]', ...args),
-  info: (...args: any[]) => console.info('[CinaConnect]', ...args),
-  warn: (...args: any[]) => console.warn('[CinaConnect]', ...args),
-  error: (...args: any[]) => console.error('[CinaConnect]', ...args),
+  debug: (...args: any[]) => isDev && console.debug('[Cinacoin]', ...args),
+  info: (...args: any[]) => console.info('[Cinacoin]', ...args),
+  warn: (...args: any[]) => console.warn('[Cinacoin]', ...args),
+  error: (...args: any[]) => console.error('[Cinacoin]', ...args),
   // NEVER log these even in debug mode:
   // private keys, seed phrases, API keys, session tokens
 }
@@ -1026,7 +1026,7 @@ interface State {
   error: Error | null
 }
 
-class CinaConnectErrorBoundary extends Component<Props, State> {
+class CinacoinErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false, error: null }
 
   static getDerivedStateFromError(error: Error): State {
@@ -1035,7 +1035,7 @@ class CinaConnectErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, info: ErrorInfo) {
     // Log to error tracking service
-    console.error('[CinaConnect Error Boundary]', error, info.componentStack)
+    console.error('[Cinacoin Error Boundary]', error, info.componentStack)
   }
 
   render() {
@@ -1057,11 +1057,11 @@ class CinaConnectErrorBoundary extends Component<Props, State> {
 }
 
 // Usage
-<CinaConnectErrorBoundary>
-  <CinaConnectProvider config={config}>
+<CinacoinErrorBoundary>
+  <CinacoinProvider config={config}>
     <App />
-  </CinaConnectProvider>
-</CinaConnectErrorBoundary>
+  </CinacoinProvider>
+</CinacoinErrorBoundary>
 ```
 
 ---
@@ -1084,15 +1084,15 @@ For the complete error code reference, see [Error Code Reference](./error-codes.
 If you're still stuck:
 
 1. **Check logs** — Enable `debug: true` for verbose output
-2. **Search GitHub Issues** — [cinaconnect/cinaconnect/issues](https://github.com/cinaconnect/cinaconnect/issues)
+2. **Search GitHub Issues** — [cinacoin/cinacoin/issues](https://github.com/cinacoin/cinacoin/issues)
 3. **Error codes** — See [Error Code Reference](./error-codes.md)
-4. **Community** — Join CinaConnect community channels
+4. **Community** — Join Cinacoin community channels
 
 ```typescript
 // Maximum debug configuration
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   debug: true,
   logger: {
@@ -1104,4 +1104,4 @@ const config = {
 
 ---
 
-*Troubleshooting Guide — CinaConnect Documentation*
+*Troubleshooting Guide — Cinacoin Documentation*

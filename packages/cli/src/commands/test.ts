@@ -9,7 +9,7 @@ import { spinner, warn } from '../utils/logger.js';
 export function testCommand(cli: Command): void {
   cli
     .command('test')
-    .description('Run CinaConnect tests')
+    .description('Run Cinacoin tests')
     .option('--unit', 'Run unit tests only (vitest)')
     .option('--e2e', 'Run E2E tests only (playwright)')
     .option('--coverage', 'Generate coverage report')

@@ -1,17 +1,17 @@
-# @cinaconnect/cross-chain-sync
+# @cinacoin/cross-chain-sync
 
-CinaConnect Cross-Chain Account Sync — unified state and identity across EVM/Solana/BTC/TON/TRON/Polkadot.
+Cinacoin Cross-Chain Account Sync — unified state and identity across EVM/Solana/BTC/TON/TRON/Polkadot.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/cross-chain-sync
+npm install @cinacoin/cross-chain-sync
 ```
 
 ## Usage
 
 ```ts
-import { StateSync, CrossChainIdentityManager } from '@cinaconnect/cross-chain-sync';
+import { StateSync, CrossChainIdentityManager } from '@cinacoin/cross-chain-sync';
 
 const sync = new StateSync();
 await sync.syncAll();

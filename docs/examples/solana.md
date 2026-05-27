@@ -6,24 +6,24 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react
+npm install @cinacoin/core-sdk @cinacoin/react
 ```
 
 ## Quick Start
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { ConnectButton, useAccount } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
+import { ConnectButton, useAccount } from '@cinacoin/react'
 
-<CinaConnectProvider
+<CinacoinProvider
   config={{
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
     chains: [
       {
         id: 'solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp',
@@ -47,7 +47,7 @@ import { ConnectButton, useAccount } from '@cinaconnect/react'
   }}
 >
   <App />
-</CinaConnectProvider>
+</CinacoinProvider>
 ```
 
 ## Complete Example
@@ -58,7 +58,7 @@ import { ConnectButton, useAccount } from '@cinaconnect/react'
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 import App from './App'
 
 const solanaMainnet = {
@@ -77,10 +77,10 @@ const solanaDevnet = {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         projectId: 'your-project-id',
-        relayUrl: 'wss://relay.cinaconnect.com/v1',
+        relayUrl: 'wss://relay.cinacoin.com/v1',
         chains: [solanaMainnet, solanaDevnet],
         metadata: {
           name: 'Solana dApp',
@@ -91,7 +91,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   </React.StrictMode>,
 )
 ```
@@ -100,10 +100,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // src/App.tsx
-import { useCinaConnect, useAccount, useDisconnect } from '@cinaconnect/react'
+import { useCinacoin, useAccount, useDisconnect } from '@cinacoin/react'
 
 function SolanaApp() {
-  const { connect, status } = useCinaConnect()
+  const { connect, status } = useCinacoin()
   const account = useAccount()
   const { disconnect } = useDisconnect()
 
@@ -138,12 +138,12 @@ export default SolanaApp
 
 ```ts
 // src/solana-wallet.ts
-import { Connector, InjectedProvider } from '@cinaconnect/core-sdk'
+import { Connector, InjectedProvider } from '@cinacoin/core-sdk'
 
 async function connectPhantom() {
   const connector = new Connector({
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
   })
 
   const provider = new InjectedProvider()
@@ -193,12 +193,12 @@ async function sendTransaction(encodedTx: string) {
 ### 4. Connect via Wallet Adapter
 
 ```ts
-import { Connector } from '@cinaconnect/core-sdk'
+import { Connector } from '@cinacoin/core-sdk'
 
 async function connectViaRelay(walletId: string) {
   const connector = new Connector({
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
   })
 
   const result = await connector.connect({

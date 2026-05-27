@@ -1,11 +1,11 @@
-# @cinaconnect/angular
+# @cinacoin/angular
 
-Angular 17+ support for CinaConnect.
+Angular 17+ support for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/angular
+npm install @cinacoin/angular
 ```
 
 ## Usage
@@ -13,11 +13,11 @@ npm install @cinaconnect/angular
 ### Module-based
 
 ```ts
-import { CinaConnectModule } from '@cinaconnect/angular';
+import { CinacoinModule } from '@cinacoin/angular';
 
 @NgModule({
   imports: [
-    CinaConnectModule.forRoot({
+    CinacoinModule.forRoot({
       projectId: 'YOUR_PROJECT_ID',
       networks: [mainnet, arbitrum, base],
     }),
@@ -29,11 +29,11 @@ export class AppModule {}
 ### Standalone Components
 
 ```ts
-import { CinaConnectService, CINA_CONNECT_OPTIONS } from '@cinaconnect/angular';
+import { CinacoinService, CINA_CONNECT_OPTIONS } from '@cinacoin/angular';
 
 @Component({
   providers: [
-    CinaConnectService,
+    CinacoinService,
     { provide: CINA_CONNECT_OPTIONS, useValue: { projectId: 'YOUR_PROJECT_ID' } },
   ],
 })
@@ -59,7 +59,7 @@ export class AppComponent {
   account$ = this.cinaConnect.account$;
   network$ = this.cinaConnect.network$;
 
-  constructor(private cinaConnect: CinaConnectService) {}
+  constructor(private cinaConnect: CinacoinService) {}
 
   connect() {
     this.cinaConnect.open();

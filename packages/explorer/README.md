@@ -1,17 +1,17 @@
-# @cinaconnect/explorer
+# @cinacoin/explorer
 
 Explorer API — wallet/dApp discovery, logo fetching, registry.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/explorer
+npm install @cinacoin/explorer
 ```
 
 ## Usage
 
 ```ts
-import { WalletRegistry, fetchWalletLogo } from '@cinaconnect/explorer';
+import { WalletRegistry, fetchWalletLogo } from '@cinacoin/explorer';
 
 const wallets = await WalletRegistry.search('meta');
 const logoUrl = await fetchWalletLogo(wallet.rdns);

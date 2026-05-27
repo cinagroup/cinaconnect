@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, Alert, } from 'react-native';
-import { useCinaConnect } from '@cinaconnect/react-native';
+import { useCinacoin } from '@cinacoin/react-native';
 const TOKENS = [
     { symbol: 'WETH', icon: '🔷' },
     { symbol: 'USDC', icon: '💵' },
@@ -9,7 +9,7 @@ const TOKENS = [
     { symbol: 'DAI', icon: '🟡' },
 ];
 export function SwapScreen() {
-    const { account } = useCinaConnect();
+    const { account } = useCinacoin();
     const [fromToken, setFromToken] = useState(0);
     const [toToken, setToToken] = useState(1);
     const [amount, setAmount] = useState('');

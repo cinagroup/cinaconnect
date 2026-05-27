@@ -1,5 +1,5 @@
-name: cinaconnect_example
-description: Example app for CinaConnect Flutter SDK
+name: cinacoin_example
+description: Example app for Cinacoin Flutter SDK
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cinaconnect:
+  cinacoin:
     path: ../
 
 flutter:

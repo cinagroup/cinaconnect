@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# health-check.sh — Full monorepo health check for CinaConnect
+# health-check.sh — Full monorepo health check for CinaCoin
 # Usage: ./scripts/health-check.sh
 # Exit codes: 0 = all checks passed, 1 = one or more checks failed
 
@@ -26,7 +26,7 @@ log_warn() { echo -e "  ${YELLOW}⚠️  WARN${NC}  $1"; ((WARN++)); }
 log_info() { echo -e "  ${BLUE}ℹ️  INFO${NC}  $1"; }
 
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║   CinaConnect — Monorepo Health Check               ║"
+echo "║   CinaCoin — Monorepo Health Check               ║"
 echo "║   $(date -u '+%Y-%m-%d %H:%M:%S UTC')                          ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo ""

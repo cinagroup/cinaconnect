@@ -104,7 +104,7 @@ export class PushServer {
       : "0.00";
 
     return {
-      service: "cinaconnect-push-server",
+      service: "cinacoin-push-server",
       delivery_log_size: this.deliveryLog.length,
       success_count: successCount,
       failure_count: failureCount,

@@ -1,5 +1,5 @@
 /**
- * Svelte actions (directives) for CinaConnect.
+ * Svelte actions (directives) for Cinacoin.
  *
  * Use with `use:` directive to add auto-connect and auto-network-switching
  * behavior to any element.
@@ -7,7 +7,7 @@
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect>Connect Wallet</button>
@@ -25,7 +25,7 @@ import { open, close, switchChain, isConnected, getConnector } from './stores.js
 /**
  * Parameters for the `cinaConnectConnect` action.
  */
-export interface CinaConnectConnectParams {
+export interface CinacoinConnectParams {
   /** Whether the action is enabled. Defaults to `true`. */
   enabled?: boolean;
 
@@ -49,7 +49,7 @@ export interface CinaConnectConnectParams {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect={{ enabled: true }}>
@@ -59,17 +59,17 @@ export interface CinaConnectConnectParams {
  */
 export const cinaConnectConnect: Action<
   HTMLElement,
-  CinaConnectConnectParams | undefined
+  CinacoinConnectParams | undefined
 > = (
   node: HTMLElement,
-  params: CinaConnectConnectParams = {},
+  params: CinacoinConnectParams = {},
 ) => {
   const { enabled = true, ariaLabel, connectorId } = params;
 
   function handleClick(_e: MouseEvent) {
     if (!enabled) return;
     open(connectorId ? { connectorId } : undefined).catch((err: unknown) => {
-      console.error('[CinaConnect] Connection failed:', err);
+      console.error('[Cinacoin] Connection failed:', err);
     });
   }
 
@@ -84,7 +84,7 @@ export const cinaConnectConnect: Action<
   node.addEventListener('click', handleClick);
 
   return {
-    update(newParams: CinaConnectConnectParams = {}) {
+    update(newParams: CinacoinConnectParams = {}) {
       // Enabled state can be toggled dynamically
       if (newParams.enabled !== enabled) {
         // Re-attach or disable based on enabled state
@@ -104,7 +104,7 @@ export const cinaConnectConnect: Action<
 /**
  * Parameters for the `cinaConnectNetwork` action.
  */
-export interface CinaConnectNetworkParams {
+export interface CinacoinNetworkParams {
   /** Target chain ID to switch to. */
   chainId: number;
 
@@ -128,8 +128,8 @@ export interface CinaConnectNetworkParams {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectNetwork } from '@cinaconnect/svelte';
- *   import { chainId } from '@cinaconnect/svelte';
+ *   import { cinaConnectNetwork } from '@cinacoin/svelte';
+ *   import { chainId } from '@cinacoin/svelte';
  *   let currentChainId;
  *   chainId.subscribe(v => currentChainId = v);
  * </script>
@@ -141,13 +141,13 @@ export interface CinaConnectNetworkParams {
  */
 export const cinaConnectNetwork: Action<
   HTMLElement,
-  CinaConnectNetworkParams | undefined
+  CinacoinNetworkParams | undefined
 > = (
   node: HTMLElement,
-  params: CinaConnectNetworkParams | undefined,
+  params: CinacoinNetworkParams | undefined,
 ) => {
   if (!params || params.chainId == null) {
-    throw new Error('[CinaConnect] cinaConnectNetwork requires a chainId parameter.');
+    throw new Error('[Cinacoin] cinaConnectNetwork requires a chainId parameter.');
   }
 
   let { chainId: targetChainId, enabled = true, ariaLabel } = params;
@@ -155,7 +155,7 @@ export const cinaConnectNetwork: Action<
   function handleClick(_e: MouseEvent) {
     if (!enabled) return;
     switchChain(targetChainId).catch((err: unknown) => {
-      console.error(`[CinaConnect] Failed to switch to chain ${targetChainId}:`, err);
+      console.error(`[Cinacoin] Failed to switch to chain ${targetChainId}:`, err);
     });
   }
 
@@ -166,7 +166,7 @@ export const cinaConnectNetwork: Action<
   node.addEventListener('click', handleClick);
 
   return {
-    update(newParams: CinaConnectNetworkParams | undefined) {
+    update(newParams: CinacoinNetworkParams | undefined) {
       if (newParams && newParams.chainId != null) {
         targetChainId = newParams.chainId;
         enabled = newParams.enabled ?? true;

@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, ElementRef, Renderer2 } from '@angular/core';
-import { CinaConnectService } from '../cinaconnect.service.js';
+import { CinacoinService } from '../cinacoin.service.js';
 
 /**
  * Directive that automatically triggers wallet connection on click.
@@ -22,7 +22,7 @@ export class ConnectDirective {
   @Input('cinaConnectDisabled') disabled = false;
 
   constructor(
-    private _service: CinaConnectService,
+    private _service: CinacoinService,
     private _el: ElementRef<HTMLElement>,
     private _renderer: Renderer2,
   ) {

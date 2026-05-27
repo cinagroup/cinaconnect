@@ -1,17 +1,17 @@
-# @cinaconnect/onramp-sdk
+# @cinacoin/onramp-sdk
 
-CinaConnect On-Ramp Aggregator SDK — multi-provider fiat-to-crypto gateway.
+Cinacoin On-Ramp Aggregator SDK — multi-provider fiat-to-crypto gateway.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/onramp-sdk
+npm install @cinacoin/onramp-sdk
 ```
 
 ## Usage
 
 ```ts
-import { OnRampAggregator, OnRampWidget } from '@cinaconnect/onramp-sdk';
+import { OnRampAggregator, OnRampWidget } from '@cinacoin/onramp-sdk';
 
 const aggregator = new OnRampAggregator();
 const quote = await aggregator.getQuote({ amount: 100, currency: 'USD', asset: 'USDC' });

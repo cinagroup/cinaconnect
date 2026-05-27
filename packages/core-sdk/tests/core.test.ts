@@ -1,7 +1,7 @@
 /**
  * core-sdk/tests/core.test.ts
  *
- * Tests for CinaConnectCore initialization, Connector base class, and Connector
+ * Tests for CinacoinCore initialization, Connector base class, and Connector
  * abstract interface contract.
  */
 

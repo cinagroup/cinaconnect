@@ -1,11 +1,11 @@
 # Safe Decoder
 
-> `@cinaconnect/safe-decoder` — Safe (Gnosis) transaction decoder for CinaConnect.
+> `@cinacoin/safe-decoder` — Safe (Gnosis) transaction decoder for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/safe-decoder
+npm install @cinacoin/safe-decoder
 ```
 
 ## Overview

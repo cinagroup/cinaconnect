@@ -20,8 +20,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:cinaconnect/src/types.dart';
-import 'package:cinaconnect/src/wallet_manager.dart';
+import 'package:cinacoin/src/types.dart';
+import 'package:cinacoin/src/wallet_manager.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // ─── Mocks ─────────────────────────────────────────────────────────────────
@@ -100,16 +100,16 @@ void main() {
 
     // Simulate existing session in storage
     final sessionData = buildSessionData();
-    when(() => mockStorage.read(key: 'cinaconnect_encrypted_session'))
+    when(() => mockStorage.read(key: 'cinacoin_encrypted_session'))
         .thenAnswer((_) async => jsonEncode(sessionData));
-    when(() => mockStorage.read(key: 'cinaconnect_session_expiry'))
+    when(() => mockStorage.read(key: 'cinacoin_session_expiry'))
         .thenAnswer((_) async => DateTime.now().add(const Duration(hours: 1)).toIso8601String());
 
     final manager = createWalletManager(secureStorage: mockStorage);
 
     // Verify session was restored from encrypted storage
-    verify(() => mockStorage.read(key: 'cinaconnect_encrypted_session')).called(1);
-    verify(() => mockStorage.read(key: 'cinaconnect_session_expiry')).called(1);
+    verify(() => mockStorage.read(key: 'cinacoin_encrypted_session')).called(1);
+    verify(() => mockStorage.read(key: 'cinacoin_session_expiry')).called(1);
 
     await manager.dispose();
   });
@@ -120,11 +120,11 @@ void main() {
 
   test('Expired session is cleared on restore', () async {
     final sessionData = buildSessionData();
-    when(() => mockStorage.read(key: 'cinaconnect_encrypted_session'))
+    when(() => mockStorage.read(key: 'cinacoin_encrypted_session'))
         .thenAnswer((_) async => jsonEncode(sessionData));
 
     // Set expiry to the past
-    when(() => mockStorage.read(key: 'cinaconnect_session_expiry'))
+    when(() => mockStorage.read(key: 'cinacoin_session_expiry'))
         .thenAnswer((_) async => DateTime.now().subtract(const Duration(hours: 1)).toIso8601String());
 
     // Allow delete calls
@@ -136,7 +136,7 @@ void main() {
     expect(manager.status, ConnectionStatus.disconnected);
 
     // Verify expired session was cleared
-    verify(() => mockStorage.delete(key: 'cinaconnect_encrypted_session')).called(1);
+    verify(() => mockStorage.delete(key: 'cinacoin_encrypted_session')).called(1);
 
     await manager.dispose();
   });
@@ -146,9 +146,9 @@ void main() {
   // ============================================================
 
   test('Corrupted session data is handled without crash', () async {
-    when(() => mockStorage.read(key: 'cinaconnect_encrypted_session'))
+    when(() => mockStorage.read(key: 'cinacoin_encrypted_session'))
         .thenAnswer((_) async => 'not-valid-json{{{');
-    when(() => mockStorage.read(key: 'cinaconnect_session_expiry'))
+    when(() => mockStorage.read(key: 'cinacoin_session_expiry'))
         .thenAnswer((_) async => 'invalid-date');
     when(() => mockStorage.delete(key: any(named: 'key'))).thenAnswer((_) async => '');
 
@@ -158,7 +158,7 @@ void main() {
     expect(manager.status, ConnectionStatus.disconnected);
 
     // Corrupted data should be cleared
-    verify(() => mockStorage.delete(key: 'cinaconnect_encrypted_session')).called(1);
+    verify(() => mockStorage.delete(key: 'cinacoin_encrypted_session')).called(1);
 
     await manager.dispose();
   });
@@ -176,8 +176,8 @@ void main() {
     await manager.disconnect();
 
     // Verify both keys are deleted
-    verify(() => mockStorage.delete(key: 'cinaconnect_encrypted_session')).called(1);
-    verify(() => mockStorage.delete(key: 'cinaconnect_session_expiry')).called(1);
+    verify(() => mockStorage.delete(key: 'cinacoin_encrypted_session')).called(1);
+    verify(() => mockStorage.delete(key: 'cinacoin_session_expiry')).called(1);
 
     expect(manager.status, ConnectionStatus.disconnected);
     expect(manager.isConnected, isFalse);
@@ -254,9 +254,9 @@ void main() {
       ],
     );
 
-    when(() => mockStorage.read(key: 'cinaconnect_encrypted_session'))
+    when(() => mockStorage.read(key: 'cinacoin_encrypted_session'))
         .thenAnswer((_) async => jsonEncode(sessionData));
-    when(() => mockStorage.read(key: 'cinaconnect_session_expiry'))
+    when(() => mockStorage.read(key: 'cinacoin_session_expiry'))
         .thenAnswer((_) async => DateTime.now().add(const Duration(hours: 1)).toIso8601String());
 
     final manager = createWalletManager(secureStorage: mockStorage);

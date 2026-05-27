@@ -1,14 +1,14 @@
 /**
- * CinaConnect Sui Adapter — Sui chain adapter package.
+ * Cinacoin Sui Adapter — Sui chain adapter package.
  *
  * Provides a {@link SuiChainAdapter} that implements the
- * {@link ChainAdapter} interface from @cinaconnect/core-sdk,
+ * {@link ChainAdapter} interface from @cinacoin/core-sdk,
  * plus wallet connectors for Sui Wallet, Suiet, Ethos, and Martian.
  *
  * @packageDocumentation
  * @example
  * ```ts
- * import { SuiChainAdapter, SUI_CHAINS, SUI_WALLETS } from '@cinaconnect/adapter-sui';
+ * import { SuiChainAdapter, SUI_CHAINS, SUI_WALLETS } from '@cinacoin/adapter-sui';
  *
  * const adapter = new SuiChainAdapter();
  * adapter.registerChains(SUI_CHAINS);

@@ -18,7 +18,7 @@
  * )
  * ```
  */
-package com.cinaconnect.ui
+package com.cinacoin.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -43,10 +43,10 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.cinaconnect.core.AccountInfo
-import com.cinaconnect.core.ConnectionStatus
-import com.cinaconnect.core.CinaConnect
-import com.cinaconnect.core.ThemeColors
+import com.cinacoin.core.AccountInfo
+import com.cinacoin.core.ConnectionStatus
+import com.cinacoin.core.Cinacoin
+import com.cinacoin.core.ThemeColors
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -78,7 +78,7 @@ fun ConnectButton(
     showNetwork: Boolean = false,
     onPress: (() -> Unit)? = null,
     onDisconnect: (() -> Unit)? = null,
-    onChainUX: CinaConnect = CinaConnect.getInstance(),
+    onChainUX: Cinacoin = Cinacoin.getInstance(),
     modifier: Modifier = Modifier
 ) {
     val status by onChainUX.status.collectAsState()
@@ -211,7 +211,7 @@ private fun truncateAddress(address: String, prefix: Int = 4, suffix: Int = 4): 
 private fun handleButtonPress(
     status: ConnectionStatus,
     account: AccountInfo?,
-    onChainUX: CinaConnect,
+    onChainUX: Cinacoin,
     onPress: (() -> Unit)?,
     onDisconnect: (() -> Unit)?
 ) {
@@ -227,6 +227,6 @@ private fun handleButtonPress(
         try {
             onChainUX.connect("metamask")
             onPress?.invoke()
-        } catch (_: Exception) { /* handled by CinaConnect state */ }
+        } catch (_: Exception) { /* handled by Cinacoin state */ }
     }
 }

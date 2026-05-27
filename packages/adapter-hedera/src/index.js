@@ -1,13 +1,13 @@
 /**
- * @cinaconnect/adapter-hedera
+ * @cinacoin/adapter-hedera
  *
- * Hedera Hashgraph chain adapter for CinaConnect.
+ * Hedera Hashgraph chain adapter for Cinacoin.
  *
  * Supports Blade Wallet, HashPack, and Kantara Wallet.
  *
  * @example
  * ```ts
- * import { HederaAdapter, HashPackConnector, announceHederaProviders } from '@cinaconnect/adapter-hedera';
+ * import { HederaAdapter, HashPackConnector, announceHederaProviders } from '@cinacoin/adapter-hedera';
  *
  * // Announce providers for EIP-6963 discovery
  * announceHederaProviders();

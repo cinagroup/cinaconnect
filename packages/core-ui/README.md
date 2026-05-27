@@ -1,17 +1,17 @@
-# @cinaconnect/core-ui
+# @cinacoin/core-ui
 
-Web Components core for CinaConnect — built with Lit.
+Web Components core for Cinacoin — built with Lit.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-ui
+npm install @cinacoin/core-ui
 ```
 
 ## Usage
 
 ```ts
-import { t, setLocale, I18nMixin } from '@cinaconnect/core-ui';
+import { t, setLocale, I18nMixin } from '@cinacoin/core-ui';
 
 await initI18n('en');
 const greeting = t('connect.wallet');

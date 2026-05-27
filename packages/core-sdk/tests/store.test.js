@@ -2,10 +2,10 @@
  * Tests for Zustand store state management.
  */
 import { describe, it, expect } from 'vitest';
-import { createCinaConnectStore, initializeStore } from '../src/store.js';
-describe('createCinaConnectStore', () => {
+import { createCinacoinStore, initializeStore } from '../src/store.js';
+describe('createCinacoinStore', () => {
     it('should initialize with disconnected status', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         const state = store.getState();
         expect(state.status).toBe('disconnected');
         expect(state.accounts).toEqual([]);
@@ -15,7 +15,7 @@ describe('createCinaConnectStore', () => {
         expect(state.error).toBeNull();
     });
     it('should set connection state', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         store.getState().setConnection({
             accounts: ['0xabc'],
             chainId: 1,
@@ -31,7 +31,7 @@ describe('createCinaConnectStore', () => {
         expect(state.error).toBeNull();
     });
     it('should set error state', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         const err = new Error('Test error');
         store.getState().setError(err);
         const state = store.getState();
@@ -39,7 +39,7 @@ describe('createCinaConnectStore', () => {
         expect(state.error).toBe(err);
     });
     it('should set status and clear error', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         store.getState().setError(new Error('Test'));
         store.getState().setStatus('disconnected');
         const state = store.getState();
@@ -47,7 +47,7 @@ describe('createCinaConnectStore', () => {
         expect(state.error).toBeNull();
     });
     it('should set and retrieve chains', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         const chains = [
             { id: '1', name: 'Ethereum', rpcUrl: 'https://eth.rpc' },
             { id: '137', name: 'Polygon', rpcUrl: 'https://polygon.rpc' },
@@ -56,13 +56,13 @@ describe('createCinaConnectStore', () => {
         expect(store.getState().chains).toEqual(chains);
     });
     it('should set active chain', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         const chain = { id: '1', name: 'Ethereum', rpcUrl: 'https://eth.rpc' };
         store.getState().setActiveChain(chain);
         expect(store.getState().activeChain).toEqual(chain);
     });
     it('should add pairings and set active pairing', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         const pairing = {
             topic: 'topic-1',
             uri: 'wc:uri',
@@ -75,7 +75,7 @@ describe('createCinaConnectStore', () => {
         expect(state.activePairing).toEqual(pairing);
     });
     it('should set relay URL and project ID', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         store.getState().setRelayUrl('wss://relay.example.com');
         store.getState().setProjectId('project-123');
         const state = store.getState();
@@ -83,7 +83,7 @@ describe('createCinaConnectStore', () => {
         expect(state.projectId).toBe('project-123');
     });
     it('should disconnect and reset all fields', () => {
-        const store = createCinaConnectStore();
+        const store = createCinacoinStore();
         // Set some state
         store.getState().setConnection({
             accounts: ['0xabc'],

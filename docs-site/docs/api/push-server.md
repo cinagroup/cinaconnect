@@ -1,6 +1,6 @@
 # Push Server
 
-> `@cinaconnect/push-server` — Push notification delivery server for CinaConnect.
+> `@cinacoin/push-server` — Push notification delivery server for Cinacoin.
 
 ## Overview
 

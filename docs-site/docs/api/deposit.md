@@ -1,11 +1,11 @@
 # Deposit
 
-> `@cinaconnect/deposit` — Deposit tracking and management for CinaConnect.
+> `@cinacoin/deposit` — Deposit tracking and management for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/deposit
+npm install @cinacoin/deposit
 ```
 
 ## Overview

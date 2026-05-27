@@ -1,4 +1,4 @@
-package com.cinaconnect.deeplink
+package com.cinacoin.deeplink
 
 import org.junit.Test
 import org.junit.Assert.*

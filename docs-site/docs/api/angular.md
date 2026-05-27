@@ -1,21 +1,21 @@
 # Angular
 
-> `@cinaconnect/angular` — Angular adapter for CinaConnect.
+> `@cinacoin/angular` — Angular adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/angular @cinaconnect/core-sdk
+npm install @cinacoin/angular @cinacoin/core-sdk
 ```
 
 ## Usage
 
 ```typescript
-import { CinaConnectModule } from '@cinaconnect/angular'
+import { CinacoinModule } from '@cinacoin/angular'
 
 @NgModule({
   imports: [
-    CinaConnectModule.forRoot({
+    CinacoinModule.forRoot({
       projectId: 'your-project-id',
     }),
   ],

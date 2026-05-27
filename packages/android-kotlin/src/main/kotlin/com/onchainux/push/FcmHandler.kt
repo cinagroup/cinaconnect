@@ -23,7 +23,7 @@
  * 2. Create a FirebaseMessagingService subclass
  * 3. Register it in AndroidManifest.xml
  */
-package com.cinaconnect.push
+package com.cinacoin.push
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -32,7 +32,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import com.cinaconnect.core.CinaConnect
+import com.cinacoin.core.Cinacoin
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.RemoteMessage
 
@@ -65,7 +65,7 @@ typealias TokenCallback = (String) -> Unit
 typealias ErrorCallback = (Exception) -> Unit
 
 /**
- * Handler for Firebase Cloud Messaging in CinaConnect.
+ * Handler for Firebase Cloud Messaging in Cinacoin.
  */
 class FcmHandler {
 
@@ -87,12 +87,12 @@ class FcmHandler {
     var onRegistrationFailed: ErrorCallback? = null
 
     private var context: Context? = null
-    private var notificationChannelId = "cinaconnect_wallet"
+    private var notificationChannelId = "cinacoin_wallet"
 
     /**
      * Initialize FCM handler with application context.
      */
-    fun initialize(context: Context, channelId: String = "cinaconnect_wallet") {
+    fun initialize(context: Context, channelId: String = "cinacoin_wallet") {
         this.context = context.applicationContext
         this.notificationChannelId = channelId
         createNotificationChannel()
@@ -111,7 +111,7 @@ class FcmHandler {
                     deviceToken = token
                     isRegistered = true
 
-                    // Send token to your CinaConnect relay server in production
+                    // Send token to your Cinacoin relay server in production
                     onTokenRegistered?.invoke(token)
                 } else {
                     isRegistered = false
@@ -160,7 +160,7 @@ class FcmHandler {
         val type = WalletNotificationType.values().find { it.value == typeStr }
             ?: WalletNotificationType.OTHER
 
-        val title = message.notification?.title ?: data["title"] ?: "CinaConnect Notification"
+        val title = message.notification?.title ?: data["title"] ?: "Cinacoin Notification"
         val body = message.notification?.body ?: data["body"] ?: ""
         val sessionId = data["sessionId"]
 

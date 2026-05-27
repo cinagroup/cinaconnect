@@ -17,7 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "paths": {
-      "@cinaconnect/adapter-xrpl": ["./src/index.ts"]
+      "@cinacoin/adapter-xrpl": ["./src/index.ts"]
     }
   },
   "include": ["src"],

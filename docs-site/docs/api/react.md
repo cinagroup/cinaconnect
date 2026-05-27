@@ -1,38 +1,38 @@
 # React
 
-> `@cinaconnect/react` — React hooks, provider, and UI components for CinaConnect.
+> `@cinacoin/react` — React hooks, provider, and UI components for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/react @cinaconnect/core-sdk
+npm install @cinacoin/react @cinacoin/core-sdk
 ```
 
-## CinaConnectProvider
+## CinacoinProvider
 
-Wrap your app with `CinaConnectProvider` to give all child components access to the CinaConnect context.
+Wrap your app with `CinacoinProvider` to give all child components access to the Cinacoin context.
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 function App() {
   return (
-    <CinaConnectProvider
+    <CinacoinProvider
       adapter={new EvmAdapter({
         projectId: 'your-project-id',
         relayUrl: 'wss://relay.yourdomain.com/v1',
       })}
     >
       {children}
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
 
 ## Hooks
 
-- `useCinaConnect()` — Access the core SDK instance
+- `useCinacoin()` — Access the core SDK instance
 - `useAccount()` — Current account state
 - `useConnect()` — Connect to a wallet
 - `useDisconnect()` — Disconnect from current wallet
@@ -43,7 +43,7 @@ function App() {
 ## ConnectButton
 
 ```tsx
-import { ConnectButton } from '@cinaconnect/react'
+import { ConnectButton } from '@cinacoin/react'
 
 function Header() {
   return <ConnectButton />

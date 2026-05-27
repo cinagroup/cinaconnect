@@ -1,4 +1,4 @@
-# CinaConnect — Setup Guide
+# Cinacoin — Setup Guide
 
 > **Version:** 1.0.0  
 > **Last Updated:** 2026-05-18
@@ -112,10 +112,10 @@ pnpm run build
 
 ```bash
 # Build a specific package
-pnpm --filter @cinaconnect/core-sdk run build
+pnpm --filter @cinacoin/core-sdk run build
 
 # Build with specific turbo filters
-pnpm run build --filter=@cinaconnect/react...
+pnpm run build --filter=@cinacoin/react...
 ```
 
 ### Verify Build
@@ -196,7 +196,7 @@ pnpm run dev
 pnpm run test
 
 # Run tests for specific package
-pnpm --filter @cinaconnect/core-sdk run test
+pnpm --filter @cinacoin/core-sdk run test
 
 # Run with coverage
 pnpm run test -- --coverage
@@ -226,7 +226,7 @@ pnpm run typedoc
 
 ```bash
 # Build Docker image
-docker build -t cinaconnect .
+docker build -t cinacoin .
 
 # Run with docker-compose
 docker-compose up -d
@@ -266,4 +266,4 @@ See `DELIVERY/README.md` → Deployment Checklist section.
 
 ---
 
-*Setup guide for CinaConnect v1.0.0. For detailed architecture, see `Master-Architecture.md`.*
+*Setup guide for Cinacoin v1.0.0. For detailed architecture, see `Master-Architecture.md`.*

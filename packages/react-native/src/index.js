@@ -1,9 +1,9 @@
 /**
- * @cinaconnect/react-native
+ * @cinacoin/react-native
  *
- * React Native adapter for CinaConnect — native UI components, not Web Components.
+ * React Native adapter for Cinacoin — native UI components, not Web Components.
  */
-export { CinaConnectProvider, useCinaConnectContext } from './CinaConnectProvider.js';
+export { CinacoinProvider, useCinacoinContext } from './CinacoinProvider.js';
 export { ConnectButton } from './ConnectButton.js';
 export { ConnectModal } from './ConnectModal.js';
 export { QRScanner } from './QRScanner.js';

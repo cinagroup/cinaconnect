@@ -1,7 +1,7 @@
 # SDK Architecture & Core Package Gap Analysis
 
 **Date:** 2026-05-17  
-**Comparison:** CinaAuth/CinaConnect (34 packages) vs Reown AppKit (20 packages + 8 adapters)  
+**Comparison:** CinaAuth/Cinacoin (34 packages) vs Reown AppKit (20 packages + 8 adapters)  
 **Reown Version:** 1.7.1 (from `package.json` on GitHub main)  
 **CinaAuth Version:** 0.1.0 (from core-sdk/index.ts VERSION constant)
 
@@ -58,35 +58,35 @@
 
 ---
 
-## 2. CinaAuth/CinaConnect Full Package Inventory
+## 2. CinaAuth/Cinacoin Full Package Inventory
 
 ### JS/TS Client SDK Packages (24)
 
 | Package | NPM Name | LOC (src) | Tests (LOC) | Total Files | Purpose |
 |---------|----------|-----------|-------------|-------------|---------|
-| `core-sdk` | `@cinaconnect/core` | 8,605 | 7,312 | 67+30 | Chain-agnostic core, adapters (11 chains), connector, session, store, events, EIP-6963, deep linking, transports |
-| `core-ui` | `@cinaconnect/core-ui` | 3,427 | 1,867 | 31+10 | Web Components (connect button, modal, chain switcher, wallet list, toast), i18n (10 locales), design system, performance |
-| `react` | `@cinaconnect/react` | 620 | 276 | 7+1 | React bindings — Provider, hooks (useAccount, useChainId, useConnect, useDisconnect), wrapper components |
-| `react-native` | `@cinaconnect/react-native` | 2,314 | 615 | 9+3 | React Native — native components, QRScanner, WalletConnect provider |
-| `vue` | `@cinaconnect/vue` | 321 | 424 | 7+3 | Vue 3 bindings — Provider, composables, components |
-| `walletconnect-v2` | `@cinaconnect/walletconnect-v2` | 3,367 | 1,933 | 15+6 | Full WCv2 implementation — relay, crypto (envelope encoding), pairing, session, methods, wallet registry |
-| `siwe` | `@cinaconnect/siwe` | 780 | 928 | 9+3 | Sign-In with Ethereum — message generation, validation |
-| `siwx` | `@cinaconnect/siwx` | 764 | 444 | 10+4 | Sign-In with X — chain-agnostic (EVM, Solana, Bitcoin) |
-| `social-login` | `@cinaconnect/social-login` | 1,131 | 1,270 | 13+6 | OAuth2 social login — Google, Apple, Twitter/X, email + HD wallet derivation |
-| `swap-sdk` | `@cinaconnect/swap-sdk` | 1,213 | 729 | 11+3 | Swap aggregator — Uniswap, 1inch, 0x executors, slippage protection |
-| `onramp-sdk` | `@cinaconnect/onramp-sdk` | 1,064 | 766 | 12+5 | On-ramp aggregator — MoonPay, Ramp, Transak providers, widget |
-| `session-keys` | `@cinaconnect/session-keys` | 1,793 | 1,039 | 10+3 | ERC-4337 session keys — policies, batch, social recovery |
-| `aa-sdk` | `@cinaconnect/aa-sdk` | 486 | 213 | 7+1 | Account Abstraction — SmartAccount, factory, paymaster, bundler client |
-| `analytics` | `@cinaconnect/analytics` | 885 | 114 | 8+1 | GDPR-compliant analytics — event tracking, metrics, consent management |
-| `batch-transaction` | `@cinaconnect/batch-transaction` | 481 | 202 | 10+2 | Batch transactions — atomic ops (transfer, approve, swap, custom) |
-| `gas-estimator` | `@cinaconnect/gas-estimator` | 409 | 132 | 7+1 | Gas estimation for EVM and Solana |
-| `token-list` | `@cinaconnect/token-list` | 569 | 181 | 8+1 | Token discovery — CoinGecko, TrustWallet sources, LRU cache |
-| `cross-chain-sync` | `@cinaconnect/cross-chain-sync` | 735 | 327 | 10+2 | Cross-chain state sync — EVM/Solana/BTC identity linking |
-| `passkey-auth` | `@cinaconnect/passkey-auth` | 645 | 126 | 7+1 | WebAuthn passkey authentication |
-| `wallet-recommender` | `@cinaconnect/wallet-recommender` | 373 | 202 | 4+1 | Wallet recommendation engine with scoring |
-| `cli` | `@cinaconnect/cli` | 628 | 586 | 11+4 | CLI — init, test commands |
-| `design-tokens` | `@cinaconnect/design-tokens` | — | — | 4+2 | Design tokens — default/light/minimal themes, CSS variables |
-| `ens-resolver` | `@cinaconnect/ens-resolver` | ~100 | 0 | 2+0 | ENS contract resolver |
+| `core-sdk` | `@cinacoin/core` | 8,605 | 7,312 | 67+30 | Chain-agnostic core, adapters (11 chains), connector, session, store, events, EIP-6963, deep linking, transports |
+| `core-ui` | `@cinacoin/core-ui` | 3,427 | 1,867 | 31+10 | Web Components (connect button, modal, chain switcher, wallet list, toast), i18n (10 locales), design system, performance |
+| `react` | `@cinacoin/react` | 620 | 276 | 7+1 | React bindings — Provider, hooks (useAccount, useChainId, useConnect, useDisconnect), wrapper components |
+| `react-native` | `@cinacoin/react-native` | 2,314 | 615 | 9+3 | React Native — native components, QRScanner, WalletConnect provider |
+| `vue` | `@cinacoin/vue` | 321 | 424 | 7+3 | Vue 3 bindings — Provider, composables, components |
+| `walletconnect-v2` | `@cinacoin/walletconnect-v2` | 3,367 | 1,933 | 15+6 | Full WCv2 implementation — relay, crypto (envelope encoding), pairing, session, methods, wallet registry |
+| `siwe` | `@cinacoin/siwe` | 780 | 928 | 9+3 | Sign-In with Ethereum — message generation, validation |
+| `siwx` | `@cinacoin/siwx` | 764 | 444 | 10+4 | Sign-In with X — chain-agnostic (EVM, Solana, Bitcoin) |
+| `social-login` | `@cinacoin/social-login` | 1,131 | 1,270 | 13+6 | OAuth2 social login — Google, Apple, Twitter/X, email + HD wallet derivation |
+| `swap-sdk` | `@cinacoin/swap-sdk` | 1,213 | 729 | 11+3 | Swap aggregator — Uniswap, 1inch, 0x executors, slippage protection |
+| `onramp-sdk` | `@cinacoin/onramp-sdk` | 1,064 | 766 | 12+5 | On-ramp aggregator — MoonPay, Ramp, Transak providers, widget |
+| `session-keys` | `@cinacoin/session-keys` | 1,793 | 1,039 | 10+3 | ERC-4337 session keys — policies, batch, social recovery |
+| `aa-sdk` | `@cinacoin/aa-sdk` | 486 | 213 | 7+1 | Account Abstraction — SmartAccount, factory, paymaster, bundler client |
+| `analytics` | `@cinacoin/analytics` | 885 | 114 | 8+1 | GDPR-compliant analytics — event tracking, metrics, consent management |
+| `batch-transaction` | `@cinacoin/batch-transaction` | 481 | 202 | 10+2 | Batch transactions — atomic ops (transfer, approve, swap, custom) |
+| `gas-estimator` | `@cinacoin/gas-estimator` | 409 | 132 | 7+1 | Gas estimation for EVM and Solana |
+| `token-list` | `@cinacoin/token-list` | 569 | 181 | 8+1 | Token discovery — CoinGecko, TrustWallet sources, LRU cache |
+| `cross-chain-sync` | `@cinacoin/cross-chain-sync` | 735 | 327 | 10+2 | Cross-chain state sync — EVM/Solana/BTC identity linking |
+| `passkey-auth` | `@cinacoin/passkey-auth` | 645 | 126 | 7+1 | WebAuthn passkey authentication |
+| `wallet-recommender` | `@cinacoin/wallet-recommender` | 373 | 202 | 4+1 | Wallet recommendation engine with scoring |
+| `cli` | `@cinacoin/cli` | 628 | 586 | 11+4 | CLI — init, test commands |
+| `design-tokens` | `@cinacoin/design-tokens` | — | — | 4+2 | Design tokens — default/light/minimal themes, CSS variables |
+| `ens-resolver` | `@cinacoin/ens-resolver` | ~100 | 0 | 2+0 | ENS contract resolver |
 
 ### Rust Server Packages (6)
 
@@ -103,10 +103,10 @@
 
 | Package | Language | LOC | Files | Tests | Purpose |
 |---------|----------|-----|-------|-------|---------|
-| `android-kotlin` | Kotlin | ~3,081 | 13 | 7 | Android SDK — CinaConnect core, WC client, UI, deeplinks, push |
-| `ios-swift` | Swift | ~5,537 | 21 | 0 | iOS SDK — CinaConnect core, WC client, UI, deeplinks, push |
+| `android-kotlin` | Kotlin | ~3,081 | 13 | 7 | Android SDK — Cinacoin core, WC client, UI, deeplinks, push |
+| `ios-swift` | Swift | ~5,537 | 21 | 0 | iOS SDK — Cinacoin core, WC client, UI, deeplinks, push |
 | `flutter-dart` | Dart | ~4,397 | 22 | 9 | Flutter SDK — adapters, auth, UI, deep links, push |
-| `unity-csharp` | C# | ~3,084 | 20 | 0 | Unity SDK — CinaConnect core, adapters, UI, wallet management |
+| `unity-csharp` | C# | ~3,084 | 20 | 0 | Unity SDK — Cinacoin core, adapters, UI, wallet management |
 
 ---
 
@@ -219,7 +219,7 @@ Reown's common package (shared types, errors) is absorbed into CinaAuth's core-s
 
 #### `controllers` → `core-sdk/store.ts` ✅
 
-Reown's controllers (AccountController, ConnectionController, etc.) map to CinaAuth's store.ts with CinaConnectState management.
+Reown's controllers (AccountController, ConnectionController, etc.) map to CinaAuth's store.ts with CinacoinState management.
 
 ---
 
@@ -453,7 +453,7 @@ These are **CinaAuth differentiators** — features Reown doesn't offer:
 
 ### Quantitative Summary
 
-| Metric | Reown AppKit | CinaAuth/CinaConnect | Delta |
+| Metric | Reown AppKit | CinaAuth/Cinacoin | Delta |
 |--------|-------------|-------------------|-------|
 | Total packages | 28 (20 + 8 adapters) | 34 | **Cina +6** |
 | JS/TS client packages | 20 | 24 | **Cina +4** |
@@ -473,7 +473,7 @@ These are **CinaAuth differentiators** — features Reown doesn't offer:
 3. **`unity-csharp` tests** — 20 source files with 0 tests. Add unit tests immediately.
 
 #### 🟡 Important Gaps
-4. **`codemod`** — Build migration tool for WalletConnect → CinaConnect. Critical for adoption from existing WC users.
+4. **`codemod`** — Build migration tool for WalletConnect → Cinacoin. Critical for adoption from existing WC users.
 5. **`polyfills`** — Add Node/browser polyfills for bundler compatibility.
 6. **`cdn`** — Build CDN bundle for zero-build script-tag usage.
 

@@ -1,16 +1,16 @@
 # Bitcoin Adapter
 
-> `@cinaconnect/adapter-bitcoin` — Bitcoin blockchain adapter for CinaConnect.
+> `@cinacoin/adapter-bitcoin` — Bitcoin blockchain adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-bitcoin
+npm install @cinacoin/adapter-bitcoin
 ```
 
 ## Overview
 
-Enable Bitcoin wallet connections and transactions within the CinaConnect ecosystem. Supports Taproot, SegWit, and legacy addresses.
+Enable Bitcoin wallet connections and transactions within the Cinacoin ecosystem. Supports Taproot, SegWit, and legacy addresses.
 
 ## Related
 

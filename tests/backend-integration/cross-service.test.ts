@@ -11,11 +11,11 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import http from 'node:http';
 import WebSocket from 'ws';
 
-import { RpcProxy } from '@cinaconnect/rpc-proxy';
-import { KeyManager } from '@cinaconnect/keys-server';
-import { RelayServer, type RelayMessage } from '@cinaconnect/relay-server';
-import { NotifyServer } from '@cinaconnect/notify-server';
-import { PushServer } from '@cinaconnect/push-server';
+import { RpcProxy } from '@cinacoin/rpc-proxy';
+import { KeyManager } from '@cinacoin/keys-server';
+import { RelayServer, type RelayMessage } from '@cinacoin/relay-server';
+import { NotifyServer } from '@cinacoin/notify-server';
+import { PushServer } from '@cinacoin/push-server';
 
 // ── Helper: GET JSON ────────────────────────────────────────
 function getJson(url: string): Promise<unknown> {
@@ -131,7 +131,7 @@ describe('Flow: Key Storage → Session → Push Notification', () => {
       sessionTtlMs: 300_000,
     });
     push = new PushServer({
-      apns: { keyId: 'flow-key', teamId: 'flow-team', bundleId: 'com.cinaconnect.flow', privateKey: 'test' },
+      apns: { keyId: 'flow-key', teamId: 'flow-team', bundleId: 'com.cinacoin.flow', privateKey: 'test' },
       fcm: { projectId: 'flow-project', serviceAccountKey: '{}' },
     });
   });

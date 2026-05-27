@@ -1,5 +1,5 @@
 /**
- * Push Notification Registration for CinaConnect React Native.
+ * Push Notification Registration for Cinacoin React Native.
  *
  * Real FCM/APNs token registration for:
  * - Transaction status updates
@@ -35,8 +35,8 @@ export async function registerPushNotifications() {
         // Placeholder: replace with real FCM registration
         token = 'android-fcm-token-placeholder';
     }
-    // Send token to CinaConnect push server
-    // await fetch('https://push.cinaconnect.com/v1/register', {
+    // Send token to Cinacoin push server
+    // await fetch('https://push.cinacoin.com/v1/register', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },
     //   body: JSON.stringify({ token, platform: Platform.OS }),

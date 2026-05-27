@@ -1,4 +1,4 @@
-# Deploy CinaConnect Health Status Page to Cloudflare Pages
+# Deploy Cinacoin Health Status Page to Cloudflare Pages
 # Triggers on changes to the health-status app
 name: Deploy Health Status Page
 
@@ -110,7 +110,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: cinaconnect-health-status
+          projectName: cinacoin-health-status
           directory: apps/health-status/out
           wranglerVersion: "3"
           branch: ${{ github.ref_name }}
@@ -122,7 +122,7 @@ jobs:
           sleep 10
 
           # Verify the default *.pages.dev URL is reachable
-          DEPLOY_URL="https://cinaconnect-health-status.pages.dev"
+          DEPLOY_URL="https://cinacoin-health-status.pages.dev"
           echo "Verifying deployment at $DEPLOY_URL..."
           HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 15 --max-time 30 "$DEPLOY_URL" || echo "000")
 
@@ -137,8 +137,8 @@ jobs:
         run: |
           echo "## 🩺 Health Status Page Deployment" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- **Project:** cinaconnect-health-status" >> $GITHUB_STEP_SUMMARY
+          echo "- **Project:** cinacoin-health-status" >> $GITHUB_STEP_SUMMARY
           echo "- **Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
           echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **URL:** https://cinaconnect-health-status.pages.dev" >> $GITHUB_STEP_SUMMARY
+          echo "- **URL:** https://cinacoin-health-status.pages.dev" >> $GITHUB_STEP_SUMMARY

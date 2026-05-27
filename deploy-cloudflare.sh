@@ -1,5 +1,5 @@
 #!/bin/bash
-# CinaConnect — Cloudflare Deploy Script
+# CinaCoin — Cloudflare Deploy Script
 # Usage: ./deploy-cloudflare.sh [--dry-run]
 
 set -e
@@ -11,7 +11,7 @@ if [ "$1" = "--dry-run" ]; then
 fi
 
 echo "═══════════════════════════════════════════════════════"
-echo "  CinaConnect — Cloudflare Deployment"
+echo "  CinaCoin — Cloudflare Deployment"
 echo "═══════════════════════════════════════════════════════"
 echo ""
 
@@ -52,7 +52,7 @@ echo ""
 # Step 3: Create R2 bucket for CDN
 echo "🪣 Step 3: Creating R2 bucket..."
 if [ "$DRY_RUN" = false ]; then
-  wrangler r2 bucket create cinaconnect-cdn 2>/dev/null || echo "   Bucket already exists"
+  wrangler r2 bucket create cinacoin-cdn 2>/dev/null || echo "   Bucket already exists"
 fi
 echo "✅ R2 bucket ready"
 echo ""
@@ -64,7 +64,7 @@ if [ "$DRY_RUN" = false ]; then
     if [ -f "$pkg" ]; then
       name=$(basename $(dirname $pkg))
       echo "   Uploading $name..."
-      wrangler r2 object put cinaconnect-cdn/${name}/index.js --file=$pkg 2>/dev/null || true
+      wrangler r2 object put cinacoin-cdn/${name}/index.js --file=$pkg 2>/dev/null || true
     fi
   done
 fi
@@ -93,7 +93,7 @@ echo ""
 echo "🌐 Step 7: Deploying Demo App..."
 if [ "$DRY_RUN" = false ]; then
   cd apps/demo
-  wrangler pages deploy .next --project-name=cinaconnect-demo 2>/dev/null || echo "   Demo deployment skipped"
+  wrangler pages deploy .next --project-name=cinacoin-demo 2>/dev/null || echo "   Demo deployment skipped"
   cd ../..
 fi
 echo ""
@@ -108,7 +108,7 @@ echo "     wrangler secret put NEXT_PUBLIC_PROJECT_ID"
 echo "     wrangler secret put ENCRYPTION_KEY"
 echo ""
 echo "  2. Create D1 database:"
-echo "     wrangler d1 create cinaconnect-keys"
+echo "     wrangler d1 create cinacoin-keys"
 echo ""
 echo "  3. Create KV namespaces and update wrangler.toml IDs"
 echo ""

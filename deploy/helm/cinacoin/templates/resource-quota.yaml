@@ -1,0 +1,56 @@
+# Resource Quotas — prevent resource runaway and ensure fair sharing
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: cinacoin-quota
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  hard:
+    requests.cpu: "32"
+    requests.memory: "64Gi"
+    limits.cpu: "64"
+    limits.memory: "128Gi"
+    pods: "100"
+    services: "20"
+    persistentvolumeclaims: "30"
+    secrets: "50"
+    configmaps: "50"
+    services.loadbalancers: "5"
+    services.nodeports: "0"
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: cinacoin-compute-quota
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  hard:
+    requests.nvidia.com/gpu: "0"
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: cinacoin-limit-range
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  limits:
+    - default:
+        cpu: "1000m"
+        memory: "1Gi"
+      defaultRequest:
+        cpu: "250m"
+        memory: "256Mi"
+      max:
+        cpu: "8000m"
+        memory: "32Gi"
+      min:
+        cpu: "50m"
+        memory: "64Mi"
+      type: Container

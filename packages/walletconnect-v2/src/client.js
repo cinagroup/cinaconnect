@@ -5,7 +5,7 @@
  * relay connection, and request/response handling into a single
  * easy-to-use API. Compatible with the Reown/WalletConnect v2 API surface.
  */
-import { EventEmitter } from '@cinaconnect/core-sdk';
+import { EventEmitter } from '@cinacoin/core-sdk';
 import { WcRelay } from './relay.js';
 import { WcSessionManager } from './session.js';
 import { parseWcUri, isValidWcUri, deletePairing, pairingPing } from './pairing.js';

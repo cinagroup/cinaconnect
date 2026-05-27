@@ -1,5 +1,5 @@
 /**
- * KYC/AML compliance types for the @cinaconnect/kyc package.
+ * KYC/AML compliance types for the @cinacoin/kyc package.
  */
 
 /** Overall KYC compliance status for an entity. */

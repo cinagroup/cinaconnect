@@ -1,7 +1,7 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { ConnectButton } from '../packages/react/src/ConnectButton';
 const meta = {
-    title: 'CinaConnect/ConnectButton',
+    title: 'Cinacoin/ConnectButton',
     component: ConnectButton,
     argTypes: {
         label: { control: 'text', description: 'Button text when disconnected.' },

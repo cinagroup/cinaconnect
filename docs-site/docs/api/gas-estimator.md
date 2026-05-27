@@ -1,11 +1,11 @@
 # Gas Estimator
 
-> `@cinaconnect/gas-estimator` — Gas estimation utilities for CinaConnect.
+> `@cinacoin/gas-estimator` — Gas estimation utilities for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/gas-estimator
+npm install @cinacoin/gas-estimator
 ```
 
 ## Overview

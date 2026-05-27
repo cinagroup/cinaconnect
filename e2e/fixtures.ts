@@ -1,11 +1,11 @@
 import { test as base, expect, type Page } from '@playwright/test';
 
 // ============================================================
-// Shared fixtures for CinaConnect E2E tests
+// Shared fixtures for Cinacoin E2E tests
 // ============================================================
 
 /**
- * Extended test fixtures with CinaConnect-specific helpers.
+ * Extended test fixtures with Cinacoin-specific helpers.
  */
 export const test = base.extend<{
   /** The page navigated to the demo app. */

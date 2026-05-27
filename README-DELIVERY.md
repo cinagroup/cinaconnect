@@ -1,14 +1,14 @@
-# CinaConnect v1.0 — Delivery Summary
+# Cinacoin v1.0 — Delivery Summary
 
 > **Date:** 2026-05-18  
 > **Version:** 1.0.0  
-> **Author:** CinaGroup / CinaConnect Team  
+> **Author:** CinaGroup / Cinacoin Team  
 
 ---
 
-## What Is CinaConnect?
+## What Is Cinacoin?
 
-CinaConnect is a **full-stack, white-label Web3 SDK** for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools — across web, mobile, and game engines.
+Cinacoin is a **full-stack, white-label Web3 SDK** for building seamless on-chain experiences. It provides wallet connections, multi-chain authentication, payments, smart accounts, and developer tools — across web, mobile, and game engines.
 
 - **600+ wallets** supported via the WalletConnect Network
 - **11 chain adapters** (EVM, Solana, Bitcoin, TON, TRON, Cosmos, Sui, Starknet, NEAR, Hedera, XRPL)
@@ -52,7 +52,7 @@ CinaConnect is a **full-stack, white-label Web3 SDK** for building seamless on-c
 
 ```bash
 # Clone and install
-git clone <repo-url> && cd cinaconnect
+git clone <repo-url> && cd cinacoin
 pnpm install
 
 # Build everything
@@ -130,8 +130,8 @@ pnpm run ci
 
 ## Support
 
-- **Documentation:** [docs.cinaconnect.io](https://docs.cinaconnect.io)
-- **GitHub:** [github.com/cinaconnect/cinaconnect](https://github.com/cinaconnect/cinaconnect)
+- **Documentation:** [docs.cinacoin.io](https://docs.cinacoin.io)
+- **GitHub:** [github.com/cinacoin/cinacoin](https://github.com/cinacoin/cinacoin)
 - **Issues:** Open on GitHub with appropriate labels
 - **Migration:** Coming from Reown/AppKit? See the [Migration Guide](./docs/guide/migrate-from-reown.md)
 
@@ -143,5 +143,5 @@ MIT License — see `LICENSE.md` for details.
 
 ---
 
-**CinaConnect v1.0** — by CinaGroup  
+**Cinacoin v1.0** — by CinaGroup  
 *Connect Everything On-Chain*

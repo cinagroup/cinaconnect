@@ -14,7 +14,7 @@ export {
   bytesToHex,
   hexToBytes,
   type X25519Keypair,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 export {
   encrypt as coreEncrypt,
@@ -22,7 +22,7 @@ export {
   deriveSymmetricKey,
   deriveTopic,
   generateNonce,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 import { sha256 } from '@noble/hashes/sha2.js';
 import { hmac_sha256 } from '@noble/hashes/hmac.js';
@@ -32,13 +32,13 @@ import {
   hexToBytes,
   generateNonce,
   type X25519Keypair,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 // Re-export the core encrypt/decrypt with original names for convenience
 import {
   encrypt as _encrypt,
   decrypt as _decrypt,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 export { _encrypt as encrypt, _decrypt as decrypt };
 
 // ============================================================

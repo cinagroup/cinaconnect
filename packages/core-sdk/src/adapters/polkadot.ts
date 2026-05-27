@@ -325,7 +325,7 @@ export class PolkadotChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. Required by ChainAdapter interface. */
+  /** Set the Cinacoin connector. Required by ChainAdapter interface. */
   setConnector(_connector: Connector): void {
     // Polkadot adapter uses polkadot.js injection; connector is optional.
   }
@@ -430,7 +430,7 @@ export class PolkadotChainAdapter {
       return (typeof free === 'bigint' ? free.toString() : String(free));
     }
 
-    // Fallback: JSON-RPC via WebSocket
+    // Fallback: JSON-RPC via HTTP gateway
     return this._rpcQueryBalance(address);
   }
 
@@ -595,7 +595,7 @@ export class PolkadotChainAdapter {
   /** Convert DOT to Plancks. */
   static dotToPlancks(dot: string | number): string {
     const parts = String(dot).split('.');
-    const intPart = BigInt(parts[0]);
+    const intPart = BigInt(parts[0] || '0');
     let fracPart = 0n;
     if (parts.length > 1) {
       const frac = parts[1].padEnd(10, '0').slice(0, 10);
@@ -864,11 +864,18 @@ export class PolkadotChainAdapter {
   }
 
   /**
-   * SCALE-decode a u128 value (little-endian, up to 16 bytes).
+   * SCALE-decode a u128 value (little-endian, 16 bytes).
+   * Throws if insufficient bytes remain.
    */
   private _scaleDecodeU128(bytes: Uint8Array, offset: number = 0): bigint {
+    if (offset + 16 > bytes.length) {
+      throw new Error(
+        `SCALE u128 decode: need 16 bytes at offset ${offset}, ` +
+        `but only ${bytes.length - offset} bytes available (total ${bytes.length})`,
+      );
+    }
     let value = 0n;
-    for (let i = 0; i < 16 && (offset + i) < bytes.length; i++) {
+    for (let i = 0; i < 16; i++) {
       value |= BigInt(bytes[offset + i]) << BigInt(i * 8);
     }
     return value;
@@ -876,30 +883,39 @@ export class PolkadotChainAdapter {
 
   /**
    * SCALE-decode a compact u32/VarInt (used for nonce and reference counters).
+   * Throws if insufficient bytes remain for the encoding mode.
    */
-  private _scaleDecodeCompact(bytes: Uint8Array, offset: number = 0): { value: number; bytesRead: number } {
+  private _scaleDecodeCompact(bytes: Uint8Array, offset: number = 0): { value: bigint; bytesRead: number } {
+    if (offset >= bytes.length) {
+      throw new Error(`SCALE compact decode: offset ${offset} beyond ${bytes.length} bytes`);
+    }
     const first = bytes[offset];
     const mode = first & 0b11;
     if (mode === 0b00) {
       // Single byte, value >> 2
-      return { value: first >> 2, bytesRead: 1 };
+      return { value: BigInt(first >> 2), bytesRead: 1 };
     } else if (mode === 0b01) {
       // 2-byte little-endian, value >> 2
+      if (offset + 2 > bytes.length) throw new Error('SCALE compact: need 2 bytes for mode 01');
       const val = (bytes[offset] | (bytes[offset + 1] << 8)) >> 2;
-      return { value: val, bytesRead: 2 };
+      return { value: BigInt(val), bytesRead: 2 };
     } else if (mode === 0b10) {
       // 4-byte little-endian, value >> 2
-      const val = (bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16) | (bytes[offset + 3] << 24)) >> 2;
-      return { value: val, bytesRead: 4 };
+      if (offset + 4 > bytes.length) throw new Error('SCALE compact: need 4 bytes for mode 10');
+      const val = (bytes[offset] | (bytes[offset + 1] << 8) | (bytes[offset + 2] << 16) | (bytes[offset + 3] << 24)) >>> 0;
+      return { value: BigInt(Math.floor(val / 4)), bytesRead: 4 };
     } else {
       // mode == 0b11: big int prefix, next byte tells length
       const lenExp = (first >> 2) & 0b111111;
       const byteCount = 4 + lenExp;
+      if (offset + 1 + byteCount > bytes.length) {
+        throw new Error(`SCALE compact: need ${1 + byteCount} bytes for mode 11 (lenExp=${lenExp})`);
+      }
       let value = 0n;
       for (let i = 0; i < byteCount; i++) {
         value |= BigInt(bytes[offset + 1 + i]) << BigInt(i * 8);
       }
-      return { value: Number(value), bytesRead: 1 + byteCount };
+      return { value, bytesRead: 1 + byteCount };
     }
   }
 
@@ -924,16 +940,16 @@ export class PolkadotChainAdapter {
     let offset = 0;
     // Skip nonce
     const nonce = this._scaleDecodeCompact(scaleBytes, offset);
-    offset += nonce.bytesRead;
+    offset += Number(nonce.bytesRead);
     // Skip consumers
     const consumers = this._scaleDecodeCompact(scaleBytes, offset);
-    offset += consumers.bytesRead;
+    offset += Number(consumers.bytesRead);
     // Skip providers
     const providers = this._scaleDecodeCompact(scaleBytes, offset);
-    offset += providers.bytesRead;
+    offset += Number(providers.bytesRead);
     // Skip sufficients
     const sufficients = this._scaleDecodeCompact(scaleBytes, offset);
-    offset += sufficients.bytesRead;
+    offset += Number(sufficients.bytesRead);
 
     // Now we're at AccountData.free (u128 = 16 bytes)
     const free = this._scaleDecodeU128(scaleBytes, offset);
@@ -956,18 +972,34 @@ export class PolkadotChainAdapter {
           params: [storageKey],
         }),
       });
-      const data = await resp.json();
-      if (data.error) throw new Error(data.error.message);
-      if (data.result) {
-        // Decode the SCALE-encoded AccountInfo storage value
-        const scaleBytes = this._hexToBytes((data.result as string).slice(2)); // strip 0x
-        const decoded = this._decodeAccountInfo(scaleBytes);
-        return decoded.free;
+      if (!resp.ok) {
+        throw new Error(`HTTP ${resp.status} from ${httpUrl}`);
       }
-    } catch {
-      // Gateway unavailable or decoding failed
+      const data = await resp.json() as Record<string, unknown>;
+      if (data.error) {
+        const err = data.error as Record<string, unknown>;
+        throw new Error(`RPC error: ${String(err.message ?? err.code ?? JSON.stringify(data.error))}`);
+      }
+      const result = data.result;
+      // state_getStorage returns null if key not found
+      if (result == null) {
+        throw new Error(`No storage data returned for address ${address}`);
+      }
+      const hexStr = result as string;
+      if (typeof hexStr !== 'string' || hexStr.length < 4 || !hexStr.startsWith('0x')) {
+        throw new Error(`Unexpected storage result format: ${String(hexStr).slice(0, 60)}`);
+      }
+      // Decode the SCALE-encoded AccountInfo storage value
+      const scaleBytes = this._hexToBytes(hexStr.slice(2)); // strip 0x
+      if (scaleBytes.length < 20) {
+        throw new Error(`SCALE data too short (${scaleBytes.length} bytes) for AccountInfo`);
+      }
+      const decoded = this._decodeAccountInfo(scaleBytes);
+      return decoded.free;
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      throw new Error(`Polkadot balance RPC query failed: ${msg}`);
     }
-    return '0';
   }
 
   /** Generate storage key for balance query. */

@@ -2,11 +2,11 @@
  * Direct WalletConnect button component.
  *
  * Renders a branded WalletConnect button that triggers a QR-code
- * connection flow via @cinaconnect/core-sdk.
+ * connection flow via @cinacoin/core-sdk.
  *
  * @example
  * ```tsx
- * import { WalletConnectButton } from '@cinaconnect/wallet-buttons';
+ * import { WalletConnectButton } from '@cinacoin/wallet-buttons';
  *
  * <WalletConnectButton size="lg" label="Connect with QR" />
  * ```

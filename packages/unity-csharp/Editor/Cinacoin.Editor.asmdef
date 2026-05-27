@@ -1,0 +1,19 @@
+{
+  "name": "CinaConnect.Editor",
+  "rootNamespace": "CinaConnect.Editor",
+  "references": [
+    "CinaConnect.Runtime",
+    "com.unity.nuget.newtonsoft-json"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

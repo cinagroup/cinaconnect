@@ -1,4 +1,4 @@
-# CinaConnect vs Reown — Final Feature Completeness Score Report
+# Cinacoin vs Reown — Final Feature Completeness Score Report
 
 > **Generated**: 2026-05-16  
 > **Scope**: Full codebase audit across all 21 packages, deploy configs, examples, docs  
@@ -8,7 +8,7 @@
 
 ## 1. Overall Completeness Score: 42%
 
-| Dimension | CinaConnect | Reown | Score |
+| Dimension | Cinacoin | Reown | Score |
 |-----------|:---------:|:-----:|:-----:|
 | SDK Core & Connection | 45% | 95% | 🔴 |
 | UI Components & Theming | 60% | 90% | 🟡 |
@@ -30,7 +30,7 @@
 
 ### 2.1 Core SDK & Connection
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
 | WalletConnect v2 pairing | ✅ Production | ✅ Design complete, crypto module has `@noble/ciphers` implementation | 🟡 Partial — ChaCha20-Poly1305 encrypt/decrypt is implemented with `@noble/ciphers`, but keypair shared secret may still need verification |
 | EIP-6963 multi-wallet discovery | ✅ | ✅ Implemented | ✅ Parity |
@@ -40,15 +40,15 @@
 | Session management | ✅ Relay-synced | ✅ Zustand + localStorage | 🟡 No relay sync yet |
 | Chain adapters (EVM) | ✅ wagmi/ethers adapters | ✅ EvmAdapter, SolanaAdapter, BitcoinAdapter | 🟡 Raw EIP-1193 only |
 | Multi-chain session | ✅ | ✅ Designed in session-keys | 🟡 Partial |
-| Relay transport | Reown proprietary | ✅ Rust relay-server with NATS+Redis | 🟢 **CinaConnect leads** |
-| RPC proxy | ❌ Third-party | ✅ Go rpc-proxy with cache+dedup+router | 🟢 **CinaConnect leads** |
+| Relay transport | Reown proprietary | ✅ Rust relay-server with NATS+Redis | 🟢 **Cinacoin leads** |
+| RPC proxy | ❌ Third-party | ✅ Go rpc-proxy with cache+dedup+router | 🟢 **Cinacoin leads** |
 | viem/ethers integration | ✅ Full | ❌ Not implemented | 🔴 Gap |
 | wagmi adapter | ✅ | ❌ | 🔴 Gap |
 | ethers v5/v6 adapter | ✅ | ❌ | 🔴 Gap |
 
 ### 2.2 UI Components & Theming
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
 | ConnectButton | ✅ Production | ✅ Lit Web Component + React + Vue + RN | 🟡 Needs polish |
 | ConnectModal | ✅ Production | ✅ Multi-view (wallets/social/email/scan) | 🟡 Needs polish |
@@ -69,10 +69,10 @@
 
 ### 2.3 Mobile SDKs
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
-| iOS Swift SDK | ✅ reown-swift (108⭐) | ✅ CinaConnect/Sources (10 files, 456 lines) | 🟡 Real code, needs testing |
-| Android Kotlin SDK | ✅ reown-kotlin (56⭐) | ✅ CinaConnect/core (6 files, 360 lines) | 🟡 Real code, needs testing |
+| iOS Swift SDK | ✅ reown-swift (108⭐) | ✅ Cinacoin/Sources (10 files, 456 lines) | 🟡 Real code, needs testing |
+| Android Kotlin SDK | ✅ reown-kotlin (56⭐) | ✅ Cinacoin/core (6 files, 360 lines) | 🟡 Real code, needs testing |
 | React Native | ✅ appkit-react-native | ✅ Provider + Button + Modal + QRScanner | 🟡 Needs e2e testing |
 | Deep linking | ✅ | ✅ DeepLinkHandler (iOS+Android) | 🟡 Needs testing |
 | Push notifications (APNs) | ✅ push-server | ✅ PushNotificationHandler (iOS) + Push server (Rust) | 🟡 Server-side needs deployment |
@@ -82,50 +82,50 @@
 
 ### 2.4 Infrastructure & Backend
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
-| Relay Server | ✅ Proprietary SaaS | ✅ Rust (relay.rs + crypto + health + config) | 🟢 **CinaConnect leads** |
-| RPC Proxy | ❌ | ✅ Go (proxy + router + cache + dedup + ratelimit) | 🟢 **CinaConnect leads** |
+| Relay Server | ✅ Proprietary SaaS | ✅ Rust (relay.rs + crypto + health + config) | 🟢 **Cinacoin leads** |
+| RPC Proxy | ❌ | ✅ Go (proxy + router + cache + dedup + ratelimit) | 🟢 **Cinacoin leads** |
 | Push Server | ✅ Rust (34⭐) | ✅ Rust (apns + fcm + handler + retry + metrics) | 🟡 Needs production deployment |
 | Keys Server | ✅ HCL/Terraform | ✅ Rust (identity_keys + invite_keys + wallet_keys + migrations) | 🟢 **Comparable** |
-| Bundler | Third-party (Pimlico) | ✅ Rust (bundler + mempool + gas_oracle + reputation + validation + RPC) | 🟢 **CinaConnect leads** |
-| Paymaster Contracts | Basic client | ✅ 6 Solidity contracts (Paymaster + Token + Verifying + Upgradeable + interfaces + libs) | 🟢 **CinaConnect leads** |
-| K8s Deployment | Managed | ✅ Helm charts + multi-region (51 deploy files) | 🟢 **CinaConnect leads** |
-| Monitoring | Proprietary | ✅ Prometheus + Grafana + Jaeger + Loki + OTel | 🟢 **CinaConnect leads** |
+| Bundler | Third-party (Pimlico) | ✅ Rust (bundler + mempool + gas_oracle + reputation + validation + RPC) | 🟢 **Cinacoin leads** |
+| Paymaster Contracts | Basic client | ✅ 6 Solidity contracts (Paymaster + Token + Verifying + Upgradeable + interfaces + libs) | 🟢 **Cinacoin leads** |
+| K8s Deployment | Managed | ✅ Helm charts + multi-region (51 deploy files) | 🟢 **Cinacoin leads** |
+| Monitoring | Proprietary | ✅ Prometheus + Grafana + Jaeger + Loki + OTel | 🟢 **Cinacoin leads** |
 | CI/CD | Managed | ✅ GitHub Actions (build + deploy + quality + release + security) | 🟢 **Comparable** |
-| Cost management | Commercial SaaS | ✅ KEDA + Spot + budget alerts + cost dashboard | 🟢 **CinaConnect leads** |
-| Runbooks | ❌ | ✅ 6 runbooks (daily/weekly/monthly checklists + incident response) | 🟢 **CinaConnect leads** |
+| Cost management | Commercial SaaS | ✅ KEDA + Spot + budget alerts + cost dashboard | 🟢 **Cinacoin leads** |
+| Runbooks | ❌ | ✅ 6 runbooks (daily/weekly/monthly checklists + incident response) | 🟢 **Cinacoin leads** |
 
 ### 2.5 Smart Accounts & Authentication
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
-| ERC-4337 Support | ✅ Client-side | ✅ Full v0.7 (Bundler + Paymaster) | 🟢 **CinaConnect leads** |
-| Bundler RPC | N/A | ✅ All 5 ERC-4337 RPC methods | 🟢 **CinaConnect leads** |
-| UserOp validation | Client | ✅ Server-side (blacklist, gas limits, profit margin) | 🟢 **CinaConnect leads** |
-| Gas Oracle | N/A | ✅ eth_feeHistory + caching | 🟢 **CinaConnect leads** |
-| Paymaster sponsor modes | Basic | ✅ Fixed/Percentage/FreeTier/Whitelist/Token | 🟢 **CinaConnect leads** |
-| Daily budget tracking | ❌ | ✅ Per-user tracking | 🟢 **CinaConnect leads** |
+| ERC-4337 Support | ✅ Client-side | ✅ Full v0.7 (Bundler + Paymaster) | 🟢 **Cinacoin leads** |
+| Bundler RPC | N/A | ✅ All 5 ERC-4337 RPC methods | 🟢 **Cinacoin leads** |
+| UserOp validation | Client | ✅ Server-side (blacklist, gas limits, profit margin) | 🟢 **Cinacoin leads** |
+| Gas Oracle | N/A | ✅ eth_feeHistory + caching | 🟢 **Cinacoin leads** |
+| Paymaster sponsor modes | Basic | ✅ Fixed/Percentage/FreeTier/Whitelist/Token | 🟢 **Cinacoin leads** |
+| Daily budget tracking | ❌ | ✅ Per-user tracking | 🟢 **Cinacoin leads** |
 | SIWE (EIP-4361) | ✅ Full | ✅ generateMessage + parseMessage + verifyMessage + validator | 🟡 Needs server-side verification |
 | SIWX (Sign-In with X) | ✅ Full | ✅ Multi-chain (EVM + Solana + Bitcoin) | 🟡 Needs more chains |
-| Session Keys | ❌ | ✅ Policy engine + batch tx + social recovery + cross-chain sync | 🟢 **CinaConnect leads** |
+| Session Keys | ❌ | ✅ Policy engine + batch tx + social recovery + cross-chain sync | 🟢 **Cinacoin leads** |
 | ERC-6492 signature verification | ✅ | ✅ Rust (decoder + factory + verify + types) | 🟡 Needs integration |
 | Social Login | ✅ | ✅ Google + Apple + Twitter + Email providers + wallet derivation | 🟡 Needs OAuth2 backend |
 | Email Login (Magic Link) | ✅ | ✅ Email provider implemented | 🟡 Needs backend |
 
 ### 2.6 Swap & On-Ramp
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
-| Swap SDK | ❌ | ✅ Aggregator (Uniswap + 1inch + 0x) | 🟢 **CinaConnect leads** |
-| Swap quoter | ❌ | ✅ Price comparison + slippage protection | 🟢 **CinaConnect leads** |
-| Swap router | ❌ | ✅ Multi-provider routing | 🟢 **CinaConnect leads** |
-| On-Ramp SDK | ❌ | ✅ MoonPay + Ramp + Transak providers + widget | 🟢 **CinaConnect leads** |
-| On-Ramp aggregation | ❌ | ✅ Best provider selection | 🟢 **CinaConnect leads** |
+| Swap SDK | ❌ | ✅ Aggregator (Uniswap + 1inch + 0x) | 🟢 **Cinacoin leads** |
+| Swap quoter | ❌ | ✅ Price comparison + slippage protection | 🟢 **Cinacoin leads** |
+| Swap router | ❌ | ✅ Multi-provider routing | 🟢 **Cinacoin leads** |
+| On-Ramp SDK | ❌ | ✅ MoonPay + Ramp + Transak providers + widget | 🟢 **Cinacoin leads** |
+| On-Ramp aggregation | ❌ | ✅ Best provider selection | 🟢 **Cinacoin leads** |
 
 ### 2.7 Developer Ecosystem
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
 | Documentation site | ✅ docs.reown.com (111⭐) | ❌ Raw MD files only (15 doc files) | 🔴 Critical gap |
 | Example apps | ✅ web-examples (510⭐) | ✅ 23 files (web/RN/iOS/Android examples) | 🟡 Good start, needs hosting |
@@ -143,7 +143,7 @@
 
 ### 2.8 Testing & Quality
 
-| Feature | Reown | CinaConnect | Status |
+| Feature | Reown | Cinacoin | Status |
 |---------|-------|-----------|--------|
 | TypeScript unit tests | ✅ vitest (comprehensive) | ⚠️ ~45 test files (core-sdk: 25, core-ui: 3, session-keys: 3, swap-sdk: 3, siwe: 2) | 🟡 Improving but gaps |
 | Solidity tests | ✅ | ✅ Paymaster.t.sol | 🟡 Partial |
@@ -167,8 +167,8 @@
 | **react** | 620 | 0 | 🟡 | Provider + ConnectButton + ConnectModal + ChainSwitcher + hooks. Clean structure, zero tests. |
 | **vue** | 426 | 0 | 🟡 | Provider (SFC) + composables + components + types. Minimal but functional structure, zero tests. |
 | **react-native** | 1,379 | 0 | 🟡 | Provider + ConnectButton + ConnectModal + QRScanner. Full RN structure, zero tests. |
-| **ios-swift** | 3,164 | 0 | 🟢 | 10 Swift files covering full SDK (CinaConnect + WalletManager + ConnectButton + ConnectModal + DeepLinkHandler + PushNotificationHandler + EVMAdapter + SolanaAdapter + SIWE + tests). Well-structured, needs unit tests. |
-| **android-kotlin** | 1,696 | 0 | 🟢 | 6 Kotlin files covering full SDK (CinaConnect + WalletManager + ConnectButton + ConnectModal + DeepLinkHandler + FcmHandler). Clean architecture, needs unit tests. |
+| **ios-swift** | 3,164 | 0 | 🟢 | 10 Swift files covering full SDK (Cinacoin + WalletManager + ConnectButton + ConnectModal + DeepLinkHandler + PushNotificationHandler + EVMAdapter + SolanaAdapter + SIWE + tests). Well-structured, needs unit tests. |
+| **android-kotlin** | 1,696 | 0 | 🟢 | 6 Kotlin files covering full SDK (Cinacoin + WalletManager + ConnectButton + ConnectModal + DeepLinkHandler + FcmHandler). Clean architecture, needs unit tests. |
 | **design-tokens** | 265 | 0 | 🟢 | 3-layer token system (global + semantic + component), theme definitions (default/light/minimal), build script. Complete for its scope. |
 | **siwe** | 772 | 2 | 🟡 | Full EIP-4361 implementation (generate + parse + verify + validator + types + utils + tests). Good coverage. |
 | **siwx** | 764 | 0 | 🟡 | Multi-chain auth (EVM + Solana + Bitcoin adapters + types). Good structure, needs tests. |
@@ -206,7 +206,7 @@
 | P1-4 | **Bundle size not tracked or optimized** | Frontend SDKs must be small; no tree-shaking or size-limit configured | 1w |
 | P1-5 | **Social login needs OAuth2 backend** | Providers are implemented but need a real OAuth2 flow server | 1-2w |
 | P1-6 | **ERC-6492 needs SDK integration** | Rust library exists but isn't wired into the core SDK for use | 3-5d |
-| P1-7 | **No CLI tool** | Developer onboarding is harder without `npx @cinaconnect/init` | 1-2w |
+| P1-7 | **No CLI tool** | Developer onboarding is harder without `npx @cinacoin/init` | 1-2w |
 | P1-8 | **No codemod for AppKit migration** | Migration from Reown AppKit is a key selling point | 1w |
 
 ### P2 — Medium Priority (90 Days)
@@ -240,14 +240,14 @@
 6. **Add unit tests to core-server packages** — Start with relay-server crypto + rpc-proxy router (highest risk)
 7. **Write iOS/Android SDK tests** — 4,860 lines of native code needs coverage
 8. **Bundle optimization** — Configure tree-shaking, ESM/CJS dual output, size-limit CI check
-9. **CLI tool** — `@cinaconnect/cli` for project scaffolding
+9. **CLI tool** — `@cinacoin/cli` for project scaffolding
 
 ### 5.3 Medium Term (Weeks 6-12)
 
 10. **E2E test infrastructure** — Playwright for web + Detox for RN
 11. **OAuth2 backend for social login** — Complete the social login story
 12. **ERC-6492 SDK integration** — Wire Rust lib into core-sdk
-13. **Codemod** — AppKit → CinaConnect migration tool
+13. **Codemod** — AppKit → Cinacoin migration tool
 14. **Smart account contract audit** — Professional security review of paymaster + bundler contracts
 
 ### 5.4 Long Term (Months 3-6)
@@ -263,7 +263,7 @@
 
 ## 6. Summary
 
-### Where CinaConnect Leads Reown
+### Where Cinacoin Leads Reown
 
 | Area | Advantage |
 |------|-----------|
@@ -275,7 +275,7 @@
 | **Session keys** | Policy engine + social recovery + batch transactions — Reown has none of this |
 | **Design token system** | 3-layer token architecture with 4 presets vs. Reown's simpler theming |
 
-### Where Reown Leads CinaConnect
+### Where Reown Leads Cinacoin
 
 | Area | Gap |
 |------|-----|
@@ -288,9 +288,9 @@
 
 ### Bottom Line
 
-CinaConnect at **42% completeness** has transitioned from a "design-only" project to one with **real implementations across all 21 packages**. The architecture is superior to Reown in infrastructure depth and smart account capabilities. However, the **developer experience gap** (docs, examples, CLI, codemod) and **testing gaps** on server-side packages remain the largest blockers to production adoption.
+Cinacoin at **42% completeness** has transitioned from a "design-only" project to one with **real implementations across all 21 packages**. The architecture is superior to Reown in infrastructure depth and smart account capabilities. However, the **developer experience gap** (docs, examples, CLI, codemod) and **testing gaps** on server-side packages remain the largest blockers to production adoption.
 
-**Path to 70%**: Focus on the P0 items (LICENSE, docs, crypto verification, server-side tests, viem integration) and the top P1 items (Flutter SDK, E2E tests, bundle optimization). This would bring CinaConnect to feature parity with Reown's core capabilities while maintaining its infrastructure advantages.
+**Path to 70%**: Focus on the P0 items (LICENSE, docs, crypto verification, server-side tests, viem integration) and the top P1 items (Flutter SDK, E2E tests, bundle optimization). This would bring Cinacoin to feature parity with Reown's core capabilities while maintaining its infrastructure advantages.
 
 ---
 

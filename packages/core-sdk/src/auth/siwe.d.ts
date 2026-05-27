@@ -1,12 +1,12 @@
 /**
- * SIWE (Sign-In with Ethereum) integration for the CinaConnect Core SDK.
+ * SIWE (Sign-In with Ethereum) integration for the Cinacoin Core SDK.
  *
  * Provides high-level signIn/signOut methods that wrap the low-level
- * SIWE message generation and verification from @cinaconnect/siwe.
+ * SIWE message generation and verification from @cinacoin/siwe.
  *
  * Usage:
  * ```ts
- * import { SIWEAuth } from '@cinaconnect/core-sdk';
+ * import { SIWEAuth } from '@cinacoin/core-sdk';
  *
  * const siwe = new SIWEAuth(connector, {
  *   domain: 'https://myapp.com',
@@ -21,7 +21,7 @@
  * ```
  */
 import type { Connector } from '../connector.js';
-import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from '@cinaconnect/siwe';
+import type { SIWEParams, ParsedSIWE, SIWEVerificationResult } from '@cinacoin/siwe';
 /**
  * Configuration for SIWE authentication.
  */

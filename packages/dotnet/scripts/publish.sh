@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# publish.sh — Publish the CinaConnect NuGet package to NuGet.org
+# publish.sh — Publish the CinaCoin NuGet package to NuGet.org
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -21,11 +21,11 @@ if [ ! -d "nupkg" ] || [ -z "$(ls nupkg/*.nupkg 2>/dev/null)" ]; then
   bash "$SCRIPT_DIR/pack.sh"
 fi
 
-echo "=== CinaConnect .NET SDK — Publish ==="
+echo "=== CinaCoin .NET SDK — Publish ==="
 echo ""
 
 # Push main package
-for pkg in nupkg/CinaConnect.*.nupkg; do
+for pkg in nupkg/CinaCoin.*.nupkg; do
   [ -f "$pkg" ] || continue
   echo "Pushing $pkg ..."
   dotnet nuget push "$pkg" \

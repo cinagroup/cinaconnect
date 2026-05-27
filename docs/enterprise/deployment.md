@@ -1,6 +1,6 @@
-# CinaConnect Enterprise Deployment Guide
+# Cinacoin Enterprise Deployment Guide
 
-> Complete guide for deploying CinaConnect in self-hosted enterprise environments. Covers Docker Compose, Kubernetes, load balancing, SSL/TLS, backup strategies, and monitoring.
+> Complete guide for deploying Cinacoin in self-hosted enterprise environments. Covers Docker Compose, Kubernetes, load balancing, SSL/TLS, backup strategies, and monitoring.
 
 ---
 
@@ -78,7 +78,7 @@
 - **RAM**: 16 GB minimum, 32 GB recommended
 - **Storage**: 100 GB SSD minimum
 - **Network**: Public IP, DNS configured, ports 80/443/3478/5349 open
-- **Domain**: `app.cinaconnect.com` (or custom)
+- **Domain**: `app.cinacoin.com` (or custom)
 
 ---
 
@@ -87,14 +87,14 @@
 ### docker-compose.yml
 
 ```yaml
-# docker-compose.yml — CinaConnect Enterprise
+# docker-compose.yml — Cinacoin Enterprise
 version: "3.9"
 
 x-common-env: &common-env
   NODE_ENV: production
   CINA_CONNECT_DB_HOST: postgres
   CINA_CONNECT_DB_PORT: 5432
-  CINA_CONNECT_DB_NAME: cinaconnect
+  CINA_CONNECT_DB_NAME: cinacoin
   CINA_CONNECT_DB_USER: ${DB_USER}
   CINA_CONNECT_DB_PASSWORD: ${DB_PASSWORD}
   CINA_CONNECT_REDIS_HOST: redis
@@ -109,7 +109,7 @@ x-common-env: &common-env
 services:
   # ─── Frontend ─────────────────────────────────────────
   frontend:
-    image: cinaconnect/frontend:${CC_VERSION:-latest}
+    image: cinacoin/frontend:${CC_VERSION:-latest}
     restart: unless-stopped
     environment:
       <<: *common-env
@@ -126,11 +126,11 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── API Server ───────────────────────────────────────
   api:
-    image: cinaconnect/api:${CC_VERSION:-latest}
+    image: cinacoin/api:${CC_VERSION:-latest}
     restart: unless-stopped
     environment:
       <<: *common-env
@@ -149,11 +149,11 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── WebSocket Signaling ──────────────────────────────
   signaling:
-    image: cinaconnect/signaling:${CC_VERSION:-latest}
+    image: cinacoin/signaling:${CC_VERSION:-latest}
     restart: unless-stopped
     environment:
       <<: *common-env
@@ -171,14 +171,14 @@ services:
       timeout: 5s
       retries: 3
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── PostgreSQL ───────────────────────────────────────
   postgres:
     image: postgres:15-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: cinaconnect
+      POSTGRES_DB: cinacoin
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
@@ -187,12 +187,12 @@ services:
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d cinaconnect"]
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d cinacoin"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── Redis ────────────────────────────────────────────
   redis:
@@ -214,7 +214,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── TURN/STUN (coturn) ──────────────────────────────
   coturn:
@@ -246,7 +246,7 @@ services:
       - api
       - signaling
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── Prometheus ───────────────────────────────────────
   prometheus:
@@ -258,7 +258,7 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
   # ─── Grafana ──────────────────────────────────────────
   grafana:
@@ -276,7 +276,7 @@ services:
     depends_on:
       - prometheus
     networks:
-      - cinaconnect-net
+      - cinacoin-net
 
 volumes:
   postgres-data:
@@ -285,18 +285,18 @@ volumes:
   grafana-data:
 
 networks:
-  cinaconnect-net:
+  cinacoin-net:
     driver: bridge
 ```
 
 ### .env
 
 ```bash
-# .env — CinaConnect Enterprise (DO NOT COMMIT)
-DOMAIN=app.cinaconnect.com
+# .env — Cinacoin Enterprise (DO NOT COMMIT)
+DOMAIN=app.cinacoin.com
 CC_VERSION=2.1.0
 
-DB_USER=cinaconnect
+DB_USER=cinacoin
 DB_PASSWORD=<generate-secure-password>
 
 REDIS_PASSWORD=<generate-secure-password>
@@ -304,8 +304,8 @@ REDIS_PASSWORD=<generate-secure-password>
 JWT_SECRET=<generate-256-bit-secret>
 SESSION_SECRET=<generate-256-bit-secret>
 
-TURN_HOST=turn.cinaconnect.com
-TURN_USER=cinaconnect
+TURN_HOST=turn.cinacoin.com
+TURN_USER=cinacoin
 TURN_PASSWORD=<generate-secure-password>
 TURN_SECRET=<generate-256-bit-secret>
 
@@ -359,25 +359,25 @@ docker compose down -v
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: cinaconnect
+  name: cinacoin
 ---
 # k8s/configmap.yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cinaconnect-config
-  namespace: cinaconnect
+  name: cinacoin-config
+  namespace: cinacoin
 data:
   NODE_ENV: "production"
   CINA_CONNECT_DB_HOST: "postgres-service"
   CINA_CONNECT_DB_PORT: "5432"
-  CINA_CONNECT_DB_NAME: "cinaconnect"
+  CINA_CONNECT_DB_NAME: "cinacoin"
   CINA_CONNECT_REDIS_HOST: "redis-service"
   CINA_CONNECT_REDIS_PORT: "6379"
-  CINA_CONNECT_TURN_HOST: "turn.cinaconnect.com"
+  CINA_CONNECT_TURN_HOST: "turn.cinacoin.com"
   CINA_CONNECT_TURN_PORT: "3478"
-  API_URL: "https://app.cinaconnect.com/api"
-  WS_URL: "wss://app.cinaconnect.com/ws"
+  API_URL: "https://app.cinacoin.com/api"
+  WS_URL: "wss://app.cinacoin.com/ws"
 ```
 
 ### Secrets
@@ -387,8 +387,8 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: cinaconnect-secrets
-  namespace: cinaconnect
+  name: cinacoin-secrets
+  namespace: cinacoin
 type: Opaque
 stringData:
   DB_PASSWORD: "<base64-encoded>"
@@ -406,15 +406,15 @@ stringData:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cinaconnect-api
-  namespace: cinaconnect
+  name: cinacoin-api
+  namespace: cinacoin
   labels:
-    app: cinaconnect-api
+    app: cinacoin-api
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: cinaconnect-api
+      app: cinacoin-api
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -423,18 +423,18 @@ spec:
   template:
     metadata:
       labels:
-        app: cinaconnect-api
+        app: cinacoin-api
     spec:
       containers:
         - name: api
-          image: cinaconnect/api:2.1.0
+          image: cinacoin/api:2.1.0
           ports:
             - containerPort: 3001
           envFrom:
             - configMapRef:
-                name: cinaconnect-config
+                name: cinacoin-config
             - secretRef:
-                name: cinaconnect-secrets
+                name: cinacoin-secrets
           env:
             - name: PORT
               value: "3001"
@@ -462,11 +462,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cinaconnect-api-service
-  namespace: cinaconnect
+  name: cinacoin-api-service
+  namespace: cinacoin
 spec:
   selector:
-    app: cinaconnect-api
+    app: cinacoin-api
   ports:
     - port: 3001
       targetPort: 3001
@@ -480,15 +480,15 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cinaconnect-frontend
-  namespace: cinaconnect
+  name: cinacoin-frontend
+  namespace: cinacoin
   labels:
-    app: cinaconnect-frontend
+    app: cinacoin-frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: cinaconnect-frontend
+      app: cinacoin-frontend
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -497,18 +497,18 @@ spec:
   template:
     metadata:
       labels:
-        app: cinaconnect-frontend
+        app: cinacoin-frontend
     spec:
       containers:
         - name: frontend
-          image: cinaconnect/frontend:2.1.0
+          image: cinacoin/frontend:2.1.0
           ports:
             - containerPort: 3000
           envFrom:
             - configMapRef:
-                name: cinaconnect-config
+                name: cinacoin-config
             - secretRef:
-                name: cinaconnect-secrets
+                name: cinacoin-secrets
           resources:
             requests:
               cpu: 100m
@@ -532,11 +532,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cinaconnect-frontend-service
-  namespace: cinaconnect
+  name: cinacoin-frontend-service
+  namespace: cinacoin
 spec:
   selector:
-    app: cinaconnect-frontend
+    app: cinacoin-frontend
   ports:
     - port: 3000
       targetPort: 3000
@@ -550,30 +550,30 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cinaconnect-signaling
-  namespace: cinaconnect
+  name: cinacoin-signaling
+  namespace: cinacoin
   labels:
-    app: cinaconnect-signaling
+    app: cinacoin-signaling
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: cinaconnect-signaling
+      app: cinacoin-signaling
   template:
     metadata:
       labels:
-        app: cinaconnect-signaling
+        app: cinacoin-signaling
     spec:
       containers:
         - name: signaling
-          image: cinaconnect/signaling:2.1.0
+          image: cinacoin/signaling:2.1.0
           ports:
             - containerPort: 3002
           envFrom:
             - configMapRef:
-                name: cinaconnect-config
+                name: cinacoin-config
             - secretRef:
-                name: cinaconnect-secrets
+                name: cinacoin-secrets
           resources:
             requests:
               cpu: 200m
@@ -597,11 +597,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: cinaconnect-signaling-service
-  namespace: cinaconnect
+  name: cinacoin-signaling-service
+  namespace: cinacoin
 spec:
   selector:
-    app: cinaconnect-signaling
+    app: cinacoin-signaling
   ports:
     - port: 3002
       targetPort: 3002
@@ -615,8 +615,8 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: cinaconnect-ingress
-  namespace: cinaconnect
+  name: cinacoin-ingress
+  namespace: cinacoin
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
     nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
@@ -629,31 +629,31 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - app.cinaconnect.com
-      secretName: cinaconnect-tls
+        - app.cinacoin.com
+      secretName: cinacoin-tls
   rules:
-    - host: app.cinaconnect.com
+    - host: app.cinacoin.com
       http:
         paths:
           - path: /api
             pathType: Prefix
             backend:
               service:
-                name: cinaconnect-api-service
+                name: cinacoin-api-service
                 port:
                   number: 3001
           - path: /ws
             pathType: Prefix
             backend:
               service:
-                name: cinaconnect-signaling-service
+                name: cinacoin-signaling-service
                 port:
                   number: 3002
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: cinaconnect-frontend-service
+                name: cinacoin-frontend-service
                 port:
                   number: 3000
 ```
@@ -665,13 +665,13 @@ spec:
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: cinaconnect-api-hpa
-  namespace: cinaconnect
+  name: cinacoin-api-hpa
+  namespace: cinacoin
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: cinaconnect-api
+    name: cinacoin-api
   minReplicas: 2
   maxReplicas: 10
   metrics:
@@ -702,9 +702,9 @@ kubectl apply -f k8s/ingress.yaml
 kubectl apply -f k8s/hpa.yaml
 
 # Verify
-kubectl get pods -n cinaconnect
-kubectl get svc -n cinaconnect
-kubectl get ingress -n cinaconnect
+kubectl get pods -n cinacoin
+kubectl get svc -n cinacoin
+kubectl get ingress -n cinacoin
 ```
 
 ---
@@ -741,13 +741,13 @@ upstream signaling_pool {
 
 server {
     listen 80;
-    server_name app.cinaconnect.com;
+    server_name app.cinacoin.com;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl http2;
-    server_name app.cinaconnect.com;
+    server_name app.cinacoin.com;
 
     ssl_certificate     /etc/nginx/certs/fullchain.pem;
     ssl_certificate_key /etc/nginx/certs/privkey.pem;
@@ -826,7 +826,7 @@ defaults
     retries 3
 
 frontend https_front
-    bind *:443 ssl crt /etc/haproxy/certs/cinaconnect.pem
+    bind *:443 ssl crt /etc/haproxy/certs/cinacoin.pem
     mode http
 
     # Rate limiting
@@ -877,8 +877,8 @@ sudo systemctl stop nginx
 
 # Obtain certificate
 sudo certbot certonly --standalone \
-  -d app.cinaconnect.com \
-  --email admin@cinaconnect.com \
+  -d app.cinacoin.com \
+  --email admin@cinacoin.com \
   --agree-tos \
   --non-interactive
 
@@ -897,8 +897,8 @@ sudo apt install -y python3-certbot-nginx
 
 # Obtain and auto-configure
 sudo certbot --nginx \
-  -d app.cinaconnect.com \
-  --email admin@cinaconnect.com \
+  -d app.cinacoin.com \
+  --email admin@cinacoin.com \
   --agree-tos \
   --redirect \
   --hsts \
@@ -916,7 +916,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@cinaconnect.com
+    email: admin@cinacoin.com
     privateKeySecretRef:
       name: letsencrypt-prod-account-key
     solvers:
@@ -953,15 +953,15 @@ add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; prelo
 
 ```bash
 #!/bin/bash
-# scripts/backup.sh — CinaConnect Database Backup
+# scripts/backup.sh — Cinacoin Database Backup
 
 set -euo pipefail
 
-BACKUP_DIR="/var/backups/cinaconnect/postgres"
+BACKUP_DIR="/var/backups/cinacoin/postgres"
 RETENTION_DAYS=30
 DATE=$(date +%Y%m%d_%H%M%S)
-DB_NAME="cinaconnect"
-DB_USER="${DB_USER:-cinaconnect}"
+DB_NAME="cinacoin"
+DB_USER="${DB_USER:-cinacoin}"
 DB_HOST="${DB_HOST:-localhost}"
 DB_PORT="${DB_PORT:-5432}"
 
@@ -976,12 +976,12 @@ pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
   --verbose \
   --no-owner \
   --no-privileges \
-  --file="$BACKUP_DIR/cinaconnect_${DATE}.dump"
+  --file="$BACKUP_DIR/cinacoin_${DATE}.dump"
 
 # Verify backup
-if pg_restore --list "$BACKUP_DIR/cinaconnect_${DATE}.dump" > /dev/null 2>&1; then
-    echo "[$(date)] Backup verified: cinaconnect_${DATE}.dump"
-    SIZE=$(du -sh "$BACKUP_DIR/cinaconnect_${DATE}.dump" | cut -f1)
+if pg_restore --list "$BACKUP_DIR/cinacoin_${DATE}.dump" > /dev/null 2>&1; then
+    echo "[$(date)] Backup verified: cinacoin_${DATE}.dump"
+    SIZE=$(du -sh "$BACKUP_DIR/cinacoin_${DATE}.dump" | cut -f1)
     echo "[$(date)] Size: $SIZE"
 else
     echo "[$(date)] ERROR: Backup verification failed!" >&2
@@ -990,14 +990,14 @@ fi
 
 # Upload to S3 / MinIO (optional)
 if command -v aws &> /dev/null && [ -n "${BACKUP_S3_BUCKET:-}" ]; then
-    aws s3 cp "$BACKUP_DIR/cinaconnect_${DATE}.dump" \
-      "s3://${BACKUP_S3_BUCKET}/postgres/cinaconnect_${DATE}.dump" \
+    aws s3 cp "$BACKUP_DIR/cinacoin_${DATE}.dump" \
+      "s3://${BACKUP_S3_BUCKET}/postgres/cinacoin_${DATE}.dump" \
       --storage-class STANDARD_IA
     echo "[$(date)] Uploaded to S3: ${BACKUP_S3_BUCKET}"
 fi
 
 # Rotate old backups
-find "$BACKUP_DIR" -name "cinaconnect_*.dump" -mtime +${RETENTION_DAYS} -delete
+find "$BACKUP_DIR" -name "cinacoin_*.dump" -mtime +${RETENTION_DAYS} -delete
 echo "[$(date)] Cleaned up backups older than ${RETENTION_DAYS} days"
 
 echo "[$(date)] Backup complete."
@@ -1006,13 +1006,13 @@ echo "[$(date)] Backup complete."
 ### Cron Schedule
 
 ```cron
-# /etc/cron.d/cinaconnect-backup
+# /etc/cron.d/cinacoin-backup
 
 # Daily at 2:00 AM
-0 2 * * * root /opt/cinaconnect/scripts/backup.sh >> /var/log/cinaconnect/backup.log 2>&1
+0 2 * * * root /opt/cinacoin/scripts/backup.sh >> /var/log/cinacoin/backup.log 2>&1
 
 # Weekly full backup on Sunday at 1:00 AM
-0 1 * * 0 root /opt/cinaconnect/scripts/backup-full.sh >> /var/log/cinaconnect/backup-full.log 2>&1
+0 1 * * 0 root /opt/cinacoin/scripts/backup-full.sh >> /var/log/cinacoin/backup-full.log 2>&1
 ```
 
 ### Point-in-Time Recovery (PITR)
@@ -1025,10 +1025,10 @@ echo "[$(date)] Backup complete."
 # archive_timeout = 60
 
 # Restore to specific point
-pg_restore -h localhost -U cinaconnect -d cinaconnect \
+pg_restore -h localhost -U cinacoin -d cinacoin \
   --verbose \
   --no-owner \
-  /var/backups/cinaconnect/postgres/cinaconnect_20260517_020000.dump
+  /var/backups/cinacoin/postgres/cinacoin_20260517_020000.dump
 
 # Or restore to specific timestamp
 pg_basebackup -D /var/lib/postgresql/recovery -Fp -Xs -P
@@ -1041,10 +1041,10 @@ pg_basebackup -D /var/lib/postgresql/recovery -Fp -Xs -P
 #!/bin/bash
 # scripts/check-backup.sh — Verify recent backup exists
 
-BACKUP_DIR="/var/backups/cinaconnect/postgres"
+BACKUP_DIR="/var/backups/cinacoin/postgres"
 MAX_AGE_HOURS=26
 
-LATEST=$(find "$BACKUP_DIR" -name "cinaconnect_*.dump" -printf '%T@ %p\n' | sort -n | tail -1)
+LATEST=$(find "$BACKUP_DIR" -name "cinacoin_*.dump" -printf '%T@ %p\n' | sort -n | tail -1)
 
 if [ -z "$LATEST" ]; then
     echo "CRITICAL: No backups found!"
@@ -1084,7 +1084,7 @@ scrape_configs:
     static_configs:
       - targets: ["localhost:9090"]
 
-  - job_name: "cinaconnect-api"
+  - job_name: "cinacoin-api"
     metrics_path: "/metrics"
     static_configs:
       - targets: ["api:3001"]
@@ -1092,12 +1092,12 @@ scrape_configs:
       - source_labels: [__address__]
         target_label: instance
 
-  - job_name: "cinaconnect-frontend"
+  - job_name: "cinacoin-frontend"
     metrics_path: "/metrics"
     static_configs:
       - targets: ["frontend:3000"]
 
-  - job_name: "cinaconnect-signaling"
+  - job_name: "cinacoin-signaling"
     metrics_path: "/metrics"
     static_configs:
       - targets: ["signaling:3002"]
@@ -1120,7 +1120,7 @@ scrape_configs:
 ```yaml
 # config/alert_rules.yml
 groups:
-  - name: cinaconnect-alerts
+  - name: cinacoin-alerts
     rules:
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) > 0.05
@@ -1191,7 +1191,7 @@ groups:
 ```json
 {
   "dashboard": {
-    "title": "CinaConnect Enterprise Overview",
+    "title": "Cinacoin Enterprise Overview",
     "panels": [
       {
         "title": "HTTP Request Rate",
@@ -1299,7 +1299,7 @@ node-exporter:
   ports:
     - "9100:9100"
   networks:
-    - cinaconnect-net
+    - cinacoin-net
 ```
 
 ---
@@ -1310,18 +1310,18 @@ node-exporter:
 
 ```bash
 # Check all services
-curl -sf https://app.cinaconnect.com/health && echo "Frontend: OK"
-curl -sf https://app.cinaconnect.com/api/health && echo "API: OK"
-curl -sf https://app.cinaconnect.com/ws/health && echo "Signaling: OK"
+curl -sf https://app.cinacoin.com/health && echo "Frontend: OK"
+curl -sf https://app.cinacoin.com/api/health && echo "API: OK"
+curl -sf https://app.cinacoin.com/ws/health && echo "Signaling: OK"
 
 # Check database
-docker exec cinaconnect-postgres-1 pg_isready -U cinaconnect
+docker exec cinacoin-postgres-1 pg_isready -U cinacoin
 
 # Check Redis
-docker exec cinaconnect-redis-1 redis-cli -a "$REDIS_PASSWORD" ping
+docker exec cinacoin-redis-1 redis-cli -a "$REDIS_PASSWORD" ping
 
 # Check TURN
-turnutils_uclient -u cinaconnect -w "$TURN_PASSWORD" turn.cinaconnect.com
+turnutils_uclient -u cinacoin -w "$TURN_PASSWORD" turn.cinacoin.com
 ```
 
 ### Rolling Update
@@ -1333,18 +1333,18 @@ docker compose up -d --no-deps api frontend signaling
 docker compose ps
 
 # Kubernetes
-kubectl set image deployment/cinaconnect-api api=cinaconnect/api:2.2.0 -n cinaconnect
-kubectl rollout status deployment/cinaconnect-api -n cinaconnect
+kubectl set image deployment/cinacoin-api api=cinacoin/api:2.2.0 -n cinacoin
+kubectl rollout status deployment/cinacoin-api -n cinacoin
 ```
 
 ### Emergency Rollback
 
 ```bash
 # Docker Compose
-docker compose up -d --no-deps api=cinaconnect/api:2.0.0
+docker compose up -d --no-deps api=cinacoin/api:2.0.0
 
 # Kubernetes
-kubectl rollout undo deployment/cinaconnect-api -n cinaconnect
+kubectl rollout undo deployment/cinacoin-api -n cinacoin
 ```
 
 ### Log Access
@@ -1355,10 +1355,10 @@ docker compose logs -f --tail=100 api
 docker compose logs -f --tail=100 signaling
 
 # Kubernetes
-kubectl logs -f deployment/cinaconnect-api -n cinaconnect --tail=100
-kubectl logs -f deployment/cinaconnect-signaling -n cinaconnect --tail=100
+kubectl logs -f deployment/cinacoin-api -n cinacoin --tail=100
+kubectl logs -f deployment/cinacoin-signaling -n cinacoin --tail=100
 ```
 
 ---
 
-*Last updated: 2026-05-17 | CinaConnect Enterprise Platform Team*
+*Last updated: 2026-05-17 | Cinacoin Enterprise Platform Team*

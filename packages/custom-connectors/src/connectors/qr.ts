@@ -51,12 +51,12 @@ export class QRConnector implements ConnectorConfig {
   async init(): Promise<void> {
     if (this._signClient) return;
 
-    const { SignClient } = await import('@cinaconnect/core-sdk');
+    const { SignClient } = await import('@cinacoin/core-sdk');
     this._signClient = await SignClient.init({
       projectId: this._projectId,
       metadata: {
-        name: 'CinaConnect',
-        description: 'CinaConnect QR Wallet',
+        name: 'Cinacoin',
+        description: 'Cinacoin QR Wallet',
         url: typeof window !== 'undefined' ? window.location.origin : '',
         icons: [],
       },

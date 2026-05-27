@@ -1,8 +1,8 @@
 /**
- * Default CSS styles for CinaConnect components.
+ * Default CSS styles for Cinacoin components.
  *
  * Provides CSS custom property defaults and global resets that are applied
- * when the @cinaconnect/design-tokens package is loaded.
+ * when the @cinacoin/design-tokens package is loaded.
  */
 /** Global CSS that should be injected at the application root. */
 export declare const defaultStyles: import("lit").CSSResult;

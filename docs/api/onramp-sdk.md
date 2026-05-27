@@ -1,6 +1,6 @@
 # On-Ramp SDK API
 
-> `@cinaconnect/onramp-sdk` — Multi-provider fiat-to-crypto gateway aggregator.
+> `@cinacoin/onramp-sdk` — Multi-provider fiat-to-crypto gateway aggregator.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The On-Ramp SDK aggregates quotes from multiple fiat-to-crypto providers (MoonPa
 ## Installation
 
 ```bash
-npm install @cinaconnect/onramp-sdk
+npm install @cinacoin/onramp-sdk
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ import {
   MoonPayProvider,
   RampProvider,
   TransakProvider,
-} from '@cinaconnect/onramp-sdk'
+} from '@cinacoin/onramp-sdk'
 
 // Create aggregator
 const aggregator = new OnRampAggregator()
@@ -59,7 +59,7 @@ console.log(`Best: ${bestQuote.providerName} → ${bestQuote.cryptoAmount} ETH`)
 Fetches quotes from all registered providers concurrently and selects the best option.
 
 ```typescript
-import { OnRampAggregator } from '@cinaconnect/onramp-sdk'
+import { OnRampAggregator } from '@cinacoin/onramp-sdk'
 
 const aggregator = new OnRampAggregator(config?: Partial<AggregatorConfig>)
 ```
@@ -112,7 +112,7 @@ Handle the result of a widget session.
 Provides a unified widget interface for all supported on-ramp providers.
 
 ```typescript
-import { OnRampWidget } from '@cinaconnect/onramp-sdk'
+import { OnRampWidget } from '@cinacoin/onramp-sdk'
 
 const widget = new OnRampWidget(aggregator, {
   containerId: 'onramp-widget', // for embedded mode
@@ -177,7 +177,7 @@ interface OnRampProviderAdapter {
 #### MoonPayProvider
 
 ```typescript
-import { MoonPayProvider } from '@cinaconnect/onramp-sdk'
+import { MoonPayProvider } from '@cinacoin/onramp-sdk'
 
 new MoonPayProvider({
   apiKey: 'moonpay-api-key',
@@ -188,7 +188,7 @@ new MoonPayProvider({
 #### RampProvider
 
 ```typescript
-import { RampProvider } from '@cinaconnect/onramp-sdk'
+import { RampProvider } from '@cinacoin/onramp-sdk'
 
 new RampProvider({
   apiKey: 'ramp-api-key',
@@ -198,7 +198,7 @@ new RampProvider({
 #### TransakProvider
 
 ```typescript
-import { TransakProvider } from '@cinaconnect/onramp-sdk'
+import { TransakProvider } from '@cinacoin/onramp-sdk'
 
 new TransakProvider({
   apiKey: 'transak-api-key',

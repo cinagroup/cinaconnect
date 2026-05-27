@@ -17,7 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "paths": {
-      "@cinaconnect/config": ["./src/index.ts"]
+      "@cinacoin/config": ["./src/index.ts"]
     }
   },
   "include": ["src"],

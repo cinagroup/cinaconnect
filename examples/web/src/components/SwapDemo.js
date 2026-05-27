@@ -1,7 +1,7 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState } from 'react';
-import { useCinaConnect } from '@cinaconnect/react';
-import { SwapQuoter, SwapRouter, UniswapExecutor, OneInchExecutor, ZeroxExecutor, } from '@cinaconnect/swap-sdk';
+import { useCinacoin } from '@cinacoin/react';
+import { SwapQuoter, SwapRouter, UniswapExecutor, OneInchExecutor, ZeroxExecutor, } from '@cinacoin/swap-sdk';
 const SUPPORTED_TOKENS = [
     {
         address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -41,7 +41,7 @@ const ETH_RPC = 'https://eth.llamarpc.com';
  * - Transaction hash display and Etherscan link
  */
 export function SwapDemo() {
-    const { account, signTransaction, chainId, getProvider } = useCinaConnect();
+    const { account, signTransaction, chainId, getProvider } = useCinacoin();
     const [fromToken, setFromToken] = useState(SUPPORTED_TOKENS[0]);
     const [toToken, setToToken] = useState(SUPPORTED_TOKENS[1]);
     const [fromAmount, setFromAmount] = useState('');

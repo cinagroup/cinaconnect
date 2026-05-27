@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/next — AppKitProvider, server utils, and hooks re-exports.
+ * Tests for @cinacoin/next — AppKitProvider, server utils, and hooks re-exports.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -19,13 +19,16 @@ vi.mock('react', () => ({
   useRef: vi.fn(() => ({ current: null })),
 }));
 
-// ─── Mock @cinaconnect/react ─────────────────────────────────────────────────
+// ─── Mock @cinacoin/react ─────────────────────────────────────────────────
 
-vi.mock('@cinaconnect/react', () => ({
-  CinaConnectProvider: vi.fn(({ children }: { children: any }) => children),
-  useCinaConnect: vi.fn(() => ({ connect: vi.fn(), disconnect: vi.fn() })),
-  useCinaConnectAccount: vi.fn(() => ({ address: '0x1234', isConnected: false })),
-  useCinaConnectNetwork: vi.fn(() => ({ chainId: 1, switchChain: vi.fn() })),
+vi.mock('@cinacoin/react', () => ({
+  CinacoinProvider: vi.fn(({ children }: { children: any }) => children),
+  ConnectButton: vi.fn(() => null),
+  useCinacoin: vi.fn(() => ({ connect: vi.fn(), disconnect: vi.fn() })),
+  useCinacoinContext: vi.fn(() => ({})),
+  useCinacoinAccount: vi.fn(() => ({ address: '0x1234', isConnected: false })),
+  useCinacoinNetwork: vi.fn(() => ({ chainId: 1, switchChain: vi.fn() })),
+  useChainId: vi.fn(() => 1),
   useDisconnect: vi.fn(() => vi.fn()),
   useWalletInfo: vi.fn(() => ({ name: 'MetaMask', icon: 'icon' })),
   useBalance: vi.fn(() => ({ balance: '1.5', symbol: 'ETH' })),
@@ -70,19 +73,19 @@ describe('hooks re-exports', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
-  it('should export useCinaConnect', async () => {
+  it('should export useCinacoin', async () => {
     const hooks = await import('../src/hooks/index.js');
-    expect(hooks.useCinaConnect).toBeDefined();
+    expect(hooks.useCinacoin).toBeDefined();
   });
 
-  it('should export useCinaConnectAccount', async () => {
+  it('should export useCinacoinAccount', async () => {
     const hooks = await import('../src/hooks/index.js');
-    expect(hooks.useCinaConnectAccount).toBeDefined();
+    expect(hooks.useCinacoinAccount).toBeDefined();
   });
 
-  it('should export useCinaConnectNetwork', async () => {
+  it('should export useCinacoinNetwork', async () => {
     const hooks = await import('../src/hooks/index.js');
-    expect(hooks.useCinaConnectNetwork).toBeDefined();
+    expect(hooks.useCinacoinNetwork).toBeDefined();
   });
 
   it('should export useDisconnect', async () => {
@@ -116,16 +119,16 @@ describe('server utils', () => {
     expect(typeof server.createServerClient).toBe('function');
   });
 
-  it('should export getCinaConnectServer', async () => {
+  it('should export getCinacoinServer', async () => {
     const server = await import('../src/server/index.js');
-    expect(server.getCinaConnectServer).toBeDefined();
-    expect(typeof server.getCinaConnectServer).toBe('function');
+    expect(server.getCinacoinServer).toBeDefined();
+    expect(typeof server.getCinacoinServer).toBe('function');
   });
 
-  it('should export withCinaConnectAuth', async () => {
+  it('should export withCinacoinAuth', async () => {
     const server = await import('../src/server/index.js');
-    expect(server.withCinaConnectAuth).toBeDefined();
-    expect(typeof server.withCinaConnectAuth).toBe('function');
+    expect(server.withCinacoinAuth).toBeDefined();
+    expect(typeof server.withCinacoinAuth).toBe('function');
   });
 
   it('should export requireAuth', async () => {
@@ -140,10 +143,10 @@ describe('package exports', () => {
     const index = await import('../src/index.js');
     expect(index.AppKitProvider).toBeDefined();
     expect(index.AppKitPagesRouter).toBeDefined();
-    expect(index.getCinaConnectServer).toBeDefined();
-    expect(index.useCinaConnect).toBeDefined();
-    expect(index.useCinaConnectAccount).toBeDefined();
-    expect(index.useCinaConnectNetwork).toBeDefined();
+    expect(index.getCinacoinServer).toBeDefined();
+    expect(index.useCinacoin).toBeDefined();
+    expect(index.useCinacoinAccount).toBeDefined();
+    expect(index.useCinacoinNetwork).toBeDefined();
   });
 
   it('should export components', async () => {
@@ -173,10 +176,10 @@ describe('server/core', () => {
     }
   });
 
-  it('getCinaConnectServer should return a singleton client', async () => {
+  it('getCinacoinServer should return a singleton client', async () => {
     try {
-      const { getCinaConnectServer } = await import('../src/server/core.js');
-      const client = getCinaConnectServer({ projectId: 'test' });
+      const { getCinacoinServer } = await import('../src/server/core.js');
+      const client = getCinacoinServer({ projectId: 'test' });
       expect(client).toBeDefined();
     } catch (e: any) {
       expect(e).toBeDefined();
@@ -200,10 +203,10 @@ describe('server/middleware', () => {
     expect(typeof verifySiweMessage).toBe('function');
   });
 
-  it('should export withCinaConnectAuth', async () => {
-    const { withCinaConnectAuth } = await import('../src/server/middleware.js');
-    expect(withCinaConnectAuth).toBeDefined();
-    expect(typeof withCinaConnectAuth).toBe('function');
+  it('should export withCinacoinAuth', async () => {
+    const { withCinacoinAuth } = await import('../src/server/middleware.js');
+    expect(withCinacoinAuth).toBeDefined();
+    expect(typeof withCinacoinAuth).toBe('function');
   });
 
   it('should export requireAuth', async () => {
@@ -212,9 +215,9 @@ describe('server/middleware', () => {
     expect(typeof requireAuth).toBe('function');
   });
 
-  it('withCinaConnectAuth should return 401 when no session', async () => {
-    const { withCinaConnectAuth } = await import('../src/server/middleware.js');
-    const handler = withCinaConnectAuth(async () => {
+  it('withCinacoinAuth should return 401 when no session', async () => {
+    const { withCinacoinAuth } = await import('../src/server/middleware.js');
+    const handler = withCinacoinAuth(async () => {
       return new Response(JSON.stringify({ ok: true }));
     });
 

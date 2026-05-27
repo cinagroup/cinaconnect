@@ -1,9 +1,9 @@
 using System.Threading.Tasks;
 using System.Numerics;
 using NUnit.Framework;
-using CinaConnect.Chain;
+using Cinacoin.Chain;
 
-namespace CinaConnect.Tests.Runtime
+namespace Cinacoin.Tests.Runtime
 {
     /// <summary>
     /// Tests for Solana adapter: SOL balance, transaction, address validation.

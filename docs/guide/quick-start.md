@@ -15,25 +15,25 @@
 npm create vite@latest my-dapp -- --template react-ts
 cd my-dapp
 
-# 安装 CinaConnect
-npm install @cinaconnect/core @cinaconnect/react
+# 安装 Cinacoin
+npm install @cinacoin/core @cinacoin/react
 ```
 
 ## 第二步：初始化
 
-在应用入口创建 `CinaConnect` 实例：
+在应用入口创建 `Cinacoin` 实例：
 
 ```tsx
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 import App from './App'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         // 项目标识（用于 analytics 和会话管理）
         projectId: 'your-project-id',
@@ -64,7 +64,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   </React.StrictMode>,
 )
 ```
@@ -73,7 +73,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // src/App.tsx
-import { ConnectButton } from '@cinaconnect/react'
+import { ConnectButton } from '@cinacoin/react'
 
 function App() {
   return (
@@ -98,10 +98,10 @@ npm run dev
 ## 使用 Hook 获取状态
 
 ```tsx
-import { useCinaConnect } from '@cinaconnect/react'
+import { useCinacoin } from '@cinacoin/react'
 
 function WalletInfo() {
-  const { account, chainId, status, connectors, connect, disconnect } = useCinaConnect()
+  const { account, chainId, status, connectors, connect, disconnect } = useCinacoin()
 
   if (status === 'disconnected') {
     return <p>未连接</p>
@@ -122,7 +122,7 @@ function WalletInfo() {
 ### 连接 MetaMask
 
 ```tsx
-import { useConnect, useAccount } from '@cinaconnect/react'
+import { useConnect, useAccount } from '@cinacoin/react'
 
 function MetaMaskConnect() {
   const { connect, status } = useConnect()
@@ -151,7 +151,7 @@ function MetaMaskConnect() {
 ### 连接 WalletConnect (扫码)
 
 ```tsx
-import { useConnect } from '@cinaconnect/react'
+import { useConnect } from '@cinacoin/react'
 
 function WalletConnectButton() {
   const { connect } = useConnect()
@@ -167,7 +167,7 @@ function WalletConnectButton() {
 ### 连接 Coinbase Wallet
 
 ```tsx
-import { useConnect } from '@cinaconnect/react'
+import { useConnect } from '@cinacoin/react'
 
 function CoinbaseButton() {
   const { connect } = useConnect()
@@ -184,8 +184,8 @@ function CoinbaseButton() {
 
 ```tsx
 import { useEffect, useState } from 'react'
-import { discoverWallets, watchWallets } from '@cinaconnect/core-sdk'
-import { useConnect } from '@cinaconnect/react'
+import { discoverWallets, watchWallets } from '@cinacoin/core-sdk'
+import { useConnect } from '@cinacoin/react'
 
 function AutoDetectWallets() {
   const { connect } = useConnect()
@@ -221,12 +221,12 @@ function AutoDetectWallets() {
 ### 低层级 SDK 直连（无 React）
 
 ```ts
-import { Connector, InjectedProvider, EvmAdapter } from '@cinaconnect/core-sdk'
+import { Connector, InjectedProvider, EvmAdapter } from '@cinacoin/core-sdk'
 
 async function connectWallet() {
   const connector = new Connector({
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
   })
 
   // 通过注入提供商连接（MetaMask）
@@ -243,7 +243,7 @@ async function connectWallet() {
   // 签名消息
   const signature = await connector.request({
     method: 'personal_sign',
-    params: ['Hello CinaConnect!', result.accounts[0]],
+    params: ['Hello Cinacoin!', result.accounts[0]],
   })
 
   console.log('Signature:', signature)

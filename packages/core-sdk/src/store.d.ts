@@ -1,11 +1,11 @@
 /**
- * Zustand-based state management for the CinaConnect SDK.
+ * Zustand-based state management for the Cinacoin SDK.
  */
 import type { Chain, ConnectionResult, PairingData } from './types.js';
 /** SDK connection state. */
 export type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 /** SDK state managed by Zustand. */
-export interface CinaConnectState {
+export interface CinacoinState {
     status: ConnectionStatus;
     accounts: string[];
     chainId: number | null;
@@ -30,7 +30,7 @@ export interface CinaConnectState {
     disconnect: () => void;
 }
 /** Create the SDK store. */
-export declare const createCinaConnectStore: () => import("zustand").UseBoundStore<import("zustand").StoreApi<CinaConnectState>>;
+export declare const createCinacoinStore: () => import("zustand").UseBoundStore<import("zustand").StoreApi<CinacoinState>>;
 /**
  * SDK configuration for store initialization.
  */
@@ -40,5 +40,5 @@ export interface StoreConfig {
     chains: Chain[];
 }
 /** Initialize the SDK store with configuration. */
-export declare function initializeStore(config: StoreConfig): import("zustand").UseBoundStore<import("zustand").StoreApi<CinaConnectState>>;
+export declare function initializeStore(config: StoreConfig): import("zustand").UseBoundStore<import("zustand").StoreApi<CinacoinState>>;
 //# sourceMappingURL=store.d.ts.map

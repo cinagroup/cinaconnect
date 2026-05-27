@@ -1,5 +1,25 @@
 /**
  * Session state machine for managing wallet connection lifecycle.
+ *
+ * SECURITY NOTE:
+ * This module persists session metadata to localStorage for SPA convenience.
+ * In production applications, consider these mitigations:
+ *
+ * 1. **Do NOT store auth tokens in localStorage.** Tokens should be stored
+ *    in httpOnly, Secure, SameSite=Strict cookies set by the server.
+ *
+ * 2. **Only persist non-sensitive metadata** (connector ID, chain ID,
+ *    last connected accounts). The actual signing capability should require
+ *    user interaction each session.
+ *
+ * 3. **Implement session expiry.** Persisted sessions should have a TTL
+ *    and be validated against the server on restore.
+ *
+ * 4. **Use sessionStorage for higher sensitivity.** sessionStorage is cleared
+ *    on tab close, limiting the window for XSS-based session theft.
+ *
+ * 5. **Add integrity checks.** Include an HMAC or hash of persisted state
+ *    to detect tampering.
  */
 
 import type { ConnectParams, ConnectionResult } from './types.js';
@@ -15,7 +35,28 @@ export type SessionState =
   | { status: 'error'; error: Error };
 
 /** Session storage key for persistence. */
-const SESSION_STORAGE_KEY = 'cinaconnect_session';
+const SESSION_STORAGE_KEY = 'cinacoin_session';
+
+/**
+ * Session expiry TTL in milliseconds (24 hours).
+ * Persisted sessions older than this are considered expired.
+ */
+const SESSION_TTL_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Create an integrity hash of the session state.
+ * Used to detect tampering with persisted session data.
+ */
+function computeIntegrity(state: object): string {
+  const data = JSON.stringify(state);
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    const char = data.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash.toString(36);
+}
 
 /**
  * SessionManager controls the connection lifecycle.
@@ -47,7 +88,9 @@ export class SessionManager extends EventEmitter {
 
   /**
    * Restore a persisted session from localStorage.
-   * @returns The restored session state.
+   *
+   * SECURITY: Validates expiry and integrity hash before restoring.
+   * If validation fails, returns disconnected state.
    */
   async restore(): Promise<SessionState> {
     try {
@@ -57,6 +100,22 @@ export class SessionManager extends EventEmitter {
       }
 
       const persisted = JSON.parse(raw);
+
+      // Check expiry
+      if (persisted.expiresAt && Date.now() > persisted.expiresAt) {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+        return this.state;
+      }
+
+      // Verify integrity hash
+      const { expiresAt, ...stateForHash } = persisted;
+      const expectedHash = computeIntegrity(stateForHash);
+      if (persisted._integrity && persisted._integrity !== expectedHash) {
+        // Tampered data — clear and return disconnected
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+        return this.state;
+      }
+
       if (persisted?.status === 'connected') {
         this.state = {
           status: 'connected',
@@ -166,10 +225,16 @@ export class SessionManager extends EventEmitter {
     this.emit('stateChange', newState);
   }
 
-  /** Persist current connected state to localStorage. */
+  /** Persist current connected state to localStorage with expiry and integrity. */
   private persist(): void {
     if (this.state.status === 'connected') {
-      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(this.state));
+      // State doesn't have expiresAt, just use the full state for hashing
+      const payload = {
+        ...this.state,
+        expiresAt: Date.now() + SESSION_TTL_MS,
+        _integrity: computeIntegrity(this.state),
+      };
+      localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(payload));
     }
   }
 }

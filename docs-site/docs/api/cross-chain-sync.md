@@ -1,11 +1,11 @@
 # Cross-Chain Sync
 
-> `@cinaconnect/cross-chain-sync` — Cross-chain synchronization for CinaConnect.
+> `@cinacoin/cross-chain-sync` — Cross-chain synchronization for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/cross-chain-sync
+npm install @cinacoin/cross-chain-sync
 ```
 
 ## Overview

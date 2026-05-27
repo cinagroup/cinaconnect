@@ -1,5 +1,5 @@
 /**
- * Type definitions for @cinaconnect/wallet-buttons
+ * Type definitions for @cinacoin/wallet-buttons
  */
 
 import type { ReactNode } from 'react';

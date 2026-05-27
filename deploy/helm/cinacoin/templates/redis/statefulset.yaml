@@ -1,0 +1,115 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-cluster
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: redis
+    component: cache
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  serviceName: redis-cluster
+  replicas: {{ add .Values.redis.cluster.masterCount .Values.redis.cluster.replicaCount }}
+  selector:
+    matchLabels:
+      app: redis
+  podManagementPolicy: Parallel
+  template:
+    metadata:
+      labels:
+        app: redis
+        component: cache
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.redis.ports.metrics }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: redis
+          image: "{{ .Values.redis.cluster.image.repository }}:{{ .Values.redis.cluster.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          args:
+            - redis-server
+            - --cluster-enabled
+            - "yes"
+            - --cluster-config-file
+            - /data/nodes.conf
+            - --cluster-node-timeout
+            - "5000"
+            - --port
+            - "{{ .Values.redis.ports.client }}"
+            - --cluster-announce-port
+            - "{{ .Values.redis.ports.client }}"
+            - --cluster-announce-bus-port
+            - "{{ .Values.redis.ports.bus }}"
+            - --appendonly
+            - "yes"
+            - --maxmemory
+            - "8gb"
+            - --maxmemory-policy
+            - "allkeys-lru"
+            - --save
+            - "900 1"
+            - --save
+            - "300 10"
+            - --save
+            - "60 10000"
+            - --tcp-keepalive
+            - "300"
+            - --maxclients
+            - "10000"
+            - --slowlog-log-slower-than
+            - "10000"
+            - --slowlog-max-len
+            - "1024"
+          ports:
+            - name: client
+              containerPort: {{ .Values.redis.ports.client }}
+              protocol: TCP
+            - name: bus
+              containerPort: {{ .Values.redis.ports.bus }}
+              protocol: TCP
+          {{- with .Values.redis.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            timeoutSeconds: 3
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: {{ .Values.redis.persistence.storageClass }}
+        resources:
+          requests:
+            storage: {{ .Values.redis.persistence.size }}

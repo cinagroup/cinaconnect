@@ -7,29 +7,29 @@ import { spinner, warn } from '../utils/logger.js';
 /** Registry of available add-on packages. */
 const ADDONS = {
     // Core adapters
-    '@cinaconnect/evm': { package: '@cinaconnect/core-sdk', description: 'EVM chain adapter' },
-    '@cinaconnect/solana': { package: '@cinaconnect/core-sdk', description: 'Solana chain adapter' },
-    '@cinaconnect/bitcoin': { package: '@cinaconnect/core-sdk', description: 'Bitcoin chain adapter' },
+    '@cinacoin/evm': { package: '@cinacoin/core-sdk', description: 'EVM chain adapter' },
+    '@cinacoin/solana': { package: '@cinacoin/core-sdk', description: 'Solana chain adapter' },
+    '@cinacoin/bitcoin': { package: '@cinacoin/core-sdk', description: 'Bitcoin chain adapter' },
     // UI frameworks
-    '@cinaconnect/react': { package: '@cinaconnect/react', description: 'React UI components' },
-    '@cinaconnect/vue': { package: '@cinaconnect/vue', description: 'Vue UI components' },
-    '@cinaconnect/react-native': { package: '@cinaconnect/react-native', description: 'React Native components' },
+    '@cinacoin/react': { package: '@cinacoin/react', description: 'React UI components' },
+    '@cinacoin/vue': { package: '@cinacoin/vue', description: 'Vue UI components' },
+    '@cinacoin/react-native': { package: '@cinacoin/react-native', description: 'React Native components' },
     // Features
-    '@cinaconnect/swap-sdk': { package: '@cinaconnect/swap-sdk', description: 'DEX swap aggregator' },
-    '@cinaconnect/siwe': { package: '@cinaconnect/siwe', description: 'Sign-In With Ethereum' },
-    '@cinaconnect/onramp-sdk': { package: '@cinaconnect/onramp-sdk', description: 'Fiat on-ramp aggregator' },
-    '@cinaconnect/walletconnect-v2': { package: '@cinaconnect/walletconnect-v2', description: 'WalletConnect v2 integration' },
-    '@cinaconnect/session-keys': { package: '@cinaconnect/session-keys', description: 'ERC-4337 session keys' },
-    '@cinaconnect/social-login': { package: '@cinaconnect/social-login', description: 'Social login providers' },
+    '@cinacoin/swap-sdk': { package: '@cinacoin/swap-sdk', description: 'DEX swap aggregator' },
+    '@cinacoin/siwe': { package: '@cinacoin/siwe', description: 'Sign-In With Ethereum' },
+    '@cinacoin/onramp-sdk': { package: '@cinacoin/onramp-sdk', description: 'Fiat on-ramp aggregator' },
+    '@cinacoin/walletconnect-v2': { package: '@cinacoin/walletconnect-v2', description: 'WalletConnect v2 integration' },
+    '@cinacoin/session-keys': { package: '@cinacoin/session-keys', description: 'ERC-4337 session keys' },
+    '@cinacoin/social-login': { package: '@cinacoin/social-login', description: 'Social login providers' },
 };
 /** List all available addons. */
 export function listCommand(cli) {
     cli
         .command('list')
         .alias('ls')
-        .description('List all available CinaConnect addons')
+        .description('List all available Cinacoin addons')
         .action(() => {
-        console.log('\n  Available CinaConnect addons:\n');
+        console.log('\n  Available Cinacoin addons:\n');
         for (const [name, info] of Object.entries(ADDONS)) {
             console.log(`    ${name.padEnd(32)} ${info.description}`);
         }
@@ -42,13 +42,13 @@ export function addCommand(cli) {
     // Add 'add' command
     cli
         .command('add')
-        .description('Add an CinaConnect adapter, plugin, or component')
-        .argument('<addon>', 'Addon to add (e.g., @cinaconnect/react)')
+        .description('Add an Cinacoin adapter, plugin, or component')
+        .argument('<addon>', 'Addon to add (e.g., @cinacoin/react)')
         .option('--dev', 'Add as dev dependency')
         .action(async (addon, opts) => {
         const info = ADDONS[addon];
         if (!info) {
-            warn(`Unknown addon '${addon}'. Run 'cinaconnect list' to see available addons.`);
+            warn(`Unknown addon '${addon}'. Run 'cinacoin list' to see available addons.`);
             process.exit(1);
         }
         const s = spinner(`Adding ${addon}...`);
@@ -56,7 +56,7 @@ export function addCommand(cli) {
             // Check if package.json exists
             const pkgPath = join(process.cwd(), 'package.json');
             if (!existsSync(pkgPath)) {
-                s.fail('No package.json found. Run "cinaconnect init" first.');
+                s.fail('No package.json found. Run "cinacoin init" first.');
                 process.exit(1);
             }
             const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));

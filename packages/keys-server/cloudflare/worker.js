@@ -1,5 +1,5 @@
 /**
- * CinaConnect Keys Server — Cloudflare Worker
+ * Cinacoin Keys Server — Cloudflare Worker
  *
  * Manages encrypted key pairs and sessions using D1 (SQLite) + KV.
  * Replaces the PostgreSQL + Redis architecture.

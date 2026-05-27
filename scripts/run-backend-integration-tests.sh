@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run-backend-integration-tests.sh — Build and run CinaConnect backend integration tests
+# run-backend-integration-tests.sh — Build and run CinaCoin backend integration tests
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -86,12 +86,12 @@ BUILD_RESULTS=()
 
 for svc in "${SERVICES[@]}"; do
   echo ""
-  info "  Building @cinaconnect/$svc ..."
+  info "  Building @cinacoin/$svc ..."
   if (cd "$PROJECT_ROOT/packages/$svc" && pnpm run build 2>&1 | tail -3); then
-    log "  @cinaconnect/$svc → built"
+    log "  @cinacoin/$svc → built"
     BUILD_RESULTS+=("$svc:success")
   else
-    warn "  @cinaconnect/$svc → build failed (may not affect integration tests if dist exists)"
+    warn "  @cinacoin/$svc → build failed (may not affect integration tests if dist exists)"
     BUILD_RESULTS+=("$svc:skipped")
   fi
 done
@@ -130,7 +130,7 @@ REPORT_FILE="$SCRIPT_DIR/test-report-$(date +%Y%m%d-%H%M%S).md"
 
 # Collect test counts from vitest output if available
 cat > "$REPORT_FILE" <<EOF
-# CinaConnect Backend Integration Test Report
+# CinaCoin Backend Integration Test Report
 
 **Generated:** $TIMESTAMP
 **Duration:** ${TEST_DURATION}s
@@ -148,7 +148,7 @@ for result in "${BUILD_RESULTS[@]}"; do
   icon="❓"
   [[ "$status" == "success" ]] && icon="✅"
   [[ "$status" == "skipped" ]] && icon="⚠️"
-  echo "| @cinaconnect/$svc | $icon $status | integrated |" >> "$REPORT_FILE"
+  echo "| @cinacoin/$svc | $icon $status | integrated |" >> "$REPORT_FILE"
 done
 
 cat >> "$REPORT_FILE" <<EOF
@@ -234,9 +234,9 @@ for result in "${BUILD_RESULTS[@]}"; do
   svc="${result%%:*}"
   status="${result##*:}"
   if [[ "$status" == "success" ]]; then
-    log "  @cinaconnect/$svc"
+    log "  @cinacoin/$svc"
   else
-    warn "  @cinaconnect/$svc ($status)"
+    warn "  @cinacoin/$svc ($status)"
   fi
 done
 

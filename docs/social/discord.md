@@ -1,10 +1,10 @@
-# Discord Announcement — CinaConnect v0.2.0
+# Discord Announcement — Cinacoin v0.2.0
 
 ---
 
-## 🔔 CinaConnect v0.2.0 is LIVE!
+## 🔔 Cinacoin v0.2.0 is LIVE!
 
-Hey everyone! We just shipped **CinaConnect v0.2.0** with **72 packages on npm**. Here's the TL;DR:
+Hey everyone! We just shipped **Cinacoin v0.2.0** with **72 packages on npm**. Here's the TL;DR:
 
 ### 🎯 What's New
 
@@ -32,7 +32,7 @@ Hey everyone! We just shipped **CinaConnect v0.2.0** with **72 packages on npm**
 ### 🚀 Try It
 
 ```bash
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 ```
 
 ### 📱 Platform SDKs
@@ -45,14 +45,14 @@ Social: Telegram Mini Apps, Farcaster Mini Apps
 ### 🔧 Coming from Reown/AppKit?
 
 ```bash
-npx @cinaconnect/codemod migrate-from-reown ./src
+npx @cinacoin/codemod migrate-from-reown ./src
 ```
 
 ### 📖 Links
 
-- **Docs:** docs.cinaconnect.io
-- **GitHub:** github.com/cinaconnect/cinaconnect
-- **npm:** npmjs.com/org/cinaconnect
+- **Docs:** docs.cinacoin.io
+- **GitHub:** github.com/cinacoin/cinacoin
+- **npm:** npmjs.com/org/cinacoin
 - **Migration Guide:** [Migrate from Reown](../../docs/guide/migrate-from-reown.md)
 
 ### 🗺️ What's Next

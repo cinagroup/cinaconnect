@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
-import { useCinaConnect, ConnectButton, ConnectModal } from '@cinaconnect/react';
+import { useCinacoin, ConnectButton, ConnectModal } from '@cinacoin/react';
 import { ethers } from 'ethers';
 /**
  * ConnectDemo — Real wallet connection demo with:
@@ -17,7 +17,7 @@ const RPC_ENDPOINTS = {
 };
 export function ConnectDemo() {
     const [showModal, setShowModal] = useState(false);
-    const { account, status, balance, connectors, disconnect, chainId } = useCinaConnect();
+    const { account, status, balance, connectors, disconnect, chainId } = useCinacoin();
     const [balanceInfo, setBalanceInfo] = useState(null);
     const [loadingBalance, setLoadingBalance] = useState(false);
     const [eip6963Wallets, setEip6963Wallets] = useState([]);

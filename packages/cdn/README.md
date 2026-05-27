@@ -1,6 +1,6 @@
-# @cinaconnect/cdn
+# @cinacoin/cdn
 
-CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>` tag. No build tools required.
+CDN bundle for Cinacoin — use ConnectButton and ConnectModal via `<script>` tag. No build tools required.
 
 ## Quick Start
 
@@ -16,7 +16,7 @@ CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>`
 
   <!-- Configure before loading -->
   <script>
-    window.CinaConnect = {
+    window.Cinacoin = {
       projectId: 'YOUR_WALLETCONNECT_PROJECT_ID',
       theme: 'dark',
       primaryColor: '#6366F1',
@@ -25,12 +25,12 @@ CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>`
   </script>
 
   <!-- Load CDN bundle -->
-  <script src="https://cdn.cinaconnect.dev/connect.js"></script>
+  <script src="https://cdn.cinacoin.dev/connect.js"></script>
 
   <!-- Render components -->
   <script>
     // Render a ConnectButton
-    CinaConnect.renderConnectButton('#connect-button', {
+    Cinacoin.renderConnectButton('#connect-button', {
       size: 'lg',
       label: 'Connect',
       onConnect: (address) => console.log('Connected:', address),
@@ -38,7 +38,7 @@ CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>`
     });
 
     // Render a ConnectModal
-    CinaConnect.renderConnectModal('#connect-modal', {
+    Cinacoin.renderConnectModal('#connect-modal', {
       wallets: [
         { id: 'metamask', name: 'MetaMask', installed: true },
         { id: 'walletconnect', name: 'WalletConnect' },
@@ -47,9 +47,9 @@ CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>`
     });
 
     // Control modal programmatically
-    CinaConnect.showModal();
-    CinaConnect.hideModal();
-    CinaConnect.toggleModal();
+    Cinacoin.showModal();
+    Cinacoin.hideModal();
+    Cinacoin.toggleModal();
   </script>
 </body>
 </html>
@@ -57,7 +57,7 @@ CDN bundle for CinaConnect — use ConnectButton and ConnectModal via `<script>`
 
 ## Configuration
 
-Set `window.CinaConnect` before loading the script:
+Set `window.Cinacoin` before loading the script:
 
 | Option | Type | Default | Description |
 |--------|------|---------|-------------|
@@ -72,7 +72,7 @@ Set `window.CinaConnect` before loading the script:
 ### ConnectButton
 
 ```ts
-CinaConnect.renderConnectButton(selector: string, options?: ConnectButtonOptions): void
+Cinacoin.renderConnectButton(selector: string, options?: ConnectButtonOptions): void
 ```
 
 Options:
@@ -88,7 +88,7 @@ Options:
 ### ConnectModal
 
 ```ts
-CinaConnect.renderConnectModal(selector: string, options?: ConnectModalOptions): void
+Cinacoin.renderConnectModal(selector: string, options?: ConnectModalOptions): void
 ```
 
 Options:
@@ -104,29 +104,29 @@ Options:
 ### Modal Controls
 
 ```ts
-CinaConnect.showModal(): void
-CinaConnect.hideModal(): void
-CinaConnect.toggleModal(): void
-CinaConnect.getModalView(): string
+Cinacoin.showModal(): void
+Cinacoin.hideModal(): void
+Cinacoin.toggleModal(): void
+Cinacoin.getModalView(): string
 ```
 
 ### State
 
 ```ts
-CinaConnect.getButtonState(): string        // 'disconnected' | 'connecting' | 'connected'
-CinaConnect.getButtonAddress(): string|null // Connected wallet address
-CinaConnect.disconnect(): void              // Disconnect wallet
+Cinacoin.getButtonState(): string        // 'disconnected' | 'connecting' | 'connected'
+Cinacoin.getButtonAddress(): string|null // Connected wallet address
+Cinacoin.disconnect(): void              // Disconnect wallet
 ```
 
 ### Module Loader (Advanced)
 
-For lazy-loading additional CinaConnect modules:
+For lazy-loading additional Cinacoin modules:
 
 ```ts
-CinaConnect.loadModule('pay-ui', () => import('/pay-ui.js'))
-CinaConnect.isLoaded('pay-ui')
-CinaConnect.getModule('pay-ui')
-CinaConnect.clearCache()
+Cinacoin.loadModule('pay-ui', () => import('/pay-ui.js'))
+Cinacoin.isLoaded('pay-ui')
+Cinacoin.getModule('pay-ui')
+Cinacoin.clearCache()
 ```
 
 ## CDN URLs

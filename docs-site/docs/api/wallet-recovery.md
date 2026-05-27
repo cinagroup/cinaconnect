@@ -1,11 +1,11 @@
 # Wallet Recovery
 
-> `@cinaconnect/wallet-recovery` — Wallet recovery mechanisms for CinaConnect.
+> `@cinacoin/wallet-recovery` — Wallet recovery mechanisms for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/wallet-recovery
+npm install @cinacoin/wallet-recovery
 ```
 
 ## Overview

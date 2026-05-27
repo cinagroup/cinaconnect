@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/config
+ * @cinacoin/config
  *
  * Remote feature flags, headless mode SDK, and virtual testnet integration.
  *

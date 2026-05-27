@@ -1,5 +1,5 @@
 /**
- * Starknet-specific types for the @cinaconnect/adapter-starknet package.
+ * Starknet-specific types for the @cinacoin/adapter-starknet package.
  */
 /* ------------------------------------------------------------------ */
 /*  Starknet chain presets                                             */

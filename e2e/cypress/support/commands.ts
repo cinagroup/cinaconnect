@@ -1,5 +1,5 @@
 // ***************************************************************
-// Custom Cypress Commands for CinaConnect
+// Custom Cypress Commands for Cinacoin
 // ***************************************************************
 
 declare global {

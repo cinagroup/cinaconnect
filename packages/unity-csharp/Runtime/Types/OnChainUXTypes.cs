@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace CinaConnect
+namespace Cinacoin
 {
     /// <summary>
-    /// Core type definitions for the CinaConnect Unity SDK.
+    /// Core type definitions for the Cinacoin Unity SDK.
     /// Mirrors the TypeScript core-sdk types.ts API surface.
     /// </summary>
 
@@ -254,7 +254,7 @@ namespace CinaConnect
     }
 
     /// SDK version.
-    public static class CinaConnectVersion
+    public static class CinacoinVersion
     {
         public const string Value = "0.1.0";
     }

@@ -6,7 +6,7 @@
  */
 
 import XCTest
-@testable import CinaConnect
+@testable import OnChainUX
 
 final class WalletConnectTests: XCTestCase {
 
@@ -45,13 +45,13 @@ final class WalletConnectTests: XCTestCase {
     // MARK: - URI Parsing
 
     func testParseValidWCv2Uri() {
-        let uri = "wc:abc123@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinaconnect.io&symKey=def456"
+        let uri = "wc:abc123@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinacoin.io&symKey=def456"
         do {
             let components = try WCUtils.parseUri(uri)
             XCTAssertEqual(components.topic, "abc123")
             XCTAssertEqual(components.version, 2)
             XCTAssertEqual(components.relayProtocol, "waku")
-            XCTAssertEqual(components.relayUrl, "wss://relay.cinaconnect.io")
+            XCTAssertEqual(components.relayUrl, "wss://relay.cinacoin.io")
             XCTAssertEqual(components.symKey, "def456")
         } catch {
             XCTFail("Failed to parse valid WC URI: \(error)")
@@ -80,7 +80,7 @@ final class WalletConnectTests: XCTestCase {
             topic: "test123",
             version: 2,
             relayProtocol: "waku",
-            relayUrl: "wss://relay.cinaconnect.io",
+            relayUrl: "wss://relay.cinacoin.io",
             symKey: "symkey123"
         )
 
@@ -141,7 +141,7 @@ final class WalletConnectTests: XCTestCase {
         XCTAssertThrowsError(try kp.sharedSecret(peerPublicKeyHex: "invalid"))
     }
 
-    func testEncryptDecryptRoundtrip() {
+    func testChaCha20Poly1305EncryptDecryptRoundtrip() {
         let symKey = WCUtils.generateSymKey()
         let json: [String: Any] = [
             "id": 1,
@@ -156,6 +156,79 @@ final class WalletConnectTests: XCTestCase {
 
         let decrypted = WCUtils.decrypt(symKey: symKey, encrypted: encrypted!)
         XCTAssertNotNil(decrypted)
+
+        // Verify round-trip correctness
+        let roundtrip = try? JSONSerialization.jsonObject(with: decrypted!) as? [String: Any]
+        XCTAssertNotNil(roundtrip)
+        XCTAssertEqual(roundtrip?["id"] as? Int, 1)
+        XCTAssertEqual(roundtrip?["jsonrpc"] as? String, "2.0")
+        XCTAssertEqual(roundtrip?["method"] as? String, "test")
+    }
+
+    func testChaCha20Poly1305DecryptWrongKey() {
+        let symKey1 = WCUtils.generateSymKey()
+        let symKey2 = WCUtils.generateSymKey()
+        let json: [String: Any] = ["secret": true]
+
+        let encrypted = WCUtils.encrypt(symKey: symKey1, json: json)
+        XCTAssertNotNil(encrypted)
+
+        // Decrypting with wrong key should fail
+        let decrypted = WCUtils.decrypt(symKey: symKey2, encrypted: encrypted!)
+        XCTAssertNil(decrypted, "Decryption with wrong key should fail (auth tag mismatch)")
+    }
+
+    func testChaCha20Poly1305NonceSize() {
+        // Verify the encrypted output format: nonce (12) || ciphertext || tag (16)
+        let symKey = WCUtils.generateSymKey()
+        let json: [String: Any] = ["test": true]
+        let encrypted = WCUtils.encrypt(symKey: symKey, json: json)
+        XCTAssertNotNil(encrypted)
+
+        let combined = Data(base64Encoded: encrypted!)!
+        // Minimum: 12 (nonce) + 16 (tag) = 28 bytes
+        XCTAssertGreaterThan(combined.count, 28)
+        // Nonce portion should be 12 bytes
+        let nonceData = combined.prefix(12)
+        XCTAssertEqual(nonceData.count, 12, "ChaCha20-Poly1305 nonce must be 12 bytes")
+    }
+
+    func testChaCha20Poly1305DeterministicNonce() {
+        // Same key + different plaintexts produce different ciphertexts (nonce is random)
+        let symKey = WCUtils.generateSymKey()
+        let json: [String: Any] = ["data": "same"]
+
+        let enc1 = WCUtils.encrypt(symKey: symKey, json: json)!
+        let enc2 = WCUtils.encrypt(symKey: symKey, json: json)!
+        XCTAssertNotEqual(enc1, enc2, "Random nonce should produce different ciphertexts")
+
+        // But both should decrypt correctly
+        let dec1 = WCUtils.decrypt(symKey: symKey, encrypted: enc1)!
+        let dec2 = WCUtils.decrypt(symKey: symKey, encrypted: enc2)!
+        XCTAssertEqual(dec1, dec2)
+    }
+
+    func testEncryptDecryptWithEmptyData() {
+        let symKey = WCUtils.generateSymKey()
+        let json: [String: Any] = [:]
+        let encrypted = WCUtils.encrypt(symKey: symKey, json: json)
+        XCTAssertNotNil(encrypted)
+        let decrypted = WCUtils.decrypt(symKey: symKey, encrypted: encrypted!)
+        XCTAssertNotNil(decrypted)
+    }
+
+    func testChaCha20Poly1305LargePayload() {
+        let symKey = WCUtils.generateSymKey()
+        var largeDict: [String: Any] = [:]
+        for i in 0..<100 {
+            largeDict["key\(i)"] = String(repeating: "x", count: 100)
+        }
+        let encrypted = WCUtils.encrypt(symKey: symKey, json: largeDict)
+        XCTAssertNotNil(encrypted)
+        let decrypted = WCUtils.decrypt(symKey: symKey, encrypted: encrypted!)
+        XCTAssertNotNil(decrypted)
+        let roundtrip = try? JSONSerialization.jsonObject(with: decrypted!) as? [String: Any]
+        XCTAssertEqual(roundtrip?.count, 100)
     }
 
     func testDeriveSessionTopic() {
@@ -171,6 +244,138 @@ final class WalletConnectTests: XCTestCase {
             peerPublicKey: "bb".repeating(count: 32)
         )
         XCTAssertEqual(topic, topic2)
+    }
+
+    // MARK: - ChaCha20-Poly1305 Shared Secret Encryption
+
+    func testEncryptUsingSharedSecretRoundtrip() {
+        let kp1 = WCX25519Keypair.generate()
+        let kp2 = WCX25519Keypair.generate()
+
+        // Both sides compute the same shared secret
+        let secret1 = try! kp1.sharedSecret(peerPublicKeyHex: kp2.publicKeyHex)
+        let secret2 = try! kp2.sharedSecret(peerPublicKeyHex: kp1.publicKeyHex)
+        XCTAssertEqual(secret1, secret2)
+
+        // Encrypt with kp1's keypair + kp2's public key
+        let json: [String: Any] = ["method": "eth_sendTransaction", "params": ["from": "0x123"]]
+        let encrypted = WCUtils.encryptUsingSharedSecret(
+            myPrivateKey: kp1.privateKeyBytes,
+            peerPublicKeyHex: kp2.publicKeyHex,
+            json: json
+        )
+        XCTAssertNotNil(encrypted)
+        XCTAssertFalse(encrypted!.isEmpty)
+
+        // Decrypt with kp2's keypair + kp1's public key
+        let decrypted = WCUtils.decrypt(
+            symKey: secret2.toHexString(),
+            encrypted: encrypted!
+        )
+        XCTAssertNotNil(decrypted)
+
+        // Verify content
+        let roundtrip = try? JSONSerialization.jsonObject(with: decrypted!) as? [String: Any]
+        XCTAssertEqual(roundtrip?["method"] as? String, "eth_sendTransaction")
+    }
+
+    func testEncryptUsingSharedSecretDeterministicSharedSecret() {
+        // Verify both parties derive identical shared secrets
+        let kp1 = WCX25519Keypair.generate()
+        let kp2 = WCX25519Keypair.generate()
+
+        let s1 = try! kp1.sharedSecret(peerPublicKeyHex: kp2.publicKeyHex)
+        let s2 = try! kp2.sharedSecret(peerPublicKeyHex: kp1.publicKeyHex)
+        XCTAssertEqual(s1, s2, "DH shared secrets must be identical")
+
+        // Encrypt from side 1, decrypt from side 2
+        let json: [String: Any] = ["ping": true]
+        let enc = WCUtils.encryptUsingSharedSecret(
+            myPrivateKey: kp1.privateKeyBytes,
+            peerPublicKeyHex: kp2.publicKeyHex,
+            json: json
+        )
+        let dec = WCUtils.decrypt(symKey: s2.toHexString(), encrypted: enc!)
+        XCTAssertNotNil(dec)
+    }
+
+    // MARK: - encryptUsingSessionKey (HKDF-SHA256 Key Derivation)
+
+    func testEncryptUsingSessionKeyRoundtrip() {
+        let topic = WCUtils.generateTopic()
+        let data = Data("Hello World".utf8)
+
+        let encrypted = WCUtils.encryptUsingSessionKey(topic: topic, data: data)
+        XCTAssertNotNil(encrypted)
+        XCTAssertFalse(encrypted!.isEmpty)
+
+        // Derive the same key and decrypt
+        let topicData = topic.data(using: .utf8)!
+        let derivedKey = HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: SymmetricKey(data: topicData),
+            outputByteCount: 32
+        )
+
+        let symKey = derivedKey.withUnsafeBytes { Data($0).toHexString() }
+        let decrypted = WCUtils.decrypt(symKey: symKey, encrypted: encrypted!)
+        XCTAssertNotNil(decrypted)
+        XCTAssertEqual(decrypted, data)
+    }
+
+    func testEncryptUsingSessionKeyNotUsingTopicAsKey() {
+        // The key must NOT be the raw topic bytes (that was the old bug)
+        let topic = "abc123def456"
+        let data = Data("test payload".utf8)
+
+        let encrypted = WCUtils.encryptUsingSessionKey(topic: topic, data: data)
+        XCTAssertNotNil(encrypted)
+
+        // Verify decryption fails with the raw topic-as-key (the old buggy approach)
+        let badKey = topic.data(using: .utf8)!.toHexString()
+        let badDecrypted = WCUtils.decrypt(symKey: badKey, encrypted: encrypted!)
+        XCTAssertNil(badDecrypted, "Raw topic-as-key should not decrypt HKDF-derived key")
+    }
+
+    func testEncryptUsingSessionKeyDeterministicKeyDerivation() {
+        // Same topic always derives the same key (HKDF is deterministic)
+        let topic = "fixed-topic-12345"
+        let topicData = topic.data(using: .utf8)!
+
+        let key1 = HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: SymmetricKey(data: topicData),
+            outputByteCount: 32
+        )
+        let key2 = HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: SymmetricKey(data: topicData),
+            outputByteCount: 32
+        )
+        XCTAssertEqual(
+            key1.withUnsafeBytes { Data($0) },
+            key2.withUnsafeBytes { Data($0) },
+            "HKDF must derive identical keys from the same input"
+        )
+    }
+
+    func testEncryptUsingSessionKeyDifferentTopics() {
+        let topic1 = "topic-alpha"
+        let topic2 = "topic-beta"
+        let data = Data("same data".utf8)
+
+        let enc1 = WCUtils.encryptUsingSessionKey(topic: topic1, data: data)!
+        let enc2 = WCUtils.encryptUsingSessionKey(topic: topic2, data: data)!
+
+        // Different topics → different keys → different ciphertexts
+        XCTAssertNotEqual(enc1, enc2)
+
+        // Cross-decrypt should fail
+        let topicData1 = topic1.data(using: .utf8)!
+        let key1 = HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: SymmetricKey(data: topicData1),
+            outputByteCount: 32
+        )
+        let symKey1 = key1.withUnsafeBytes { Data($0).toHexString() }
+        let crossDecrypted = WCUtils.decrypt(symKey: symKey1, encrypted: enc2)
+        XCTAssertNil(crossDecrypted)
     }
 
     // MARK: - WC Methods & Events
@@ -329,7 +534,7 @@ final class WalletConnectTests: XCTestCase {
 
     func testWalletManagerWcConnectors() {
         let manager = WalletManager()
-        let config = CinaConnectConfig(
+        let config = CinacoinConfig(
             projectId: "test-id",
             chains: [.ethereum, .polygon],
             metadata: AppMetadata(

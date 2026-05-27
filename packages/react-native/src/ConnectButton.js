@@ -3,12 +3,12 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * ConnectButton — Native React Native button with real WC v2 connection state.
  *
  * Uses native RN components and reads real connection state from
- * both CinaConnectProvider and WalletConnectProvider for accurate
+ * both CinacoinProvider and WalletConnectProvider for accurate
  * account display, balance fetching, and disconnect handling.
  */
 import React, { useCallback, useState } from 'react';
 import { TouchableOpacity, Text, View, StyleSheet, ActivityIndicator, } from 'react-native';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 import { useWalletConnect } from './WalletConnectProvider.js';
 const SIZE_HEIGHT = { sm: 36, md: 44, lg: 52 };
 const SIZE_PADDING = { sm: 16, md: 24, lg: 32 };
@@ -35,11 +35,11 @@ function chainName(chainId) {
  * Native ConnectButton for React Native with real WC v2 state.
  *
  * Reads connection state from WalletConnectProvider (if available) and
- * CinaConnectProvider. Supports balance fetching, network badge, avatar,
+ * CinacoinProvider. Supports balance fetching, network badge, avatar,
  * and real disconnect via WC session cleanup.
  */
 export function ConnectButton({ label = 'Connect Wallet', variant = 'primary', size = 'md', showBalance = false, showAvatar = false, showNetwork = false, style, textStyle, onPress, onDisconnect, }) {
-    const { account, status, connect, disconnect, themeColors } = useCinaConnectContext();
+    const { account, status, connect, disconnect, themeColors } = useCinacoinContext();
     // Try to get real WC v2 state (may not be available if not wrapped)
     let wcBalance = null;
     let wcSession = null;
@@ -53,7 +53,7 @@ export function ConnectButton({ label = 'Connect Wallet', variant = 'primary', s
         wcFetching = wc.connecting;
     }
     catch {
-        // WalletConnectProvider not in tree — use CinaConnectProvider only
+        // WalletConnectProvider not in tree — use CinacoinProvider only
     }
     const [fetchingBalance, setFetchingBalance] = useState(false);
     // Derive effective connected state
@@ -64,7 +64,7 @@ export function ConnectButton({ label = 'Connect Wallet', variant = 'primary', s
         if (isConnecting)
             return;
         if (isConnected) {
-            // Toggle: disconnect via WC or CinaConnect
+            // Toggle: disconnect via WC or Cinacoin
             if (wcDisconnect) {
                 wcDisconnect().then(() => onDisconnect?.()).catch(() => { });
             }

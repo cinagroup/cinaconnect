@@ -265,7 +265,7 @@ export default function HealthStatusPage() {
         <header className="mb-10">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-[var(--text-primary)]">CinaConnect</h1>
+              <h1 className="text-2xl font-bold text-[var(--text-primary)]">CinaCoin</h1>
               <p className="text-[var(--text-secondary)] text-sm mt-1">Service Status</p>
             </div>
             <div className="flex items-center gap-3">
@@ -348,7 +348,7 @@ export default function HealthStatusPage() {
         <footer className="text-center text-xs text-[var(--text-secondary)] pt-4 border-t border-[var(--border)]">
           <p>Health checks run client-side every 5 minutes. Last updated: {lastRefresh ? formatTime(lastRefresh) : "—"}</p>
           <p className="mt-1">
-            Powered by CinaConnect — <a href="https://cinaconnect.dev" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">cinaconnect.dev</a>
+            Powered by CinaCoin — <a href="https://cinacoin.dev" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">cinacoin.dev</a>
           </p>
         </footer>
       </div>

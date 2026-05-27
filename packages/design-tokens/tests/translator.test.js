@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/design-tokens theme translation.
+ * Tests for @cinacoin/design-tokens theme translation.
  * Tests theme token translation and CSS variable generation.
  */
 import { describe, it, expect } from 'vitest';

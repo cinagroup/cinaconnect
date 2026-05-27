@@ -1,4 +1,4 @@
-# CinaConnect Cloudflare Deployment
+# Cinacoin Cloudflare Deployment
 # Deploy all components to Cloudflare
 
 ## Architecture
@@ -29,14 +29,14 @@ wrangler login
 
 ```bash
 # Create R2 bucket for SDK bundles
-wrangler r2 bucket create cinaconnect-cdn
+wrangler r2 bucket create cinacoin-cdn
 
 # Build all packages
 pnpm install && pnpm run build
 
 # Upload bundles
-wrangler r2 object put cinaconnect-cdn/core-sdk/index.js --file=packages/core-sdk/dist/index.js
-wrangler r2 object put cinaconnect-cdn/core-sdk/index.js.map --file=packages/core-sdk/dist/index.js.map
+wrangler r2 object put cinacoin-cdn/core-sdk/index.js --file=packages/core-sdk/dist/index.js
+wrangler r2 object put cinacoin-cdn/core-sdk/index.js.map --file=packages/core-sdk/dist/index.js.map
 ```
 
 ### 3. Deploy RPC Proxy (Workers)
@@ -50,11 +50,11 @@ wrangler deploy --config cloudflare/wrangler.toml
 
 ```bash
 # Create D1 database
-wrangler d1 create cinaconnect-keys
+wrangler d1 create cinacoin-keys
 # → Copy the database_id to wrangler.toml
 
 # Run migrations
-wrangler d1 execute cinaconnect-keys --local --file=cloudflare/schema.sql
+wrangler d1 execute cinacoin-keys --local --file=cloudflare/schema.sql
 
 # Deploy
 cd packages/keys-server
@@ -74,7 +74,7 @@ wrangler deploy --config cloudflare/wrangler.toml
 cd apps/demo
 # Build with static export
 pnpm run build
-wrangler pages deploy .next --project-name=cinaconnect-demo
+wrangler pages deploy .next --project-name=cinacoin-demo
 ```
 
 ## Environment Variables

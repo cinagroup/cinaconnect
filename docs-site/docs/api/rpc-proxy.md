@@ -1,6 +1,6 @@
 # RPC Proxy
 
-> `@cinaconnect/rpc-proxy` — Self-hosted RPC proxy in Go/Rust.
+> `@cinacoin/rpc-proxy` — Self-hosted RPC proxy in Go/Rust.
 
 ## Overview
 

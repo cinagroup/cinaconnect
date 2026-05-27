@@ -8,7 +8,7 @@
  * Includes in-memory caching to avoid redundant RPC calls.
  *
  * ```tsx
- * import { useENSName, useENSAddress } from '@cinaconnect/react-native/ens';
+ * import { useENSName, useENSAddress } from '@cinacoin/react-native/ens';
  *
  * function Profile({ address }) {
  *   const { name, loading } = useENSName(address);
@@ -23,7 +23,7 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useCinaConnectContext } from '../OnChainUXProvider.js';
+import { useCinacoinContext } from '../OnChainUXProvider.js';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -283,7 +283,7 @@ function decodeENSString(result: string): string | null {
  * @returns UseENSNameReturn with name, loading state, and error.
  */
 export function useENSName(address?: string | null): UseENSNameReturn {
-  const { request: ctxRequest } = useCinaConnectContext();
+  const { request: ctxRequest } = useCinacoinContext();
   const [name, setName] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -344,7 +344,7 @@ export function useENSName(address?: string | null): UseENSNameReturn {
  * @returns UseENSAddressReturn with address, loading state, and error.
  */
 export function useENSAddress(name?: string | null): UseENSAddressReturn {
-  const { request: ctxRequest } = useCinaConnectContext();
+  const { request: ctxRequest } = useCinacoinContext();
   const [address, setAddress] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);

@@ -1,11 +1,11 @@
 /**
- * Vue component wrappers for CinaConnect Web Components.
+ * Vue component wrappers for Cinacoin Web Components.
  *
  * These are thin wrappers that forward props and events to the underlying
- * custom elements registered by @cinaconnect/core-ui.
+ * custom elements registered by @cinacoin/core-ui.
  */
 import { defineComponent, h, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { useCinaConnect } from './composables.js';
+import { useCinacoin } from './composables.js';
 /**
  * ConnectButton — Vue wrapper for the OCX ConnectButton Web Component.
  */
@@ -22,7 +22,7 @@ export const OcxConnectButton = defineComponent({
     emits: ['click', 'disconnect'],
     setup(props, { emit }) {
         const elRef = ref(null);
-        const { account, status, connect, disconnect } = useCinaConnect();
+        const { account, status, connect, disconnect } = useCinacoin();
         const stateMap = {
             disconnected: 'disconnected',
             connecting: 'connecting',
@@ -79,7 +79,7 @@ export const OcxConnectModal = defineComponent({
     emits: ['close', 'wallet-select'],
     setup(props, { emit }) {
         const elRef = ref(null);
-        const { connect } = useCinaConnect();
+        const { connect } = useCinacoin();
         onMounted(() => {
             const el = elRef.value;
             if (!el)
@@ -118,7 +118,7 @@ export const OcxChainSwitcher = defineComponent({
     emits: ['chain-change'],
     setup(props, { emit }) {
         const elRef = ref(null);
-        const { config, account, switchChain } = useCinaConnect();
+        const { config, account, switchChain } = useCinacoin();
         watch([() => config.chains, () => account.value.chainId], () => {
             const el = elRef.value;
             if (el) {

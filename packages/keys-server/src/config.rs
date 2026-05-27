@@ -17,7 +17,7 @@ pub struct Config {
     pub redis_cache_ttl_secs: u64,
 
     // --- Auth ---
-    /// JWT signing secret.
+    /// JWT signing secret. Must be set via JWT_SECRET env var — no default.
     pub jwt_secret: String,
     /// JWT token expiry in seconds.
     pub jwt_expiry_secs: u64,
@@ -38,6 +38,15 @@ pub struct Config {
 
 impl Config {
     pub fn from_env() -> Result<Self, Box<dyn std::error::Error>> {
+        // JWT_SECRET is mandatory — no default, refuse to start without it.
+        let jwt_secret = std::env::var("JWT_SECRET")
+            .map_err(|_| "JWT_SECRET environment variable is required. Refusing to start without a secure JWT signing key.")?;
+
+        // Enforce minimum length for JWT secret
+        if jwt_secret.len() < 16 {
+            return Err("JWT_SECRET must be at least 16 characters long for security.".into());
+        }
+
         Ok(Self {
             host: std::env::var("KEYS_SERVER_HOST").unwrap_or_else(|_| "0.0.0.0".into()),
             port: std::env::var("KEYS_SERVER_PORT")
@@ -62,8 +71,7 @@ impl Config {
                 .and_then(|s| s.parse().ok())
                 .unwrap_or(300),
 
-            jwt_secret: std::env::var("JWT_SECRET")
-                .unwrap_or_else(|_| "change-me-in-production".into()),
+            jwt_secret,
             jwt_expiry_secs: std::env::var("JWT_EXPIRY_SECS")
                 .ok()
                 .and_then(|s| s.parse().ok())

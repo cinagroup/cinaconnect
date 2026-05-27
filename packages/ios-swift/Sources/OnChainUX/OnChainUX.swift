@@ -1,14 +1,14 @@
 /**
- * CinaConnect iOS SDK — Main module.
+ * Cinacoin iOS SDK — Main module.
  *
- * Provides the core `CinaConnect` class that manages wallet connections,
+ * Provides the core `Cinacoin` class that manages wallet connections,
  * chain state, and theme configuration for native iOS applications.
  *
  * ## Usage
  * ```swift
- * import CinaConnect
+ * import Cinacoin
  *
- * let config = CinaConnectConfig(
+ * let config = CinacoinConfig(
  *     projectId: "your-project-id",
  *     chains: [.ethereum, .polygon, .arbitrum],
  *     metadata: AppMetadata(
@@ -19,11 +19,11 @@
  *     )
  * )
  *
- * CinaConnect.shared.configure(with: config)
+ * Cinacoin.shared.configure(with: config)
  * ```
  *
  * ## Architecture
- * - `CinaConnect` — Central manager (singleton) for configuration and state
+ * - `Cinacoin` — Central manager (singleton) for configuration and state
  * - `WalletManager` — Wallet discovery, connection, and session lifecycle
  * - `ConnectButton` — SwiftUI button component
  * - `ConnectModal` — SwiftUI modal component
@@ -40,14 +40,14 @@ import Foundation
 /// SDK version string.
 public let ONCHAINUX_VERSION = "0.1.0"
 
-// MARK: - CinaConnect
+// MARK: - Cinacoin
 
-/// Central CinaConnect manager. Configured once at app launch, provides
+/// Central Cinacoin manager. Configured once at app launch, provides
 /// access to wallet connection state, chain information, and theme settings.
-public final class CinaConnect: ObservableObject {
+public final class Cinacoin: ObservableObject {
     
     /// Shared singleton instance.
-    public static let shared = CinaConnect()
+    public static let shared = Cinacoin()
     
     /// Current connection status.
     @Published public private(set) var status: ConnectionStatus = .disconnected
@@ -67,7 +67,7 @@ public final class CinaConnect: ObservableObject {
     @Published public private(set) var themeColors: ThemeColors = .dark
     
     /// Configuration provided by the app.
-    public private(set) var config: CinaConnectConfig?
+    public private(set) var config: CinacoinConfig?
     
     /// Wallet manager for connection operations.
     public let walletManager = WalletManager()
@@ -80,9 +80,9 @@ public final class CinaConnect: ObservableObject {
     
     private init() {}
     
-    /// Configure CinaConnect with app-specific settings.
+    /// Configure Cinacoin with app-specific settings.
     /// - Parameter config: The configuration to apply.
-    public func configure(with config: CinaConnectConfig) {
+    public func configure(with config: CinacoinConfig) {
         self.config = config
         self.themeMode = config.themeMode
         activeChainId = config.chains.first?.chainId ?? 1
@@ -116,10 +116,10 @@ public final class CinaConnect: ObservableObject {
     /// - Parameter chainId: Target chain ID.
     public func switchChain(chainId: Int) async throws {
         guard let config = config else {
-            throw CinaConnectError.notConfigured
+            throw CinacoinError.notConfigured
         }
         guard config.chains.contains(where: { $0.chainId == chainId }) else {
-            throw CinaConnectError.chainNotSupported(chainId)
+            throw CinacoinError.chainNotSupported(chainId)
         }
         activeChainId = chainId
     }
@@ -137,8 +137,8 @@ public final class CinaConnect: ObservableObject {
 
 // MARK: - Configuration
 
-/// Configuration passed to CinaConnect at startup.
-public struct CinaConnectConfig: Sendable {
+/// Configuration passed to Cinacoin at startup.
+public struct CinacoinConfig: Sendable {
     /// Optional project ID for Relay/RPC services.
     public var projectId: String?
     /// Supported chains.
@@ -428,8 +428,8 @@ public struct TransactionRequest: Sendable {
 
 // MARK: - Errors
 
-/// CinaConnect-specific errors.
-public enum CinaConnectError: Error, LocalizedError {
+/// Cinacoin-specific errors.
+public enum CinacoinError: Error, LocalizedError {
     case notConfigured
     case chainNotSupported(Int)
     case walletNotFound(String)
@@ -440,7 +440,7 @@ public enum CinaConnectError: Error, LocalizedError {
     public var errorDescription: String? {
         switch self {
         case .notConfigured:
-            return "CinaConnect has not been configured. Call CinaConnect.shared.configure(with:) first."
+            return "Cinacoin has not been configured. Call Cinacoin.shared.configure(with:) first."
         case let .chainNotSupported(id):
             return "Chain \(id) is not supported."
         case let .walletNotFound(id):

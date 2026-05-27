@@ -95,10 +95,10 @@ export interface KotlinSessionInfo {
 }
 
 /**
- * CinaConnect SDK interface for Kotlin/Android.
+ * Cinacoin SDK interface for Kotlin/Android.
  * Implement this in your Android bridge layer.
  */
-export interface KotlinCinaConnectSDK {
+export interface KotlinCinacoinSDK {
   /** Initialize the SDK with project configuration */
   initialize(params: KotlinWCParams): Promise<void>;
 

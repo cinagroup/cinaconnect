@@ -1,6 +1,6 @@
-# Contributing to CinaConnect
+# Contributing to Cinacoin
 
-Thank you for your interest in contributing to CinaConnect! We welcome contributions from everyone — whether you're fixing a typo, adding a new chain adapter, or building a core feature.
+Thank you for your interest in contributing to Cinacoin! We welcome contributions from everyone — whether you're fixing a typo, adding a new chain adapter, or building a core feature.
 
 This guide covers everything you need to get started, contribute effectively, and get your work merged.
 
@@ -60,11 +60,11 @@ This project follows our [Code of Conduct](CODE_OF_CONDUCT.md). Please read it b
 
 ```bash
 # 1. Fork the repo on GitHub, then clone your fork
-git clone https://github.com/YOUR_USERNAME/cinaconnect.git
-cd cinaconnect
+git clone https://github.com/YOUR_USERNAME/cinacoin.git
+cd cinacoin
 
 # 2. Add the upstream remote to stay in sync
-git remote add upstream https://github.com/cinaconnect/cinaconnect.git
+git remote add upstream https://github.com/cinacoin/cinacoin.git
 git fetch upstream
 ```
 
@@ -87,7 +87,7 @@ pnpm run build
 cd packages/core-sdk && pnpm run build
 
 # Or use Turbo's filter:
-pnpm run build --filter=@cinaconnect/core-sdk
+pnpm run build --filter=@cinacoin/core-sdk
 ```
 
 ### Run the Demo App
@@ -329,7 +329,7 @@ We use [Vitest](https://vitest.dev/) for testing. Tests live in `packages/<name>
 pnpm run test
 
 # Run tests for a single package
-pnpm run test --filter=@cinaconnect/core-sdk
+pnpm run test --filter=@cinacoin/core-sdk
 
 # Run tests in watch mode
 cd packages/core-sdk && pnpm run test --watch
@@ -414,7 +414,7 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md#how-to-add-a-new-package) for detailed ins
 
 Quick overview:
 1. Create directory under `packages/your-package/`
-2. Create `package.json` with `@cinaconnect/` scope
+2. Create `package.json` with `@cinacoin/` scope
 3. Add build scripts (tsup for TypeScript, standard Cargo for Rust)
 4. Ensure it's included in `pnpm-workspace.yaml`
 5. Add to `turbo.json` task pipeline
@@ -429,7 +429,7 @@ See [DEVELOPMENT.md](./DEVELOPMENT.md#how-to-add-a-new-chain-adapter) for detail
 Quick overview:
 1. Create `packages/adapter-<chain>/`
 2. Implement the adapter interface (defined in core-sdk)
-3. Add chain definitions to `@cinaconnect/chains` if not present
+3. Add chain definitions to `@cinacoin/chains` if not present
 4. Wire up wallet discovery and connection flow
 5. Add tests with mock providers
 6. Update the adapter registry in core-sdk
@@ -501,4 +501,4 @@ Security-sensitive areas include:
 
 ---
 
-Thank you for contributing to CinaConnect! 🚀
+Thank you for contributing to Cinacoin! 🚀

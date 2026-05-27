@@ -1,4 +1,4 @@
-# CinaConnect Mobile & Game Engine SDK Analysis
+# Cinacoin Mobile & Game Engine SDK Analysis
 
 > Report: `03-mobile-game.md` — Native SDK completeness vs Reown equivalents
 > Generated: 2026-05-25
@@ -72,7 +72,7 @@
 8. `SolanaAdapterTests.swift`
 9. `EVMAdapterTests.swift`
 
-**Build readiness:** ✅ `Package.swift` (Swift 5.9). SPM package with WalletConnectSwiftV2 1.13.0 dependency. Targets iOS 15+ and macOS 12+. Note: Package.swift path references `Sources/CinaConnect/` but actual source is in `Sources/OnChainUX/` — **this is a build-blocking mismatch** unless the directory is aliased or renamed.
+**Build readiness:** ✅ `Package.swift` (Swift 5.9). SPM package with WalletConnectSwiftV2 1.13.0 dependency. Targets iOS 15+ and macOS 12+. Note: Package.swift path references `Sources/Cinacoin/` but actual source is in `Sources/OnChainUX/` — **this is a build-blocking mismatch** unless the directory is aliased or renamed.
 
 ---
 
@@ -142,7 +142,7 @@
 
 | Feature | Status | Notes |
 |---|---|---|
-| **Core wallet connection** | ⚠️ HTTP API wrapper | `CinaConnectClient.cs` — HTTP client to `api.cinaconnect.com`, not native WC protocol |
+| **Core wallet connection** | ⚠️ HTTP API wrapper | `CinacoinClient.cs` — HTTP client to `api.cinacoin.com`, not native WC protocol |
 | **WC protocol support** | ❌ None | No X25519, no relay WebSocket, no pairing — delegates to server |
 | **Deep linking** | ❌ Missing | Server-side only |
 | **Push notifications** | ❌ Missing | Not applicable (server model) |
@@ -152,7 +152,7 @@
 
 **Test files: 0**
 
-**Build readiness:** ✅ `CinaConnect.csproj` present. Models: 16 files. Services: 3 files (`RelayClient.cs`, `CryptoUtils.cs`, `WalletService.cs`). Example program included. TypeScript wrapper builds.
+**Build readiness:** ✅ `Cinacoin.csproj` present. Models: 16 files. Services: 3 files (`RelayClient.cs`, `CryptoUtils.cs`, `WalletService.cs`). Example program included. TypeScript wrapper builds.
 
 **Note:** This is a fundamentally different architecture than other SDKs — it's an **HTTP API client** rather than a **native WC protocol implementation**. Suitable for server-side or desktop apps but not for wallet-to-wallet direct connections.
 
@@ -163,7 +163,7 @@
 | Feature | Status | Notes |
 |---|---|---|
 | **Core wallet connection** | ✅ Complete | `OnChainUXProvider.tsx` — context provider with WC v2 |
-| **WC protocol support** | ✅ Complete | `WalletConnectProvider.tsx` — real WC v2 via `@cinaconnect/walletconnect-v2` |
+| **WC protocol support** | ✅ Complete | `WalletConnectProvider.tsx` — real WC v2 via `@cinacoin/walletconnect-v2` |
 | **Deep linking** | ✅ Complete | `deepLink.ts` + `linkMode.ts` |
 | **Push notifications** | ⚠️ Partial | No dedicated push handler |
 | **UI components** | ✅ Complete | `ConnectModal.tsx` + `ConnectButton.tsx` + `QRScanner.tsx` |
@@ -280,7 +280,7 @@ Reown's official SDKs (formerly WalletConnect) cover: `@web3modal/wagmi`, `@web3
 | SDK | Build System | Dependencies Resolved | Can Build? | Notes |
 |---|---|---|---|---|
 | **android-kotlin** | Gradle (`.gradle.kts`) | ✅ WalletConnectKotlin SDK pinned | ✅ Yes | Needs Android SDK 34, Kotlin 1.9+ |
-| **ios-swift** | SPM (`Package.swift`) | ✅ WalletConnectSwiftV2 1.13.0 | ⚠️ Path mismatch | `Package.swift` sources point to `Sources/CinaConnect/` but files are in `Sources/OnChainUX/` |
+| **ios-swift** | SPM (`Package.swift`) | ✅ WalletConnectSwiftV2 1.13.0 | ⚠️ Path mismatch | `Package.swift` sources point to `Sources/Cinacoin/` but files are in `Sources/OnChainUX/` |
 | **flutter-dart** | pub (`pubspec.yaml`) | ✅ All deps specified | ✅ Yes | Flutter 3.16+, Dart 3.2+ |
 | **unity-csharp** | Unity Editor | ⚠️ Missing `.asmdef` | ⚠️ Partial | Works in-editor, but no UPM packaging. Needs Assembly Definitions for proper compilation |
 | **dotnet** | dotnet CLI (`.csproj`) | ✅ Standard .NET deps | ✅ Yes | `dotnet build` should work. Needs Newtonsoft.Json NuGet |
@@ -301,7 +301,7 @@ Reown's official SDKs (formerly WalletConnect) cover: `@web3modal/wagmi`, `@web3
 - Social/email backends not wired
 
 ### iOS-Specific
-- **Build-blocking:** `Package.swift` source path mismatch (`Sources/CinaConnect/` vs `Sources/OnChainUX/`)
+- **Build-blocking:** `Package.swift` source path mismatch (`Sources/Cinacoin/` vs `Sources/OnChainUX/`)
 - `WCUtils.swift` X25519 placeholder needs completion
 - No QR scanner component
 
@@ -321,16 +321,16 @@ Reown's official SDKs (formerly WalletConnect) cover: `@web3modal/wagmi`, `@web3
 - No deep linking, no push, no UI, no chain adapters
 - CryptoUtils uses SHA-256 placeholder for Keccak-256
 - Zero test coverage
-- Suitable only for server-side or desktop apps connecting via CinaConnect API
+- Suitable only for server-side or desktop apps connecting via Cinacoin API
 
 ---
 
 ## 8. Recommendations
 
 ### Immediate Fixes
-1. **iOS Package.swift path mismatch** — Rename `Sources/OnChainUX/` to `Sources/CinaConnect/` or update `Package.swift` paths. **This blocks SPM builds.**
+1. **iOS Package.swift path mismatch** — Rename `Sources/OnChainUX/` to `Sources/Cinacoin/` or update `Package.swift` paths. **This blocks SPM builds.**
 2. **Unity .asmdef files** — Create Assembly Definitions for `Runtime/` and `Editor/` folders. Required for UPM.
-3. **dotnet tests** — Add at least basic unit tests for `CinaConnectClient`.
+3. **dotnet tests** — Add at least basic unit tests for `CinacoinClient`.
 
 ### Near-Term
 4. **Social/Email login backends** — Wire up the stub UI components or document them as planned features.

@@ -1,11 +1,11 @@
-# @cinaconnect/passkey-auth
+# @cinacoin/passkey-auth
 
 WebAuthn-based passkey authentication for blockchain applications. Supports registration, authentication, listing, and removal of passkey credentials with a fallback for server-side environments.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/passkey-auth
+npm install @cinacoin/passkey-auth
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/passkey-auth
 ### Browser Passkey Registration
 
 ```ts
-import { PasskeyManager } from '@cinaconnect/passkey-auth';
+import { PasskeyManager } from '@cinacoin/passkey-auth';
 
 const passkey = new PasskeyManager({
   rpName: 'My App',
@@ -38,7 +38,7 @@ await passkey.remove(result.credentialId);
 ### Crypto Utilities
 
 ```ts
-import { generateKeypair, signData, verifySignature, deriveAddress } from '@cinaconnect/passkey-auth';
+import { generateKeypair, signData, verifySignature, deriveAddress } from '@cinacoin/passkey-auth';
 
 // Generate a P-256 keypair
 const keypair = generateKeypair();

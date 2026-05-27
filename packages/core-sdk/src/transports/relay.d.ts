@@ -1,7 +1,7 @@
 /**
  * Relay WebSocket transport — communicates with the self-hosted relay server.
  *
- * Implements the CinaConnect relay protocol (compatible with WalletConnect v2).
+ * Implements the Cinacoin relay protocol (compatible with WalletConnect v2).
  */
 import { EventEmitter } from '../events.js';
 /** Relay transport configuration. */

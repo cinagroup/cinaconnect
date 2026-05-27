@@ -3,14 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { AppState, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { CinaConnectProvider } from '@cinaconnect/react-native';
+import { CinacoinProvider } from '@cinacoin/react-native';
 import { ConnectScreen } from './screens/ConnectScreen';
 import { SwapScreen } from './screens/SwapScreen';
 import { MultiChainScreen } from './screens/MultiChainScreen';
 import { registerPushNotifications } from './utils/pushNotifications';
 const Tab = createBottomTabNavigator();
 /**
- * Real CinaConnect React Native app configuration.
+ * Real Cinacoin React Native app configuration.
  *
  * - Uses real WalletConnect v2 relay
  * - Registers for push notifications
@@ -22,10 +22,10 @@ const config = {
     projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // ← Replace with real projectId
     relayUrl: 'wss://relay.walletconnect.com',
     metadata: {
-        name: 'CinaConnect Mobile Demo',
-        description: 'CinaConnect React Native Example — Real blockchain integration',
-        url: 'https://cinaconnect.com',
-        icons: ['https://cinaconnect.com/logo.svg'],
+        name: 'Cinacoin Mobile Demo',
+        description: 'Cinacoin React Native Example — Real blockchain integration',
+        url: 'https://cinacoin.com',
+        icons: ['https://cinacoin.com/logo.svg'],
     },
     chains: [
         {
@@ -86,7 +86,7 @@ export default function App() {
         });
         return () => subscription.remove();
     }, []);
-    return (_jsx(CinaConnectProvider, { config: config, children: _jsx(NavigationContainer, { children: _jsxs(Tab.Navigator, { screenOptions: {
+    return (_jsx(CinacoinProvider, { config: config, children: _jsx(NavigationContainer, { children: _jsxs(Tab.Navigator, { screenOptions: {
                     headerStyle: { backgroundColor: '#0F172A' },
                     headerTintColor: '#F8FAFC',
                     tabBarStyle: { backgroundColor: '#1E293B' },

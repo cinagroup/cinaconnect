@@ -1,16 +1,16 @@
 #!/bin/bash
-# Quick health check script for all CinaConnect Cloudflare Workers
+# Quick health check script for all CinaCoin Cloudflare Workers
 
-echo "🏥 CinaConnect Workers Health Check"
+echo "🏥 CinaCoin Workers Health Check"
 echo "===================================="
 echo ""
 
 SERVICES=(
-  "RPC Proxy:cinaconnect-rpc-proxy"
-  "Keys Server:cinaconnect-keys-server"
-  "Relay Server:cinaconnect-relay-server"
-  "Notify Server:cinaconnect-notify-server"
-  "Push Server:cinaconnect-push-server"
+  "RPC Proxy:cinacoin-rpc-proxy"
+  "Keys Server:cinacoin-keys-server"
+  "Relay Server:cinacoin-relay-server"
+  "Notify Server:cinacoin-notify-server"
+  "Push Server:cinacoin-push-server"
 )
 
 FAILURES=0

@@ -1,6 +1,6 @@
 # Bundler
 
-> CinaConnect ERC-4337 Bundler — 用户操作打包与提交服务。
+> Cinacoin ERC-4337 Bundler — 用户操作打包与提交服务。
 
 ## 架构
 
@@ -16,7 +16,7 @@
                             └─────────┘
 ```
 
-Bundler 是 CinaConnect 的 ERC-4337 基础设施组件。它接收 UserOperations，验证它们，打包成批量交易，并提交到 EntryPoint 合约。
+Bundler 是 Cinacoin 的 ERC-4337 基础设施组件。它接收 UserOperations，验证它们，打包成批量交易，并提交到 EntryPoint 合约。
 
 ## 技术栈
 
@@ -167,21 +167,21 @@ GET /v1/metrics
 ### Docker
 
 ```bash
-docker build -t cinaconnect/bundler:latest .
+docker build -t cinacoin/bundler:latest .
 docker run -p 4337:4337 \
   -e ENTRY_POINT_ADDRESS=0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789 \
   -e CHAIN_ID=1 \
   -e RPC_URL=https://eth-mainnet.g.alchemy.com/v2/KEY \
   -e BUNDLER_PRIVATE_KEY=<private-key> \
-  cinaconnect/bundler:latest
+  cinacoin/bundler:latest
 ```
 
 ### Kubernetes
 
 ```bash
-helm install bundler ./deploy/helm/cinaconnect \
+helm install bundler ./deploy/helm/cinacoin \
   --set bundler.replicaCount=2 \
-  --set global.imageRegistry=ghcr.io/cinaconnect
+  --set global.imageRegistry=ghcr.io/cinacoin
 ```
 
 ## 安全

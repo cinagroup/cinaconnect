@@ -1,8 +1,8 @@
-import { createClient, } from "@cinaconnect/core-sdk";
+import { createClient, } from "@cinacoin/core-sdk";
 /**
  * Create a headless SDK client with no UI.
  *
- * The returned `HeadlessClient` gives you the full `@cinaconnect/core-sdk`
+ * The returned `HeadlessClient` gives you the full `@cinacoin/core-sdk`
  * API so you can build your own UI on top.
  *
  * @param options - Project + wallet options.

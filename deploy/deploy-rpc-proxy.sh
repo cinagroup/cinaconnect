@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy-rpc-proxy.sh — Deploy CinaConnect RPC Proxy to Cloudflare Workers
+# deploy-rpc-proxy.sh — Deploy CinaCoin RPC Proxy to Cloudflare Workers
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -7,7 +7,7 @@ PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 PACKAGE_DIR="$PROJECT_ROOT/packages/rpc-proxy"
 CF_DIR="$PACKAGE_DIR/cloudflare"
 STATE_FILE="$SCRIPT_DIR/.wrangler-state"
-SERVICE="cinaconnect-rpc-proxy"
+SERVICE="cinacoin-rpc-proxy"
 
 # ── Colors ──────────────────────────────────────────────────────
 RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m' CYAN='\033[0;36m' NC='\033[0m'
@@ -22,7 +22,7 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Deploy CinaConnect RPC Proxy to Cloudflare Workers.
+Deploy CinaCoin RPC Proxy to Cloudflare Workers.
 
 Options:
   -e, --environment ENV   Target environment (staging|production) [default: production]
@@ -116,7 +116,7 @@ if [[ $DEPLOY_EXIT -ne 0 ]]; then
   err "Deployment failed with exit code $DEPLOY_EXIT"
   # Update state file with failure
   cat > "$STATE_FILE" <<EOF
-{"service":"cinaconnect-rpc-proxy","environment":"$ENVIRONMENT","timestamp":"$TIMESTAMP","status":"failed","exit_code":$DEPLOY_EXIT,"commit":"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')"}
+{"service":"cinacoin-rpc-proxy","environment":"$ENVIRONMENT","timestamp":"$TIMESTAMP","status":"failed","exit_code":$DEPLOY_EXIT,"commit":"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')"}
 EOF
   exit $DEPLOY_EXIT
 fi
@@ -126,7 +126,7 @@ log "$SERVICE deployed successfully to $ENVIRONMENT"
 
 # Record deployment state
 cat > "$STATE_FILE" <<EOF
-{"service":"cinaconnect-rpc-proxy","environment":"$ENVIRONMENT","timestamp":"$TIMESTAMP","status":"success","commit":"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')","dry_run":$DRY_RUN}
+{"service":"cinacoin-rpc-proxy","environment":"$ENVIRONMENT","timestamp":"$TIMESTAMP","status":"success","commit":"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')","dry_run":$DRY_RUN}
 EOF
 
 # Append to history (keep last 50 entries)
@@ -134,7 +134,7 @@ if [[ -f "${STATE_FILE}.history" ]]; then
   tail -n 49 "${STATE_FILE}.history" > "${STATE_FILE}.history.tmp"
   mv "${STATE_FILE}.history.tmp" "${STATE_FILE}.history"
 fi
-echo "{\"service\":\"cinaconnect-rpc-proxy\",\"environment\":\"$ENVIRONMENT\",\"timestamp\":\"$TIMESTAMP\",\"status\":\"success\",\"commit\":\"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')\"}" >> "${STATE_FILE}.history"
+echo "{\"service\":\"cinacoin-rpc-proxy\",\"environment\":\"$ENVIRONMENT\",\"timestamp\":\"$TIMESTAMP\",\"status\":\"success\",\"commit\":\"$(git -C "$PROJECT_ROOT" rev-parse HEAD 2>/dev/null || echo 'unknown')\"}" >> "${STATE_FILE}.history"
 
 # ── Optional health check ───────────────────────────────────────
 if [[ "$DRY_RUN" != true ]]; then
@@ -142,7 +142,7 @@ if [[ "$DRY_RUN" != true ]]; then
   sleep 3
 
   # Try to get the worker URL from wrangler output
-  WORKER_URL="${RPC_PROXY_URL:-https://cinaconnect-rpc-proxy.${CF_ACCOUNT_SUBDOMAIN:-workers.dev}}"
+  WORKER_URL="${RPC_PROXY_URL:-https://cinacoin-rpc-proxy.${CF_ACCOUNT_SUBDOMAIN:-workers.dev}}"
   
   if command -v curl &>/dev/null; then
     HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" "$WORKER_URL/health" 2>/dev/null || echo "000")

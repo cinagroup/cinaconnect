@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/core-ui",
+  "name": "@cinacoin/core-ui",
   "version": "0.2.0",
-  "description": "Web Components core for CinaConnect — built with Lit",
+  "description": "Web Components core for Cinacoin — built with Lit",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",

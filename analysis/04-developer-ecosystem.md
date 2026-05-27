@@ -1,4 +1,4 @@
-# Developer Experience, Ecosystem & Quality — CinaAuth/CinaConnect vs Reown Gap Analysis
+# Developer Experience, Ecosystem & Quality — CinaAuth/Cinacoin vs Reown Gap Analysis
 
 > **Date**: 2026-05-16  
 > **Scope**: Developer ecosystem, documentation, tooling, community, and quality infrastructure  
@@ -8,11 +8,11 @@
 
 ## Executive Summary
 
-CinaConnect has **six well-structured architecture design documents** (Master + Phase 1-5) covering infrastructure, UI, smart accounts, deployment, and optimization. The code skeleton spans 15 packages across Rust, Go, TypeScript, Solidity, and Vue.
+Cinacoin has **six well-structured architecture design documents** (Master + Phase 1-5) covering infrastructure, UI, smart accounts, deployment, and optimization. The code skeleton spans 15 packages across Rust, Go, TypeScript, Solidity, and Vue.
 
 **However, the project is a "design-phase monorepo" — it has architecture docs but lacks virtually every element of a modern developer ecosystem.** Reown (formerly WalletConnect) has invested years in building a developer-facing platform with documentation sites, example apps, AI agent configs, automated quality tooling, and community infrastructure.
 
-| Dimension | CinaAuth/CinaConnect | Reown | Gap |
+| Dimension | CinaAuth/Cinacoin | Reown | Gap |
 |-----------|:---:|:---:|:---:|
 | Documentation Site | ❌ None | ✅ MDX docs site (111 ⭐) | Critical |
 | Example Apps | ❌ None | ✅ 3 example repos (726 ⭐) | Critical |
@@ -43,7 +43,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - Multi-language support
 - Versioned docs matching SDK releases
 
-### CinaConnect
+### Cinacoin
 - **6 Markdown design docs** totaling ~130K characters
 - Well-structured technical specifications with architecture diagrams, code examples, and deployment configs
 - **No hosted documentation site** — all docs are raw `.md` files in the repo root
@@ -52,7 +52,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - **No searchable documentation** — developer must read files manually
 
 ### Gap Assessment
-| Aspect | Reown | CinaConnect | Gap |
+| Aspect | Reown | Cinacoin | Gap |
 |--------|-------|-----------|-----|
 | Hosted docs site | ✅ Yes | ❌ None | 🔴 Critical |
 | API reference | ✅ Auto-generated | ❌ None | 🔴 Critical |
@@ -65,10 +65,10 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 
 | Priority | Action | Effort | Details |
 |----------|--------|--------|---------|
-| **P0** | Create a hosted documentation site | 2-4 weeks | Use VitePress, Docusaurus, or Nextra. Deploy to docs.cinaconnect.com. Convert existing Phase docs into developer-facing guides with copy-paste examples. |
+| **P0** | Create a hosted documentation site | 2-4 weeks | Use VitePress, Docusaurus, or Nextra. Deploy to docs.cinacoin.com. Convert existing Phase docs into developer-facing guides with copy-paste examples. |
 | **P0** | Write Getting Started guide | 1 week | "5-minute integration" tutorial showing ConnectButton setup. Must work with zero infrastructure (demo mode). |
 | **P1** | Generate API reference from JSDoc/TypeDoc | 3 days | Add JSDoc comments to all exported APIs. Auto-generate reference docs on each release. |
-| **P1** | Add migration guide from AppKit | 1 week | Document API mapping: `createAppKit()` → `CinaConnect.init()`, `wagmi` hooks → `@cinaconnect/react` hooks. |
+| **P1** | Add migration guide from AppKit | 1 week | Document API mapping: `createAppKit()` → `Cinacoin.init()`, `wagmi` hooks → `@cinacoin/react` hooks. |
 | **P2** | Add i18n to docs | Ongoing | Since the codebase is Chinese-first, provide bilingual (中文/English) documentation. |
 
 ---
@@ -82,7 +82,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - **skills** — Reusable skill set for developing with Reown products
 - Each example is a standalone, runnable project
 
-### CinaConnect
+### Cinacoin
 - **Zero example applications**
 - Phase 2 design doc *mentions* a `/apps/gallery` (Storybook) and `/apps/demo` (demo dApp) — but these directories **do not exist**
 - No Storybook setup
@@ -91,7 +91,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - No "quick start" template repository
 
 ### Gap Assessment
-| Asset | Reown | CinaConnect | Gap |
+| Asset | Reown | Cinacoin | Gap |
 |-------|-------|-----------|-----|
 | Web examples | ✅ 3 repos, 726 ⭐ | ❌ None | 🔴 Critical |
 | RN examples | ✅ 130 ⭐ | ❌ None | 🔴 Critical |
@@ -105,10 +105,10 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 | Priority | Action | Effort | Details |
 |----------|--------|--------|---------|
 | **P0** | Build a demo dApp | 1-2 weeks | Single-page dApp showing ConnectButton → ConnectModal → ChainSwitcher → TransactionToast flow. Deploy to Vercel. |
-| **P0** | Create quick-start template | 1 week | `npm create cinaconnect@latest` that scaffolds a Next.js app with CinaConnect pre-configured. |
+| **P0** | Create quick-start template | 1 week | `npm create cinacoin@latest` that scaffolds a Next.js app with Cinacoin pre-configured. |
 | **P1** | Set up Storybook for UI components | 1 week | `/apps/gallery` with stories for every component. Visual regression testing via Chromatic. |
 | **P1** | Add CodeSandbox/StackBlitz links | 2 days | One-click playground for each package in README files. |
-| **P2** | Create framework-specific examples | Ongoing | Separate repos: `cinaconnect-nextjs-example`, `cinaconnect-vite-example`, `cinaconnect-vue-example`. |
+| **P2** | Create framework-specific examples | Ongoing | Separate repos: `cinacoin-nextjs-example`, `cinacoin-vite-example`, `cinacoin-vue-example`. |
 
 ---
 
@@ -125,7 +125,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
   - Code of Conduct (typically via community standard)
   - Clear PR review process
 
-### CinaConnect
+### Cinacoin
 - **No CONTRIBUTING.md**
 - **No CODE_OF_CONDUCT.md**
 - **No AGENTS.md or CLAUDE.md**
@@ -135,7 +135,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - Has `.github/workflows/` with build, release, deploy, and security workflows — but no contribution guidelines
 
 ### Gap Assessment
-| File | Reown appkit | CinaConnect | Gap |
+| File | Reown appkit | Cinacoin | Gap |
 |------|:---:|:---:|:---:|
 | CONTRIBUTING.md | ✅ | ❌ | 🟡 High |
 | CODE_OF_CONDUCT.md | ✅ | ❌ | 🟡 High |
@@ -171,7 +171,7 @@ CinaConnect has **six well-structured architecture design documents** (Master + 
 - Supports Cursor, Claude Code, GitHub Copilot, and other AI coding tools
 - Documented patterns for AI-assisted code review and generation
 
-### CinaConnect
+### Cinacoin
 - **Zero AI development configuration**
 - No AGENTS.md, CLAUDE.md, .cursor/, or .github/copilot-instructions.md
 - AI agents have no guidance on:
@@ -196,7 +196,7 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 ### Suggested AGENTS.md Content
 
 ```markdown
-# CinaConnect — Agent Instructions
+# Cinacoin — Agent Instructions
 
 ## Repo Structure
 - packages/core-sdk/ — TypeScript core SDK (viem + Zustand)
@@ -243,7 +243,7 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 - **playwright-insights** — E2E testing insights and metrics
 - Automated linting, formatting, and type checking in CI
 
-### CinaConnect
+### Cinacoin
 - **GitHub Actions workflows exist** (build.yaml, deploy.yaml, release.yaml, security.yaml)
   - ✅ Rust: clippy, fmt, test
   - ✅ Go: vet, test, gosec, govulncheck
@@ -261,7 +261,7 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
   - ❌ No performance regression testing
 
 ### Gap Assessment
-| Tool | Reown | CinaConnect | Gap |
+| Tool | Reown | Cinacoin | Gap |
 |------|:---:|:---:|:---:|
 | renovate | ✅ | ❌ | 🟡 High |
 | changesets | ✅ | ❌ | 🟡 High |
@@ -277,7 +277,7 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 |----------|--------|--------|---------|
 | **P1** | Add renovate.json | 2 hours | Automate npm, cargo, and go dependency updates. Group by ecosystem. |
 | **P1** | Migrate to @changeset | 1 week | Replace semantic-release with Changesets for proper monorepo versioning. |
-| **P1** | Add bundle size action | 2 days | Track @cinaconnect/core, @cinaconnect/ui bundle sizes in PRs. Set budgets: core < 25KB gzipped, ui < 15KB gzipped. |
+| **P1** | Add bundle size action | 2 days | Track @cinacoin/core, @cinacoin/ui bundle sizes in PRs. Set budgets: core < 25KB gzipped, ui < 15KB gzipped. |
 | **P2** | Add Playwright E2E tests | 2 weeks | Test: connection flow, chain switching, transaction signing. Integrate with GitHub Actions. |
 | **P2** | Add bundle analysis | 1 day | `rollup-plugin-visualizer` or `webpack-bundle-analyzer` for each package. |
 | **P2** | Add coverage thresholds | 1 day | Enforce minimum coverage in CI (80% for core packages). |
@@ -294,7 +294,7 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 - Regular security audits before major releases
 - Smart contract audits by firms like OpenZeppelin, Trail of Bits
 
-### CinaConnect
+### Cinacoin
 - **Design docs mention security** but no audits have been performed
 - **security.yaml** workflow includes cargo-audit, gosec, govulncheck, Semgrep, Trivy
 - **No SECURITY.md** file
@@ -302,10 +302,10 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 - **No third-party audit reports**
 - **No dependency vulnerability monitoring** (no Dependabot or Renovate)
 - **Paymaster contracts** have not been audited (Phase 3 mentions "审计" as a planned step)
-- Phase 3 design doc lists third-party contracts (EntryPoint, Safe, Kernel) with audit status — but CinaConnect's own code has zero audits
+- Phase 3 design doc lists third-party contracts (EntryPoint, Safe, Kernel) with audit status — but Cinacoin's own code has zero audits
 
 ### Gap Assessment
-| Practice | Reown | CinaConnect | Gap |
+| Practice | Reown | Cinacoin | Gap |
 |----------|:---:|:---:|:---:|
 | Third-party audit | ✅ | ❌ | 🔴 Critical |
 | Bug bounty | ✅ | ❌ | 🟡 High |
@@ -335,12 +335,12 @@ This is a significant gap for a multi-language monorepo. Without AI agent config
 - **Compatibility layer** — AppKit can work alongside existing WalletConnect implementations during transition
 - API mapping documentation
 
-### CinaConnect
+### Cinacoin
 - **No migration tools whatsoever**
 - Master Architecture doc mentions "渐进迁移" (progressive migration) as a design principle
 - **No codemod or automated migration script**
 - **No API compatibility layer**
-- **No mapping documentation** between AppKit and CinaConnect APIs
+- **No mapping documentation** between AppKit and Cinacoin APIs
 
 ### Gap Assessment
 This is a critical gap because the entire project's value proposition is replacing Reown. Without migration tools, developers must manually rewrite their integration code — a significant adoption barrier.
@@ -349,10 +349,10 @@ This is a critical gap because the entire project's value proposition is replaci
 
 | Priority | Action | Effort | Details |
 |----------|--------|--------|---------|
-| **P0** | Create API migration guide | 1 week | Document every AppKit API → CinaConnect equivalent. Example: `createAppKit()` → `CinaConnect.init()`, `useAppKitAccount()` → `useCinaConnect()`. |
-| **P1** | Build AppKit compatibility shim | 2-3 weeks | Create `@cinaconnect/appkit-compat` that provides AppKit-compatible API surface backed by CinaConnect. Allows gradual migration. |
+| **P0** | Create API migration guide | 1 week | Document every AppKit API → Cinacoin equivalent. Example: `createAppKit()` → `Cinacoin.init()`, `useAppKitAccount()` → `useCinacoin()`. |
+| **P1** | Build AppKit compatibility shim | 2-3 weeks | Create `@cinacoin/appkit-compat` that provides AppKit-compatible API surface backed by Cinacoin. Allows gradual migration. |
 | **P1** | Write codemod | 2 weeks | Automated AST transformation for common migration patterns. Support: import replacement, component name changes, prop migrations. |
-| **P2** | Create "side-by-side" comparison dApp | 1 week | A dApp showing identical functionality implemented with both AppKit and CinaConnect. |
+| **P2** | Create "side-by-side" comparison dApp | 1 week | A dApp showing identical functionality implemented with both AppKit and Cinacoin. |
 
 ---
 
@@ -367,7 +367,7 @@ This is a critical gap because the entire project's value proposition is replaci
 - **Newsletter** — Developer updates
 - **Community-contributed examples** in their repos
 
-### CinaConnect
+### Cinacoin
 - **No community infrastructure of any kind**
 - No Discord, no Telegram, no forum
 - No GitHub Discussions (not even enabled)
@@ -406,7 +406,7 @@ This is expected for a pre-launch project, but must be addressed before any publ
 | playwright-insights | — | — | E2E testing insights |
 | vite-size-action | — | — | Bundle size tracking |
 
-### CinaConnect Current State
+### Cinacoin Current State
 | Asset | Status | Notes |
 |-------|--------|-------|
 | Design docs (6 files) | ✅ Complete | ~130K chars, well-structured |
@@ -441,9 +441,9 @@ This is expected for a pre-launch project, but must be addressed before any publ
 | # | Action | Owner Effort | Why |
 |---|--------|-------------|-----|
 | 7 | Build demo dApp | 1-2 weeks | Show, don't tell |
-| 8 | Create quick-start template | 1 week | `npm create cinaconnect@latest` |
+| 8 | Create quick-start template | 1 week | `npm create cinacoin@latest` |
 | 9 | Commission smart contract audit | 4-8 weeks | On-chain code requires audit |
-| 10 | Add API migration guide | 1 week | Enable AppKit → CinaConnect migration |
+| 10 | Add API migration guide | 1 week | Enable AppKit → Cinacoin migration |
 | 11 | Add CLAUDE.md + .cursor/ | 1-2 days | Modern dev tooling |
 | 12 | Add renovate.json | 2 hours | Automated dependency updates |
 | 13 | Set up GitHub Discussions | 1 hour | Community Q&A |
@@ -468,9 +468,9 @@ This is expected for a pre-launch project, but must be addressed before any publ
 
 ## 11. Strategic Recommendation
 
-CinaConnect has **strong technical architecture** — the Phase docs are comprehensive, multi-language, and production-oriented. However, it is currently an **internal design repository**, not a **developer platform**.
+Cinacoin has **strong technical architecture** — the Phase docs are comprehensive, multi-language, and production-oriented. However, it is currently an **internal design repository**, not a **developer platform**.
 
-The gap between design docs and a usable developer platform is enormous. Reown didn't start with docs and examples — they accumulated them over years of public development. CinaConnect can accelerate by:
+The gap between design docs and a usable developer platform is enormous. Reown didn't start with docs and examples — they accumulated them over years of public development. Cinacoin can accelerate by:
 
 1. **Immediate**: Add LICENSE, SECURITY.md, CONTRIBUTING.md (P0 items 1-3 — less than 1 day total)
 2. **Week 1-2**: Build docs site + Getting Started + demo dApp (P0 items 4-6)

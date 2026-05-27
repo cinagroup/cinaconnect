@@ -53,6 +53,9 @@ async function fetchNativePriceUsd(chainId: number): Promise<number> {
     const res = await fetch(
       `https://api.coingecko.com/api/v3/simple/price?ids=${id}&vs_currencies=usd`,
     );
+    if (!res.ok) {
+      return 0;
+    }
     const data = await res.json();
     return data[id]?.usd ?? 0;
   } catch {

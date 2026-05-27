@@ -1,4 +1,4 @@
-# CinaConnect 功能测试报告
+# Cinacoin 功能测试报告
 
 **测试时间**: 2026-05-18
 **测试范围**: 所有已部署的 Cloudflare Workers 和 Pages
@@ -26,9 +26,9 @@
 - ✅ Push Server - Health (HTTP 200)
 
 ### 2. 前端页面首页 (3/4)
-- ✅ Demo App - Homepage (包含 "CinaConnect")
+- ✅ Demo App - Homepage (包含 "Cinacoin")
 - ✅ Backend Dashboard - Homepage (包含 "Dashboard")
-- ✅ API Documentation Site - Homepage (包含 "CinaConnect")
+- ✅ API Documentation Site - Homepage (包含 "Cinacoin")
 
 ### 3. 后端仪表板页面 (6/6)
 - ✅ Backend Dashboard - RPC Proxy Page
@@ -84,19 +84,19 @@
 ### Cloudflare Workers (5 个)
 | 服务 | URL | 状态 |
 |------|-----|------|
-| RPC Proxy | `cinaconnect-rpc-proxy.cinagroup.workers.dev` | ✅ 在线 |
-| Keys Server | `cinaconnect-keys-server.cinagroup.workers.dev` | ✅ 在线 |
-| Relay Server | `cinaconnect-relay-server.cinagroup.workers.dev` | ✅ 在线 |
-| Notify Server | `cinaconnect-notify-server.cinagroup.workers.dev` | ✅ 在线 |
-| Push Server | `cinaconnect-push-server.cinagroup.workers.dev` | ✅ 在线 |
+| RPC Proxy | `cinacoin-rpc-proxy.cinagroup.workers.dev` | ✅ 在线 |
+| Keys Server | `cinacoin-keys-server.cinagroup.workers.dev` | ✅ 在线 |
+| Relay Server | `cinacoin-relay-server.cinagroup.workers.dev` | ✅ 在线 |
+| Notify Server | `cinacoin-notify-server.cinagroup.workers.dev` | ✅ 在线 |
+| Push Server | `cinacoin-push-server.cinagroup.workers.dev` | ✅ 在线 |
 
 ### Cloudflare Pages (4 个)
 | 应用 | URL | 状态 |
 |------|-----|------|
-| Demo 应用 | `cinaconnect-demo.pages.dev` | ✅ 在线 |
+| Demo 应用 | `cinacoin-demo.pages.dev` | ✅ 在线 |
 | 后端管理仪表板 | `backend-dashboard.pages.dev` | ✅ 在线 |
-| 健康状态页面 | `cinaconnect-health-status.pages.dev` | ✅ 在线 |
-| API 文档站点 | `cinaconnect-docs.pages.dev` | ✅ 在线 |
+| 健康状态页面 | `cinacoin-health-status.pages.dev` | ✅ 在线 |
+| API 文档站点 | `cinacoin-docs.pages.dev` | ✅ 在线 |
 
 ---
 

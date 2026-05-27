@@ -1,12 +1,12 @@
 /**
- * @cinaconnect/cdn
+ * @cinacoin/cdn
  *
  * CDN bundle entry point.
- * Exposes global window.CinaConnect namespace for script-tag usage.
+ * Exposes global window.Cinacoin namespace for script-tag usage.
  */
 
 import { getConfig, validateConfig } from "./config.js";
-import type { CinaConnectConfig } from "./config.js";
+import type { CinacoinConfig } from "./config.js";
 import {
   renderConnectButton,
   getConnectButtonState,
@@ -27,12 +27,12 @@ import { loadModule, isLoaded, getModule, clearCache, preloadModules } from "./l
 import type { LoadState, LoadResult } from "./loader.js";
 
 // ============================================================
-// Global API — mounted on window.CinaConnect
+// Global API — mounted on window.Cinacoin
 // ============================================================
 
-export interface CinaConnectAPI {
+export interface CinacoinAPI {
   // Config
-  config: () => CinaConnectConfig;
+  config: () => CinacoinConfig;
   validate: () => string[];
 
   // ConnectButton
@@ -63,11 +63,11 @@ export interface CinaConnectAPI {
 // Attach to window if in browser
 declare global {
   interface Window {
-    CinaConnect: CinaConnectAPI;
+    Cinacoin: CinacoinAPI;
   }
 }
 
-const api: CinaConnectAPI = {
+const api: CinacoinAPI = {
   config: getConfig,
   validate: () => validateConfig(getConfig()),
   renderConnectButton,
@@ -89,12 +89,12 @@ const api: CinaConnectAPI = {
 };
 
 if (typeof window !== "undefined") {
-  window.CinaConnect = api;
+  window.Cinacoin = api;
 }
 
 export { getConfig, validateConfig };
 export { renderConnectButton, getConnectButtonState, disconnect };
 export { renderConnectModal, showModal, hideModal, toggleModal, getCurrentView };
 export { loadModule, isLoaded, getModule, clearCache, preloadModules };
-export type { CinaConnectConfig, ConnectButtonOptions, ConnectModalOptions, LoadState, LoadResult };
+export type { CinacoinConfig, ConnectButtonOptions, ConnectModalOptions, LoadState, LoadResult };
 export default api;

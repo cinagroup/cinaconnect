@@ -27,7 +27,7 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import type { SwapWidgetProps } from "./types.js";
 import { SwapWidgetCore } from "./SwapWidgetCore.js";
 import { getWidgetStyles, cardStyles, buttonStyles, inputStyles } from "./styles.js";
-import type { SwapQuote, SwapReceipt, TokenInfo, SwapRoute } from "@cinaconnect/swap-sdk";
+import type { SwapQuote, SwapReceipt, TokenInfo, SwapRoute } from "@cinacoin/swap-sdk";
 
 // Re-export core for consumers
 export { SwapWidgetCore } from "./SwapWidgetCore.js";

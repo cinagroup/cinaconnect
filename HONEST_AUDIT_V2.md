@@ -1,4 +1,4 @@
-# CinaConnect 诚实审计总结 v2
+# Cinacoin 诚实审计总结 v2
 
 > 2026-05-18 · 基于 49 commits, 64 packages, live deployment
 

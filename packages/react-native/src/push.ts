@@ -20,7 +20,7 @@
  *
  * ## Usage
  * ```tsx
- * import { PushNotificationManager } from '@cinaconnect/react-native/push';
+ * import { PushNotificationManager } from '@cinacoin/react-native/push';
  *
  * // In your App entry point:
  * const pushManager = PushNotificationManager.getInstance();
@@ -134,8 +134,8 @@ export class PushNotificationManager {
   };
 
   private _appStateSub: { remove: () => void } | null = null;
-  private _notificationSub: { remove: () => void } | null = null;
-  private _tokenRefreshSub: { remove: () => void } | null = null;
+  private _notificationSub: { remove: () => void } | (() => void) | null = null;
+  private _tokenRefreshSub: { remove: () => void } | (() => void) | null = null;
 
   private constructor() {}
 
@@ -197,8 +197,10 @@ export class PushNotificationManager {
   /** Tear down all listeners and state. */
   destroy(): void {
     this._appStateSub?.remove();
-    this._notificationSub?.remove();
-    this._tokenRefreshSub?.remove();
+    const unsub = this._notificationSub;
+    if (unsub) typeof unsub === 'function' ? unsub() : unsub.remove();
+    const unsub2 = this._tokenRefreshSub;
+    if (unsub2) typeof unsub2 === 'function' ? unsub2() : unsub2.remove();
 
     this._state = {
       isInitialized: false,
@@ -444,21 +446,23 @@ export class PushNotificationManager {
       );
 
       // Foreground notifications
-      this._notificationSub = messaging.default().onMessage(async (remoteMessage: unknown) => {
+      const unsubMsg = messaging.default().onMessage(async (remoteMessage: unknown) => {
         const rm = remoteMessage as Record<string, any>;
-          const notification = PushNotificationManager.parsePayload({
+        const notification = PushNotificationManager.parsePayload({
           title: rm.notification?.title,
           body: rm.notification?.body,
           ...rm.data,
         });
         this.handleNotification(notification);
       });
+      this._notificationSub = { remove: unsubMsg };
 
       // Token refresh
-      this._tokenRefreshSub = messaging.default().onTokenRefresh((token: string) => {
+      const unsubToken = messaging.default().onTokenRefresh((token: string) => {
         this._state.token = token;
         this._config?.onTokenRefresh?.(token);
       });
+      this._tokenRefreshSub = { remove: unsubToken };
     } catch {
       // FCM not available on iOS — try APNs directly
       try {
@@ -489,21 +493,23 @@ export class PushNotificationManager {
       );
 
       // Foreground notifications
-      this._notificationSub = messaging.default().onMessage(async (remoteMessage: unknown) => {
+      const unsubMsg = messaging.default().onMessage(async (remoteMessage: unknown) => {
         const rm = remoteMessage as Record<string, any>;
-          const notification = PushNotificationManager.parsePayload({
+        const notification = PushNotificationManager.parsePayload({
           title: rm.notification?.title,
           body: rm.notification?.body,
           ...rm.data,
         });
         this.handleNotification(notification);
       });
+      this._notificationSub = { remove: unsubMsg };
 
       // Token refresh
-      this._tokenRefreshSub = messaging.default().onTokenRefresh((token: string) => {
+      const unsubToken = messaging.default().onTokenRefresh((token: string) => {
         this._state.token = token;
         this._config?.onTokenRefresh?.(token);
       });
+      this._tokenRefreshSub = { remove: unsubToken };
     } catch {
       // FCM not available
       console.warn('[PushNotificationManager] FCM messaging not available');

@@ -25,7 +25,7 @@ export interface ConnectorEvents {
 /**
  * Configuration and lifecycle contract for a custom wallet connector.
  *
- * Implement this interface to integrate any wallet with the CinaConnect
+ * Implement this interface to integrate any wallet with the Cinacoin
  * connector ecosystem.
  */
 export interface ConnectorConfig {

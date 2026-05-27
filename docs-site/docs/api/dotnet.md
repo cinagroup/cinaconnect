@@ -1,20 +1,20 @@
 # .NET C#
 
-> `@cinaconnect/dotnet` — .NET SDK for CinaConnect.
+> `@cinacoin/dotnet` — .NET SDK for Cinacoin.
 
 ## Installation
 
 ```bash
-dotnet add package CinaConnect
+dotnet add package Cinacoin
 ```
 
 ## Usage
 
 ```csharp
-using CinaConnect;
+using Cinacoin;
 
-var config = new CinaConnectConfig { ProjectId = "your-project-id" };
-var cinaConnect = new CinaConnectClient(config);
+var config = new CinacoinConfig { ProjectId = "your-project-id" };
+var cinaConnect = new CinacoinClient(config);
 ```
 
 ## Related

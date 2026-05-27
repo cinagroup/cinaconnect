@@ -1,17 +1,19 @@
-import { AppKitProvider, type AppKitProviderOptions } from './AppKitProvider';
-import { AppKitPagesRouter, type AppKitPagesRouterOptions } from './AppKitPagesRouter';
+import { AppKitProvider, type AppKitProviderProps as AppKitProviderOptions } from './AppKitProvider';
+import { AppKitPagesRouter, type AppKitPagesRouterProps as AppKitPagesRouterOptions } from './AppKitPagesRouter';
 
 export { AppKitProvider, AppKitPagesRouter };
 export type { AppKitProviderOptions, AppKitPagesRouterOptions };
+export type { AppKitProviderProps } from './AppKitProvider';
+export type { AppKitPagesRouterProps } from './AppKitPagesRouter';
 
 // Server utilities
-export { getCinaConnectServer, getSession, verifySiweMessage, createServerClient } from './server';
-export { withCinaConnectAuth, requireAuth } from './server/middleware';
+export { getCinacoinServer, getSession, verifySiweMessage, createServerClient } from './server';
+export { withCinacoinAuth, requireAuth } from './server/middleware';
 
 // Edge Runtime
 export {
   getEdgeSession,
-  withCinaConnectAuthEdge,
+  withCinacoinAuthEdge,
   requireAuthEdge,
   createSessionCookieHeader,
 } from './server/edge';
@@ -46,11 +48,11 @@ export type {
   AuthenticateResult,
 } from './server/actions';
 
-// Client hooks (re-exports from @cinaconnect/react)
+// Client hooks (re-exports from @cinacoin/react)
 export {
-  useCinaConnect,
-  useCinaConnectAccount,
-  useCinaConnectNetwork,
+  useCinacoin,
+  useCinacoinAccount,
+  useCinacoinNetwork,
   useDisconnect,
   useWalletInfo,
   useBalance,

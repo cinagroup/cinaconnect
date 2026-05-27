@@ -6,7 +6,7 @@ test.describe('Wallet Connection Flow', () => {
   });
 
   test('home page loads with hero section', async ({ page }) => {
-    await expect(page.getByRole('heading', { name: /CinaConnect/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Cinacoin/i })).toBeVisible();
     await expect(page.getByText(/open-source wallet connection toolkit/i)).toBeVisible();
   });
 
@@ -42,7 +42,7 @@ test.describe('Wallet Connection Flow', () => {
   });
 
   test('footer contains correct copyright and links', async ({ page }) => {
-    await expect(page.getByText(/© 2026 CinaConnect/)).toBeVisible();
+    await expect(page.getByText(/© 2026 Cinacoin/)).toBeVisible();
     await expect(page.getByRole('link', { name: 'GitHub' })).toBeVisible();
   });
 

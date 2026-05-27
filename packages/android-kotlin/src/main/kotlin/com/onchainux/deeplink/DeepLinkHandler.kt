@@ -24,13 +24,13 @@
  * </queries>
  * ```
  */
-package com.cinaconnect.deeplink
+package com.cinacoin.deeplink
 
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import com.cinaconnect.core.CinaConnectConfig
+import com.cinacoin.core.CinacoinConfig
 
 /** Platform for redirect decisions. */
 enum class Platform { IOS, ANDROID, WEB }
@@ -115,10 +115,10 @@ class DeepLinkHandler {
         )
     }
 
-    private var config: CinaConnectConfig? = null
+    private var config: CinacoinConfig? = null
 
     /** Configure the handler. */
-    fun configure(config: CinaConnectConfig) {
+    fun configure(config: CinacoinConfig) {
         this.config = config
     }
 

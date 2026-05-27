@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/walletconnect-v2
+ * @cinacoin/walletconnect-v2
  *
- * WalletConnect v2 protocol implementation for CinaConnect.
+ * WalletConnect v2 protocol implementation for Cinacoin.
  * Provides pairing, session management, crypto utilities,
  * relay client, JSON-RPC methods, wallet registry, and
  * a unified WalletConnectClient.
@@ -71,7 +71,7 @@ export {
   coreDecrypt,
 } from './crypto.js';
 
-export type { X25519Keypair } from '@cinaconnect/core-sdk';
+export type { X25519Keypair } from '@cinacoin/core-sdk';
 
 // Relay
 export { WcRelay } from './relay.js';

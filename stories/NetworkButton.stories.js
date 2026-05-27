@@ -41,7 +41,7 @@ function NetworkButton({ network, label, isActive = false, showChainId = false, 
                 } }), displayName, showChainId && _jsxs("span", { style: { opacity: 0.6, fontSize: parseInt(s.fontSize) - 2 }, children: ["#", meta.chainId] })] }));
 }
 const meta = {
-    title: 'CinaConnect/NetworkButton',
+    title: 'Cinacoin/NetworkButton',
     component: NetworkButton,
     argTypes: {
         network: {

@@ -13,9 +13,9 @@ import {
   useCallsStatus,
 } from '../composables/useEIP5792.js';
 
-// Mock the useCinaConnect context getter
+// Mock the useCinacoin context getter
 vi.mock('../composables.js', () => ({
-  useCinaConnect: () => ({
+  useCinacoin: () => ({
     config: {},
     connectors: ref([]),
     account: ref({ address: null, balance: '0', chainId: 1, chainSymbol: 'ETH' }),

@@ -1,5 +1,5 @@
 /**
- * Gas estimation types for @cinaconnect/gas-estimator
+ * Gas estimation types for @cinacoin/gas-estimator
  */
 export {};
 //# sourceMappingURL=types.js.map

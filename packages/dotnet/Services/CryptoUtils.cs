@@ -1,44 +1,43 @@
 using System.Security.Cryptography;
 using System.Text;
+using Org.BouncyCastle.Crypto.Digests;
 
-namespace CinaConnect.Services;
+namespace Cinacoin.Services;
 
 /// <summary>
 /// Utility class for cryptographic operations used in wallet interactions.
 /// Provides hashing, signature encoding, and address derivation helpers.
 /// </summary>
 /// <remarks>
-/// For production use with EVM chains, pair this with a dedicated Keccak-256 library
-/// such as <c>Nethereum</c> or <c>Org.BouncyCastle</c>. The <c>Keccak256</c> methods
-/// below delegate to SHA-256 as a compilation-safe placeholder.
+/// Uses <c>BouncyCastle.Cryptography</c> for real Keccak-256 (SHA-3) hashing,
+/// which is required by EVM chains for address derivation and message signing.
 /// </remarks>
 public static class CryptoUtils
 {
     /// <summary>
-    /// Computes a hash of the input data.
+    /// Computes a Keccak-256 hash of the input data using BouncyCastle.
     /// </summary>
     /// <remarks>
-    /// <para>
-    /// Returns SHA-256 by default. For true Keccak-256 (required by EVM chains),
-    /// install a Keccak library and replace the implementation.
-    /// </para>
-    /// <para>
-    /// Example with Nethereum: <c>Nethereum.Util.Sha3.Keccak256(data)</c>
-    /// </para>
+    /// Keccak-256 is NOT the same as SHA-256 or NIST SHA-3-256. It differs in
+    /// the padding scheme. This implementation uses the correct Keccak-256
+    /// (used by Ethereum and all EVM chains).
     /// </remarks>
     /// <param name="data">Input byte array.</param>
-    /// <returns>32-byte hash.</returns>
+    /// <returns>32-byte Keccak-256 hash.</returns>
     public static byte[] Keccak256(byte[] data)
     {
-        using var sha = SHA256.Create();
-        return sha.ComputeHash(data);
+        var digest = new KeccakDigest(256);
+        digest.BlockUpdate(data, 0, data.Length);
+        var result = new byte[digest.GetDigestSize()];
+        digest.DoFinal(result, 0);
+        return result;
     }
 
     /// <summary>
-    /// Computes a hash of a UTF-8 string.
+    /// Computes a Keccak-256 hash of a UTF-8 string.
     /// </summary>
     /// <param name="input">Input string.</param>
-    /// <returns>32-byte hash.</returns>
+    /// <returns>32-byte Keccak-256 hash.</returns>
     public static byte[] Keccak256(string input)
     {
         return Keccak256(Encoding.UTF8.GetBytes(input));

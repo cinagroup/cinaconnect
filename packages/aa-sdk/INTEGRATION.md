@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `@cinaconnect/aa-sdk` package provides a complete Account Abstraction (ERC-4337) SDK wired to real bundler and paymaster RPC endpoints, with viem-based cryptographic signing and contract deployment.
+The `@cinacoin/aa-sdk` package provides a complete Account Abstraction (ERC-4337) SDK wired to real bundler and paymaster RPC endpoints, with viem-based cryptographic signing and contract deployment.
 
 ## Architecture
 
@@ -95,7 +95,7 @@ The `@cinaconnect/aa-sdk` package provides a complete Account Abstraction (ERC-4
 The `executeUserOperation()` function from `createClients.ts` performs all 6 steps automatically:
 
 ```typescript
-import { createSmartAccount, executeUserOperation } from '@cinaconnect/aa-sdk';
+import { createSmartAccount, executeUserOperation } from '@cinacoin/aa-sdk';
 import { sepolia } from 'viem/chains';
 
 const sdk = createSmartAccount({
@@ -122,7 +122,7 @@ console.log('Success:', receipt?.success);
 
 ## Bundler RPC Interface
 
-The cinaconnect bundler (Rust/Axum) exposes these JSON-RPC methods:
+The cinacoin bundler (Rust/Axum) exposes these JSON-RPC methods:
 
 | Method | Description |
 |---|---|
@@ -132,8 +132,8 @@ The cinaconnect bundler (Rust/Axum) exposes these JSON-RPC methods:
 | `eth_getUserOperationReceipt` | Get execution receipt for a UserOp |
 | `eth_supportedEntryPoints` | List supported entry point addresses |
 | `web3_clientVersion` | Bundler version string |
-| `cinaconnect_getBundlerConfig` | Get bundler config (redacted) |
-| `cinaconnect_getReputationStats` | Sender reputation statistics |
+| `cinacoin_getBundlerConfig` | Get bundler config (redacted) |
+| `cinacoin_getReputationStats` | Sender reputation statistics |
 
 All methods accept standard JSON-RPC 2.0 request format:
 
@@ -238,8 +238,8 @@ export AA_RPC_URL="https://rpc.sepolia.org"
 pnpm install
 
 # 3. Build
-pnpm build --filter=@cinaconnect/aa-sdk
+pnpm build --filter=@cinacoin/aa-sdk
 
 # 4. Test
-pnpm test --filter=@cinaconnect/aa-sdk
+pnpm test --filter=@cinacoin/aa-sdk
 ```

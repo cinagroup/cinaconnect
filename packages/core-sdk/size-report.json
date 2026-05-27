@@ -1,5 +1,5 @@
 {
-  "package": "@cinaconnect/core-sdk",
+  "package": "@cinacoin/core-sdk",
   "version": "0.1.0",
   "generated": "2026-05-16T14:22:00.000Z",
   "builds": {

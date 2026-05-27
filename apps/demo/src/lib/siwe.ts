@@ -4,7 +4,7 @@
  * Builds EIP-4361 compliant messages, handles wallet signing via
  * personal_sign, verifies signatures, and manages session state.
  *
- * Uses @cinaconnect/siwe for message generation/parsing.
+ * Uses @cinacoin/siwe for message generation/parsing.
  */
 
 import {
@@ -12,7 +12,7 @@ import {
   generateNonce,
   generateTimestamp,
   parseMessage,
-} from '@cinaconnect/siwe';
+} from '@cinacoin/siwe';
 import { createSiweSession } from './authSession';
 
 /* ── Types ── */
@@ -64,16 +64,16 @@ export function createSiweMessage(
   const domain =
     typeof window !== 'undefined'
       ? window.location.host
-      : 'demo.cinaconnect.io';
+      : 'demo.cinacoin.io';
   const uri =
     typeof window !== 'undefined'
       ? window.location.origin
-      : 'https://demo.cinaconnect.io';
+      : 'https://demo.cinacoin.io';
 
   const message = generateMessage({
     domain,
     address,
-    statement: 'Sign in to CinaConnect Demo',
+    statement: 'Sign in to Cinacoin Demo',
     uri,
     version: '1',
     chainId,
@@ -88,7 +88,7 @@ export function createSiweMessage(
     data: {
       domain,
       address,
-      statement: 'Sign in to CinaConnect Demo',
+      statement: 'Sign in to Cinacoin Demo',
       uri,
       version: '1',
       chainId,

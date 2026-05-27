@@ -39,13 +39,13 @@ class ConnectModalProps {
 /// ```dart
 /// showModalBottomSheet(
 ///   context: context,
-///   builder: (_) => CinaConnectConnectModal(
+///   builder: (_) => CinacoinConnectModal(
 ///     wallets: wallets,
 ///     onWalletSelect: (wallet) => connect(wallet),
 ///   ),
 /// )
 /// ```
-class CinaConnectConnectModal extends StatefulWidget {
+class CinacoinConnectModal extends StatefulWidget {
   /// Available wallets to display.
   final List<WalletInfo> wallets;
   /// Callback when a wallet is selected.
@@ -59,7 +59,7 @@ class CinaConnectConnectModal extends StatefulWidget {
   /// Subtitle text.
   final String? subtitle;
 
-  const CinaConnectConnectModal({
+  const CinacoinConnectModal({
     super.key,
     required this.wallets,
     required this.onWalletSelect,
@@ -70,10 +70,10 @@ class CinaConnectConnectModal extends StatefulWidget {
   });
 
   @override
-  State<CinaConnectConnectModal> createState() => _CinaConnectConnectModalState();
+  State<CinacoinConnectModal> createState() => _CinacoinConnectModalState();
 }
 
-class _CinaConnectConnectModalState extends State<CinaConnectConnectModal> {
+class _CinacoinConnectModalState extends State<CinacoinConnectModal> {
   String? _selectedWalletId;
   bool _showQR = false;
 

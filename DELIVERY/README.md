@@ -1,8 +1,8 @@
-# CinaConnect — Delivery Package
+# Cinacoin — Delivery Package
 
 > **Version:** 1.0.0  
 > **Delivery Date:** 2026-05-18  
-> **Project:** CinaConnect — Self-hosted Wallet Connection Toolkit  
+> **Project:** Cinacoin — Self-hosted Wallet Connection Toolkit  
 > **Completion:** 98.5%
 
 ---
@@ -134,7 +134,7 @@ cd apps/demo-react && pnpm run dev
 
 ## 📋 Package Overview
 
-CinaConnect is a monorepo with **72 packages** organized into:
+Cinacoin is a monorepo with **72 packages** organized into:
 
 | Category | Packages | Description |
 |---|---|---|
@@ -152,7 +152,7 @@ CinaConnect is a monorepo with **72 packages** organized into:
 
 ### Contact
 
-- **Project:** CinaConnect (OnChainUX)
+- **Project:** Cinacoin (OnChainUX)
 - **Version:** 1.0.0
 - **License:** MIT
 
@@ -178,4 +178,4 @@ CinaConnect is a monorepo with **72 packages** organized into:
 
 ---
 
-*Delivery package generated on 2026-05-18. CinaConnect v1.0.0.*
+*Delivery package generated on 2026-05-18. Cinacoin v1.0.0.*

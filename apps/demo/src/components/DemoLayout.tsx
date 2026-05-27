@@ -30,7 +30,7 @@ export default function DemoLayout({ children }: { children: ReactNode }) {
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
             <Link href="/" className="text-xl font-bold bg-gradient-to-r from-blue-500 to-purple-600 bg-clip-text text-transparent shrink-0">
-              CinaConnect
+              CinaCoin
             </Link>
 
             {/* Desktop Nav */}
@@ -104,7 +104,7 @@ export default function DemoLayout({ children }: { children: ReactNode }) {
       {/* Footer */}
       <footer className="border-t border-gray-800 mt-auto">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-sm text-gray-500">
-          CinaConnect Demo — Self-hosted wallet connection toolkit
+          CinaCoin Demo — Self-hosted wallet connection toolkit
         </div>
       </footer>
     </div>

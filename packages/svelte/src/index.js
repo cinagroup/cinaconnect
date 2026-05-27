@@ -1,21 +1,21 @@
 /**
- * @cinaconnect/svelte — Svelte/SvelteKit adapter for CinaConnect.
+ * @cinacoin/svelte — Svelte/SvelteKit adapter for Cinacoin.
  *
  * Provides Svelte stores, composables, and components that wrap
- * @cinaconnect/core-sdk for seamless wallet integration in Svelte apps.
+ * @cinacoin/core-sdk for seamless wallet integration in Svelte apps.
  *
  * @packageDocumentation
  */
 // Core stores and factory
-export { createCinaConnect } from './lib/createCinaConnect.js';
+export { createCinacoin } from './lib/createCinacoin.js';
 // Svelte stores
-export { isConnected, address, balance, chainId, status, error, isConnecting, hasError, chains, initCinaConnect, getConnector, open, close, switchChain, resetCinaConnect, } from './lib/stores.js';
+export { isConnected, address, balance, chainId, status, error, isConnecting, hasError, chains, initCinacoin, getConnector, open, close, switchChain, resetCinacoin, } from './lib/stores.js';
 // Svelte hook-style accessors
-export { getCinaConnect, getCinaConnectAccount, getCinaConnectNetwork } from './lib/useCinaConnect.js';
+export { getCinacoin, getCinacoinAccount, getCinacoinNetwork } from './lib/useCinacoin.js';
 // Actions
 export { cinaConnectConnect, cinaConnectNetwork } from './lib/actions.js';
 // Svelte components
-export { default as CinaConnectButton } from './components/CinaConnectButton.svelte';
-export { default as CinaConnectAccountButton } from './components/CinaConnectAccountButton.svelte';
-export { default as CinaConnectNetworkButton } from './components/CinaConnectNetworkButton.svelte';
+export { default as CinacoinButton } from './components/CinacoinButton.svelte';
+export { default as CinacoinAccountButton } from './components/CinacoinAccountButton.svelte';
+export { default as CinacoinNetworkButton } from './components/CinacoinNetworkButton.svelte';
 //# sourceMappingURL=index.js.map

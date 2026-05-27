@@ -1,5 +1,5 @@
 /**
- * Playwright E2E configuration for CinaConnect.
+ * Playwright E2E configuration for Cinacoin.
  *
  * Usage:
  *   npx playwright test              — run all tests

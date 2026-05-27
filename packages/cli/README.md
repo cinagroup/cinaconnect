@@ -1,24 +1,24 @@
-# @cinaconnect/cli
+# @cinacoin/cli
 
-Command-line interface for the **CinaConnect** self-hosted wallet connection toolkit.
+Command-line interface for the **Cinacoin** self-hosted wallet connection toolkit.
 
 ## Installation
 
 ```bash
-npm install -g @cinaconnect/cli
+npm install -g @cinacoin/cli
 # or
-npx @cinaconnect/cli <command>
+npx @cinacoin/cli <command>
 ```
 
 ## Commands
 
-### `init` — Scaffold a new CinaConnect project
+### `init` — Scaffold a new Cinacoin project
 
 ```bash
-cinaconnect init my-app
-cinaconnect init my-app --template react
-cinaconnect init my-app --template next --package-manager pnpm
-cinaconnect init my-app --dry-run
+cinacoin init my-app
+cinacoin init my-app --template react
+cinacoin init my-app --template next --package-manager pnpm
+cinacoin init my-app --dry-run
 ```
 
 | Option | Description | Default |
@@ -30,9 +30,9 @@ cinaconnect init my-app --dry-run
 ### `add` — Add adapters, plugins, or components
 
 ```bash
-cinaconnect add @cinaconnect/react
-cinaconnect add @cinaconnect/swap-sdk --dev
-cinaconnect list   # List all available addons
+cinacoin add @cinacoin/react
+cinacoin add @cinacoin/swap-sdk --dev
+cinacoin list   # List all available addons
 ```
 
 | Option | Description | Default |
@@ -43,25 +43,25 @@ cinaconnect list   # List all available addons
 
 | Addon | Description |
 |---|---|
-| `@cinaconnect/evm` | EVM chain adapter |
-| `@cinaconnect/solana` | Solana chain adapter |
-| `@cinaconnect/bitcoin` | Bitcoin chain adapter |
-| `@cinaconnect/react` | React UI components |
-| `@cinaconnect/vue` | Vue UI components |
-| `@cinaconnect/react-native` | React Native components |
-| `@cinaconnect/swap-sdk` | DEX swap aggregator |
-| `@cinaconnect/siwe` | Sign-In With Ethereum |
-| `@cinaconnect/onramp-sdk` | Fiat on-ramp aggregator |
-| `@cinaconnect/walletconnect-v2` | WalletConnect v2 integration |
-| `@cinaconnect/session-keys` | ERC-4337 session keys |
-| `@cinaconnect/social-login` | Social login providers |
+| `@cinacoin/evm` | EVM chain adapter |
+| `@cinacoin/solana` | Solana chain adapter |
+| `@cinacoin/bitcoin` | Bitcoin chain adapter |
+| `@cinacoin/react` | React UI components |
+| `@cinacoin/vue` | Vue UI components |
+| `@cinacoin/react-native` | React Native components |
+| `@cinacoin/swap-sdk` | DEX swap aggregator |
+| `@cinacoin/siwe` | Sign-In With Ethereum |
+| `@cinacoin/onramp-sdk` | Fiat on-ramp aggregator |
+| `@cinacoin/walletconnect-v2` | WalletConnect v2 integration |
+| `@cinacoin/session-keys` | ERC-4337 session keys |
+| `@cinacoin/social-login` | Social login providers |
 
 ### `build` — Build SDK packages
 
 ```bash
-cinaconnect build
-cinaconnect build --scope @cinaconnect/core
-cinaconnect build --force
+cinacoin build
+cinacoin build --scope @cinacoin/core
+cinacoin build --force
 ```
 
 | Option | Description | Default |
@@ -72,13 +72,13 @@ cinaconnect build --force
 ### `test` — Run tests
 
 ```bash
-cinaconnect test              # Run all tests
-cinaconnect test --unit       # Unit tests only
-cinaconnect test --e2e        # E2E tests only
-cinaconnect test --coverage   # With coverage
-cinaconnect test --watch      # Watch mode
-cinaconnect test --ui         # Playwright UI mode
-cinaconnect test --project chromium
+cinacoin test              # Run all tests
+cinacoin test --unit       # Unit tests only
+cinacoin test --e2e        # E2E tests only
+cinacoin test --coverage   # With coverage
+cinacoin test --watch      # Watch mode
+cinacoin test --ui         # Playwright UI mode
+cinacoin test --project chromium
 ```
 
 | Option | Description | Default |
@@ -93,7 +93,7 @@ cinaconnect test --project chromium
 ## Programmatic Usage
 
 ```ts
-import { program } from '@cinaconnect/cli';
+import { program } from '@cinacoin/cli';
 
 program.parse(['node', 'cli', 'init', 'my-app', '--template', 'react']);
 ```

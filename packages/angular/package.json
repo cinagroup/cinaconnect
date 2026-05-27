@@ -1,11 +1,11 @@
 {
-  "name": "@cinaconnect/angular",
+  "name": "@cinacoin/angular",
   "version": "0.2.0",
-  "description": "Angular 17+ adapter for CinaConnect Core SDK",
+  "description": "Angular 17+ adapter for Cinacoin Core SDK",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cinaconnect/onux.git",
+    "url": "https://github.com/cinagroup/Cinacoin.git",
     "directory": "packages/angular"
   },
   "exports": {
@@ -14,11 +14,11 @@
       "types": "./dist/index.d.ts",
       "esm2022": "./dist/esm2022/index.mjs",
       "esm": "./dist/esm2022/index.mjs",
-      "default": "./dist/fesm2022/cinaconnect-angular.mjs"
+      "default": "./dist/fesm2022/cinacoin-angular.mjs"
     }
   },
-  "main": "dist/fesm2022/cinaconnect-angular.mjs",
-  "module": "dist/fesm2022/cinaconnect-angular.mjs",
+  "main": "dist/fesm2022/cinacoin-angular.mjs",
+  "module": "dist/fesm2022/cinacoin-angular.mjs",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "ng-packagr -p ng-package.json",
@@ -33,7 +33,7 @@
     "rxjs": "^7.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "^0.2.0",
+    "@cinacoin/core-sdk": "^0.2.0",
     "tslib": "^2.6.0"
   },
   "devDependencies": {

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/adapter-bitcoin",
+  "name": "@cinacoin/adapter-bitcoin",
   "version": "1.0.0",
-  "description": "Native Bitcoin wallet connectors for CinaConnect — Unisat, Leather, OKX, SatsConnect, Xverse, Wallet Standard",
+  "description": "Native Bitcoin wallet connectors for Cinacoin — Unisat, Leather, OKX, SatsConnect, Xverse, Wallet Standard",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
   "peerDependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {
     "@sats-connect/core": "^0.2.0"
@@ -26,5 +26,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

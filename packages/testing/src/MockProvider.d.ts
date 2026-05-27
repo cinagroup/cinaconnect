@@ -50,8 +50,8 @@ export type ProviderEventListener<K extends keyof ProviderEventMap> = (payload: 
 export declare class MockProvider {
     /** EIP-1193: isMetaMask flag */
     readonly isMetaMask = true;
-    /** EIP-1193: isCinaConnect mock flag */
-    readonly isCinaConnect = true;
+    /** EIP-1193: isCinacoin mock flag */
+    readonly isCinacoin = true;
     private _accounts;
     private _chainId;
     private _defaultResponse;

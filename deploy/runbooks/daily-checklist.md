@@ -1,4 +1,4 @@
-# Daily Ops Checklist — CinaConnect
+# Daily Ops Checklist — Cinacoin
 
 ---
 
@@ -40,7 +40,7 @@
 - [ ] Search for ERROR-level logs in last 24h
 ```bash
 # In Loki/Grafana Explore
-{namespace="cinaconnect"} |= "ERROR"
+{namespace="cinacoin"} |= "ERROR"
 ```
 
 ---

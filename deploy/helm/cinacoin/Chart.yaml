@@ -1,0 +1,16 @@
+apiVersion: v2
+name: cinacoin
+description: Cinacoin Production Deployment — white-label on-chain UX toolkit
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+kubeVersion: ">= 1.24.0"
+maintainers:
+  - name: Cinacoin Team
+    email: ops@cinacoin.com
+keywords:
+  - relay
+  - rpc-proxy
+  - blockchain
+  - wallet-connect
+  - web3

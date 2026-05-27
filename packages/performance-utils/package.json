@@ -1,28 +1,28 @@
 {
-  "name": "@cinaconnect/performance-utils",
+  "name": "@cinacoin/performance-utils",
   "version": "0.1.0",
-  "description": "Performance monitoring and optimization utilities for CinaConnect",
+  "description": "Performance monitoring and optimization utilities for Cinacoin",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./hooks": {
-      "import": "./dist/hooks/index.mjs",
+      "import": "./dist/hooks/index.js",
       "require": "./dist/hooks/index.js",
       "types": "./dist/hooks/index.d.ts"
     },
     "./bundle-analyzer": {
-      "import": "./dist/bundle-analyzer/index.mjs",
+      "import": "./dist/bundle-analyzer/index.js",
       "require": "./dist/bundle-analyzer/index.js",
       "types": "./dist/bundle-analyzer/index.d.ts"
     },
     "./memory-leak": {
-      "import": "./dist/memory-leak/index.mjs",
+      "import": "./dist/memory-leak/index.js",
       "require": "./dist/memory-leak/index.js",
       "types": "./dist/memory-leak/index.d.ts"
     }

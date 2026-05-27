@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/ios-swift",
+  "name": "@cinacoin/ios-swift",
   "version": "0.2.0",
-  "description": "iOS SDK TypeScript types for CinaConnect — Swift interop interfaces",
+  "description": "iOS SDK TypeScript types for Cinacoin — Swift interop interfaces",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -30,5 +30,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

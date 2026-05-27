@@ -1,10 +1,10 @@
-name: cinaconnect
-description: CinaConnect Flutter SDK — Self-hosted wallet connection toolkit. A complete replacement for Reown/WalletConnect infrastructure for Flutter apps.
+name: cinacoin
+description: Cinacoin Flutter SDK — Self-hosted wallet connection toolkit. A complete replacement for Reown/WalletConnect infrastructure for Flutter apps.
 version: 0.1.0
-homepage: https://github.com/hainai/cinaconnect
-repository: https://github.com/hainai/cinaconnect
-issue_tracker: https://github.com/hainai/cinaconnect/issues
-documentation: https://docs.cinaconnect.dev/flutter
+homepage: https://github.com/hainai/cinacoin
+repository: https://github.com/hainai/cinacoin
+issue_tracker: https://github.com/hainai/cinacoin/issues
+documentation: https://docs.cinacoin.dev/flutter
 
 environment:
   sdk: '>=3.2.0 <4.0.0'

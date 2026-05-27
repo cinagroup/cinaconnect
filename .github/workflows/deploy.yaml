@@ -23,7 +23,7 @@ on:
 env:
   HELM_VERSION: "3.14.0"
   REGISTRY: ghcr.io
-  IMAGE_NAMESPACE: onchainux
+  IMAGE_NAMESPACE: cinacoin
 
 jobs:
   # ── Build & Push Images ──────────────────────────────────────
@@ -58,8 +58,8 @@ jobs:
           file: deploy/docker/relay-server/Dockerfile
           push: true
           tags: |
-            ghcr.io/onchainux/relay-server:${{ steps.version.outputs.version }}
-            ghcr.io/onchainux/relay-server:latest
+            ghcr.io/cinacoin/relay-server:${{ steps.version.outputs.version }}
+            ghcr.io/cinacoin/relay-server:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -70,8 +70,8 @@ jobs:
           file: deploy/docker/rpc-proxy/Dockerfile
           push: true
           tags: |
-            ghcr.io/onchainux/rpc-proxy:${{ steps.version.outputs.version }}
-            ghcr.io/onchainux/rpc-proxy:latest
+            ghcr.io/cinacoin/rpc-proxy:${{ steps.version.outputs.version }}
+            ghcr.io/cinacoin/rpc-proxy:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -82,32 +82,32 @@ jobs:
           file: deploy/docker/bundler/Dockerfile
           push: true
           tags: |
-            ghcr.io/onchainux/bundler:${{ steps.version.outputs.version }}
-            ghcr.io/onchainux/bundler:latest
+            ghcr.io/cinacoin/bundler:${{ steps.version.outputs.version }}
+            ghcr.io/cinacoin/bundler:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Build and push push-server
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: deploy/docker/push-server/Dockerfile
+          context: ./packages/push-server
+          file: packages/push-server/Dockerfile
           push: true
           tags: |
-            ghcr.io/onchainux/push-server:${{ steps.version.outputs.version }}
-            ghcr.io/onchainux/push-server:latest
+            ghcr.io/cinacoin/push-server:${{ steps.version.outputs.version }}
+            ghcr.io/cinacoin/push-server:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Build and push keys-server
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: deploy/docker/keys-server/Dockerfile
+          context: ./packages/keys-server
+          file: packages/keys-server/Dockerfile
           push: true
           tags: |
-            ghcr.io/onchainux/keys-server:${{ steps.version.outputs.version }}
-            ghcr.io/onchainux/keys-server:latest
+            ghcr.io/cinacoin/keys-server:${{ steps.version.outputs.version }}
+            ghcr.io/cinacoin/keys-server:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -146,7 +146,7 @@ jobs:
 
       - name: Deploy to staging
         run: |
-          helm upgrade --install onchainux ./deploy/helm/onchainux \
+          helm upgrade --install cinacoin ./deploy/helm/cinacoin \
             --namespace staging \
             --create-namespace \
             --set global.environment=staging \
@@ -237,7 +237,7 @@ jobs:
       - name: Canary deployment (10% traffic)
         run: |
           echo "Starting canary deployment with 10% traffic..."
-          helm upgrade --install onchainux-canary ./deploy/helm/onchainux \
+          helm upgrade --install cinacoin-canary ./deploy/helm/cinacoin \
             --namespace production \
             --set global.environment=production \
             --set global.region=${{ secrets.PRODUCTION_REGION }} \
@@ -282,16 +282,16 @@ jobs:
             echo "✓ Canary passed: error rate ($VALUE) within 1% threshold"
           else
             echo "✗ Canary failed: error rate ($VALUE) exceeds 1% threshold, rolling back"
-            helm rollback onchainux --namespace production
-            kubectl delete deployment onchainux-canary-relay-server onchainux-canary-rpc-proxy onchainux-canary-bundler onchainux-canary-push-server onchainux-canary-keys-server -n production --ignore-not-found
+            helm rollback cinacoin --namespace production
+            kubectl delete deployment cinacoin-canary-relay-server cinacoin-canary-rpc-proxy cinacoin-canary-bundler cinacoin-canary-push-server cinacoin-canary-keys-server -n production --ignore-not-found
             exit 1
           fi
 
           # Verify no crash loops
-          CRASHED=$(kubectl get pods -n production -l app.kubernetes.io/instance=onchainux-canary --field-selector=status.phase=Running --no-headers | grep -c "CrashLoopBackOff" || true)
+          CRASHED=$(kubectl get pods -n production -l app.kubernetes.io/instance=cinacoin-canary --field-selector=status.phase=Running --no-headers | grep -c "CrashLoopBackOff" || true)
           if [ "$CRASHED" -gt 0 ]; then
             echo "✗ Canary pods in CrashLoopBackOff, rolling back"
-            helm rollback onchainux --namespace production
+            helm rollback cinacoin --namespace production
             exit 1
           fi
           echo "✓ No crash loops detected"
@@ -299,7 +299,7 @@ jobs:
       - name: Full production rollout
         run: |
           echo "Promoting canary to full production..."
-          helm upgrade --install onchainux ./deploy/helm/onchainux \
+          helm upgrade --install cinacoin ./deploy/helm/cinacoin \
             --namespace production \
             --set global.environment=production \
             --set global.region=${{ secrets.PRODUCTION_REGION }} \
@@ -326,7 +326,7 @@ jobs:
         if: always()
         run: |
           echo "Cleaning up canary deployment..."
-          helm uninstall onchainux-canary --namespace production --wait --timeout 5m || true
+          helm uninstall cinacoin-canary --namespace production --wait --timeout 5m || true
           echo "✓ Canary cleanup complete"
 
       - name: Post-deployment notification
@@ -336,9 +336,9 @@ jobs:
           if [ "$STATUS" = "success" ]; then
             curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
               -H 'Content-type: application/json' \
-              --data '{"text":"✅ OnChainUX v${{ steps.version.outputs.version }} deployed to production successfully"}'
+              --data '{"text":"✅ Cinacoin v${{ steps.version.outputs.version }} deployed to production successfully"}'
           else
             curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
               -H 'Content-type: application/json' \
-              --data '{"text":"❌ OnChainUX v${{ steps.version.outputs.version }} production deployment failed"}'
+              --data '{"text":"❌ Cinacoin v${{ steps.version.outputs.version }} production deployment failed"}'
           fi

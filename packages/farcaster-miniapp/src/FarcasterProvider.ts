@@ -52,7 +52,7 @@ export class FarcasterProvider {
 
   constructor(config?: FarcasterProviderConfig) {
     this._chains = config?.chains ?? [1, 10, 8453];
-    this.appName = config?.appName ?? 'CinaConnect App';
+    this.appName = config?.appName ?? 'Cinacoin App';
     this._chainId = config?.chains?.[0] ?? 1;
     this._context = config?.contextOverride ?? this._detectFarcaster();
   }

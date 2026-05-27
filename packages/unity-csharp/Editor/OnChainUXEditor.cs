@@ -1,13 +1,13 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace CinaConnect.Editor
+namespace Cinacoin.Editor
 {
     /// <summary>
-    /// Unity Editor window for CinaConnect configuration.
+    /// Unity Editor window for Cinacoin configuration.
     /// Allows setting project ID, relay URL, and app metadata via the Unity Editor.
     /// </summary>
-    public class CinaConnectEditorWindow : EditorWindow
+    public class CinacoinEditorWindow : EditorWindow
     {
         private string _projectId = "";
         private string _relayUrl = "wss://relay.walletconnect.com";
@@ -17,10 +17,10 @@ namespace CinaConnect.Editor
         private string _appIcons = "";
         private bool _enableDebugLogs = true;
 
-        [MenuItem("Window/CinaConnect/Configuration")]
+        [MenuItem("Window/Cinacoin/Configuration")]
         public static void ShowWindow()
         {
-            var window = GetWindow<CinaConnectEditorWindow>("CinaConnect Config");
+            var window = GetWindow<CinacoinEditorWindow>("Cinacoin Config");
             window.minSize = new Vector2(350, 300);
             LoadSettings();
         }
@@ -33,7 +33,7 @@ namespace CinaConnect.Editor
         private void OnGUI()
         {
             EditorGUILayout.Space(10);
-            EditorGUILayout.LabelField("CinaConnect Configuration", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Cinacoin Configuration", EditorStyles.boldLabel);
             EditorGUILayout.Space(5);
 
             EditorGUI.BeginChangeCheck();
@@ -65,14 +65,14 @@ namespace CinaConnect.Editor
                 GenerateConfigJson();
             }
 
-            if (GUILayout.Button("Add CinaConnect Manager to Scene"))
+            if (GUILayout.Button("Add Cinacoin Manager to Scene"))
             {
                 AddManagerToScene();
             }
 
             EditorGUILayout.Space(10);
             EditorGUILayout.HelpBox(
-                "Configure your CinaConnect project ID and app metadata here.\n" +
+                "Configure your Cinacoin project ID and app metadata here.\n" +
                 "Click 'Generate Config JSON' to create a configuration file.",
                 MessageType.Info
             );
@@ -80,13 +80,13 @@ namespace CinaConnect.Editor
 
         private void SaveSettings()
         {
-            EditorPrefs.SetString("CinaConnect_ProjectId", _projectId);
-            EditorPrefs.SetString("CinaConnect_RelayUrl", _relayUrl);
-            EditorPrefs.SetString("CinaConnect_AppName", _appName);
-            EditorPrefs.SetString("CinaConnect_AppDescription", _appDescription);
-            EditorPrefs.SetString("CinaConnect_AppUrl", _appUrl);
-            EditorPrefs.SetString("CinaConnect_AppIcons", _appIcons);
-            EditorPrefs.SetBool("CinaConnect_DebugLogs", _enableDebugLogs);
+            EditorPrefs.SetString("Cinacoin_ProjectId", _projectId);
+            EditorPrefs.SetString("Cinacoin_RelayUrl", _relayUrl);
+            EditorPrefs.SetString("Cinacoin_AppName", _appName);
+            EditorPrefs.SetString("Cinacoin_AppDescription", _appDescription);
+            EditorPrefs.SetString("Cinacoin_AppUrl", _appUrl);
+            EditorPrefs.SetString("Cinacoin_AppIcons", _appIcons);
+            EditorPrefs.SetBool("Cinacoin_DebugLogs", _enableDebugLogs);
         }
 
         private void GenerateConfigJson()
@@ -106,22 +106,22 @@ namespace CinaConnect.Editor
   ""relayUrl"": ""{_relayUrl}""
 }}";
 
-            var path = EditorUtility.SaveFilePanel("Save Config", "Assets", "cinaconnect_config.json", "json");
+            var path = EditorUtility.SaveFilePanel("Save Config", "Assets", "cinacoin_config.json", "json");
             if (!string.IsNullOrEmpty(path))
             {
                 System.IO.File.WriteAllText(path, json);
                 AssetDatabase.Refresh();
-                Debug.Log($"CinaConnect config saved to: {path}");
+                Debug.Log($"Cinacoin config saved to: {path}");
             }
         }
 
         private void AddManagerToScene()
         {
-            var manager = FindObjectOfType<CinaConnectManager>();
+            var manager = FindObjectOfType<CinacoinManager>();
             if (manager == null)
             {
-                var go = new GameObject("[CinaConnect]");
-                manager = go.AddComponent<CinaConnectManager>();
+                var go = new GameObject("[Cinacoin]");
+                manager = go.AddComponent<CinacoinManager>();
 
                 // Set project ID from settings
                 var serialized = new SerializedObject(manager);
@@ -130,16 +130,16 @@ namespace CinaConnect.Editor
                 serialized.FindProperty("_enableDebugLogs").boolValue = _enableDebugLogs;
                 serialized.ApplyModifiedProperties();
 
-                Undo.RegisterCreatedObjectUndo(go, "Create CinaConnect Manager");
+                Undo.RegisterCreatedObjectUndo(go, "Create Cinacoin Manager");
                 Selection.activeGameObject = go;
 
-                Debug.Log("CinaConnect Manager added to scene");
+                Debug.Log("Cinacoin Manager added to scene");
             }
             else
             {
                 EditorUtility.DisplayDialog(
-                    "CinaConnect",
-                    "CinaConnect Manager already exists in the scene.",
+                    "Cinacoin",
+                    "Cinacoin Manager already exists in the scene.",
                     "OK"
                 );
             }

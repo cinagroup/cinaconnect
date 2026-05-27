@@ -1,6 +1,6 @@
 # Backend Dashboard
 
-CinaConnect Backend Management Dashboard — built with Next.js 15.
+Cinacoin Backend Management Dashboard — built with Next.js 15.
 
 ## Deployment to Cloudflare Pages
 

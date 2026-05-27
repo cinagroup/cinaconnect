@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 // ============================================================
-// Tests for @cinaconnect/vue CinaConnectProvider
+// Tests for @cinacoin/vue CinacoinProvider
 // ============================================================
 // Mock Vue's provide/inject system for testing
 const mockProvide = vi.fn();
@@ -12,7 +12,7 @@ vi.mock('vue', () => ({
     computed: mockComputed,
     ref: mockRef,
 }));
-describe('CinaConnectProvider', () => {
+describe('CinacoinProvider', () => {
     describe('configuration', () => {
         it('should accept config with chains', () => {
             const config = {
@@ -84,7 +84,7 @@ describe('CinaConnectProvider', () => {
         it('should provide ONCHAINUX_KEY as a symbol', async () => {
             const { ONCHAINUX_KEY } = await import('../src/types.js');
             expect(typeof ONCHAINUX_KEY).toBe('symbol');
-            expect(ONCHAINUX_KEY.description).toBe('cinaconnect');
+            expect(ONCHAINUX_KEY.description).toBe('cinacoin');
         });
         it('should have correct account state shape', () => {
             const account = {

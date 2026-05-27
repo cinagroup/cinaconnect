@@ -6,7 +6,7 @@
  *
  * @example
  * ```ts
- * import { Ethers6Adapter } from '@cinaconnect/core-sdk';
+ * import { Ethers6Adapter } from '@cinacoin/core-sdk';
  * import { BrowserProvider } from 'ethers';
  *
  * const provider = new BrowserProvider(window.ethereum);
@@ -125,7 +125,7 @@ export interface Ethers6Log {
 // ---------------------------------------------------------------------------
 
 /**
- * ethers v6 adapter implementing the CinaConnect Connector interface.
+ * ethers v6 adapter implementing the Cinacoin Connector interface.
  *
  * Uses the modern Promise-based API of ethers v6 with BrowserProvider
  * and JsonRpcSigner.

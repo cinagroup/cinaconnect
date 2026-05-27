@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/adapter-cosmos",
+  "name": "@cinacoin/adapter-cosmos",
   "version": "1.0.0",
-  "description": "Cosmos ecosystem chain adapter for CinaConnect — Keplr, Leap, Cosmos SDK chains",
+  "description": "Cosmos ecosystem chain adapter for Cinacoin — Keplr, Leap, Cosmos SDK chains",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
   "peerDependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {
     "@cosmjs/stargate": "^0.32.0",
@@ -27,5 +27,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

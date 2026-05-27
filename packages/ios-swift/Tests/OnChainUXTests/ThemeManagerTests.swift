@@ -1,15 +1,15 @@
 import XCTest
-@testable import CinaConnect
+@testable import Cinacoin
 
 /// Tests for theme switching and theme color token injection.
-/// iOS uses `ThemeColors` structs and `ThemeMode` enums defined in CinaConnect.swift.
+/// iOS uses `ThemeColors` structs and `ThemeMode` enums defined in Cinacoin.swift.
 final class ThemeManagerTests: XCTestCase {
 
     // MARK: - Theme Mode Defaults
 
-    func testCinaConnectDefaultThemeIsDark() {
-        let sdk = CinaConnect.shared
-        sdk.configure(with: CinaConnectConfig(
+    func testCinacoinDefaultThemeIsDark() {
+        let sdk = Cinacoin.shared
+        sdk.configure(with: CinacoinConfig(
             projectId: "test",
             chains: [.ethereum]
         ))
@@ -26,8 +26,8 @@ final class ThemeManagerTests: XCTestCase {
     // MARK: - Theme Switching
 
     func testSetThemeModeUpdatesColors() {
-        let sdk = CinaConnect.shared
-        let config = CinaConnectConfig(
+        let sdk = Cinacoin.shared
+        let config = CinacoinConfig(
             projectId: "test",
             chains: [.ethereum],
             themeMode: .dark

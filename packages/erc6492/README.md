@@ -1,17 +1,17 @@
-# @cinaconnect/erc6492
+# @cinacoin/erc6492
 
-ERC-6492 signature validation for CinaConnect — contract signature verification.
+ERC-6492 signature validation for Cinacoin — contract signature verification.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/erc6492
+npm install @cinacoin/erc6492
 ```
 
 ## Usage
 
 ```ts
-import { verifyERC6492Signature } from '@cinaconnect/erc6492';
+import { verifyERC6492Signature } from '@cinacoin/erc6492';
 
 const isValid = await verifyERC6492Signature({
   address: '0x...',

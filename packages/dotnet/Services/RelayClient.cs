@@ -2,13 +2,13 @@ using System.Net.Http.Headers;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.Json;
-using CinaConnect.Models;
+using Cinacoin.Models;
 using Microsoft.Extensions.Logging;
 
-namespace CinaConnect.Services;
+namespace Cinacoin.Services;
 
 /// <summary>
-/// Relay client for managing wallet connection sessions via the CinaConnect relay server.
+/// Relay client for managing wallet connection sessions via the Cinacoin relay server.
 /// Handles WebSocket connections, session pairing, and message relay.
 /// </summary>
 public sealed class RelayClient : IAsyncDisposable
@@ -23,10 +23,10 @@ public sealed class RelayClient : IAsyncDisposable
     /// <summary>
     /// Creates a new RelayClient instance.
     /// </summary>
-    /// <param name="relayUrl">Relay server URL (default: wss://relay.cinaconnect.com).</param>
+    /// <param name="relayUrl">Relay server URL (default: wss://relay.cinacoin.com).</param>
     /// <param name="logger">Optional logger instance.</param>
     public RelayClient(
-        string relayUrl = "wss://relay.cinaconnect.com",
+        string relayUrl = "wss://relay.cinacoin.com",
         ILogger<RelayClient>? logger = null)
     {
         _relayUrl = new Uri(relayUrl);

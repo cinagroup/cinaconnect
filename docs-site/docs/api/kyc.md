@@ -1,11 +1,11 @@
 # KYC
 
-> `@cinaconnect/kyc` — KYC (Know Your Customer) integration for CinaConnect.
+> `@cinacoin/kyc` — KYC (Know Your Customer) integration for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/kyc
+npm install @cinacoin/kyc
 ```
 
 ## Overview

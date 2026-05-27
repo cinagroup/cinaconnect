@@ -1,11 +1,11 @@
 # Performance Utils
 
-> `@cinaconnect/performance-utils` — Performance optimization utilities.
+> `@cinacoin/performance-utils` — Performance optimization utilities.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/performance-utils
+npm install @cinacoin/performance-utils
 ```
 
 ## Overview

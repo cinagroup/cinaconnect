@@ -1,0 +1,23 @@
+# Pod Security Standards — Enforced via namespace labels
+# PSPs are deprecated in Kubernetes 1.21+; use Pod Security Admission instead.
+# Apply these labels to the namespace to enforce restricted pod security standards.
+#
+# Usage: kubectl label namespace {{ .Release.Namespace }} \
+#   pod-security.kubernetes.io/enforce=restricted \
+#   pod-security.kubernetes.io/enforce-version=latest \
+#   pod-security.kubernetes.io/warn=restricted \
+#   pod-security.kubernetes.io/warn-version=latest \
+#   pod-security.kubernetes.io/audit=restricted \
+#   pod-security.kubernetes.io/audit-version=latest
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: latest
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: latest

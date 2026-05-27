@@ -78,9 +78,9 @@ export interface SessionManagerConfig {
 
 const DEFAULT_ACCESS_TTL = 3600;
 const DEFAULT_REFRESH_TTL = 604800;
-const DEFAULT_ISSUER = 'cinaconnect-social-login';
-const LOCAL_STORAGE_ACCESS_KEY = '@cinaconnect/session';
-const LOCAL_STORAGE_REFRESH_KEY = '@cinaconnect/refresh';
+const DEFAULT_ISSUER = 'cinacoin-social-login';
+const LOCAL_STORAGE_ACCESS_KEY = '@cinacoin/session';
+const LOCAL_STORAGE_REFRESH_KEY = '@cinacoin/refresh';
 
 // ─── In-memory session store (server-side) ──────────────────────────────
 

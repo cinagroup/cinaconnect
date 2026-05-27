@@ -12,7 +12,7 @@ import { jwtVerify, createRemoteJWKSet, type JWTPayload } from 'jose';
 // ─── Types ──────────────────────────────────────────────────────────────
 
 /** Supported providers for token verification. */
-export type TokenProvider = 'google' | 'apple' | 'twitter';
+export type TokenProvider = 'google' | 'apple' | 'twitter' | 'github';
 
 /**
  * Result of a token verification operation.
@@ -40,6 +40,8 @@ export interface TokenVerifierConfig {
   appleClientId?: string;
   /** Twitter Bearer token for API v2 access token verification. */
   twitterBearerToken?: string;
+  /** GitHub OAuth app ID (numeric client ID for audience validation). */
+  githubClientId?: string;
 }
 
 // ─── Provider-specific endpoints ────────────────────────────────────────
@@ -103,6 +105,8 @@ export class TokenVerifier {
         return this.verifyAppleToken(token);
       case 'twitter':
         return this.verifyTwitterToken(token);
+      case 'github':
+        return this.verifyGitHubToken(token);
       default:
         return { valid: false, error: `Unsupported provider: ${provider}` };
     }
@@ -322,6 +326,61 @@ export class TokenVerifier {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Unknown error';
       return { valid: false, error: `Twitter token verification failed: ${message}` };
+    }
+  }
+
+  // ─── GitHub ─────────────────────────────────────────────────────────
+
+  /**
+   * Verify a GitHub access token using the GitHub API.
+   *
+   * Calls `/user` endpoint with the access token to confirm
+   * it is valid and retrieve the user profile.
+   *
+   * @param accessToken - GitHub OAuth2 access token.
+   * @returns Verification result.
+   */
+  private async verifyGitHubToken(accessToken: string): Promise<TokenVerifyResult> {
+    if (!accessToken || accessToken.length < 10) {
+      return { valid: false, error: 'Invalid GitHub access token: too short' };
+    }
+
+    try {
+      const response = await fetch('https://api.github.com/user', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: 'application/vnd.github.v3+json',
+        },
+      });
+
+      if (!response.ok) {
+        const body = await response.text();
+        return {
+          valid: false,
+          error: `GitHub API returned ${response.status}: ${body}`,
+        };
+      }
+
+      const data = (await response.json()) as Record<string, unknown>;
+      const userId = String(data.id || data.login || '');
+
+      if (!userId) {
+        return { valid: false, error: 'GitHub token returned no user ID' };
+      }
+
+      return {
+        valid: true,
+        payload: {
+          sub: userId,
+          name: data.name as string,
+          login: data.login as string,
+        },
+        userId,
+        email: (data.email as string) || undefined,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      return { valid: false, error: `GitHub token verification failed: ${message}` };
     }
   }
 }

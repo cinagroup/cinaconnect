@@ -1,6 +1,6 @@
 # Go-To-Market (GTM) Checklist
 
-> A structured checklist for launching CinaConnect — from pre-launch preparation to post-launch optimization.
+> A structured checklist for launching Cinacoin — from pre-launch preparation to post-launch optimization.
 
 ---
 
@@ -10,11 +10,11 @@
 
 | Item | Description | Status |
 |------|-------------|--------|
-| `projectId` configured | Unique project ID registered in CinaConnect dashboard | ☐ |
-| Metadata set | App name, description, URL, and icons configured in `CinaConnectProvider` | ☐ |
+| `projectId` configured | Unique project ID registered in Cinacoin dashboard | ☐ |
+| Metadata set | App name, description, URL, and icons configured in `CinacoinProvider` | ☐ |
 | Relay server deployed | Self-hosted relay running in production (or public relay verified) | ☐ |
 | RPC endpoints configured | Primary + fallback RPC providers set up | ☐ |
-| Domains verified | dApp domain registered with CinaConnect Verify API | ☐ |
+| Domains verified | dApp domain registered with Cinacoin Verify API | ☐ |
 | SSL/TLS certificates | Valid certificates for all domains (relay, dApp, APIs) | ☐ |
 
 ### Security Review
@@ -33,7 +33,7 @@
 | CSRF protection | State-changing endpoints require CSRF tokens | ☐ |
 | Input validation | All user inputs validated (addresses, amounts, URLs) | ☐ |
 | Private key hygiene | No private keys in code, storage, logs, or error reports | ☐ |
-| Phishing prevention | Domain registered with CinaConnect Verify API | ☐ |
+| Phishing prevention | Domain registered with Cinacoin Verify API | ☐ |
 | HTTPS everywhere | No mixed content; HSTS enabled | ☐ |
 | SRI hashes | External CDN scripts include Subresource Integrity | ☐ |
 | Error message safety | Errors don't leak internal state or stack traces | ☐ |
@@ -52,7 +52,7 @@
 | Mobile deep links | iOS Universal Links + Android App Links verified | ☐ |
 | Social login | Google, email, and other providers tested end-to-end | ☐ |
 | Error handling | All error paths display user-friendly messages | ☐ |
-| Performance budget | Initial JS bundle < 500KB (gzipped) for CinaConnect portion | ☐ |
+| Performance budget | Initial JS bundle < 500KB (gzipped) for Cinacoin portion | ☐ |
 | Accessibility | Connect modal passes WCAG 2.1 AA | ☐ |
 
 ### Developer Experience
@@ -74,7 +74,7 @@
 
 | Item | Description | Status |
 |------|-------------|--------|
-| Analytics enabled | CinaConnect analytics tracking connection events | ☐ |
+| Analytics enabled | Cinacoin analytics tracking connection events | ☐ |
 | Error tracking | Sentry/Datadog configured for error capture | ☐ |
 | Uptime monitoring | Relay server and dApp monitored (UptimeRobot, Pingdom) | ☐ |
 | Alerting configured | PagerDuty/Slack alerts for critical failures | ☐ |
@@ -85,10 +85,10 @@
 
 | Metric | Target | Tool |
 |--------|--------|------|
-| Connection success rate | > 95% | CinaConnect analytics |
+| Connection success rate | > 95% | Cinacoin analytics |
 | Average connection time | < 3 seconds | Custom timing |
 | Error rate | < 2% | Sentry |
-| Active sessions | Monitor trend | CinaConnect analytics |
+| Active sessions | Monitor trend | Cinacoin analytics |
 | Bounce rate at connect modal | < 30% | Google Analytics |
 | Page load time (LCP) | < 2.5 seconds | Web Vitals |
 
@@ -100,7 +100,7 @@
 | Canary release | Roll out to 10% of users first | ☐ |
 | Rollout plan | Gradual increase: 10% → 25% → 50% → 100% | ☐ |
 | Rollback plan | Can revert to previous version in < 5 minutes | ☐ |
-| Support team briefed | Customer support knows CinaConnect features | ☐ |
+| Support team briefed | Customer support knows Cinacoin features | ☐ |
 | Social media ready | Announcements prepared for launch day | ☐ |
 | Blog post published | Technical blog post about the migration/build | ☐ |
 | Changelog updated | Version changelog with all changes | ☐ |
@@ -135,7 +135,7 @@
 |------|-------------|--------|
 | Bundle analysis | Run `vite-bundle-visualizer` and optimize | ☐ |
 | Lazy loading | Connect modal loaded on-demand, not at startup | ☐ |
-| Code splitting | CinaConnect packages in separate chunk | ☐ |
+| Code splitting | Cinacoin packages in separate chunk | ☐ |
 | Caching strategy | Token lists, chain configs cached with proper TTL | ☐ |
 | CDN configured | Static assets served from CDN | ☐ |
 | WebSocket optimization | Ping/keepalive tuned; reconnect logic verified | ☐ |
@@ -153,12 +153,12 @@
 **Implement A/B testing:**
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core'
+import { Cinacoin } from '@cinacoin/core'
 
 // Pass experiment config
-const cinaconnect = new CinaConnect({
+const cinacoin = new Cinacoin({
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   experiments: {
     walletOrder: 'recommended-first', // vs 'alphabetical'
@@ -168,7 +168,7 @@ const cinaconnect = new CinaConnect({
 })
 
 // Track experiment results
-cinaconnect.on('connect', (session) => {
+cinacoin.on('connect', (session) => {
   analytics.track('experiment_connect', {
     experiment: 'walletOrder',
     variant: 'recommended-first',
@@ -208,18 +208,18 @@ cinaconnect.on('connect', (session) => {
 pnpm audit          # Check dependencies
 pnpm test           # Run test suite
 pnpm build          # Build all packages
-helm lint ./deploy/helm/cinaconnect  # Validate Helm chart
+helm lint ./deploy/helm/cinacoin  # Validate Helm chart
 
 # 2. Deploy infrastructure
 kubectl apply -f deploy/k8s/namespace.yaml
-helm upgrade cinaconnect ./deploy/helm/cinaconnect \
-  --namespace cinaconnect \
-  --values ./deploy/helm/cinaconnect/values-production.yaml
+helm upgrade cinacoin ./deploy/helm/cinacoin \
+  --namespace cinacoin \
+  --values ./deploy/helm/cinacoin/values-production.yaml
 
 # 3. Verify deployment
-kubectl get pods -n cinaconnect
-kubectl get svc -n cinaconnect
-curl https://relay.cinaconnect.com/v1/health
+kubectl get pods -n cinacoin
+kubectl get svc -n cinacoin
+curl https://relay.cinacoin.com/v1/health
 
 # 4. Deploy dApp
 npm run build && npm run deploy
@@ -231,4 +231,4 @@ curl https://mydapp.com/api/health
 
 ---
 
-*Go-To-Market Checklist — CinaConnect Documentation*
+*Go-To-Market Checklist — Cinacoin Documentation*

@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+    component: network-policy
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: relay
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: rpc-proxy
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: push-server
+      ports:
+        - protocol: TCP
+          port: 6379
+        - protocol: TCP
+          port: 16379

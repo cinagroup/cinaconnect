@@ -1,5 +1,5 @@
 /**
- * NEAR-specific types for the @cinaconnect/adapter-near package.
+ * NEAR-specific types for the @cinacoin/adapter-near package.
  */
 /* ------------------------------------------------------------------ */
 /*  NEAR chain presets                                                 */

@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * publish-all.js — Node.js version of the @cinaconnect publish pipeline
+ * publish-all.js — Node.js version of the @cinacoin publish pipeline
  * 
  * Features:
  * - Reads all package.json files in packages/
@@ -33,6 +33,7 @@ const CONFIG = {
   retries: 2,
   retryDelayMs: 2000,
   timeoutMs: 60000,
+  buildMissing: false,
 };
 
 // ── Argument parsing ───────────────────────────────────────────────
@@ -41,6 +42,7 @@ for (const arg of process.argv.slice(2)) {
   else if (arg === '--dry-run') CONFIG.dryRun = true;
   else if (arg.startsWith('--concurrency=')) CONFIG.concurrency = parseInt(arg.split('=')[1], 10);
   else if (arg.startsWith('--filter=')) CONFIG.filter = arg.split('=')[1].split(',').map(s => s.trim().toLowerCase());
+  else if (arg === '--build-missing') CONFIG.buildMissing = true;
   else if (arg === '--help' || arg === '-h') {
     console.log(`Usage: node ${path.basename(__filename)} [options]
 
@@ -49,6 +51,7 @@ Options:
   --dry-run           Simulate publishing (default)
   --concurrency=N     Max concurrent publishes (default: 4)
   --filter=pattern    Only publish packages matching pattern (comma-separated)
+  --build-missing     Build packages with no dist/ before publishing
   --help              Show this help`);
     process.exit(0);
   }
@@ -186,7 +189,7 @@ async function runWithConcurrency(items, fn, concurrency) {
 // ── Main ───────────────────────────────────────────────────────────
 async function main() {
   console.log('');
-  console.log(`${colors.bold}📦  @cinaconnect Publish Pipeline${colors.reset}`);
+  console.log(`${colors.bold}📦  @cinacoin Publish Pipeline${colors.reset}`);
   console.log('');
 
   if (CONFIG.dryRun) {

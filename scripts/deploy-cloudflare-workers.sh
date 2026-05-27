@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# CinaConnect Cloudflare Workers Deployment Script
+# CinaCoin Cloudflare Workers Deployment Script
 # Deploys Relay, Notify, and Push servers to Cloudflare
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -69,7 +69,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-echo -e "${GREEN}📦 CinaConnect Cloudflare Workers Deployment${NC}"
+echo -e "${GREEN}📦 CinaCoin Cloudflare Workers Deployment${NC}"
 echo "Environment: $ENVIRONMENT"
 echo ""
 
@@ -94,9 +94,9 @@ echo ""
 echo -e "${GREEN}🎉 All Cloudflare Workers deployed successfully!${NC}"
 echo ""
 echo "Deployed services:"
-echo "  • cinaconnect-relay-server"
-echo "  • cinaconnect-notify-server"
-echo "  • cinaconnect-push-server"
+echo "  • cinacoin-relay-server"
+echo "  • cinacoin-notify-server"
+echo "  • cinacoin-push-server"
 echo ""
 echo "To verify deployment, run:"
 echo "  ./scripts/check-cloudflare-workers.sh"

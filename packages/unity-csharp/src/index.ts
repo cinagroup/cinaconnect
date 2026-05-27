@@ -1,12 +1,12 @@
 /**
- * @cinaconnect/unity-types
- * TypeScript type definitions matching the CinaConnect Unity SDK C# API surface.
+ * @cinacoin/unity-types
+ * TypeScript type definitions matching the Cinacoin Unity SDK C# API surface.
  * Mirrors: ChainNamespace, Chain, NativeCurrency, ConnectParams, AppMetadata,
  *          ConnectionResult, TransactionRequest, ConnectionStatus, SessionState,
- *          WalletInfo, CinaConnectConfig, SessionData,
+ *          WalletInfo, CinacoinConfig, SessionData,
  *          SIWEParams, ParsedSIWE, SIWEVerificationResult,
  *          EvmAdapter, SolanaAdapter, DeepLinkHandler, WalletManager,
- *          CinaConnectManager, ConnectModal, WalletCard, ConnectButton
+ *          CinacoinManager, ConnectModal, WalletCard, ConnectButton
  */
 
 // ─── Core Types (OnChainUXTypes.cs) ───────────────────────────────────
@@ -145,8 +145,8 @@ export const CINA_CONNECT_VERSION = '0.1.0';
 
 // ─── Configuration Types ──────────────────────────────────────────────
 
-/** Configuration for CinaConnect initialization. */
-export interface CinaConnectConfig {
+/** Configuration for Cinacoin initialization. */
+export interface CinacoinConfig {
   projectId: string;
   metadata: AppMetadata;
   relayUrl?: string;
@@ -411,7 +411,7 @@ export class WalletManager {
   isWalletInstalled(_walletId: string): boolean { void _walletId; return false; }
 }
 
-// ─── CinaConnectManager ───────────────────────────────────────────────
+// ─── CinacoinManager ───────────────────────────────────────────────
 
 /** Event handler types. */
 export type OnStateChange = (state: SessionState) => void;
@@ -421,8 +421,8 @@ export type OnChainChanged = (chainId: number) => void;
 export type OnError = (error: string) => void;
 
 /** Main singleton runtime class for wallet connections. */
-export class CinaConnectManager {
-  static instance: CinaConnectManager | null = null;
+export class CinacoinManager {
+  static instance: CinacoinManager | null = null;
 
   get status(): ConnectionStatus { return 'Disconnected'; }
   get accounts(): string[] { return []; }

@@ -1,11 +1,11 @@
 # Wallet Recommender
 
-> `@cinaconnect/wallet-recommender` — Intelligent wallet recommendation for CinaConnect.
+> `@cinacoin/wallet-recommender` — Intelligent wallet recommendation for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/wallet-recommender
+npm install @cinacoin/wallet-recommender
 ```
 
 ## Overview

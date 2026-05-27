@@ -1,5 +1,5 @@
 /**
- * Tests for EIP-5792 service, standalone components, and exports — @cinaconnect/angular.
+ * Tests for EIP-5792 service, standalone components, and exports — @cinacoin/angular.
  *
  * Covers Eip5792Service capabilities, sendCalls, atomicBatch,
  * getCallsStatus, helpers, SSR guards, and standalone migration.
@@ -126,10 +126,10 @@ const mockCapabilities: any = {
   },
 };
 
-vi.mock('@cinaconnect/core-sdk', async () => {
+vi.mock('@cinacoin/core-sdk', async () => {
   return {
     Connector: vi.fn().mockImplementation(() => mockConnector),
-    CinaConnectCore: vi.fn().mockImplementation(() => ({
+    CinacoinCore: vi.fn().mockImplementation(() => ({
       getConnector: () => mockConnector,
     })),
     walletGetCapabilities: vi.fn().mockResolvedValue(mockCapabilities),
@@ -172,7 +172,7 @@ vi.mock('@cinaconnect/core-sdk', async () => {
 
 // ─── Mock injection tokens ──────────────────────────────────────────────────
 
-vi.mock('../src/lib/cinaconnect.tokens.js', () => ({
+vi.mock('../src/lib/cinacoin.tokens.js', () => ({
   CINA_CONNECT_INSTANCE: 'CINA_CONNECT_INSTANCE',
   CINA_CONNECT_OPTIONS: 'CINA_CONNECT_OPTIONS',
 }));
@@ -451,10 +451,10 @@ describe('EIP-5792 Exports (source verification)', () => {
     expect(src).toContain("Eip5792Service");
   });
 
-  it('should export Eip5792Service from cinaconnect.module.ts', async () => {
+  it('should export Eip5792Service from cinacoin.module.ts', async () => {
     const fs = await import('fs');
     const src = fs.readFileSync(
-      require.resolve('../src/lib/cinaconnect.module.ts'),
+      require.resolve('../src/lib/cinacoin.module.ts'),
       'utf-8',
     );
     expect(src).toContain("export { Eip5792Service }");
@@ -527,15 +527,15 @@ describe('Module backward compatibility', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
-  it('CinaConnectModule should still export forRoot', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
-    expect(typeof CinaConnectModule.forRoot).toBe('function');
+  it('CinacoinModule should still export forRoot', async () => {
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
+    expect(typeof CinacoinModule.forRoot).toBe('function');
   });
 
-  it('CinaConnectModule should import standalone components in imports array', async () => {
+  it('CinacoinModule should import standalone components in imports array', async () => {
     const fs = await import('fs');
     const src = fs.readFileSync(
-      require.resolve('../src/lib/cinaconnect.module.ts'),
+      require.resolve('../src/lib/cinacoin.module.ts'),
       'utf-8',
     );
     // Should NOT have button components in declarations (only in imports)
@@ -551,10 +551,10 @@ describe('Module backward compatibility', () => {
     expect(src).toContain('NetworkButtonComponent');
   });
 
-  it('CinaConnectModule should still declare pipes and directive', async () => {
+  it('CinacoinModule should still declare pipes and directive', async () => {
     const fs = await import('fs');
     const src = fs.readFileSync(
-      require.resolve('../src/lib/cinaconnect.module.ts'),
+      require.resolve('../src/lib/cinacoin.module.ts'),
       'utf-8',
     );
     expect(src).toContain('declarations:');

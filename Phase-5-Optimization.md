@@ -71,7 +71,7 @@ spec:
     spec:
       containers:
       - name: relay
-        image: ghcr.io/cinaconnect/relay-server:1.0.0
+        image: ghcr.io/cinacoin/relay-server:1.0.0
       # Spot 实例容忍中断
       tolerations:
       - key: "spot-instance"
@@ -91,7 +91,7 @@ spec:
     spec:
       containers:
       - name: relay
-        image: ghcr.io/cinaconnect/relay-server:1.0.0
+        image: ghcr.io/cinacoin/relay-server:1.0.0
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -413,8 +413,8 @@ chains:
     name: Ethereum
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/eth"
-    ws_url: "wss://rpc.cinaconnect.com/eth/ws"
+    rpc_url: "https://rpc.cinacoin.com/eth"
+    ws_url: "wss://rpc.cinacoin.com/eth/ws"
     explorer: "https://etherscan.io"
     explorer_tx: "https://etherscan.io/tx/{hash}"
     native_currency:
@@ -433,8 +433,8 @@ chains:
     name: Polygon
     symbol: MATIC
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/polygon"
-    ws_url: "wss://rpc.cinaconnect.com/polygon/ws"
+    rpc_url: "https://rpc.cinacoin.com/polygon"
+    ws_url: "wss://rpc.cinacoin.com/polygon/ws"
     explorer: "https://polygonscan.com"
     explorer_tx: "https://polygonscan.com/tx/{hash}"
     native_currency:
@@ -452,8 +452,8 @@ chains:
     name: Solana
     symbol: SOL
     type: solana
-    rpc_url: "https://rpc.cinaconnect.com/solana"
-    ws_url: "wss://rpc.cinaconnect.com/solana/ws"
+    rpc_url: "https://rpc.cinacoin.com/solana"
+    ws_url: "wss://rpc.cinacoin.com/solana/ws"
     explorer: "https://solscan.io"
     explorer_tx: "https://solscan.io/tx/{hash}"
     native_currency:
@@ -640,7 +640,7 @@ load_balancer:
         enabled: true
         origins:
           - name: relay-us-east
-            address: relay-us-east.cinaconnect.com
+            address: relay-us-east.cinacoin.com
             enabled: true
             weight: 50
         check:
@@ -654,7 +654,7 @@ load_balancer:
         enabled: true
         origins:
           - name: relay-eu-west
-            address: relay-eu-west.cinaconnect.com
+            address: relay-eu-west.cinacoin.com
             enabled: true
             weight: 30
         check:
@@ -668,7 +668,7 @@ load_balancer:
         enabled: true
         origins:
           - name: relay-apac
-            address: relay-apac.cinaconnect.com
+            address: relay-apac.cinacoin.com
             enabled: true
             weight: 20
         check:

@@ -3,9 +3,9 @@
  *
  * For script-tag usage:
  * ```html
- * <script src="https://cdn.cinaconnect.dev/connect.js"></script>
+ * <script src="https://cdn.cinacoin.dev/connect.js"></script>
  * <script>
- *   CinaConnect.renderConnectButton('#my-button', {
+ *   Cinacoin.renderConnectButton('#my-button', {
  *     projectId: 'your-project-id',
  *     theme: 'dark',
  *   });
@@ -14,7 +14,7 @@
  */
 
 import { getConfig, validateConfig } from "./config.js";
-import type { CinaConnectConfig } from "./config.js";
+import type { CinacoinConfig } from "./config.js";
 
 export type ButtonSize = "sm" | "md" | "lg";
 export type ButtonVariant = "primary" | "outline";
@@ -59,7 +59,7 @@ export function renderConnectButton(
 ): void {
   const element = document.querySelector(selector);
   if (!element) {
-    console.error(`[CinaConnect] Element "${selector}" not found`);
+    console.error(`[Cinacoin] Element "${selector}" not found`);
     return;
   }
 
@@ -68,7 +68,7 @@ export function renderConnectButton(
 
   const missing = validateConfig(config);
   if (missing.length > 0) {
-    console.warn(`[CinaConnect] Missing config: ${missing.join(", ")}`);
+    console.warn(`[Cinacoin] Missing config: ${missing.join(", ")}`);
   }
 
   const btn = document.createElement("button");
@@ -115,7 +115,7 @@ export function disconnect(): void {
 
 // ── Internal handlers ──────────────────────────────────────
 
-async function handleConnect(btn: HTMLElement, config: CinaConnectConfig & ConnectButtonOptions): Promise<void> {
+async function handleConnect(btn: HTMLElement, config: CinacoinConfig & ConnectButtonOptions): Promise<void> {
   _state = "connecting";
   btn.textContent = "Connecting...";
   btn.style.opacity = "0.7";
@@ -137,11 +137,11 @@ async function handleConnect(btn: HTMLElement, config: CinaConnectConfig & Conne
     btn.textContent = config.label ?? "Connect Wallet";
     btn.style.opacity = "1";
     btn.style.pointerEvents = "auto";
-    console.error("[CinaConnect] Connection failed:", err);
+    console.error("[Cinacoin] Connection failed:", err);
   }
 }
 
-function handleDisconnect(btn: HTMLElement, config: CinaConnectConfig & ConnectButtonOptions): void {
+function handleDisconnect(btn: HTMLElement, config: CinacoinConfig & ConnectButtonOptions): void {
   _state = "disconnected";
   _address = null;
   btn.textContent = config.label ?? "Connect Wallet";

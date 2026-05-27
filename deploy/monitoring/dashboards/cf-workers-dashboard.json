@@ -1,9 +1,9 @@
 {
-  "_comment": "CinaConnect — Cloudflare Workers Production Dashboard Template",
+  "_comment": "Cinacoin — Cloudflare Workers Production Dashboard Template",
   "_description": "Import into Cloudflare Dashboard → Workers → Manage → Analytics → Create Custom Dashboard",
   "version": "1.0.0",
   "updated": "2026-05-18",
-  "title": "CinaConnect Workers — Production",
+  "title": "Cinacoin Workers — Production",
   "time_range": "24h",
   "refresh_interval": "5m",
   "variables": [
@@ -12,7 +12,7 @@
       "label": "Service",
       "type": "dropdown",
       "multi_select": true,
-      "default": ["cinaconnect-rpc-proxy", "cinaconnect-keys-server", "cinaconnect-relay-server", "cinaconnect-notify-server", "cinaconnect-push-server"],
+      "default": ["cinacoin-rpc-proxy", "cinacoin-keys-server", "cinacoin-relay-server", "cinacoin-notify-server", "cinacoin-push-server"],
       "query": "SELECT DISTINCT scriptName FROM workersInvocationsAdaptive"
     }
   ],

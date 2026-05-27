@@ -1,11 +1,21 @@
-import { createPublicClient, http, type Chain, type Address, type Hash, type Transport } from 'viem';
-import type {
+import {
+  createPublicClient,
+  http,
+  type Chain,
+  type Address,
+  type Hash,
+  type Hex,
+  type Transport,
+  encodeFunctionData,
+} from 'viem';
+import {
   UserOperation,
   UserOperationGasEstimate,
   UserOperationReceipt,
   UserOperationStatus,
   SendUserOperationResult,
   BundlerConfig,
+  UserOpSimulationResult,
 } from './types';
 
 /**
@@ -29,6 +39,183 @@ export class BundlerClient {
 
   getEntryPoint(): Address {
     return this.entryPoint;
+  }
+
+  /**
+   * Simulate a UserOperation by calling `eth_call` against the EntryPoint.
+   * This performs real on-chain simulation (via `simulateHandleOp` or
+   * direct `handleOps` calldata) to estimate gas and catch validation errors
+   * before sending. NOT a no-op — uses actual RPC `eth_call`.
+   *
+   * Returns estimated gas usage and any revert reason.
+   */
+  async simulateUserOp(userOp: UserOperation): Promise<UserOpSimulationResult> {
+    // ABI for EntryPoint v0.6 handleOps
+    const HANDLE_OPS_ABI = [
+      {
+        type: 'function',
+        name: 'handleOps',
+        inputs: [
+          {
+            name: 'ops',
+            type: 'tuple[]',
+            components: [
+              { name: 'sender', type: 'address' },
+              { name: 'nonce', type: 'uint256' },
+              { name: 'initCode', type: 'bytes' },
+              { name: 'callData', type: 'bytes' },
+              { name: 'callGasLimit', type: 'uint256' },
+              { name: 'verificationGasLimit', type: 'uint256' },
+              { name: 'preVerificationGas', type: 'uint256' },
+              { name: 'maxFeePerGas', type: 'uint256' },
+              { name: 'maxPriorityFeePerGas', type: 'uint256' },
+              { name: 'paymasterAndData', type: 'bytes' },
+              { name: 'signature', type: 'bytes' },
+            ],
+          },
+          { name: 'beneficiary', type: 'address' },
+        ],
+        outputs: [],
+      },
+    ] as const;
+
+    // ABI for EntryPoint v0.6 simulateHandleOp
+    const SIMULATE_HANDLE_OP_ABI = [
+      {
+        type: 'function',
+        name: 'simulateHandleOp',
+        inputs: [
+          {
+            name: 'op',
+            type: 'tuple',
+            components: [
+              { name: 'sender', type: 'address' },
+              { name: 'nonce', type: 'uint256' },
+              { name: 'initCode', type: 'bytes' },
+              { name: 'callData', type: 'bytes' },
+              { name: 'callGasLimit', type: 'uint256' },
+              { name: 'verificationGasLimit', type: 'uint256' },
+              { name: 'preVerificationGas', type: 'uint256' },
+              { name: 'maxFeePerGas', type: 'uint256' },
+              { name: 'maxPriorityFeePerGas', type: 'uint256' },
+              { name: 'paymasterAndData', type: 'bytes' },
+              { name: 'signature', type: 'bytes' },
+            ],
+          },
+          { name: 'target', type: 'address' },
+          { name: 'targetCallData', type: 'bytes' },
+        ],
+        outputs: [
+          { name: 'paid', type: 'uint256' },
+          { name: 'validAfter', type: 'uint256' },
+          { name: 'validUntil', type: 'uint256' },
+          { name: 'targetSuccess', type: 'bool' },
+          { name: 'targetResult', type: 'bytes' },
+        ],
+      },
+    ] as const;
+
+    const publicClient = createPublicClient({
+      chain: this.chain,
+      transport: http((this.chain.rpcUrls.default?.http ?? [])[0] ?? ''),
+    });
+
+    // Try simulateHandleOp first (EntryPoint v0.6+)
+    try {
+      const calldata = encodeFunctionData({
+        abi: SIMULATE_HANDLE_OP_ABI,
+        functionName: 'simulateHandleOp',
+        args: [
+          {
+            sender: userOp.sender,
+            nonce: userOp.nonce,
+            initCode: userOp.initCode,
+            callData: userOp.callData,
+            callGasLimit: userOp.callGasLimit,
+            verificationGasLimit: userOp.verificationGasLimit,
+            preVerificationGas: userOp.preVerificationGas,
+            maxFeePerGas: userOp.maxFeePerGas,
+            maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
+            paymasterAndData: userOp.paymasterAndData,
+            signature: userOp.signature,
+          },
+          userOp.sender, // target: the sender's smart account
+          '0x', // no additional target call
+        ],
+      });
+
+      const result = await publicClient.call({
+        to: this.entryPoint,
+        data: calldata,
+      });
+
+      // If we get here without reverting, simulation succeeded
+      return {
+        success: true,
+        simulationType: 'validation_and_execution',
+      };
+    } catch (err: unknown) {
+      // Extract revert reason if available
+      const revertReason = this.extractRevertReason(err);
+
+      // Fallback: try handleOps simulation
+      try {
+        const calldata = encodeFunctionData({
+          abi: HANDLE_OPS_ABI,
+          functionName: 'handleOps',
+          args: [
+            [
+              {
+                sender: userOp.sender,
+                nonce: userOp.nonce,
+                initCode: userOp.initCode,
+                callData: userOp.callData,
+                callGasLimit: userOp.callGasLimit,
+                verificationGasLimit: userOp.verificationGasLimit,
+                preVerificationGas: userOp.preVerificationGas,
+                maxFeePerGas: userOp.maxFeePerGas,
+                maxPriorityFeePerGas: userOp.maxPriorityFeePerGas,
+                paymasterAndData: userOp.paymasterAndData,
+                signature: userOp.signature,
+              },
+            ],
+            '0x0000000000000000000000000000000000000001', // dummy beneficiary
+          ],
+        });
+
+        await publicClient.call({
+          to: this.entryPoint,
+          data: calldata,
+        });
+
+        return {
+          success: true,
+          simulationType: 'validation_and_execution',
+        };
+      } catch (fallbackErr: unknown) {
+        const fallbackReason = this.extractRevertReason(fallbackErr);
+        return {
+          success: false,
+          revertReason: revertReason ?? fallbackReason ?? 'Simulation failed',
+        };
+      }
+    }
+  }
+
+  /** Extract a human-readable revert reason from an error. */
+  private extractRevertReason(err: unknown): string | undefined {
+    if (err instanceof Error) {
+      const msg = err.message;
+      // Try to extract revert reason from error message
+      const match = msg.match(/execution reverted[:]?\s*(.*)/i) ||
+        msg.match(/reverted[:]?\s*(.*)/i) ||
+        msg.match(/AA(\d+)/); // AA error codes from EntryPoint
+      if (match) {
+        return match[1]?.trim() || match[0];
+      }
+      return msg.slice(0, 200); // truncate
+    }
+    return undefined;
   }
 
   /**

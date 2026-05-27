@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: rpc-alerts
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: prometheus
     component: alerting-rules
@@ -17,7 +17,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC 错误率 > 1%"
             description: "当前 RPC 错误率为 {{ $value | humanizePercentage }}"
@@ -28,7 +28,7 @@ spec:
           for: 2m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC 错误率 > 5% (Critical)"
             description: "当前 RPC 错误率为 {{ $value | humanizePercentage }}"
@@ -39,7 +39,7 @@ spec:
           for: 10m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC 缓存命中率 < 60%"
             description: "缓存命中率: {{ $value | humanizePercentage }}"
@@ -50,7 +50,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC Provider 故障切换发生"
             description: "从 {{ $labels.from_provider }} 切换到 {{ $labels.to_provider }}"
@@ -61,7 +61,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC 响应延迟 P95 > 2s"
             description: "Provider {{ $labels.provider }} P95 延迟: {{ $value }}s"
@@ -72,7 +72,7 @@ spec:
           for: 1m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "RPC Proxy Pod 重启"
             description: "Pod {{ $labels.pod }} 在 15 分钟内重启"

@@ -1,13 +1,13 @@
 # Final Test Coverage & Quality Assessment
 
-> CinaAuth/CinaConnect vs Reown — Testing Infrastructure Comparison
+> CinaAuth/Cinacoin vs Reown — Testing Infrastructure Comparison
 > Generated: 2026-05-16
 
 ---
 
 ## 1. Test Infrastructure Setup
 
-### CinaAuth/CinaConnect
+### CinaAuth/Cinacoin
 
 | Component | Status | Details |
 |-----------|--------|---------|
@@ -62,7 +62,7 @@ Reown AppKit (formerly WalletConnect Web3Modal) uses a **monorepo with vitest** 
 **Estimated coverage: ~40-50%**
 
 **Missing scenarios:**
-- **No tests for: CinaConnectProvider, ConnectModal, ChainSwitcher** (if in this package)
+- **No tests for: CinacoinProvider, ConnectModal, ChainSwitcher** (if in this package)
 - No snapshot testing for rendered DOM structure
 - No accessibility testing beyond aria labels (no a11y audit)
 - No responsive/layout tests
@@ -140,8 +140,8 @@ Reown AppKit (formerly WalletConnect Web3Modal) uses a **monorepo with vitest** 
 
 ### Critical Gaps (Priority Order)
 
-1. **react (6 files, 0 tests)** — `hooks.ts`, `ConnectButton.tsx`, `ConnectModal.tsx`, `CinaConnectProvider.tsx`, `ChainSwitcher.tsx` are the primary developer integration surface. Missing tests for:
-   - React hooks: `useCinaConnect`, `useAccount`, `useBalance`, `useChainId`
+1. **react (6 files, 0 tests)** — `hooks.ts`, `ConnectButton.tsx`, `ConnectModal.tsx`, `CinacoinProvider.tsx`, `ChainSwitcher.tsx` are the primary developer integration surface. Missing tests for:
+   - React hooks: `useCinacoin`, `useAccount`, `useBalance`, `useChainId`
    - Component rendering with different states
    - Provider context value propagation
    - Chain switching UI logic
@@ -275,9 +275,9 @@ This is the **most critical gap** in the CI pipeline. The test infrastructure ex
 
 ### Phase 2: React Package (Week 2)
 - [ ] Add React Testing Library
-- [ ] Test `useCinaConnect`, `useAccount` hooks
+- [ ] Test `useCinacoin`, `useAccount` hooks
 - [ ] Test `ConnectButton` component rendering
-- [ ] Test `CinaConnectProvider` context
+- [ ] Test `CinacoinProvider` context
 
 ### Phase 3: siwx & Social Login (Week 3)
 - [ ] Port siwe test patterns to siwx
@@ -302,7 +302,7 @@ This is the **most critical gap** in the CI pipeline. The test infrastructure ex
 
 ## 9. Conclusion
 
-CinaAuth/CinaConnect has **strong unit testing** in its well-tested packages (session-keys, siwe, swap-sdk) with excellent edge case coverage, error handling, and mock strategies. The test infrastructure (vitest workspace, v8 coverage) is properly configured.
+CinaAuth/Cinacoin has **strong unit testing** in its well-tested packages (session-keys, siwe, swap-sdk) with excellent edge case coverage, error handling, and mock strategies. The test infrastructure (vitest workspace, v8 coverage) is properly configured.
 
 However, the project has **critical gaps**:
 

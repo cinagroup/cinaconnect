@@ -1,15 +1,15 @@
 /**
- * @cinaconnect/svelte — Svelte/SvelteKit adapter for CinaConnect.
+ * @cinacoin/svelte — Svelte/SvelteKit adapter for Cinacoin.
  *
  * Provides Svelte stores, composables, and components that wrap
- * @cinaconnect/core-sdk for seamless wallet integration in Svelte apps.
+ * @cinacoin/core-sdk for seamless wallet integration in Svelte apps.
  *
  * @packageDocumentation
  */
 
 // Core stores and factory
-export { createCinaConnect } from './lib/createCinaConnect.js';
-export type { CinaConnectContext, CreateCinaConnectOptions } from './lib/createCinaConnect.js';
+export { createCinacoin } from './lib/createCinacoin.js';
+export type { CinacoinContext, CreateCinacoinOptions } from './lib/createCinacoin.js';
 
 // Svelte stores
 export {
@@ -22,25 +22,25 @@ export {
   isConnecting,
   hasError,
   chains,
-  initCinaConnect,
+  initCinacoin,
   getConnector,
   open,
   close,
   switchChain,
-  resetCinaConnect,
+  resetCinacoin,
 } from './lib/stores.js';
 
 // Svelte hook-style accessors
-export { getCinaConnect, getCinaConnectAccount, getCinaConnectNetwork } from './lib/useCinaConnect.js';
+export { getCinacoin, getCinacoinAccount, getCinacoinNetwork } from './lib/useCinacoin.js';
 
 // Actions
 export { cinaConnectConnect, cinaConnectNetwork } from './lib/actions.js';
-export type { CinaConnectConnectParams, CinaConnectNetworkParams } from './lib/actions.js';
+export type { CinacoinConnectParams, CinacoinNetworkParams } from './lib/actions.js';
 
 // Svelte components
-export { default as CinaConnectButton } from './components/CinaConnectButton.svelte';
-export { default as CinaConnectAccountButton } from './components/CinaConnectAccountButton.svelte';
-export { default as CinaConnectNetworkButton } from './components/CinaConnectNetworkButton.svelte';
+export { default as CinacoinButton } from './components/CinacoinButton.svelte';
+export { default as CinacoinAccountButton } from './components/CinacoinAccountButton.svelte';
+export { default as CinacoinNetworkButton } from './components/CinacoinNetworkButton.svelte';
 
 // EIP-5792 Wallet Call API stores
 export {
@@ -73,4 +73,4 @@ export type {
   ConnectionResult,
   ConnectionStatus,
   AppMetadata,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';

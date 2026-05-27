@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { AppState, Alert, Text, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { CinaConnectProvider } from '@cinaconnect/react-native'
+import { CinaCoinProvider } from '@cinacoin/react-native'
 import { ConnectScreen } from './screens/ConnectScreen'
 import { SwapScreen } from './screens/SwapScreen'
 import { MultiChainScreen } from './screens/MultiChainScreen'
@@ -12,7 +12,7 @@ import { registerPushNotifications } from './utils/pushNotifications'
 const Tab = createBottomTabNavigator()
 
 /**
- * Real CinaConnect React Native app configuration.
+ * Real CinaCoin React Native app configuration.
  *
  * - Uses real WalletConnect v2 relay
  * - Registers for push notifications
@@ -25,10 +25,10 @@ const config = {
   projectId: 'YOUR_WALLETCONNECT_PROJECT_ID', // ← Replace with real projectId
   relayUrl: 'wss://relay.walletconnect.com',
   metadata: {
-    name: 'CinaConnect Mobile Demo',
-    description: 'CinaConnect React Native Example — Real blockchain integration',
-    url: 'https://cinaconnect.com',
-    icons: ['https://cinaconnect.com/logo.svg'],
+    name: 'CinaCoin Mobile Demo',
+    description: 'CinaCoin React Native Example — Real blockchain integration',
+    url: 'https://cinacoin.com',
+    icons: ['https://cinacoin.com/logo.svg'],
   },
   chains: [
     {
@@ -93,7 +93,7 @@ export default function App() {
   }, [])
 
   return (
-    <CinaConnectProvider config={config}>
+    <CinaCoinProvider config={config}>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={{
@@ -130,6 +130,6 @@ export default function App() {
           />
         </Tab.Navigator>
       </NavigationContainer>
-    </CinaConnectProvider>
+    </CinaCoinProvider>
   )
 }

@@ -1,8 +1,8 @@
 /**
- * NEAR-specific types for the @cinaconnect/adapter-near package.
+ * NEAR-specific types for the @cinacoin/adapter-near package.
  */
 
-import type { Chain } from '@cinaconnect/core-sdk';
+import type { Chain } from '@cinacoin/core-sdk';
 
 /* ------------------------------------------------------------------ */
 /*  NEAR chain presets                                                 */

@@ -1,11 +1,11 @@
 # Batch Transaction
 
-> `@cinaconnect/batch-transaction` — Batch transaction construction for CinaConnect.
+> `@cinacoin/batch-transaction` — Batch transaction construction for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/batch-transaction
+npm install @cinacoin/batch-transaction
 ```
 
 ## Overview

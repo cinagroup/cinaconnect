@@ -1,17 +1,15 @@
 {
-  "name": "@cinaconnect/analytics-server",
+  "name": "@cinacoin/analytics-server",
   "version": "0.1.0",
-  "description": "CinaConnect Analytics Ingestion Server — Cloudflare Worker",
-  "type": "module",
-  "main": "src/index.ts",
+  "description": "Cinacoin Analytics Ingestion Server — Cloudflare Worker",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
     "test": "vitest run",
     "test:watch": "vitest",
-    "db:migrate": "wrangler d1 migrations apply CinaConnectAnalytics --local",
-    "db:migrate:prod": "wrangler d1 migrations apply CinaConnectAnalytics --remote",
-    "db:create": "wrangler d1 create CinaConnectAnalytics"
+    "db:migrate": "wrangler d1 migrations apply CinacoinAnalytics --local",
+    "db:migrate:prod": "wrangler d1 migrations apply CinacoinAnalytics --remote",
+    "db:create": "wrangler d1 create CinacoinAnalytics"
   },
   "dependencies": {
     "hono": "^4.6.0"
@@ -23,5 +21,6 @@
     "vitest": "^2.1.0",
     "@cloudflare/workers-types": "^4.20241205.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "private": true
 }

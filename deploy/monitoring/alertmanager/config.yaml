@@ -23,12 +23,12 @@ route:
 receivers:
   - name: default-receiver
     slack_configs:
-      - channel: "#cinaconnect-alerts"
+      - channel: "#cinacoin-alerts"
         send_resolved: true
 
   - name: slack
     slack_configs:
-      - channel: "#cinaconnect-alerts"
+      - channel: "#cinacoin-alerts"
         send_resolved: true
 
   - name: pagerduty

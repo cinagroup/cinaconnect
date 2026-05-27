@@ -2,175 +2,175 @@
  * Codemod test suite — 20+ tests covering both transforms.
  */
 
-import { transformAppKitToCinaConnect } from "../src/codemods/appkit-to-cinaconnect.js";
+import { transformAppKitToCinacoin } from "../src/codemods/appkit-to-cinacoin.js";
 import { transformWcV1ToV2 } from "../src/codemods/wc-v1-to-v2.js";
 import { TRANSFORMS, listTransforms } from "../src/index.js";
 
-// ── appkit-to-cinaconnect tests ──────────────────────────────────────────────
+// ── appkit-to-cinacoin tests ──────────────────────────────────────────────
 
-describe("appkit-to-cinaconnect codemod", () => {
+describe("appkit-to-cinacoin codemod", () => {
   describe("package renames", () => {
-    test("renames @reown/appkit to @cinaconnect/core", () => {
-      const result = transformAppKitToCinaConnect(`import { createAppKit } from "@reown/appkit";`);
+    test("renames @reown/appkit to @cinacoin/core", () => {
+      const result = transformAppKitToCinacoin(`import { createAppKit } from "@reown/appkit";`);
       expect(result.transformed).toBe(true);
-      expect(result.output).toContain("@cinaconnect/core-sdk");
+      expect(result.output).toContain("@cinacoin/core-sdk");
       expect(result.output).not.toContain("@reown/appkit");
     });
 
-    test("renames @reown/appkit-react to @cinaconnect/react", () => {
-      const result = transformAppKitToCinaConnect(`import { useAppKit } from "@reown/appkit-react";`);
-      expect(result.output).toContain("@cinaconnect/react");
+    test("renames @reown/appkit-react to @cinacoin/react", () => {
+      const result = transformAppKitToCinacoin(`import { useAppKit } from "@reown/appkit-react";`);
+      expect(result.output).toContain("@cinacoin/react");
     });
 
-    test("renames @reown/appkit-wagmi to @cinaconnect/wagmi", () => {
-      const result = transformAppKitToCinaConnect(`import { wagmiAdapter } from "@reown/appkit-wagmi";`);
-      expect(result.output).toContain("@cinaconnect/wagmi");
+    test("renames @reown/appkit-wagmi to @cinacoin/wagmi", () => {
+      const result = transformAppKitToCinacoin(`import { wagmiAdapter } from "@reown/appkit-wagmi";`);
+      expect(result.output).toContain("@cinacoin/wagmi");
     });
 
-    test("renames @web3modal/ethereum to @cinaconnect/ethereum", () => {
-      const result = transformAppKitToCinaConnect(`import { EthereumClient } from "@web3modal/ethereum";`);
-      expect(result.output).toContain("@cinaconnect/ethereum");
+    test("renames @web3modal/ethereum to @cinacoin/ethereum", () => {
+      const result = transformAppKitToCinacoin(`import { EthereumClient } from "@web3modal/ethereum";`);
+      expect(result.output).toContain("@cinacoin/ethereum");
     });
 
-    test("renames @web3modal/wagmi to @cinaconnect/wagmi", () => {
-      const result = transformAppKitToCinaConnect(`import { WagmiAdapter } from "@web3modal/wagmi";`);
-      expect(result.output).toContain("@cinaconnect/wagmi");
+    test("renames @web3modal/wagmi to @cinacoin/wagmi", () => {
+      const result = transformAppKitToCinacoin(`import { WagmiAdapter } from "@web3modal/wagmi";`);
+      expect(result.output).toContain("@cinacoin/wagmi");
     });
 
-    test("renames @web3modal/react to @cinaconnect/react", () => {
-      const result = transformAppKitToCinaConnect(`import { useWeb3Modal } from "@web3modal/react";`);
-      expect(result.output).toContain("@cinaconnect/react");
+    test("renames @web3modal/react to @cinacoin/react", () => {
+      const result = transformAppKitToCinacoin(`import { useWeb3Modal } from "@web3modal/react";`);
+      expect(result.output).toContain("@cinacoin/react");
     });
 
-    test("renames @web3modal/ui to @cinaconnect/ui", () => {
-      const result = transformAppKitToCinaConnect(`import { W3mButton } from "@web3modal/ui";`);
-      expect(result.output).toContain("@cinaconnect/ui");
+    test("renames @web3modal/ui to @cinacoin/ui", () => {
+      const result = transformAppKitToCinacoin(`import { W3mButton } from "@web3modal/ui";`);
+      expect(result.output).toContain("@cinacoin/ui");
     });
 
-    test("renames @web3modal/core to @cinaconnect/core", () => {
-      const result = transformAppKitToCinaConnect(`import { W3mFrameHelpers } from "@web3modal/core";`);
-      expect(result.output).toContain("@cinaconnect/core-sdk");
+    test("renames @web3modal/core to @cinacoin/core", () => {
+      const result = transformAppKitToCinacoin(`import { W3mFrameHelpers } from "@web3modal/core";`);
+      expect(result.output).toContain("@cinacoin/core-sdk");
     });
 
-    test("renames @web3modal/html to @cinaconnect/html", () => {
-      const result = transformAppKitToCinaConnect(`import { Web3Modal } from "@web3modal/html";`);
-      expect(result.output).toContain("@cinaconnect/html");
+    test("renames @web3modal/html to @cinacoin/html", () => {
+      const result = transformAppKitToCinacoin(`import { Web3Modal } from "@web3modal/html";`);
+      expect(result.output).toContain("@cinacoin/html");
     });
   });
 
   describe("class/function renames", () => {
-    test("renames Web3Modal to CinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const modal = new Web3Modal({ projectId: "abc" });`);
-      expect(result.output).toContain("new CinaConnect(");
+    test("renames Web3Modal to Cinacoin", () => {
+      const result = transformAppKitToCinacoin(`const modal = new Web3Modal({ projectId: "abc" });`);
+      expect(result.output).toContain("new Cinacoin(");
     });
 
-    test("renames createWeb3Modal to createCinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const modal = createWeb3Modal({ projectId: "abc" });`);
-      expect(result.output).toContain("createCinaConnect(");
+    test("renames createWeb3Modal to createCinacoin", () => {
+      const result = transformAppKitToCinacoin(`const modal = createWeb3Modal({ projectId: "abc" });`);
+      expect(result.output).toContain("createCinacoin(");
     });
 
-    test("renames createAppKit to createCinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const modal = createAppKit({ projectId: "abc" });`);
-      expect(result.output).toContain("createCinaConnect(");
+    test("renames createAppKit to createCinacoin", () => {
+      const result = transformAppKitToCinacoin(`const modal = createAppKit({ projectId: "abc" });`);
+      expect(result.output).toContain("createCinacoin(");
     });
 
-    test("renames AppKit to CinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const modal = new AppKit({ projectId: "abc" });`);
-      expect(result.output).toContain("new CinaConnect(");
+    test("renames AppKit to Cinacoin", () => {
+      const result = transformAppKitToCinacoin(`const modal = new AppKit({ projectId: "abc" });`);
+      expect(result.output).toContain("new Cinacoin(");
     });
   });
 
   describe("hook renames", () => {
-    test("renames useWeb3Modal to useCinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const { open } = useWeb3Modal();`);
-      expect(result.output).toContain("useCinaConnect()");
+    test("renames useWeb3Modal to useCinacoin", () => {
+      const result = transformAppKitToCinacoin(`const { open } = useWeb3Modal();`);
+      expect(result.output).toContain("useCinacoin()");
     });
 
-    test("renames useWeb3ModalTheme to useCinaConnectTheme", () => {
-      const result = transformAppKitToCinaConnect(`const { theme } = useWeb3ModalTheme();`);
-      expect(result.output).toContain("useCinaConnectTheme()");
+    test("renames useWeb3ModalTheme to useCinacoinTheme", () => {
+      const result = transformAppKitToCinacoin(`const { theme } = useWeb3ModalTheme();`);
+      expect(result.output).toContain("useCinacoinTheme()");
     });
 
-    test("renames useAppKit to useCinaConnect", () => {
-      const result = transformAppKitToCinaConnect(`const { open } = useAppKit();`);
-      expect(result.output).toContain("useCinaConnect()");
+    test("renames useAppKit to useCinacoin", () => {
+      const result = transformAppKitToCinacoin(`const { open } = useAppKit();`);
+      expect(result.output).toContain("useCinacoin()");
     });
 
-    test("renames useAppKitAccount to useCinaConnectAccount", () => {
-      const result = transformAppKitToCinaConnect(`const { address } = useAppKitAccount();`);
-      expect(result.output).toContain("useCinaConnectAccount()");
+    test("renames useAppKitAccount to useCinacoinAccount", () => {
+      const result = transformAppKitToCinacoin(`const { address } = useAppKitAccount();`);
+      expect(result.output).toContain("useCinacoinAccount()");
     });
 
-    test("renames useAppKitNetwork to useCinaConnectNetwork", () => {
-      const result = transformAppKitToCinaConnect(`const { chainId } = useAppKitNetwork();`);
-      expect(result.output).toContain("useCinaConnectNetwork()");
+    test("renames useAppKitNetwork to useCinacoinNetwork", () => {
+      const result = transformAppKitToCinacoin(`const { chainId } = useAppKitNetwork();`);
+      expect(result.output).toContain("useCinacoinNetwork()");
     });
   });
 
   describe("component renames", () => {
-    test("renames W3mButton to CinaConnectButton", () => {
-      const result = transformAppKitToCinaConnect(`<W3mButton />`);
-      expect(result.output).toContain("CinaConnectButton");
+    test("renames W3mButton to CinacoinButton", () => {
+      const result = transformAppKitToCinacoin(`<W3mButton />`);
+      expect(result.output).toContain("CinacoinButton");
     });
 
-    test("renames W3mNetworkSelect to CinaConnectNetworkSelect", () => {
-      const result = transformAppKitToCinaConnect(`<W3mNetworkSelect />`);
-      expect(result.output).toContain("CinaConnectNetworkSelect");
+    test("renames W3mNetworkSelect to CinacoinNetworkSelect", () => {
+      const result = transformAppKitToCinacoin(`<W3mNetworkSelect />`);
+      expect(result.output).toContain("CinacoinNetworkSelect");
     });
 
-    test("renames W3mModal to CinaConnectModal", () => {
-      const result = transformAppKitToCinaConnect(`<W3mModal />`);
-      expect(result.output).toContain("CinaConnectModal");
+    test("renames W3mModal to CinacoinModal", () => {
+      const result = transformAppKitToCinacoin(`<W3mModal />`);
+      expect(result.output).toContain("CinacoinModal");
     });
 
-    test("renames AppKitButton to CinaConnectButton", () => {
-      const result = transformAppKitToCinaConnect(`<AppKitButton />`);
-      expect(result.output).toContain("CinaConnectButton");
+    test("renames AppKitButton to CinacoinButton", () => {
+      const result = transformAppKitToCinacoin(`<AppKitButton />`);
+      expect(result.output).toContain("CinacoinButton");
     });
   });
 
   describe("type renames", () => {
-    test("renames Web3ModalConfig to CinaConnectConfig", () => {
-      const result = transformAppKitToCinaConnect(`const config: Web3ModalConfig = {};`);
-      expect(result.output).toContain("CinaConnectConfig");
+    test("renames Web3ModalConfig to CinacoinConfig", () => {
+      const result = transformAppKitToCinacoin(`const config: Web3ModalConfig = {};`);
+      expect(result.output).toContain("CinacoinConfig");
     });
 
-    test("renames AppKitConfig to CinaConnectConfig", () => {
-      const result = transformAppKitToCinaConnect(`const config: AppKitConfig = {};`);
-      expect(result.output).toContain("CinaConnectConfig");
+    test("renames AppKitConfig to CinacoinConfig", () => {
+      const result = transformAppKitToCinacoin(`const config: AppKitConfig = {};`);
+      expect(result.output).toContain("CinacoinConfig");
     });
 
-    test("renames Web3ModalTheme to CinaConnectTheme", () => {
-      const result = transformAppKitToCinaConnect(`const theme: Web3ModalTheme = { mode: "dark" };`);
-      expect(result.output).toContain("CinaConnectTheme");
+    test("renames Web3ModalTheme to CinacoinTheme", () => {
+      const result = transformAppKitToCinacoin(`const theme: Web3ModalTheme = { mode: "dark" };`);
+      expect(result.output).toContain("CinacoinTheme");
     });
   });
 
   describe("config key renames", () => {
     test("renames walletConnectProjectId to projectId", () => {
-      const result = transformAppKitToCinaConnect(`{ walletConnectProjectId: "xyz" }`);
+      const result = transformAppKitToCinacoin(`{ walletConnectProjectId: "xyz" }`);
       expect(result.output).toContain("projectId:");
     });
 
     test("renames enableAnalytics to analytics", () => {
-      const result = transformAppKitToCinaConnect(`{ enableAnalytics: true }`);
+      const result = transformAppKitToCinacoin(`{ enableAnalytics: true }`);
       expect(result.output).toContain("analytics:");
     });
   });
 
   describe("edge cases", () => {
     test("no-op on already-migrated code", () => {
-      const result = transformAppKitToCinaConnect(`import { CinaConnect } from "@cinaconnect/core-sdk";`);
+      const result = transformAppKitToCinacoin(`import { Cinacoin } from "@cinacoin/core-sdk";`);
       expect(result.transformed).toBe(false);
     });
 
     test("no-op on unrelated code", () => {
-      const result = transformAppKitToCinaConnect(`const x = 42;`);
+      const result = transformAppKitToCinacoin(`const x = 42;`);
       expect(result.transformed).toBe(false);
     });
 
     test("changes array is populated", () => {
-      const result = transformAppKitToCinaConnect(`import { Web3Modal } from "@web3modal/react";`);
+      const result = transformAppKitToCinacoin(`import { Web3Modal } from "@web3modal/react";`);
       expect(result.changes.length).toBeGreaterThan(0);
     });
 
@@ -189,12 +189,12 @@ function App() {
   return <Web3Modal />
 }
 `;
-      const result = transformAppKitToCinaConnect(input);
+      const result = transformAppKitToCinacoin(input);
       expect(result.transformed).toBe(true);
-      expect(result.output).toContain("@cinaconnect/ethereum");
-      expect(result.output).toContain("@cinaconnect/react");
-      expect(result.output).toContain("createCinaConnect");
-      expect(result.output).toContain("CinaConnect");
+      expect(result.output).toContain("@cinacoin/ethereum");
+      expect(result.output).toContain("@cinacoin/react");
+      expect(result.output).toContain("createCinacoin");
+      expect(result.output).toContain("Cinacoin");
       expect(result.output).toContain("projectId:");
     });
   });
@@ -296,13 +296,13 @@ await wc.createSession();
 
 describe("index exports", () => {
   test("TRANSFORMS contains both codemods", () => {
-    expect(TRANSFORMS).toHaveProperty("appkit-to-cinaconnect");
+    expect(TRANSFORMS).toHaveProperty("appkit-to-cinacoin");
     expect(TRANSFORMS).toHaveProperty("wc-v1-to-v2");
   });
 
   test("listTransforms returns all transform names", () => {
     const transforms = listTransforms();
-    expect(transforms).toContain("appkit-to-cinaconnect");
+    expect(transforms).toContain("appkit-to-cinacoin");
     expect(transforms).toContain("wc-v1-to-v2");
     expect(transforms.length).toBe(2);
   });

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/config",
+  "name": "@cinacoin/config",
   "version": "0.2.0",
-  "description": "Remote feature flags, headless mode, and virtual testnets for @cinaconnect",
+  "description": "Remote feature flags, headless mode, and virtual testnets for @cinacoin",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -32,7 +32,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

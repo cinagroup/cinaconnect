@@ -1,5 +1,5 @@
 /**
- * Multi-chain integration tests for the CinaConnect Core SDK.
+ * Multi-chain integration tests for the Cinacoin Core SDK.
  *
  * Tests chain switching mid-session across different EVM networks.
  */

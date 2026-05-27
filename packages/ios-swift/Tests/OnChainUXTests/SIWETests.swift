@@ -1,5 +1,5 @@
 import XCTest
-@testable import CinaConnect
+@testable import Cinacoin
 
 final class SIWETests: XCTestCase {
 

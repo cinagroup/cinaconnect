@@ -1,4 +1,4 @@
-# CinaConnect 诚实审计总结
+# Cinacoin 诚实审计总结
 
 > 生成日期：2026-05-17  
 > 审计范围：全部 64 个包 + Demo App + Cloudflare 部署 + 文档声明
@@ -78,7 +78,7 @@
 | 文档 | 过度声明 |
 |------|----------|
 | README.md | "64 packages" → 实际只有 1 个可构建 |
-| RAINBOWKIT_COMPARISON.md | 对比表列出了 CinaConnect 的所有功能，但大部分未构建 |
+| RAINBOWKIT_COMPARISON.md | 对比表列出了 Cinacoin 的所有功能，但大部分未构建 |
 | ROADMAP.md | 路线图中的功能大部分已经写了代码但未构建 |
 | REOWN_GAP_ANALYSIS.md | 覆盖率声称 99%，但实际可用功能远低于此 |
 

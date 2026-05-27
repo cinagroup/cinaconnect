@@ -1,18 +1,18 @@
-/// Example app demonstrating CinaConnect Flutter SDK usage.
+/// Example app demonstrating Cinacoin Flutter SDK usage.
 import 'package:flutter/material.dart';
-import 'package:cinaconnect/cinaconnect.dart';
+import 'package:cinacoin/cinacoin.dart';
 
 void main() {
-  runApp(const CinaConnectExampleApp());
+  runApp(const CinacoinExampleApp());
 }
 
-class CinaConnectExampleApp extends StatelessWidget {
-  const CinaConnectExampleApp({super.key});
+class CinacoinExampleApp extends StatelessWidget {
+  const CinacoinExampleApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CinaConnect Example',
+      title: 'Cinacoin Example',
       theme: ThemeData(
         colorSchemeSeed: const Color(0xFF3B82F6),
         useMaterial3: true,
@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
     _walletManager = WalletManager(
       projectId: 'YOUR_PROJECT_ID', // Replace with your WC v2 project ID
       metadata: const AppMetadata(
-        name: 'CinaConnect Example',
+        name: 'Cinacoin Example',
         description: 'A Flutter dApp example',
         url: 'https://example.com',
         icons: [],
@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
   void _showConnectModal() {
     showModalBottomSheet(
       context: context,
-      builder: (_) => CinaConnectConnectModal(
+      builder: (_) => CinacoinConnectModal(
         wallets: WalletRegistry.getAll(),
         recommendedWalletIds: ['metamask', 'rainbow', 'coinbase'],
         onWalletSelect: (wallet) {
@@ -103,11 +103,11 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CinaConnect Example'),
+        title: const Text('Cinacoin Example'),
         actions: [
           Padding(
             padding: const EdgeInsets.all(8),
-            child: CinaConnectConnectButton(
+            child: CinacoinConnectButton(
               status: _sessionState.status,
               account: _sessionState.accounts?.first,
               showAvatar: true,

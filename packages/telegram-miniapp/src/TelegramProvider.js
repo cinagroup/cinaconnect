@@ -22,7 +22,7 @@ export class TelegramProvider {
         /** Event listeners. */
         this._listeners = new Map();
         this._chains = config?.chains ?? [1, 5, 11155111, 137, 8453];
-        this.appName = config?.appName ?? 'CinaConnect App';
+        this.appName = config?.appName ?? 'Cinacoin App';
         this._chainId = config?.defaultChainId ?? config?.chains?.[0] ?? DEFAULT_CHAIN_ID;
         this._rpcUrl = config?.rpcUrl;
         this._webApp = this._detectWebApp(config?.initDataOverride ?? config?.webApp);

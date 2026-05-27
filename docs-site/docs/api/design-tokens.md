@@ -1,17 +1,17 @@
 # Design Tokens
 
-> `@cinaconnect/design-tokens` — Design token system for CinaConnect white-label theming.
+> `@cinacoin/design-tokens` — Design token system for Cinacoin white-label theming.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/design-tokens
+npm install @cinacoin/design-tokens
 ```
 
 ## Usage
 
 ```css
-@import '@cinaconnect/design-tokens/tokens.css';
+@import '@cinacoin/design-tokens/tokens.css';
 ```
 
 ## Token Categories

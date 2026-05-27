@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/react-native WalletConnectProvider.
+ * Tests for @cinacoin/react-native WalletConnectProvider.
  * Tests WC v2 provider initialization, pairing, deep linking, session management, and RPC methods.
  */
 
@@ -32,7 +32,7 @@ const mockSessionManager = {
   on: vi.fn(),
 };
 
-vi.mock('@cinaconnect/walletconnect-v2', () => ({
+vi.mock('@cinacoin/walletconnect-v2', () => ({
   WcSessionManager: vi.fn(() => mockSessionManager),
   createPairing: vi.fn(),
   parseWcUri: vi.fn().mockReturnValue({ topic: 'abc123', version: 2 }),
@@ -50,7 +50,7 @@ vi.mock('@cinaconnect/walletconnect-v2', () => ({
 
 // ─── Mock core package ───────────────────────────────────────────────────────
 
-vi.mock('@cinaconnect/core-sdk', () => ({}));
+vi.mock('@cinacoin/core-sdk', () => ({}));
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 

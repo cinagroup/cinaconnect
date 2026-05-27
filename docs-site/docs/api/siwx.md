@@ -1,11 +1,11 @@
 # SIWX
 
-> `@cinaconnect/siwx` — Sign-In with X (SIWX) authentication framework.
+> `@cinacoin/siwx` — Sign-In with X (SIWX) authentication framework.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/siwx
+npm install @cinacoin/siwx
 ```
 
 ## Overview

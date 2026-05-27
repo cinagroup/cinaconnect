@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState } from 'react';
-import { useCinaConnect } from '@cinaconnect/react';
+import { useCinacoin } from '@cinacoin/react';
 import { SiweMessage } from 'siwe';
 /**
  * AuthDemo — Real SIWE (Sign-In With Ethereum) authentication demo.
@@ -14,7 +14,7 @@ import { SiweMessage } from 'siwe';
 // Backend verification endpoint (replace with your actual API)
 const AUTH_API = import.meta.env.VITE_AUTH_API_URL || '/api/auth/siwe';
 export function AuthDemo() {
-    const { account, signMessage, chainId } = useCinaConnect();
+    const { account, signMessage, chainId } = useCinacoin();
     const [authStatus, setAuthStatus] = useState('idle');
     const [authMessage, setAuthMessage] = useState('');
     const [authResult, setAuthResult] = useState(null);
@@ -28,7 +28,7 @@ export function AuthDemo() {
         const message = new SiweMessage({
             domain,
             address: account || '',
-            statement: 'Sign in to CinaConnect Demo',
+            statement: 'Sign in to Cinacoin Demo',
             uri: window.location.origin,
             version: '1',
             chainId: chainId || 1,
@@ -75,7 +75,7 @@ export function AuthDemo() {
                 expiresAt: new Date(data.expiresAt),
             };
             // Store session
-            localStorage.setItem('cinaconnect_session', JSON.stringify(sessionData));
+            localStorage.setItem('cinacoin_session', JSON.stringify(sessionData));
             setSession(sessionData);
             setAuthStatus('success');
         }
@@ -86,7 +86,7 @@ export function AuthDemo() {
         }
     };
     const handleSignOut = () => {
-        localStorage.removeItem('cinaconnect_session');
+        localStorage.removeItem('cinacoin_session');
         setSession(null);
         setAuthStatus('idle');
         setAuthResult(null);
@@ -94,7 +94,7 @@ export function AuthDemo() {
     };
     // Restore session on mount
     useState(() => {
-        const saved = localStorage.getItem('cinaconnect_session');
+        const saved = localStorage.getItem('cinacoin_session');
         if (saved) {
             try {
                 const s = JSON.parse(saved);
@@ -104,7 +104,7 @@ export function AuthDemo() {
                 }
             }
             catch {
-                localStorage.removeItem('cinaconnect_session');
+                localStorage.removeItem('cinacoin_session');
             }
         }
     });

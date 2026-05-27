@@ -1,11 +1,11 @@
 # Embedded Wallet
 
-> `@cinaconnect/embedded-wallet` — Embedded wallet creation for CinaConnect.
+> `@cinacoin/embedded-wallet` — Embedded wallet creation for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/embedded-wallet
+npm install @cinacoin/embedded-wallet
 ```
 
 ## Overview

@@ -3,7 +3,7 @@ import { useState, useCallback } from 'react';
 /**
  * HeadlessConnectButton — a completely custom connect button.
  *
- * Uses only the headless client API (`@cinaconnect/config`) with zero
+ * Uses only the headless client API (`@cinacoin/config`) with zero
  * built-in UI. You control every pixel of the experience.
  *
  * @example

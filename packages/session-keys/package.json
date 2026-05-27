@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/session-keys",
+  "name": "@cinacoin/session-keys",
   "version": "0.2.0",
-  "description": "CinaConnect Session Keys — temporary signing keys with policies and social recovery for ERC-4337 smart accounts",
+  "description": "Cinacoin Session Keys — temporary signing keys with policies and social recovery for ERC-4337 smart accounts",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -26,5 +26,12 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
 }

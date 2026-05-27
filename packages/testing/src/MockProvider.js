@@ -9,8 +9,8 @@ export class MockProvider {
     constructor(opts) {
         /** EIP-1193: isMetaMask flag */
         this.isMetaMask = true;
-        /** EIP-1193: isCinaConnect mock flag */
-        this.isCinaConnect = true;
+        /** EIP-1193: isCinacoin mock flag */
+        this.isCinacoin = true;
         this._accounts = opts?.accounts ?? [
             "0x0000000000000000000000000000000000000001",
             "0x0000000000000000000000000000000000000002",

@@ -1,17 +1,17 @@
-# @cinaconnect/walletconnect-v2
+# @cinacoin/walletconnect-v2
 
-WalletConnect v2 adapter for CinaConnect.
+WalletConnect v2 adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/walletconnect-v2
+npm install @cinacoin/walletconnect-v2
 ```
 
 ## Usage
 
 ```ts
-import { WalletConnectAdapter } from '@cinaconnect/walletconnect-v2';
+import { WalletConnectAdapter } from '@cinacoin/walletconnect-v2';
 
 const adapter = new WalletConnectAdapter({
   projectId: 'YOUR_PROJECT_ID',

@@ -1,4 +1,4 @@
-// CinaConnectExample/MultiChainView.swift
+// CinacoinExample/MultiChainView.swift
 // 多链资产总览视图
 
 import SwiftUI

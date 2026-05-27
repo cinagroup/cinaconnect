@@ -1,5 +1,5 @@
 {
-  "name": "@cinaconnect/embedded-wallet",
+  "name": "@cinacoin/embedded-wallet",
   "version": "0.2.0",
   "description": "Embedded wallet system with email, social, and phone authentication",
   "main": "dist/index.js",
@@ -33,7 +33,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/cinaconnect/onux.git",
+    "url": "https://github.com/cinagroup/Cinacoin.git",
     "directory": "packages/embedded-wallet"
   },
   "files": [

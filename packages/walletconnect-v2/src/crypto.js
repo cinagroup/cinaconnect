@@ -5,13 +5,13 @@
  * and adds WC v2–specific helpers: Type-0/Type-1 envelopes, HMAC
  * authentication, topic derivation per spec.
  */
-export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, } from '@cinaconnect/core-sdk';
-export { encrypt as coreEncrypt, decrypt as coreDecrypt, deriveSymmetricKey, deriveTopic, generateNonce, } from '@cinaconnect/core-sdk';
+export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, } from '@cinacoin/core-sdk';
+export { encrypt as coreEncrypt, decrypt as coreDecrypt, deriveSymmetricKey, deriveTopic, generateNonce, } from '@cinacoin/core-sdk';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { hmac_sha256 } from '@noble/hashes/hmac.js';
-import { sharedSecret, hexToBytes, generateNonce, } from '@cinaconnect/core-sdk';
+import { sharedSecret, hexToBytes, generateNonce, } from '@cinacoin/core-sdk';
 // Re-export the core encrypt/decrypt with original names for convenience
-import { encrypt as _encrypt, decrypt as _decrypt, } from '@cinaconnect/core-sdk';
+import { encrypt as _encrypt, decrypt as _decrypt, } from '@cinacoin/core-sdk';
 export { _encrypt as encrypt, _decrypt as decrypt };
 // ============================================================
 // Symmetric key generation

@@ -4,7 +4,7 @@
  * Manages quote fetching, provider selection, and provider redirect
  * for the OnRampWidget UI.
  */
-import type { OnRampQuote, OnRampProviderId, OnRampResult } from "@cinaconnect/onramp-sdk";
+import type { OnRampQuote, OnRampProviderId, OnRampResult } from "@cinacoin/onramp-sdk";
 import type { OnRampWidgetCoreConfig, OnRampWidgetCoreState } from "./types.js";
 /**
  * Core on-ramp widget controller (framework-agnostic).

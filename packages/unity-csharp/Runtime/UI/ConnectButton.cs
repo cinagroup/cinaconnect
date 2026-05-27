@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 
-namespace CinaConnect.UI
+namespace Cinacoin.UI
 {
     /// <summary>
     /// Unity UI Connect Button (UGUI compatible).
@@ -10,7 +10,7 @@ namespace CinaConnect.UI
     /// 
     /// Attach to a GameObject with a Button and Text components.
     /// Automatically updates button text and color based on connection state.
-    /// Handles real wallet connection flow when CinaConnectManager is available.
+    /// Handles real wallet connection flow when CinacoinManager is available.
     /// </summary>
     [RequireComponent(typeof(Button))]
     public class ConnectButton : MonoBehaviour
@@ -60,9 +60,9 @@ namespace CinaConnect.UI
             _connectModal = FindObjectOfType<ConnectModal>();
 
             // Attempt to restore session
-            if (_autoConnect && CinaConnectManager.Instance != null)
+            if (_autoConnect && CinacoinManager.Instance != null)
             {
-                CinaConnectManager.Instance.RestoreAsync().ContinueWith(task =>
+                CinacoinManager.Instance.RestoreAsync().ContinueWith(task =>
                 {
                     if (task.Result.Status == ConnectionStatus.Connected)
                     {
@@ -77,29 +77,29 @@ namespace CinaConnect.UI
 
         private void OnEnable()
         {
-            if (CinaConnectManager.Instance != null)
+            if (CinacoinManager.Instance != null)
             {
-                CinaConnectManager.Instance.OnStateChanged += HandleStateChange;
-                CinaConnectManager.Instance.OnWalletConnected += HandleWalletConnected;
-                CinaConnectManager.Instance.OnWalletDisconnected += HandleWalletDisconnected;
-                CinaConnectManager.Instance.OnErrorEvent += HandleError;
+                CinacoinManager.Instance.OnStateChanged += HandleStateChange;
+                CinacoinManager.Instance.OnWalletConnected += HandleWalletConnected;
+                CinacoinManager.Instance.OnWalletDisconnected += HandleWalletDisconnected;
+                CinacoinManager.Instance.OnErrorEvent += HandleError;
 
                 // Sync with current state
-                UpdateUI(CinaConnectManager.Instance.Status,
-                    CinaConnectManager.Instance.IsConnected && CinaConnectManager.Instance.Accounts.Length > 0
-                        ? FormatAddress(CinaConnectManager.Instance.Accounts[0])
+                UpdateUI(CinacoinManager.Instance.Status,
+                    CinacoinManager.Instance.IsConnected && CinacoinManager.Instance.Accounts.Length > 0
+                        ? FormatAddress(CinacoinManager.Instance.Accounts[0])
                         : null);
             }
         }
 
         private void OnDisable()
         {
-            if (CinaConnectManager.Instance != null)
+            if (CinacoinManager.Instance != null)
             {
-                CinaConnectManager.Instance.OnStateChanged -= HandleStateChange;
-                CinaConnectManager.Instance.OnWalletConnected -= HandleWalletConnected;
-                CinaConnectManager.Instance.OnWalletDisconnected -= HandleWalletDisconnected;
-                CinaConnectManager.Instance.OnErrorEvent -= HandleError;
+                CinacoinManager.Instance.OnStateChanged -= HandleStateChange;
+                CinacoinManager.Instance.OnWalletConnected -= HandleWalletConnected;
+                CinacoinManager.Instance.OnWalletDisconnected -= HandleWalletDisconnected;
+                CinacoinManager.Instance.OnErrorEvent -= HandleError;
             }
         }
 
@@ -128,7 +128,7 @@ namespace CinaConnect.UI
         private void HandleError(string error)
         {
             UpdateUI(ConnectionStatus.Error, _currentAddress);
-            Debug.LogWarning($"[CinaConnect:ConnectButton] Error: {error}");
+            Debug.LogWarning($"[Cinacoin:ConnectButton] Error: {error}");
         }
 
         private void HandleButtonClick()
@@ -158,7 +158,7 @@ namespace CinaConnect.UI
             }
             else
             {
-                Debug.LogWarning("[CinaConnect:ConnectButton] ConnectModal not found in scene. " +
+                Debug.LogWarning("[Cinacoin:ConnectButton] ConnectModal not found in scene. " +
                     "Add a ConnectModal component or wire up OnConnectRequested event.");
             }
         }

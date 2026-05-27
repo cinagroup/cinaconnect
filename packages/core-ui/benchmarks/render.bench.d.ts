@@ -1,7 +1,7 @@
 /**
  * Benchmark — Web Component Render Performance
  *
- * Measures Lit component render times for CinaConnect UI components.
+ * Measures Lit component render times for Cinacoin UI components.
  *
  * 5 scenarios:
  * - ConnectButton initial render

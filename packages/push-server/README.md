@@ -1,6 +1,6 @@
-# @cinaconnect/push-server
+# @cinacoin/push-server
 
-Push notification server for CinaConnect — APNs, FCM, and retry handling.
+Push notification server for Cinacoin — APNs, FCM, and retry handling.
 
 ## Installation
 

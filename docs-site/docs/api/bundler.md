@@ -1,6 +1,6 @@
 # Bundler
 
-> `@cinaconnect/bundler` — Self-hosted ERC-4337 Bundler implementation in Rust.
+> `@cinacoin/bundler` — Self-hosted ERC-4337 Bundler implementation in Rust.
 
 ## Installation
 

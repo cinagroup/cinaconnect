@@ -1,6 +1,6 @@
 # Quick Start
 
-> Get started with CinaConnect in 5 minutes.
+> Get started with Cinacoin in 5 minutes.
 
 ## Prerequisites
 
@@ -10,25 +10,25 @@
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react
+npm install @cinacoin/core-sdk @cinacoin/react
 ```
 
 ## Basic Setup
 
 ```tsx
-import { CinaConnectProvider, ConnectButton } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider, ConnectButton } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 function App() {
   return (
-    <CinaConnectProvider
+    <CinacoinProvider
       adapter={new EvmAdapter({
         projectId: 'your-project-id',
         relayUrl: 'wss://relay.yourdomain.com/v1',
       })}
     >
       <ConnectButton />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```

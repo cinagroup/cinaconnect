@@ -1,11 +1,11 @@
 # Payment Flow
 
-> `@cinaconnect/payment-flow` — Payment flow management for CinaConnect.
+> `@cinacoin/payment-flow` — Payment flow management for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/payment-flow
+npm install @cinacoin/payment-flow
 ```
 
 ## Overview

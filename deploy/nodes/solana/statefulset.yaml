@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: solana-validator
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: solana-validator
     chain: solana

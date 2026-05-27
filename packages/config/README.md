@@ -1,17 +1,17 @@
-# @cinaconnect/config
+# @cinacoin/config
 
-Remote feature flags, headless mode, and virtual testnets for @cinaconnect.
+Remote feature flags, headless mode, and virtual testnets for @cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/config
+npm install @cinacoin/config
 ```
 
 ## Usage
 
 ```ts
-import { FeatureGate } from '@cinaconnect/config';
+import { FeatureGate } from '@cinacoin/config';
 
 const gate = new FeatureGate();
 const enabled = await gate.isEnabled('new-ui');

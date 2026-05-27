@@ -1,30 +1,30 @@
 # .NET SDK Example
 
-> Use the CinaConnect .NET SDK in C# applications — wallet connectivity, transaction signing, session management, and multi-chain operations.
+> Use the Cinacoin .NET SDK in C# applications — wallet connectivity, transaction signing, session management, and multi-chain operations.
 
 ## Prerequisites
 
 - .NET 8+ SDK
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
 # NuGet package
-dotnet add package CinaConnect
+dotnet add package Cinacoin
 
 # Or via Package Manager
-Install-Package CinaConnect
+Install-Package Cinacoin
 ```
 
 ## Quick Start
 
 ```csharp
-using CinaConnect;
-using CinaConnect.Models;
+using Cinacoin;
+using Cinacoin.Models;
 
 // Create a client
-await using var client = new CinaConnectClient("YOUR_PROJECT_ID");
+await using var client = new CinacoinClient("YOUR_PROJECT_ID");
 
 // Use WalletService for high-level operations
 await using var walletService = new WalletService(client);
@@ -44,21 +44,21 @@ foreach (var network in networks)
 ```csharp
 using System;
 using System.Threading.Tasks;
-using CinaConnect;
-using CinaConnect.Models;
-using CinaConnect.Services;
+using Cinacoin;
+using Cinacoin.Models;
+using Cinacoin.Services;
 using Microsoft.Extensions.Logging;
 
-namespace CinaConnect.Example;
+namespace Cinacoin.Example;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
         // ─── Initialize the client ───
-        await using var client = new CinaConnectClient(
+        await using var client = new CinacoinClient(
             projectId: "YOUR_PROJECT_ID",
-            baseUrl: "https://api.cinaconnect.com"
+            baseUrl: "https://api.cinacoin.com"
         );
 
         await using var walletService = new WalletService(client);
@@ -115,7 +115,7 @@ public class Program
         Console.WriteLine("\n=== Message Signing ===");
         var signature = await walletService.SignMessageAsync(
             connection.Accounts[0],
-            "Hello, CinaConnect!"
+            "Hello, Cinacoin!"
         );
         Console.WriteLine($"  Signature: {signature.Substring(0, 20)}...");
 
@@ -139,11 +139,11 @@ public class Program
 ### 2. Using the Relay Client Directly
 
 ```csharp
-using CinaConnect;
-using CinaConnect.Services;
+using Cinacoin;
+using Cinacoin.Services;
 
 // Direct relay client for low-level WebSocket operations
-await using var relayClient = new RelayClient("wss://relay.cinaconnect.com/v1");
+await using var relayClient = new RelayClient("wss://relay.cinacoin.com/v1");
 
 // Connect to relay server
 await relayClient.ConnectAsync();
@@ -166,7 +166,7 @@ relayClient.OnMessage += (sender, message) =>
 ### 3. Crypto Utilities
 
 ```csharp
-using CinaConnect.Services;
+using Cinacoin.Services;
 
 // Generate a keypair
 var keypair = CryptoUtils.GenerateKeyPair();
@@ -174,7 +174,7 @@ Console.WriteLine($"Public key:  {keypair.PublicKey}");
 Console.WriteLine($"Private key: {keypair.PrivateKey}");
 
 // Sign a message
-var message = "Hello, CinaConnect!";
+var message = "Hello, Cinacoin!";
 var signature = CryptoUtils.SignMessage(message, keypair.PrivateKey);
 Console.WriteLine($"Signature: {signature}");
 
@@ -195,16 +195,16 @@ Console.WriteLine($"EIP-191: {eip191Hash}");
 
 ```csharp
 // Program.cs (ASP.NET Core)
-using CinaConnect;
-using CinaConnect.Services;
+using Cinacoin;
+using Cinacoin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register CinaConnect services
-builder.Services.AddSingleton<CinaConnectClient>(sp =>
-    new CinaConnectClient(
-        builder.Configuration["CinaConnect:ProjectId"]!,
-        logger: sp.GetRequiredService<ILogger<CinaConnectClient>>()
+// Register Cinacoin services
+builder.Services.AddSingleton<CinacoinClient>(sp =>
+    new CinacoinClient(
+        builder.Configuration["Cinacoin:ProjectId"]!,
+        logger: sp.GetRequiredService<ILogger<CinacoinClient>>()
     )
 );
 
@@ -235,13 +235,13 @@ app.Run();
 ### 5. Multi-Chain Operations
 
 ```csharp
-using CinaConnect;
-using CinaConnect.Models;
-using CinaConnect.Services;
+using Cinacoin;
+using Cinacoin.Models;
+using Cinacoin.Services;
 
 async Task MultiChainExample()
 {
-    await using var client = new CinaConnectClient("YOUR_PROJECT_ID");
+    await using var client = new CinacoinClient("YOUR_PROJECT_ID");
     await using var walletService = new WalletService(client);
 
     // Connect with multiple chains
@@ -274,8 +274,8 @@ async Task MultiChainExample()
 ### 6. Session Management
 
 ```csharp
-using CinaConnect;
-using CinaConnect.Models;
+using Cinacoin;
+using Cinacoin.Models;
 
 // Get account info
 var account = await client.GetAccountAsync("metamask");

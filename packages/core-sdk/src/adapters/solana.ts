@@ -259,21 +259,29 @@ export class SolanaChainAdapter {
     }
 
     // Fallback: raw RPC call
-    const response = await fetch(this.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getBalance',
-        params: [address],
-      }),
-    });
+    try {
+      const response = await fetch(this.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'getBalance',
+          params: [address],
+        }),
+      });
 
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    const lamports = data.result.value as number;
-    return (lamports / 1e9).toString();
+      if (!response.ok) {
+        throw new Error(`Solana RPC error ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+      const lamports = data.result.value as number;
+      return (lamports / 1e9).toString();
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+      throw new Error(`Solana getBalance failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   /* ---- Transactions ---- */
@@ -335,20 +343,28 @@ export class SolanaChainAdapter {
     }
 
     // Fallback: raw RPC
-    const response = await fetch(this.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'sendTransaction',
-        params: [Buffer.from(serializedTx).toString('base64'), { encoding: 'base64' }],
-      }),
-    });
+    try {
+      const response = await fetch(this.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'sendTransaction',
+          params: [Buffer.from(serializedTx).toString('base64'), { encoding: 'base64' }],
+        }),
+      });
 
-    const data = await response.json();
-    if (data.error) throw new Error(data.error.message);
-    return data.result as string;
+      if (!response.ok) {
+        throw new Error(`Solana RPC error ${response.status}: ${response.statusText}`);
+      }
+      const data = await response.json();
+      if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+      return data.result as string;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+      throw new Error(`Solana sendTransaction failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   /* ---- Message Signing ---- */
@@ -486,48 +502,66 @@ export class SolanaChainAdapter {
     this.connection = {
       getBalance: async (pubKey, _commitment?) => {
         const addr = pubKey.toBase58();
-        const resp = await fetch(this.rpcUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'getBalance',
-            params: [addr],
-          }),
-        });
-        const data = await resp.json();
-        if (data.error) throw new Error(data.error.message);
-        return data.result.value as number;
+        try {
+          const resp = await fetch(this.rpcUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'getBalance',
+              params: [addr],
+            }),
+          });
+          if (!resp.ok) throw new Error(`Solana RPC error ${resp.status}: ${resp.statusText}`);
+          const data = await resp.json();
+          if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+          return data.result.value as number;
+        } catch (err: unknown) {
+          if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+          throw new Error(`Solana connection getBalance failed: ${err instanceof Error ? err.message : String(err)}`);
+        }
       },
       sendRawTransaction: async (rawTx, options?) => {
-        const resp = await fetch(this.rpcUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'sendTransaction',
-            params: [Buffer.from(rawTx).toString('base64'), { encoding: 'base64', ...options }],
-          }),
-        });
-        const data = await resp.json();
-        if (data.error) throw new Error(data.error.message);
-        return data.result as string;
+        try {
+          const resp = await fetch(this.rpcUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'sendTransaction',
+              params: [Buffer.from(rawTx).toString('base64'), { encoding: 'base64', ...options }],
+            }),
+          });
+          if (!resp.ok) throw new Error(`Solana RPC error ${resp.status}: ${resp.statusText}`);
+          const data = await resp.json();
+          if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+          return data.result as string;
+        } catch (err: unknown) {
+          if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+          throw new Error(`Solana connection sendRawTransaction failed: ${err instanceof Error ? err.message : String(err)}`);
+        }
       },
       getLatestBlockhash: async (_commitment?) => {
-        const resp = await fetch(this.rpcUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'getLatestBlockhash',
-          }),
-        });
-        const data = await resp.json();
-        if (data.error) throw new Error(data.error.message);
-        return data.result.value as { blockhash: string; lastValidBlockHeight: number };
+        try {
+          const resp = await fetch(this.rpcUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              jsonrpc: '2.0',
+              id: 1,
+              method: 'getLatestBlockhash',
+            }),
+          });
+          if (!resp.ok) throw new Error(`Solana RPC error ${resp.status}: ${resp.statusText}`);
+          const data = await resp.json();
+          if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+          return data.result.value as { blockhash: string; lastValidBlockHeight: number };
+        } catch (err: unknown) {
+          if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+          throw new Error(`Solana connection getLatestBlockhash failed: ${err instanceof Error ? err.message : String(err)}`);
+        }
       },
     };
   }
@@ -567,33 +601,45 @@ export class SolanaChainAdapter {
       return this.connection.getLatestBlockhash();
     }
 
-    const resp = await fetch(this.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getLatestBlockhash',
-      }),
-    });
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message);
-    return data.result.value;
+    try {
+      const resp = await fetch(this.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'getLatestBlockhash',
+        }),
+      });
+      if (!resp.ok) throw new Error(`Solana RPC error ${resp.status}: ${resp.statusText}`);
+      const data = await resp.json();
+      if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+      return data.result.value;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+      throw new Error(`Solana _getLatestBlockhash failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   private async _getAccountInfo(address: string): Promise<unknown> {
-    const resp = await fetch(this.rpcUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        jsonrpc: '2.0',
-        id: 1,
-        method: 'getAccountInfo',
-        params: [address, { encoding: 'base64' }],
-      }),
-    });
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error.message);
-    return data.result;
+    try {
+      const resp = await fetch(this.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jsonrpc: '2.0',
+          id: 1,
+          method: 'getAccountInfo',
+          params: [address, { encoding: 'base64' }],
+        }),
+      });
+      if (!resp.ok) throw new Error(`Solana RPC error ${resp.status}: ${resp.statusText}`);
+      const data = await resp.json();
+      if (data.error) throw new Error(`Solana RPC error: ${data.error.message}`);
+      return data.result;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Solana RPC error')) throw err;
+      throw new Error(`Solana _getAccountInfo failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 }

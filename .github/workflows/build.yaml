@@ -11,7 +11,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAMESPACE: onchainux
+  IMAGE_NAMESPACE: cinacoin
   CARGO_INCREMENTAL: "0"
   RUSTFLAGS: "-D warnings"
 
@@ -343,11 +343,11 @@ jobs:
             dockerfile: deploy/docker/core-ui/Dockerfile
             context: .
           - name: push-server
-            dockerfile: deploy/docker/push-server/Dockerfile
-            context: .
+            dockerfile: packages/push-server/Dockerfile
+            context: packages/push-server
           - name: keys-server
-            dockerfile: deploy/docker/keys-server/Dockerfile
-            context: .
+            dockerfile: packages/keys-server/Dockerfile
+            context: packages/keys-server
 
     steps:
       - uses: actions/checkout@v4

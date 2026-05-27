@@ -12,10 +12,10 @@
  *
  * Uses the official WalletConnectKotlin SDK (com.walletconnect:sign).
  */
-package com.cinaconnect.walletconnect
+package com.cinacoin.walletconnect
 
 import android.content.Context
-import com.cinaconnect.core.AppMetadata
+import com.cinacoin.core.AppMetadata
 import com.walletconnect.android.Core
 import com.walletconnect.android.CoreClient
 import com.walletconnect.android.internal.common.model.Server

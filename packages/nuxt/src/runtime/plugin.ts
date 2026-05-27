@@ -1,21 +1,21 @@
-import type { CinaConnectModuleOptions } from '#build/types'
+import type { CinacoinModuleOptions } from '#build/types'
 
 import { defineNuxtPlugin, useRuntimeConfig, useNuxtApp } from '#imports'
-import { CinaConnect } from '@cinaconnect/vue'
+import { Cinacoin } from '@cinacoin/vue'
 
 /**
- * Nuxt runtime plugin that creates a CinaConnect application instance
+ * Nuxt runtime plugin that creates a Cinacoin application instance
  * and provides it via Vue's dependency injection.
  *
- * Reads configuration from `runtimeConfig.public.cinaconnect`.
+ * Reads configuration from `runtimeConfig.public.cinacoin`.
  */
 export default defineNuxtPlugin((nuxtApp) => {
-  const config = useRuntimeConfig().public.cinaconnect as CinaConnectModuleOptions & {
+  const config = useRuntimeConfig().public.cinacoin as CinacoinModuleOptions & {
     themeMode?: 'auto' | 'dark' | 'light'
     themeVariables?: Record<string, string>
   }
 
-  const app = new CinaConnect({
+  const app = new Cinacoin({
     projectId: config.projectId,
     networks: config.networks,
     metadata: config.metadata,

@@ -1,8 +1,8 @@
 using System;
 using NUnit.Framework;
-using CinaConnect.Auth;
+using Cinacoin.Auth;
 
-namespace CinaConnect.Tests.Runtime
+namespace Cinacoin.Tests.Runtime
 {
     /// <summary>
     /// Tests for SIWE: message generation, validation.

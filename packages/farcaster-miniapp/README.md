@@ -1,6 +1,6 @@
-# @cinaconnect/farcaster-miniapp
+# @cinacoin/farcaster-miniapp
 
-Farcaster Mini Apps integration for CinaConnect SDK.
+Farcaster Mini Apps integration for Cinacoin SDK.
 
 ## Features
 
@@ -11,13 +11,13 @@ Farcaster Mini Apps integration for CinaConnect SDK.
 ## Install
 
 ```bash
-npm install @cinaconnect/farcaster-miniapp
+npm install @cinacoin/farcaster-miniapp
 ```
 
 ## Usage
 
 ```ts
-import { FarcasterProvider, FarcasterAuth } from '@cinaconnect/farcaster-miniapp';
+import { FarcasterProvider, FarcasterAuth } from '@cinacoin/farcaster-miniapp';
 
 // Initialize provider
 const provider = new FarcasterProvider({

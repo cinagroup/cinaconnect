@@ -1,11 +1,11 @@
 # Swap SDK
 
-> `@cinaconnect/swap-sdk` — Swap aggregator SDK for CinaConnect.
+> `@cinacoin/swap-sdk` — Swap aggregator SDK for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/swap-sdk
+npm install @cinacoin/swap-sdk
 ```
 
 ## Overview
@@ -15,7 +15,7 @@ The Swap SDK aggregates liquidity from multiple DEXs (Uniswap, 1inch, 0x, etc.) 
 ## Usage
 
 ```typescript
-import { SwapSDK } from '@cinaconnect/swap-sdk'
+import { SwapSDK } from '@cinacoin/swap-sdk'
 
 const swap = new SwapSDK({
   chainId: 1,

@@ -1,10 +1,10 @@
-# LinkedIn Post — CinaConnect v0.2.0
+# LinkedIn Post — Cinacoin v0.2.0
 
 ---
 
-🚀 **CinaConnect v0.2.0 — 72 Packages, One SDK, Every Chain**
+🚀 **Cinacoin v0.2.0 — 72 Packages, One SDK, Every Chain**
 
-I'm excited to announce the release of CinaConnect v0.2.0 — the most comprehensive multi-chain Web3 SDK now available on npm.
+I'm excited to announce the release of Cinacoin v0.2.0 — the most comprehensive multi-chain Web3 SDK now available on npm.
 
 **What we've shipped:**
 
@@ -24,12 +24,12 @@ I'm excited to announce the release of CinaConnect v0.2.0 — the most comprehen
 
 Building a multi-chain dApp today means integrating different SDKs for different chains, different frameworks for different platforms, and stitching together authentication, payments, and smart accounts yourself.
 
-CinaConnect solves this with one installable SDK that covers the entire stack — from wallet connection to on-chain execution — across every major blockchain and every major development platform.
+Cinacoin solves this with one installable SDK that covers the entire stack — from wallet connection to on-chain execution — across every major blockchain and every major development platform.
 
 **For developers:**
 
 ```
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 ```
 
 That's it. You now have access to 600+ wallets, 300+ chains, and every framework SDK in our ecosystem.
@@ -38,9 +38,9 @@ That's it. You now have access to 600+ wallets, 300+ chains, and every framework
 
 We're working on native implementations for React Native and Flutter, a native cross-chain bridge, and expanding our test coverage. Our v0.3.0 roadmap is already in progress.
 
-📖 Full documentation: docs.cinaconnect.io
-💻 GitHub: github.com/cinaconnect/cinaconnect
-📦 npm: npmjs.com/org/cinaconnect
+📖 Full documentation: docs.cinacoin.io
+💻 GitHub: github.com/cinacoin/cinacoin
+📦 npm: npmjs.com/org/cinacoin
 
 Huge thanks to the entire CinaGroup team and our open-source contributors. This release represents months of focused engineering.
 
@@ -48,4 +48,4 @@ Huge thanks to the entire CinaGroup team and our open-source contributors. This 
 
 ---
 
-**Post image suggestion:** Screenshot of the demo app at localhost:3000 showing the wallet connection modal, or the CinaConnect logo with "v0.2.0 — 72 packages on npm" overlay.
+**Post image suggestion:** Screenshot of the demo app at localhost:3000 showing the wallet connection modal, or the Cinacoin logo with "v0.2.0 — 72 packages on npm" overlay.

@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/nuxt — module and composables.
+ * Tests for @cinacoin/nuxt — module and composables.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -42,7 +42,7 @@ vi.mock('#imports', () => ({
   useNuxtApp: vi.fn(() => mockNuxtApp),
   useRuntimeConfig: vi.fn(() => ({
     public: {
-      cinaconnect: {
+      cinacoin: {
         projectId: 'test-project-id',
         networks: ['mainnet', 'arbitrum'],
         metadata: { name: 'Test App' },
@@ -54,10 +54,10 @@ vi.mock('#imports', () => ({
   defineNuxtPlugin: vi.fn((fn: any) => fn),
 }));
 
-// ─── Mock @cinaconnect/vue ───────────────────────────────────────────────────
+// ─── Mock @cinacoin/vue ───────────────────────────────────────────────────
 
-vi.mock('@cinaconnect/vue', () => ({
-  CinaConnect: vi.fn().mockImplementation(() => ({
+vi.mock('@cinacoin/vue', () => ({
+  Cinacoin: vi.fn().mockImplementation(() => ({
     address: '0x1234',
     balance: '1.5',
     chain: 'mainnet',
@@ -74,7 +74,7 @@ vi.mock('#build/types', () => ({}));
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('CinaConnect Nuxt Module', () => {
+describe('Cinacoin Nuxt Module', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
@@ -86,8 +86,8 @@ describe('CinaConnect Nuxt Module', () => {
   it('module should have meta with name and configKey', async () => {
     const mod = await import('../src/module.js');
     expect(mod.default.meta).toBeDefined();
-    expect(mod.default.meta.name).toBe('@cinaconnect/nuxt');
-    expect(mod.default.meta.configKey).toBe('cinaconnect');
+    expect(mod.default.meta.name).toBe('@cinacoin/nuxt');
+    expect(mod.default.meta.configKey).toBe('cinacoin');
   });
 
   it('module should have defaults', async () => {
@@ -146,9 +146,9 @@ describe('CinaConnect Nuxt Module', () => {
       mockNuxt as any
     );
 
-    expect(mockNuxt.options.runtimeConfig.public.cinaconnect).toBeDefined();
-    expect(mockNuxt.options.runtimeConfig.public.cinaconnect.projectId).toBe('my-project-id');
-    expect(mockNuxt.options.runtimeConfig.public.cinaconnect.networks).toEqual([
+    expect(mockNuxt.options.runtimeConfig.public.cinacoin).toBeDefined();
+    expect(mockNuxt.options.runtimeConfig.public.cinacoin.projectId).toBe('my-project-id');
+    expect(mockNuxt.options.runtimeConfig.public.cinacoin.networks).toEqual([
       'mainnet',
       'arbitrum',
     ]);
@@ -159,42 +159,42 @@ describe('Nuxt composables', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
-  it('should export useCinaConnect', async () => {
+  it('should export useCinacoin', async () => {
     const composables = await import('../src/runtime/composables.js');
-    expect(composables.useCinaConnect).toBeDefined();
-    expect(typeof composables.useCinaConnect).toBe('function');
+    expect(composables.useCinacoin).toBeDefined();
+    expect(typeof composables.useCinacoin).toBe('function');
   });
 
-  it('should export useCinaConnectAccount', async () => {
+  it('should export useCinacoinAccount', async () => {
     const composables = await import('../src/runtime/composables.js');
-    expect(composables.useCinaConnectAccount).toBeDefined();
-    expect(typeof composables.useCinaConnectAccount).toBe('function');
+    expect(composables.useCinacoinAccount).toBeDefined();
+    expect(typeof composables.useCinacoinAccount).toBe('function');
   });
 
-  it('should export useCinaConnectNetwork', async () => {
+  it('should export useCinacoinNetwork', async () => {
     const composables = await import('../src/runtime/composables.js');
-    expect(composables.useCinaConnectNetwork).toBeDefined();
-    expect(typeof composables.useCinaConnectNetwork).toBe('function');
+    expect(composables.useCinacoinNetwork).toBeDefined();
+    expect(typeof composables.useCinacoinNetwork).toBe('function');
   });
 
-  it('useCinaConnect should return cinaConnect instance', async () => {
-    const { useCinaConnect } = await import('../src/runtime/composables.js');
-    const result = useCinaConnect();
+  it('useCinacoin should return cinaConnect instance', async () => {
+    const { useCinacoin } = await import('../src/runtime/composables.js');
+    const result = useCinacoin();
     expect(result).toHaveProperty('cinaConnect');
   });
 
-  it('useCinaConnectAccount should return address, balance, chain, isConnected', async () => {
-    const { useCinaConnectAccount } = await import('../src/runtime/composables.js');
-    const result = useCinaConnectAccount();
+  it('useCinacoinAccount should return address, balance, chain, isConnected', async () => {
+    const { useCinacoinAccount } = await import('../src/runtime/composables.js');
+    const result = useCinacoinAccount();
     expect(result).toHaveProperty('address');
     expect(result).toHaveProperty('balance');
     expect(result).toHaveProperty('chain');
     expect(result).toHaveProperty('isConnected');
   });
 
-  it('useCinaConnectNetwork should return networks and switchNetwork', async () => {
-    const { useCinaConnectNetwork } = await import('../src/runtime/composables.js');
-    const result = useCinaConnectNetwork();
+  it('useCinacoinNetwork should return networks and switchNetwork', async () => {
+    const { useCinacoinNetwork } = await import('../src/runtime/composables.js');
+    const result = useCinacoinNetwork();
     expect(result).toHaveProperty('networks');
     expect(result).toHaveProperty('switchNetwork');
     expect(typeof result.switchNetwork).toBe('function');

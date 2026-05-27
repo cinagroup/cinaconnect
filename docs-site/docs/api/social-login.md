@@ -1,11 +1,11 @@
 # Social Login
 
-> `@cinaconnect/social-login` — Social login integration for CinaConnect.
+> `@cinacoin/social-login` — Social login integration for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/social-login
+npm install @cinacoin/social-login
 ```
 
 ## Overview

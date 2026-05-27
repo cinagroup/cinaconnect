@@ -5,7 +5,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: relay-server-spot
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: relay-server-spot
     component: core
@@ -42,7 +42,7 @@ spec:
                       - Spot
       containers:
         - name: relay
-          image: ghcr.io/cinaconnect/relay-server:1.0.0
+          image: ghcr.io/cinacoin/relay-server:1.0.0
           ports:
             - name: ws
               containerPort: 8080
@@ -106,7 +106,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: relay-server-ondemand
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: relay-server-ondemand
     component: core
@@ -133,7 +133,7 @@ spec:
                       - OnDemand
       containers:
         - name: relay
-          image: ghcr.io/cinaconnect/relay-server:1.0.0
+          image: ghcr.io/cinacoin/relay-server:1.0.0
           ports:
             - name: ws
               containerPort: 8080

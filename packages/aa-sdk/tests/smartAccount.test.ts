@@ -1,5 +1,5 @@
 /**
- * Vitest integration tests for @cinaconnect/aa-sdk
+ * Vitest integration tests for @cinacoin/aa-sdk
  *
  * Tests cover:
  *   - SmartAccount creation, signing, UserOp building

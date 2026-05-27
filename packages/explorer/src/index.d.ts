@@ -1,11 +1,11 @@
 /**
- * @cinaconnect/explorer
+ * @cinacoin/explorer
  *
  * Wallet/dApp discovery, logo fetching, and registry for 600+ wallets.
  *
  * @example
  * ```ts
- * import { registry, useExplorer, WalletSearch } from '@cinaconnect/explorer';
+ * import { registry, useExplorer, WalletSearch } from '@cinacoin/explorer';
  *
  * // Search wallets
  * const wallets = registry.search('meta', 'wallet');

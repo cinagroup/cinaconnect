@@ -1,5 +1,5 @@
 /**
- * Svelte actions (directives) for CinaConnect.
+ * Svelte actions (directives) for Cinacoin.
  *
  * Use with `use:` directive to add auto-connect and auto-network-switching
  * behavior to any element.
@@ -7,7 +7,7 @@
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect>Connect Wallet</button>
@@ -20,7 +20,7 @@ import type { Action } from 'svelte/action';
 /**
  * Parameters for the `cinaConnectConnect` action.
  */
-export interface CinaConnectConnectParams {
+export interface CinacoinConnectParams {
     /** Whether the action is enabled. Defaults to `true`. */
     enabled?: boolean;
     /** Optional label override for accessibility. */
@@ -41,7 +41,7 @@ export interface CinaConnectConnectParams {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect={{ enabled: true }}>
@@ -49,11 +49,11 @@ export interface CinaConnectConnectParams {
  * </button>
  * ```
  */
-export declare const cinaConnectConnect: Action<HTMLElement, CinaConnectConnectParams | undefined>;
+export declare const cinaConnectConnect: Action<HTMLElement, CinacoinConnectParams | undefined>;
 /**
  * Parameters for the `cinaConnectNetwork` action.
  */
-export interface CinaConnectNetworkParams {
+export interface CinacoinNetworkParams {
     /** Target chain ID to switch to. */
     chainId: number;
     /** Whether the action is enabled. Defaults to `true`. */
@@ -74,8 +74,8 @@ export interface CinaConnectNetworkParams {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectNetwork } from '@cinaconnect/svelte';
- *   import { chainId } from '@cinaconnect/svelte';
+ *   import { cinaConnectNetwork } from '@cinacoin/svelte';
+ *   import { chainId } from '@cinacoin/svelte';
  *   let currentChainId;
  *   chainId.subscribe(v => currentChainId = v);
  * </script>
@@ -85,5 +85,5 @@ export interface CinaConnectNetworkParams {
  * </button>
  * ```
  */
-export declare const cinaConnectNetwork: Action<HTMLElement, CinaConnectNetworkParams | undefined>;
+export declare const cinaConnectNetwork: Action<HTMLElement, CinacoinNetworkParams | undefined>;
 //# sourceMappingURL=actions.d.ts.map

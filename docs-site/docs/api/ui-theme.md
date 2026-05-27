@@ -1,17 +1,17 @@
 # UI Theme
 
-> `@cinaconnect/ui-theme` — Theme system for CinaConnect UI components.
+> `@cinacoin/ui-theme` — Theme system for Cinacoin UI components.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/ui-theme
+npm install @cinacoin/ui-theme
 ```
 
 ## Usage
 
 ```typescript
-import { createTheme } from '@cinaconnect/ui-theme'
+import { createTheme } from '@cinacoin/ui-theme'
 
 const theme = createTheme({
   colors: {
@@ -27,4 +27,4 @@ const theme = createTheme({
 
 - [Core UI](/api/core-ui)
 - [Design Tokens](/api/design-tokens)
-- [CinaConnect UI Theme](/api/cinaconnect-ui-theme)
+- [Cinacoin UI Theme](/api/cinacoin-ui-theme)

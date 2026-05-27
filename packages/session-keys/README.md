@@ -1,17 +1,17 @@
-# @cinaconnect/session-keys
+# @cinacoin/session-keys
 
-CinaConnect Session Keys — temporary signing keys with policies and social recovery for ERC-4337 smart accounts.
+Cinacoin Session Keys — temporary signing keys with policies and social recovery for ERC-4337 smart accounts.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/session-keys
+npm install @cinacoin/session-keys
 ```
 
 ## Usage
 
 ```ts
-import { SessionKeyManager } from '@cinaconnect/session-keys';
+import { SessionKeyManager } from '@cinacoin/session-keys';
 
 const manager = new SessionKeyManager({ smartAccount: '0x...' });
 await manager.createSessionKey({ policy: { spendLimit: '1000000000000000000' } });

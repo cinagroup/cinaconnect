@@ -2,7 +2,7 @@
  * ConnectModal — Native React Native modal with real WalletConnect v2 deep linking.
  *
  * Integrates real WC v2 pairing via WalletConnectProvider, deep linking via
- * react-native Linking API, and the CinaConnect wallet registry for a real
+ * react-native Linking API, and the Cinacoin wallet registry for a real
  * connection flow with actual wallet apps.
  */
 /** Wallet info for modal display. */

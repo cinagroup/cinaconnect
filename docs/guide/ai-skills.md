@@ -1,12 +1,12 @@
 # AI Skills Integration Guide
 
-> Use CinaConnect's AI-assisted development tools to accelerate your workflow with Claude, Cursor, GitHub Copilot, and more.
+> Use Cinacoin's AI-assisted development tools to accelerate your workflow with Claude, Cursor, GitHub Copilot, and more.
 
 ---
 
 ## Overview
 
-CinaConnect provides a CLI-based AI skills system that integrates with your favorite AI coding assistant. The skills system generates project scaffolding, code snippets, and best-practice patterns tailored to your stack.
+Cinacoin provides a CLI-based AI skills system that integrates with your favorite AI coding assistant. The skills system generates project scaffolding, code snippets, and best-practice patterns tailored to your stack.
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -15,7 +15,7 @@ CinaConnect provides a CLI-based AI skills system that integrates with your favo
 └───────────────┬─────────────────────────────────┘
                 │  prompts + context
 ┌───────────────▼─────────────────────────────────┐
-│           @cinaconnect/cli skills                │
+│           @cinacoin/cli skills                │
 │                                                   │
 │  ┌──────────┐ ┌──────────┐ ┌──────────────────┐  │
 │  │ connect  │ │  auth    │ │  payment         │  │
@@ -34,18 +34,18 @@ CinaConnect provides a CLI-based AI skills system that integrates with your favo
 ## Installation
 
 ```bash
-# Install the CinaConnect CLI globally
-npm install -g @cinaconnect/cli
+# Install the Cinacoin CLI globally
+npm install -g @cinacoin/cli
 
 # Or run without installing
-npx @cinaconnect/cli skills add
+npx @cinacoin/cli skills add
 ```
 
 Verify installation:
 
 ```bash
-cinaconnect --version
-cinaconnect skills list
+cinacoin --version
+cinacoin skills list
 ```
 
 ---
@@ -55,7 +55,7 @@ cinaconnect skills list
 ### List Available Skills
 
 ```bash
-cinaconnect skills list
+cinacoin skills list
 ```
 
 Output:
@@ -76,22 +76,22 @@ Available AI Skills:
 
 ```bash
 # Add a specific skill
-cinaconnect skills add connect
+cinacoin skills add connect
 
 # Add multiple skills
-cinaconnect skills add connect auth payment
+cinacoin skills add connect auth payment
 
 # Add all skills
-cinaconnect skills add --all
+cinacoin skills add --all
 
 # Add with a specific target directory
-cinaconnect skills add connect --output ./src/cinaconnect
+cinacoin skills add connect --output ./src/cinacoin
 ```
 
 ### Update Skills
 
 ```bash
-cinaconnect skills update
+cinacoin skills update
 ```
 
 ---
@@ -100,22 +100,22 @@ cinaconnect skills update
 
 ### Cursor
 
-1. **Add CinaConnect context rules:**
+1. **Add Cinacoin context rules:**
 
 ```bash
-cinaconnect skills add --format cursor
+cinacoin skills add --format cursor
 ```
 
-This creates `.cursor/rules/cinaconnect.mdc` with project-aware context.
+This creates `.cursor/rules/cinacoin.mdc` with project-aware context.
 
-2. **Configure Cursor to recognize CinaConnect patterns:**
+2. **Configure Cursor to recognize Cinacoin patterns:**
 
 ```jsonc
 // .cursor/settings.json
 {
-  "cinaconnect": {
+  "cinacoin": {
     "projectId": "your-project-id",
-    "relayUrl": "wss://relay.cinaconnect.com/v1",
+    "relayUrl": "wss://relay.cinacoin.com/v1",
     "chains": ["mainnet", "polygon", "arbitrum"]
   }
 }
@@ -124,7 +124,7 @@ This creates `.cursor/rules/cinaconnect.mdc` with project-aware context.
 3. **Use in Cursor chat:**
 
 ```
-@cinaconnect How do I set up wallet connection with React?
+@cinacoin How do I set up wallet connection with React?
 ```
 
 Cursor will use the skills context to generate accurate, project-specific code.
@@ -132,27 +132,27 @@ Cursor will use the skills context to generate accurate, project-specific code.
 ### GitHub Copilot
 
 ```bash
-cinaconnect skills add --format copilot
+cinacoin skills add --format copilot
 ```
 
-This creates `.github/copilot-instructions.md` with CinaConnect-specific instructions.
+This creates `.github/copilot-instructions.md` with Cinacoin-specific instructions.
 
 **Example content generated:**
 
 ```markdown
-# CinaConnect Instructions
+# Cinacoin Instructions
 
-This project uses CinaConnect (@cinaconnect/react) for Web3 wallet connections.
+This project uses Cinacoin (@cinacoin/react) for Web3 wallet connections.
 
 ## Key Patterns
 
 ### Wallet Connection
-- Use `useOnux()` hook from `@cinaconnect/react`
+- Use `useOnux()` hook from `@cinacoin/react`
 - Wrap app in `OnuxProvider` with projectId, relayUrl, and chains
 - Handle connect/disconnect events with useEffect cleanup
 
 ### Multi-Chain
-- Import chains from `@cinaconnect/chains`
+- Import chains from `@cinacoin/chains`
 - Use `useOnuxNetwork()` for chain switching
 - Always include optional chains in session proposal
 
@@ -165,20 +165,20 @@ This project uses CinaConnect (@cinaconnect/react) for Web3 wallet connections.
 ### Claude (claude.ai / Claude Desktop)
 
 ```bash
-cinaconnect skills add --format claude
+cinacoin skills add --format claude
 ```
 
-Generates `CLAUDE.md` in your project root with CinaConnect context.
+Generates `CLAUDE.md` in your project root with Cinacoin context.
 
 ### VS Code + Custom Prompts
 
 Create a reusable prompt template:
 
 ```bash
-cinaconnect skills add --format vscode
+cinacoin skills add --format vscode
 ```
 
-Generates `.vscode/cinaconnect-prompts.md` you can reference in Copilot Chat.
+Generates `.vscode/cinacoin-prompts.md` you can reference in Copilot Chat.
 
 ---
 
@@ -186,17 +186,17 @@ Generates `.vscode/cinaconnect-prompts.md` you can reference in Copilot Chat.
 
 ### Wallet Connection (React)
 
-**Prompt for AI:** *"Generate a wallet connection component with CinaConnect"*
+**Prompt for AI:** *"Generate a wallet connection component with Cinacoin"*
 
 ```tsx
-import { OnuxProvider, useOnux, useOnuxAccount } from '@cinaconnect/react'
-import { mainnet, polygon, arbitrum } from '@cinaconnect/chains'
+import { OnuxProvider, useOnux, useOnuxAccount } from '@cinacoin/react'
+import { mainnet, polygon, arbitrum } from '@cinacoin/chains'
 
 function App() {
   return (
     <OnuxProvider
       projectId={import.meta.env.VITE_PROJECT_ID}
-      relayUrl="wss://relay.cinaconnect.com/v1"
+      relayUrl="wss://relay.cinacoin.com/v1"
       chains={[mainnet, polygon, arbitrum]}
       metadata={{
         name: 'My App',
@@ -229,11 +229,11 @@ function Main() {
 
 ### SIWE Authentication
 
-**Prompt for AI:** *"Generate a SIWE authentication flow with CinaConnect"*
+**Prompt for AI:** *"Generate a SIWE authentication flow with Cinacoin"*
 
 ```tsx
-import { useSIWE } from '@cinaconnect/siwe'
-import { useOnuxAccount } from '@cinaconnect/react'
+import { useSIWE } from '@cinacoin/siwe'
+import { useOnuxAccount } from '@cinacoin/react'
 
 function SignIn() {
   const { address } = useOnuxAccount()
@@ -273,12 +273,12 @@ function SignIn() {
 
 ### Swap Integration
 
-**Prompt for AI:** *"Generate a token swap component with CinaConnect SwapSDK"*
+**Prompt for AI:** *"Generate a token swap component with Cinacoin SwapSDK"*
 
 ```tsx
 import { useState } from 'react'
-import { SwapSDK } from '@cinaconnect/swap-sdk'
-import { useOnuxAccount } from '@cinaconnect/react'
+import { SwapSDK } from '@cinacoin/swap-sdk'
+import { useOnuxAccount } from '@cinacoin/react'
 
 const swapSDK = new SwapSDK({ chainId: 1 })
 
@@ -351,11 +351,11 @@ function SwapWidget() {
 
 ### Multi-Chain Setup
 
-**Prompt for AI:** *"Generate a multi-chain configuration with CinaConnect"*
+**Prompt for AI:** *"Generate a multi-chain configuration with Cinacoin"*
 
 ```typescript
-import { mainnet, polygon, arbitrum, base, optimism, bsc } from '@cinaconnect/chains'
-import { defineChain } from '@cinaconnect/chains'
+import { mainnet, polygon, arbitrum, base, optimism, bsc } from '@cinacoin/chains'
+import { defineChain } from '@cinacoin/chains'
 
 // Pre-configured production chains
 const productionChains = [mainnet, polygon, arbitrum, base]
@@ -386,11 +386,11 @@ const chains = process.env.NODE_ENV === 'production'
 
 ### Social Login
 
-**Prompt for AI:** *"Generate a social login flow with CinaConnect"*
+**Prompt for AI:** *"Generate a social login flow with Cinacoin"*
 
 ```tsx
 import { useState } from 'react'
-import { SocialLogin } from '@cinaconnect/social-login'
+import { SocialLogin } from '@cinacoin/social-login'
 
 const socialLogin = new SocialLogin({
   apiKey: import.meta.env.VITE_MAGIC_API_KEY,
@@ -471,11 +471,11 @@ Create your own AI skill for project-specific patterns:
 
 ```bash
 # Create a new skill
-cinaconnect skills create my-skill
+cinacoin skills create my-skill
 
 # This generates:
-# .cinaconnect/skills/my-skill/SKILL.md
-# .cinaconnect/skills/my-skill/templates/
+# .cinacoin/skills/my-skill/SKILL.md
+# .cinacoin/skills/my-skill/templates/
 ```
 
 **Example SKILL.md:**
@@ -484,10 +484,10 @@ cinaconnect skills create my-skill
 # My Project Skill
 
 ## Context
-This project uses CinaConnect with Next.js App Router and Wagmi.
+This project uses Cinacoin with Next.js App Router and Wagmi.
 
 ## Patterns
-- Always use 'use client' for CinaConnect components
+- Always use 'use client' for Cinacoin components
 - Wrap providers in root layout
 - Use viem for chain interactions
 - Error codes: see docs/guide/error-codes.md
@@ -506,29 +506,29 @@ This project uses CinaConnect with Next.js App Router and Wagmi.
 
 ```bash
 # Update skills first
-cinaconnect skills update
+cinacoin skills update
 
 # Check available skills
-cinaconnect skills list
+cinacoin skills list
 ```
 
 ### Generated code doesn't compile
 
-1. Check your `@cinaconnect` package versions match the skill's target version
+1. Check your `@cinacoin` package versions match the skill's target version
 2. Verify peer dependencies are installed
-3. Run `cinaconnect skills add <name> --force` to regenerate
+3. Run `cinacoin skills add <name> --force` to regenerate
 
-### AI doesn't recognize CinaConnect imports
+### AI doesn't recognize Cinacoin imports
 
 Ensure the skill context file is in your project root:
 
 ```bash
 # Regenerate context for your editor
-cinaconnect skills add --format cursor    # for Cursor
-cinaconnect skills add --format copilot   # for GitHub Copilot
-cinaconnect skills add --format claude    # for Claude
+cinacoin skills add --format cursor    # for Cursor
+cinacoin skills add --format copilot   # for GitHub Copilot
+cinacoin skills add --format claude    # for Claude
 ```
 
 ---
 
-*AI Skills Integration Guide — CinaConnect Documentation*
+*AI Skills Integration Guide — Cinacoin Documentation*

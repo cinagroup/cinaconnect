@@ -1,4 +1,4 @@
-/// Core type definitions for the CinaConnect Flutter SDK.
+/// Core type definitions for the Cinacoin Flutter SDK.
 ///
 /// These types mirror the TypeScript core-sdk types.ts API surface.
 

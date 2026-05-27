@@ -1,5 +1,5 @@
 /**
- * Image Optimization for CinaConnect Wallet Icons
+ * Image Optimization for Cinacoin Wallet Icons
  *
  * Lazy-loads wallet icons using IntersectionObserver and provides
  * a fallback for environments where the API is unavailable.

@@ -1,10 +1,10 @@
-# GitHub Release Notes — CinaConnect v0.2.0
+# GitHub Release Notes — Cinacoin v0.2.0
 
 ---
 
 ## Release v0.2.0 — Connect Everything On-Chain
 
-CinaConnect v0.2.0 is our largest release to date — **72 packages published to npm**, covering the full spectrum of Web3 development: multi-chain adapters, framework SDKs, authentication, smart accounts, payments, infrastructure, and developer tools.
+Cinacoin v0.2.0 is our largest release to date — **72 packages published to npm**, covering the full spectrum of Web3 development: multi-chain adapters, framework SDKs, authentication, smart accounts, payments, infrastructure, and developer tools.
 
 ### 🎉 Highlights
 
@@ -20,87 +20,87 @@ CinaConnect v0.2.0 is our largest release to date — **72 packages published to
 ### 📦 Full Package List
 
 #### Core
-- `@cinaconnect/core-sdk` — Core SDK (SignClient, Pairing API, Universal Provider)
-- `@cinaconnect/walletconnect-v2` — WalletConnect v2 protocol integration
-- `@cinaconnect/chains` — Chain definition registry (300+ chains)
+- `@cinacoin/core-sdk` — Core SDK (SignClient, Pairing API, Universal Provider)
+- `@cinacoin/walletconnect-v2` — WalletConnect v2 protocol integration
+- `@cinacoin/chains` — Chain definition registry (300+ chains)
 
 #### Chain Adapters (11)
-- `@cinaconnect/adapter-ethereum` — EVM (Wagmi / Ethers)
-- `@cinaconnect/adapter-solana` — Solana
-- `@cinaconnect/adapter-bitcoin` — Bitcoin (BIP-122)
-- `@cinaconnect/adapter-ton` — TON
-- `@cinaconnect/adapter-tron` — TRON
-- `@cinaconnect/adapter-cosmos` — Cosmos
-- `@cinaconnect/adapter-sui` — Sui
-- `@cinaconnect/adapter-starknet` — Starknet
-- `@cinaconnect/adapter-near` — NEAR
-- `@cinaconnect/adapter-hedera` — Hedera
-- `@cinaconnect/adapter-xrpl` — XRPL
+- `@cinacoin/adapter-ethereum` — EVM (Wagmi / Ethers)
+- `@cinacoin/adapter-solana` — Solana
+- `@cinacoin/adapter-bitcoin` — Bitcoin (BIP-122)
+- `@cinacoin/adapter-ton` — TON
+- `@cinacoin/adapter-tron` — TRON
+- `@cinacoin/adapter-cosmos` — Cosmos
+- `@cinacoin/adapter-sui` — Sui
+- `@cinacoin/adapter-starknet` — Starknet
+- `@cinacoin/adapter-near` — NEAR
+- `@cinacoin/adapter-hedera` — Hedera
+- `@cinacoin/adapter-xrpl` — XRPL
 
 #### Framework SDKs (12)
-- `@cinaconnect/react` — React + EIP-5792 hooks
-- `@cinaconnect/next` — Next.js App Router
-- `@cinaconnect/vue` — Vue 3
-- `@cinaconnect/svelte` — Svelte 4/5
-- `@cinaconnect/angular` — Angular
-- `@cinaconnect/nuxt` — Nuxt
-- `@cinaconnect/react-native` — React Native
-- `@cinaconnect/flutter-dart` — Flutter/Dart
-- `@cinaconnect/android-kotlin` — Android (Kotlin)
-- `@cinaconnect/ios-swift` — iOS (Swift)
-- `@cinaconnect/unity-csharp` — Unity (C#)
-- `@cinaconnect/dotnet` — .NET (C#)
+- `@cinacoin/react` — React + EIP-5792 hooks
+- `@cinacoin/next` — Next.js App Router
+- `@cinacoin/vue` — Vue 3
+- `@cinacoin/svelte` — Svelte 4/5
+- `@cinacoin/angular` — Angular
+- `@cinacoin/nuxt` — Nuxt
+- `@cinacoin/react-native` — React Native
+- `@cinacoin/flutter-dart` — Flutter/Dart
+- `@cinacoin/android-kotlin` — Android (Kotlin)
+- `@cinacoin/ios-swift` — iOS (Swift)
+- `@cinacoin/unity-csharp` — Unity (C#)
+- `@cinacoin/dotnet` — .NET (C#)
 
 #### Authentication (4)
-- `@cinaconnect/siwe` — Sign-In With Ethereum
-- `@cinaconnect/siwx` — Sign-In With X (multi-chain)
-- `@cinaconnect/social-login` — Email & social login
-- `@cinaconnect/passkey-auth` — Passkey / biometric
+- `@cinacoin/siwe` — Sign-In With Ethereum
+- `@cinacoin/siwx` — Sign-In With X (multi-chain)
+- `@cinacoin/social-login` — Email & social login
+- `@cinacoin/passkey-auth` — Passkey / biometric
 
 #### Smart Accounts (6)
-- `@cinaconnect/aa-sdk` — ERC-4337 Account Abstraction
-- `@cinaconnect/bundler` — ERC-4337 Bundler (Rust)
-- `@cinaconnect/paymaster` — ERC-7677 Paymaster
-- `@cinaconnect/erc6492` — ERC-6492 signature verification (Rust)
-- `@cinaconnect/session-keys` — Ephemeral session keys
-- `@cinaconnect/ens-resolver` — ENS / readable names
+- `@cinacoin/aa-sdk` — ERC-4337 Account Abstraction
+- `@cinacoin/bundler` — ERC-4337 Bundler (Rust)
+- `@cinacoin/paymaster` — ERC-7677 Paymaster
+- `@cinacoin/erc6492` — ERC-6492 signature verification (Rust)
+- `@cinacoin/session-keys` — Ephemeral session keys
+- `@cinacoin/ens-resolver` — ENS / readable names
 
 #### Payments (5)
-- `@cinaconnect/swap-sdk` — DEX aggregator interface
-- `@cinaconnect/onramp-sdk` — Fiat-to-crypto on-ramp
-- `@cinaconnect/pay-ui` — Payment UI components
-- `@cinaconnect/batch-transaction` — Batch transactions
-- `@cinaconnect/deposit` — Deposit utilities
+- `@cinacoin/swap-sdk` — DEX aggregator interface
+- `@cinacoin/onramp-sdk` — Fiat-to-crypto on-ramp
+- `@cinacoin/pay-ui` — Payment UI components
+- `@cinacoin/batch-transaction` — Batch transactions
+- `@cinacoin/deposit` — Deposit utilities
 
 #### Infrastructure (4)
-- `@cinaconnect/relay-server` — WebSocket relay (Rust)
-- `@cinaconnect/notify-server` — Notification server
-- `@cinaconnect/push-server` — Push notification server (Rust)
-- `@cinaconnect/cdn` — CDN asset delivery
+- `@cinacoin/relay-server` — WebSocket relay (Rust)
+- `@cinacoin/notify-server` — Notification server
+- `@cinacoin/push-server` — Push notification server (Rust)
+- `@cinacoin/cdn` — CDN asset delivery
 
 #### Developer Tools (20)
-- `@cinaconnect/cli` — CLI scaffolding
-- `@cinaconnect/testing` — Mock providers
-- `@cinaconnect/codemod` — Reown/AppKit migration
-- `@cinaconnect/wallet-recommender` — Wallet recommendation
-- `@cinaconnect/gas-estimator` — Gas estimation
-- `@cinaconnect/token-list` — Token registry
-- `@cinaconnect/analytics` — Connection analytics
-- `@cinaconnect/config` — Remote config
-- `@cinaconnect/design-tokens` — CSS tokens
-- `@cinaconnect/explorer` — Explorer components
-- `@cinaconnect/blockchain-api` — REST API
-- `@cinaconnect/wallet-buttons` — Button components
-- `@cinaconnect/custom-connectors` — Connector framework
-- `@cinaconnect/multiwallet` — Multi-wallet management
-- `@cinaconnect/kyc` — KYC compliance
-- `@cinaconnect/cross-chain-sync` — Cross-chain sync
-- `@cinaconnect/safe-decoder` — Safe TX decoder (Rust)
-- `@cinaconnect/travel-rule-demo` — Travel Rule demo
+- `@cinacoin/cli` — CLI scaffolding
+- `@cinacoin/testing` — Mock providers
+- `@cinacoin/codemod` — Reown/AppKit migration
+- `@cinacoin/wallet-recommender` — Wallet recommendation
+- `@cinacoin/gas-estimator` — Gas estimation
+- `@cinacoin/token-list` — Token registry
+- `@cinacoin/analytics` — Connection analytics
+- `@cinacoin/config` — Remote config
+- `@cinacoin/design-tokens` — CSS tokens
+- `@cinacoin/explorer` — Explorer components
+- `@cinacoin/blockchain-api` — REST API
+- `@cinacoin/wallet-buttons` — Button components
+- `@cinacoin/custom-connectors` — Connector framework
+- `@cinacoin/multiwallet` — Multi-wallet management
+- `@cinacoin/kyc` — KYC compliance
+- `@cinacoin/cross-chain-sync` — Cross-chain sync
+- `@cinacoin/safe-decoder` — Safe TX decoder (Rust)
+- `@cinacoin/travel-rule-demo` — Travel Rule demo
 
 #### Platform Integrations (2)
-- `@cinaconnect/telegram-miniapp` — Telegram Mini Apps
-- `@cinaconnect/farcaster-miniapp` — Farcaster Mini Apps
+- `@cinacoin/telegram-miniapp` — Telegram Mini Apps
+- `@cinacoin/farcaster-miniapp` — Farcaster Mini Apps
 
 ### 🔐 Security Improvements
 
@@ -111,20 +111,20 @@ CinaConnect v0.2.0 is our largest release to date — **72 packages published to
 
 ### ⚠️ Breaking Changes
 
-- `encrypt()` and `decrypt()` in `@cinaconnect/core-sdk` are now **synchronous** (removed `async`)
+- `encrypt()` and `decrypt()` in `@cinacoin/core-sdk` are now **synchronous** (removed `async`)
 - If you were using these with `await`, you can safely remove the `await` keyword
 
 ### 🚀 Quick Start
 
 ```bash
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 ```
 
 Or clone the full monorepo:
 
 ```bash
-git clone https://github.com/cinaconnect/cinaconnect.git
-cd cinaconnect
+git clone https://github.com/cinagroup/Cinacoin.git
+cd cinacoin
 pnpm install
 pnpm run dev --filter=demo
 # → http://localhost:3000
@@ -138,7 +138,7 @@ pnpm run dev --filter=demo
 - [Migration from Reown](./docs/guide/migrate-from-reown.md)
 - [Security Best Practices](./docs/security/best-practices.md)
 - [FAQ](./docs/faq.md)
-- [Full API Reference](https://docs.cinaconnect.io)
+- [Full API Reference](https://docs.cinacoin.io)
 
 ### 🔮 What's Next (v0.2.1 → v0.3.0)
 
@@ -150,6 +150,6 @@ pnpm run dev --filter=demo
 
 ---
 
-**Full Changelog:** [v0.1.0 → v0.2.0](https://github.com/cinaconnect/cinaconnect/compare/v0.1.0...v0.2.0)
+**Full Changelog:** [v0.1.0 → v0.2.0](https://github.com/cinagroup/Cinacoin/compare/v0.1.0...v0.2.0)
 
 **CinaGroup** — *Connect Everything On-Chain* 🔢

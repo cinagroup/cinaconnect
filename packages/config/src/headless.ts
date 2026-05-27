@@ -2,7 +2,7 @@ import {
   createClient,
   type Client,
   type ClientOptions,
-} from "@cinaconnect/core-sdk";
+} from "@cinacoin/core-sdk";
 
 /**
  * Options for creating a headless SDK client.
@@ -19,11 +19,11 @@ export interface HeadlessClientOptions extends ClientOptions {
 
 /**
  * A headless SDK client.  Returns the full `Client` interface from
- * `@cinaconnect/core-sdk` but without any built-in UI components.
+ * `@cinacoin/core-sdk` but without any built-in UI components.
  *
  * @example
  * ```ts
- * import { createHeadlessClient } from "@cinaconnect/config";
+ * import { createHeadlessClient } from "@cinacoin/config";
  *
  * const client = createHeadlessClient({
  *   projectId: "proj_abc123",
@@ -49,7 +49,7 @@ export interface HeadlessClient extends Client {
 /**
  * Create a headless SDK client with no UI.
  *
- * The returned `HeadlessClient` gives you the full `@cinaconnect/core-sdk`
+ * The returned `HeadlessClient` gives you the full `@cinacoin/core-sdk`
  * API so you can build your own UI on top.
  *
  * @param options - Project + wallet options.

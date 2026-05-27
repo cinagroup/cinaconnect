@@ -1,5 +1,5 @@
 /**
- * Passkey authentication types for @cinaconnect/passkey-auth
+ * Passkey authentication types for @cinacoin/passkey-auth
  */
 export interface PublicKeyCredentialCreationOptionsJSON {
     rp: {

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/adapter-xrpl",
+  "name": "@cinacoin/adapter-xrpl",
   "version": "1.0.0",
-  "description": "XRP Ledger chain adapter for CinaConnect — Xaman (formerly Xumm), Fireblocks, Ledger",
+  "description": "XRP Ledger chain adapter for Cinacoin — Xaman (formerly Xumm), Fireblocks, Ledger",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
   "peerDependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {
     "xrpl": "^4.0.0"
@@ -26,5 +26,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

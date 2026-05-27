@@ -1,8 +1,8 @@
 {
-  "name": "cinaconnect-rpc-proxy",
+  "name": "cinacoin-rpc-proxy",
   "version": "1.0.0",
   "private": true,
-  "description": "CinaConnect RPC Proxy — Cloudflare Worker",
+  "description": "Cinacoin RPC Proxy — Cloudflare Worker",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",

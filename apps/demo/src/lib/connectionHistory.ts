@@ -1,6 +1,6 @@
 /** Connection history stored in localStorage. */
 
-const STORAGE_KEY = 'cinaconnect_connection_history';
+const STORAGE_KEY = 'cinacoin_connection_history';
 
 export interface ConnectionRecord {
   address: string;

@@ -37,7 +37,7 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinaCoinContext } from './CinaCoinProvider.js';
 
 /** Props for the QRScanner component. */
 export interface QRScannerProps {
@@ -73,7 +73,7 @@ export function QRScanner({
   scanFrameColor,
   devMode = __DEV__,
 }: QRScannerProps): JSX.Element {
-  const { connectWithUri, connect, themeColors, wcUri } = useCinaConnectContext();
+  const { connectWithUri, connect, themeColors, wcUri } = useCinaCoinContext();
   const [scanning, setScanning] = useState(false);
   const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -168,7 +168,7 @@ export function QRScanner({
     // Use the existing pairing URI, or fall back to a test URI
     const testUri =
       wcUri ??
-      'wc:7f4b7e3c-1a2b-4c5d-8e9f-0a1b2c3d4e5f@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinaconnect.io%2Fv1&symKey=abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
+      'wc:7f4b7e3c-1a2b-4c5d-8e9f-0a1b2c3d4e5f@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinacoin.io%2Fv1&symKey=abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
 
     connectWithUri(testUri)
       .then(() => {
@@ -194,7 +194,7 @@ export function QRScanner({
       return (
         <View style={styles.cameraPlaceholder}>
           <Text style={styles.cameraPlaceholderText}>
-            Camera permission {'hasPermission' === 'true' ? 'granted' : 'required'}
+            Camera permission {hasPermission ? 'granted' : 'required'}
           </Text>
           <Text style={styles.cameraPlaceholderSubtext}>
             react-native-vision-camera must be linked to use real scanning.

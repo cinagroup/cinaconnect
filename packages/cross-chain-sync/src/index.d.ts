@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/cross-chain-sync
+ * @cinacoin/cross-chain-sync
  *
- * CinaConnect Cross-Chain Account Sync — unified state and identity across
+ * Cinacoin Cross-Chain Account Sync — unified state and identity across
  * EVM/Solana/BTC/TON/TRON/Polkadot.
  *
  * @example
@@ -11,7 +11,7 @@
  *   CrossChainIdentityManager,
  *   syncEvmState,
  *   InMemoryStorage,
- * } from '@cinaconnect/cross-chain-sync';
+ * } from '@cinacoin/cross-chain-sync';
  *
  * const storage = new InMemoryStorage();
  * const sync = new StateSync(storage);

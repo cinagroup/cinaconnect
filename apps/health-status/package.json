@@ -2,7 +2,7 @@
   "name": "health-status",
   "version": "0.1.0",
   "private": true,
-  "description": "CinaConnect Public Health Status Page",
+  "description": "Cinacoin Public Health Status Page",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

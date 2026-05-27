@@ -1,6 +1,6 @@
 # Relay Server
 
-> `@cinaconnect/relay-server` — Self-hosted WebSocket relay server in Rust.
+> `@cinacoin/relay-server` — Self-hosted WebSocket relay server in Rust.
 
 ## Overview
 

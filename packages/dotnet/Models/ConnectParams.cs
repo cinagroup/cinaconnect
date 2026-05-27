@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace CinaConnect.Models;
+namespace Cinacoin.Models;
 
 /// <summary>
 /// Connection parameters for establishing a wallet connection.

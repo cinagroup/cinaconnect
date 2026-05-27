@@ -1,7 +1,7 @@
 /**
- * CinaConnect Paymaster Deployment Script
+ * Cinacoin Paymaster Deployment Script
  *
- * Deploys CinaConnectPaymaster, VerifyingPaymaster, and TokenPaymaster
+ * Deploys CinacoinPaymaster, VerifyingPaymaster, and TokenPaymaster
  * to the configured network using viem.
  *
  * Usage:

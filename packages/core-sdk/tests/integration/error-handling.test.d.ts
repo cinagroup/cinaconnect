@@ -1,5 +1,5 @@
 /**
- * Error handling integration tests for the CinaConnect Core SDK.
+ * Error handling integration tests for the Cinacoin Core SDK.
  *
  * Tests network errors, wallet rejection, and various failure scenarios.
  */

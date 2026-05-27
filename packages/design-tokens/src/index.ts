@@ -1,10 +1,10 @@
 /**
- * @cinaconnect/design-tokens
+ * @cinacoin/design-tokens
  *
  * Exports design tokens as both CSS variable strings and JS objects.
  *
  * Usage:
- *   import { cssVariables, tokens } from '@cinaconnect/design-tokens';
+ *   import { cssVariables, tokens } from '@cinacoin/design-tokens';
  *   // cssVariables  →  string of "--ocx-*: value;\n" lines
  *   // tokens.dark   →  JS object with all resolved values for the dark theme
  */

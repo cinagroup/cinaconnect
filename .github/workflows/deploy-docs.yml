@@ -71,7 +71,7 @@ jobs:
       contents: read
     environment:
       name: production
-      url: https://cinaconnect-docs.pages.dev
+      url: https://cinacoin-docs.pages.dev
     steps:
       - uses: actions/checkout@v4
 
@@ -96,7 +96,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: >-
             pages deploy docs-site/docs/.vitepress/dist
-            --project-name=cinaconnect-docs
+            --project-name=cinacoin-docs
             --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}

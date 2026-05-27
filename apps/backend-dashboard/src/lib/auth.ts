@@ -1,7 +1,7 @@
 // Client-side SIWE-like wallet authentication for static-export Next.js dashboard.
 // No server-side verification — address ownership is proven via personal_sign.
 
-const SESSION_KEY = "cinaconnect_auth_session";
+const SESSION_KEY = "cinacoin_auth_session";
 const SESSION_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export interface AuthSession {
@@ -21,8 +21,8 @@ export function createSiweMessage(
   address: string,
   nonce: string
 ): string {
-  const domain = typeof window !== "undefined" ? window.location.hostname : "cinaconnect.local";
-  const uri = typeof window !== "undefined" ? window.location.origin : "https://cinaconnect.local";
+  const domain = typeof window !== "undefined" ? window.location.hostname : "cinacoin.local";
+  const uri = typeof window !== "undefined" ? window.location.origin : "https://cinacoin.local";
   const now = new Date();
   const issuedAt = now.toISOString();
   const expiresAt = new Date(now.getTime() + SESSION_TTL_MS).toISOString();
@@ -30,7 +30,7 @@ export function createSiweMessage(
   return (
     `${domain} wants you to sign in with your Ethereum account:\n` +
     `${address}\n\n` +
-    `Sign in to the CinaConnect Backend Dashboard.\n\n` +
+    `Sign in to the Cinacoin Backend Dashboard.\n\n` +
     `URI: ${uri}\n` +
     `Version: 1\n` +
     `Chain ID: 1\n` +

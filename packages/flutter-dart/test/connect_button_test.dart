@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinaconnect/cinaconnect.dart';
+import 'package:cinacoin/cinacoin.dart';
 
 void main() {
   group('ConnectButton', () {
@@ -8,7 +8,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.disconnected,
               label: 'Connect Wallet',
             ),
@@ -23,7 +23,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.connecting,
             ),
           ),
@@ -38,7 +38,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.connected,
               account: '0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18',
             ),
@@ -53,7 +53,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.connected,
               account: '0x1234567890abcdef1234567890abcdef12345678',
               balance: '1.5',
@@ -71,7 +71,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.connected,
               account: '0x1234567890abcdef1234567890abcdef12345678',
               showAvatar: true,
@@ -87,7 +87,7 @@ void main() {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
-            body: CinaConnectConnectButton(
+            body: CinacoinConnectButton(
               status: ConnectionStatus.error,
             ),
           ),

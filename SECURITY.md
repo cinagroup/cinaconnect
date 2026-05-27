@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of CinaConnect seriously. If you discover a security vulnerability, please follow this process:
+We take the security of Cinacoin seriously. If you discover a security vulnerability, please follow this process:
 
 ### 1. Do Not Open a Public Issue
 
@@ -16,7 +16,7 @@ We take the security of CinaConnect seriously. If you discover a security vulner
 
 ### 2. Send a Private Report
 
-Email us at **[security@cinaconnect.dev](mailto:security@cinaconnect.dev)** (or use the GitHub Security Advisories feature if available) with:
+Email us at **[security@cinacoin.dev](mailto:security@cinacoin.dev)** (or use the GitHub Security Advisories feature if available) with:
 
 - A description of the vulnerability
 - Steps to reproduce the issue

@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/wallet-recovery",
+  "name": "@cinacoin/wallet-recovery",
   "version": "0.2.0",
-  "description": "CinaConnect Wallet Recovery — Shamir's Secret Sharing with multi-provider wallet recovery",
+  "description": "Cinacoin Wallet Recovery — Shamir's Secret Sharing with multi-provider wallet recovery",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }

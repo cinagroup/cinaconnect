@@ -369,3 +369,258 @@ describe('decodeSS58 extended', () => {
     expect(decodeSS58('1111111111111111111111111111111111111111111111111')).toBeNull();
   });
 });
+
+/* ------------------------------------------------------------------ */
+/*  SCALE Codec — Compact Encoding/Decoding                             */
+/* ------------------------------------------------------------------ */
+
+describe('SCALE Compact decoding', () => {
+  let adapter: PolkadotChainAdapter;
+  beforeEach(() => { adapter = new PolkadotChainAdapter(); });
+  const _decodeCompact = (bytes: Uint8Array, offset?: number) =>
+    (adapter as any)._scaleDecodeCompact(bytes, offset ?? 0);
+
+  it('decodes single-byte mode (mode 00)', () => {
+    // value 0 << 2 = 0, mode 00
+    expect(_decodeCompact(new Uint8Array([0b000000_00]))).toEqual({ value: 0n, bytesRead: 1 });
+    // value 1 << 2 = 4, mode 00
+    expect(_decodeCompact(new Uint8Array([0b000001_00]))).toEqual({ value: 1n, bytesRead: 1 });
+    // value 63 << 2 = 252, mode 00  (max for single-byte)
+    expect(_decodeCompact(new Uint8Array([0b111111_00]))).toEqual({ value: 63n, bytesRead: 1 });
+  });
+
+  it('decodes two-byte mode (mode 01)', () => {
+    // (value << 2) | 01 = (1 << 2) | 01 = 0b000001_01 = 5
+    // value = 16383 << 2 = 0xFFFC, then + 01 = 0xFFFD
+    const bytes = new Uint8Array([0b111111_01, 0xFF]);
+    expect(_decodeCompact(bytes)).toEqual({ value: 16383n, bytesRead: 2 });
+  });
+
+  it('decodes four-byte mode (mode 10)', () => {
+    // value = 1073741823 << 2 | 0b10 => 0xFFFFFFFE
+    const bytes = new Uint8Array([0b111111_10, 0xFF, 0xFF, 0xFF]);
+    // 0xFFFFFFFE >> 2 = 0x3FFFFFFF = 1073741823
+    // Note: JS bitwise operations truncate to signed 32-bit, so we test what the impl returns
+    expect(_decodeCompact(bytes)).toEqual({ value: 1073741823n, bytesRead: 4 });
+  });
+
+  it('decodes big-int mode (mode 11)', () => {
+    // lenExp = 0 => byteCount = 4, value in 4 bytes after prefix
+    // prefix = (0 << 2) | 0b11 = 0b000000_11 = 3
+    const bytes = new Uint8Array([0b000000_11, 0x01, 0x02, 0x03, 0x04]);
+    // value = 0x04030201 = 67305985
+    expect(_decodeCompact(bytes)).toEqual({ value: 67305985n, bytesRead: 5 });
+  });
+
+  it('throws on empty input', () => {
+    expect(() => _decodeCompact(new Uint8Array([]))).toThrow('offset 0 beyond 0 bytes');
+  });
+
+  it('throws on insufficient bytes for mode 01', () => {
+    expect(() => _decodeCompact(new Uint8Array([0b000000_01]))).toThrow('need 2 bytes');
+  });
+
+  it('throws on insufficient bytes for mode 10', () => {
+    expect(() => _decodeCompact(new Uint8Array([0b000000_10, 0x00]))).toThrow('need 4 bytes');
+  });
+
+  it('throws on insufficient bytes for mode 11', () => {
+    // lenExp=0 => need 5 bytes, only provide 2
+    expect(() => _decodeCompact(new Uint8Array([0b000000_11, 0x01]))).toThrow('need 5 bytes');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  SCALE Codec — u128 Encoding/Decoding                                */
+/* ------------------------------------------------------------------ */
+
+describe('SCALE u128 decoding', () => {
+  let adapter: PolkadotChainAdapter;
+  beforeEach(() => { adapter = new PolkadotChainAdapter(); });
+  const _decodeU128 = (bytes: Uint8Array, offset?: number) =>
+    (adapter as any)._scaleDecodeU128(bytes, offset ?? 0);
+
+  it('decodes zero', () => {
+    const bytes = new Uint8Array(16);
+    expect(_decodeU128(bytes)).toBe(0n);
+  });
+
+  it('decodes 1 in little-endian', () => {
+    const bytes = new Uint8Array(16);
+    bytes[0] = 1;
+    expect(_decodeU128(bytes)).toBe(1n);
+  });
+
+  it('decodes 256 (0x100) in little-endian', () => {
+    const bytes = new Uint8Array(16);
+    bytes[1] = 1;
+    expect(_decodeU128(bytes)).toBe(256n);
+  });
+
+  it('decodes a large u128 value', () => {
+    // 1 DOT = 10^10 plancks
+    const plancks = 12_345_678_901_234_567_890n;
+    const bytes = new Uint8Array(16);
+    for (let i = 0; i < 16; i++) {
+      bytes[i] = Number((plancks >> BigInt(i * 8)) & 0xffn);
+    }
+    expect(_decodeU128(bytes)).toBe(plancks);
+  });
+
+  it('decodes max u128', () => {
+    const bytes = new Uint8Array(16).fill(0xff);
+    expect(_decodeU128(bytes)).toBe((1n << 128n) - 1n);
+  });
+
+  it('decodes at non-zero offset', () => {
+    const bytes = new Uint8Array(20);
+    bytes[4] = 1; // 1 at offset 4
+    expect(_decodeU128(bytes, 4)).toBe(1n);
+  });
+
+  it('throws on insufficient bytes', () => {
+    const bytes = new Uint8Array(10);
+    expect(() => _decodeU128(bytes)).toThrow('need 16 bytes');
+  });
+
+  it('throws on insufficient bytes at offset', () => {
+    const bytes = new Uint8Array(20);
+    expect(() => _decodeU128(bytes, 10)).toThrow('need 16 bytes at offset 10');
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  SCALE Codec — AccountInfo Decoding                                  */
+/* ------------------------------------------------------------------ */
+
+describe('SCALE AccountInfo decoding', () => {
+  let adapter: PolkadotChainAdapter;
+  beforeEach(() => { adapter = new PolkadotChainAdapter(); });
+  const _decodeAccountInfo = (bytes: Uint8Array) =>
+    (adapter as any)._decodeAccountInfo(bytes);
+
+  function buildAccountInfoBytes({
+    nonce = 1,
+    consumers = 0,
+    providers = 1,
+    sufficients = 0,
+    free = 10_000_000_000n,
+    reserved = 0n,
+    frozen = 0n,
+  }: {
+    nonce?: number;
+    consumers?: number;
+    providers?: number;
+    sufficients?: number;
+    free?: bigint;
+    reserved?: bigint;
+    frozen?: bigint;
+  } = {}): Uint8Array {
+    const parts: number[] = [];
+
+    // Encode compact values
+    const encodeCompact = (val: bigint): number[] => {
+      const n = Number(val);
+      if (n <= 63) {
+        return [n << 2];
+      } else if (n <= 16383) {
+        const raw = n << 2 | 0b01;
+        return [raw & 0xff, (raw >> 8) & 0xff];
+      } else {
+        // mode 10 for larger values
+        const raw = n << 2 | 0b10;
+        return [raw & 0xff, (raw >> 8) & 0xff, (raw >> 16) & 0xff, (raw >> 24) & 0xff];
+      }
+    };
+
+    // Encode u128 little-endian
+    const encodeU128 = (val: bigint): number[] => {
+      const bytes: number[] = [];
+      for (let i = 0; i < 16; i++) {
+        bytes.push(Number((val >> BigInt(i * 8)) & 0xffn));
+      }
+      return bytes;
+    };
+
+    parts.push(...encodeCompact(BigInt(nonce)));
+    parts.push(...encodeCompact(BigInt(consumers)));
+    parts.push(...encodeCompact(BigInt(providers)));
+    parts.push(...encodeCompact(BigInt(sufficients)));
+    parts.push(...encodeU128(free));
+    parts.push(...encodeU128(reserved));
+    parts.push(...encodeU128(frozen));
+
+    return new Uint8Array(parts);
+  }
+
+  it('decodes free balance with small nonce', () => {
+    const bytes = buildAccountInfoBytes({ nonce: 1, free: 10_000_000_000n });
+    const result = _decodeAccountInfo(bytes);
+    expect(result.free).toBe('10000000000');
+  });
+
+  it('decodes free balance for zero nonce', () => {
+    const bytes = buildAccountInfoBytes({ nonce: 0, free: 5_000_000_000n });
+    const result = _decodeAccountInfo(bytes);
+    expect(result.free).toBe('5000000000');
+  });
+
+  it('decodes zero free balance', () => {
+    const bytes = buildAccountInfoBytes({ nonce: 5, free: 0n });
+    const result = _decodeAccountInfo(bytes);
+    expect(result.free).toBe('0');
+  });
+
+  it('decodes free balance with non-zero consumers/providers', () => {
+    const bytes = buildAccountInfoBytes({
+      nonce: 42,
+      consumers: 3,
+      providers: 2,
+      sufficients: 1,
+      free: 99_999_999_999n,
+    });
+    const result = _decodeAccountInfo(bytes);
+    expect(result.free).toBe('99999999999');
+  });
+
+  it('throws on too-short data', () => {
+    const bytes = new Uint8Array(10);
+    expect(() => _decodeAccountInfo(bytes)).toThrow();
+  });
+});
+
+/* ------------------------------------------------------------------ */
+/*  SCALE Codec — Storage Key Building                                  */
+/* ------------------------------------------------------------------ */
+
+describe('SCALE storage key building', () => {
+  let adapter: PolkadotChainAdapter;
+  beforeEach(() => { adapter = new PolkadotChainAdapter(); });
+  const _buildStorageKey = (addr: string) =>
+    (adapter as any)._buildStorageKey(addr);
+
+  it('builds a storage key for a valid SS58 address', () => {
+    const key = _buildStorageKey('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
+    expect(key).toMatch(/^0x[a-f0-9]+$/);
+    // System Twox128 (16) + Account Twox128 (16) + Blake2b128Concat (16 hash + 32 pubkey) = 80 bytes
+    // 80 bytes = 160 hex chars + "0x" prefix = 162
+    expect(key.length).toBe(2 + 160);
+  });
+
+  it('builds consistent keys for the same address', () => {
+    const addr = '5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY';
+    const key1 = _buildStorageKey(addr);
+    const key2 = _buildStorageKey(addr);
+    expect(key1).toBe(key2);
+  });
+
+  it('builds different keys for different addresses', () => {
+    const key1 = _buildStorageKey('5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY');
+    const key2 = _buildStorageKey('5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty');
+    expect(key1).not.toBe(key2);
+  });
+
+  it('throws on invalid SS58 address', () => {
+    expect(() => _buildStorageKey('invalid')).toThrow('invalid SS58 address');
+  });
+});

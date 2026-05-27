@@ -1,5 +1,5 @@
 /**
- * Deployment script for CinaConnect Analytics Server
+ * Deployment script for Cinacoin Analytics Server
  * Creates required Cloudflare resources and deploys
  */
 
@@ -23,7 +23,7 @@ function error(msg: string) {
 }
 
 async function main() {
-  log("CinaConnect Analytics Server — Deployment Script");
+  log("Cinacoin Analytics Server — Deployment Script");
   log("=".repeat(50));
 
   // 1. Check prerequisites
@@ -59,7 +59,7 @@ async function main() {
   // 5. Run D1 migrations
   log("Running D1 migrations...");
   try {
-    execSync(`wrangler d1 migrations apply CinaConnectAnalytics --remote`, {
+    execSync(`wrangler d1 migrations apply CinacoinAnalytics --remote`, {
       cwd: PACKAGE_ROOT,
       stdio: "inherit",
     });
@@ -84,13 +84,13 @@ async function main() {
   log("=".repeat(50));
   log("Deployment complete!");
   log("Endpoints:");
-  log("  POST https://cinaconnect-analytics.<account>.workers.dev/v1/events");
-  log("  GET  https://cinaconnect-analytics.<account>.workers.dev/v1/health");
-  log("  GET  https://cinaconnect-analytics.<account>.workers.dev/v1/metrics");
+  log("  POST https://cinacoin-analytics.<account>.workers.dev/v1/events");
+  log("  GET  https://cinacoin-analytics.<account>.workers.dev/v1/health");
+  log("  GET  https://cinacoin-analytics.<account>.workers.dev/v1/metrics");
   log("\nNext steps:");
   log("  1. Set API_KEY: npx wrangler secret put API_KEY");
-  log("  2. Test health: curl https://cinaconnect-analytics.<account>.workers.dev/v1/health");
-  log("  3. Send events: curl -X POST -H 'Content-Type: application/json' -d @events.json https://cinaconnect-analytics.<account>.workers.dev/v1/events");
+  log("  2. Test health: curl https://cinacoin-analytics.<account>.workers.dev/v1/health");
+  log("  3. Send events: curl -X POST -H 'Content-Type: application/json' -d @events.json https://cinacoin-analytics.<account>.workers.dev/v1/events");
 }
 
 async function getDatabaseId(): Promise<string> {
@@ -102,7 +102,7 @@ async function getDatabaseId(): Promise<string> {
     );
     const databases = JSON.parse(output);
     const existing = databases.find(
-      (db: { name: string }) => db.name === "CinaConnectAnalytics"
+      (db: { name: string }) => db.name === "CinacoinAnalytics"
     );
     if (existing) {
       log(`Found existing D1 database: ${existing.uuid}`);
@@ -113,10 +113,10 @@ async function getDatabaseId(): Promise<string> {
   }
 
   // Create new database
-  log("Creating D1 database: CinaConnectAnalytics...");
+  log("Creating D1 database: CinacoinAnalytics...");
   try {
     const output = execSync(
-      `wrangler d1 create CinaConnectAnalytics --json`,
+      `wrangler d1 create CinacoinAnalytics --json`,
       { stdio: "pipe", encoding: "utf8" }
     );
     const result = JSON.parse(output);
@@ -124,7 +124,7 @@ async function getDatabaseId(): Promise<string> {
     return result.uuid;
   } catch {
     warn("Could not create D1 database. Please create manually:");
-    warn("  wrangler d1 create CinaConnectAnalytics");
+    warn("  wrangler d1 create CinacoinAnalytics");
     return "YOUR_D1_DATABASE_ID";
   }
 }

@@ -28,13 +28,13 @@ curl -s -X POST http://erigon-ethereum:8545 \
 ### Step 2: Check Node Logs
 
 ```bash
-kubectl logs statefulset/erigon-ethereum -n cinaconnect --tail=500 | grep -iE "sync|import|error"
+kubectl logs statefulset/erigon-ethereum -n cinacoin --tail=500 | grep -iE "sync|import|error"
 ```
 
 ### Step 3: Check Disk I/O
 
 ```bash
-kubectl exec -it erigon-ethereum-0 -n cinaconnect -- iostat -x 5 3
+kubectl exec -it erigon-ethereum-0 -n cinacoin -- iostat -x 5 3
 ```
 
 Look for:
@@ -44,7 +44,7 @@ Look for:
 ### Step 4: Check Memory Usage
 
 ```bash
-kubectl top pods -n cinaconnect -l app=erigon-ethereum
+kubectl top pods -n cinacoin -l app=erigon-ethereum
 free -h  # if accessible
 ```
 
@@ -68,9 +68,9 @@ echo "Node block: $((16#${NODE_BLOCK#0x}))"
 
 ```bash
 # Increase max_peers in Erigon config
-kubectl edit statefulset erigon-ethereum -n cinaconnect
+kubectl edit statefulset erigon-ethereum -n cinacoin
 # Add: --p2p.maxpeers=200
-kubectl rollout restart statefulset erigon-ethereum -n cinaconnect
+kubectl rollout restart statefulset erigon-ethereum -n cinacoin
 ```
 
 ### If disk I/O is bottlenecked:
@@ -82,17 +82,17 @@ kubectl rollout restart statefulset erigon-ethereum -n cinaconnect
 
 ```bash
 # Option A: Restart (may resume sync)
-kubectl rollout restart statefulset erigon-ethereum -n cinaconnect
+kubectl rollout restart statefulset erigon-ethereum -n cinacoin
 
 # Option B: Restore from snapshot (faster recovery)
 # 1. Stop the node
-kubectl scale statefulset erigon-ethereum -n cinaconnect --replicas=0
+kubectl scale statefulset erigon-ethereum -n cinacoin --replicas=0
 
 # 2. Download latest snapshot to PVC
 # (Use official Erigon snapshots)
 
 # 3. Restart
-kubectl scale statefulset erigon-ethereum -n cinaconnect --replicas=2
+kubectl scale statefulset erigon-ethereum -n cinacoin --replicas=2
 ```
 
 ---

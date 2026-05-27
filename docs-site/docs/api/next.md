@@ -1,11 +1,11 @@
 # Next.js
 
-> `@cinaconnect/next` — Next.js adapter for CinaConnect with App Router support.
+> `@cinacoin/next` — Next.js adapter for Cinacoin with App Router support.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/next @cinaconnect/core-sdk
+npm install @cinacoin/next @cinacoin/core-sdk
 ```
 
 ## Usage
@@ -13,10 +13,10 @@ npm install @cinaconnect/next @cinaconnect/core-sdk
 ```tsx
 // app/providers.tsx
 'use client'
-import { CinaConnectProvider } from '@cinaconnect/next'
+import { CinacoinProvider } from '@cinacoin/next'
 
 export function Providers({ children }) {
-  return <CinaConnectProvider>{children}</CinaConnectProvider>
+  return <CinacoinProvider>{children}</CinacoinProvider>
 }
 ```
 

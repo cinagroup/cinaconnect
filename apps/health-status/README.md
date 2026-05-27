@@ -1,6 +1,6 @@
-# CinaConnect Health Status Page
+# Cinacoin Health Status Page
 
-Public-facing health status page for CinaConnect infrastructure services.
+Public-facing health status page for Cinacoin infrastructure services.
 
 Built with Next.js (static export) and deployed to **Cloudflare Pages**.
 
@@ -34,14 +34,14 @@ The app is deployed to Cloudflare Pages as a static site.
 
 | Environment | URL |
 |---|---|
-| Production | `https://cinaconnect-health-status.pages.dev` |
-| Custom Domain | `status.cinaconnect.com` (configure in Cloudflare dashboard) |
+| Production | `https://cinacoin-health-status.pages.dev` |
+| Custom Domain | `status.cinacoin.com` (configure in Cloudflare dashboard) |
 
 ### Wrangler Configuration
 
 See `wrangler.toml` for build and output settings:
 
-- **Project name:** `cinaconnect-health-status`
+- **Project name:** `cinacoin-health-status`
 - **Build command:** `pnpm --filter health-status build`
 - **Output directory:** `apps/health-status/out/`
 
@@ -61,7 +61,7 @@ Pushes to `main` that touch `apps/health-status/` trigger automatic deployment v
 ```bash
 # Using Wrangler CLI
 npx wrangler pages deploy apps/health-status/out \
-  --project-name=cinaconnect-health-status \
+  --project-name=cinacoin-health-status \
   --branch=main
 
 # Or via the cloudflare/pages-action GitHub Action (see workflow)
@@ -69,10 +69,10 @@ npx wrangler pages deploy apps/health-status/out \
 
 ### Custom Domain
 
-To set up `status.cinaconnect.com`:
+To set up `status.cinacoin.com`:
 
-1. Go to **Cloudflare Pages** → `cinaconnect-health-status` → **Custom domains**
-2. Add `status.cinaconnect.com`
+1. Go to **Cloudflare Pages** → `cinacoin-health-status` → **Custom domains**
+2. Add `status.cinacoin.com`
 3. Cloudflare will automatically provision SSL and configure DNS
 4. Wait for DNS propagation (typically < 5 minutes)
 

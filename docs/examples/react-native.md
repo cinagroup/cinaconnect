@@ -1,6 +1,6 @@
 # React Native 示例
 
-> 移动端 React Native 示例，展示 CinaConnect 移动端集成。
+> 移动端 React Native 示例，展示 Cinacoin 移动端集成。
 
 ## 目录结构
 

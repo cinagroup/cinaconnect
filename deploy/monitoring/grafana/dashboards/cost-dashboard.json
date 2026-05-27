@@ -2,8 +2,8 @@
   "dashboard": {
     "id": null,
     "uid": "cost-tracking",
-    "title": "Cost Tracking — CinaConnect",
-    "tags": ["cinaconnect", "cost"],
+    "title": "Cost Tracking — Cinacoin",
+    "tags": ["cinacoin", "cost"],
     "timezone": "browser",
     "refresh": "5m",
     "time": {
@@ -59,11 +59,11 @@
         "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
         "targets": [
           {
-            "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"cinaconnect\"}[5m])) * 100",
+            "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"cinacoin\"}[5m])) * 100",
             "legendFormat": "CPU Used %"
           },
           {
-            "expr": "sum(container_memory_working_set_bytes{namespace=\"cinaconnect\"}) / sum(kube_pod_container_resource_limits{resource=\"memory\", namespace=\"cinaconnect\"}) * 100",
+            "expr": "sum(container_memory_working_set_bytes{namespace=\"cinacoin\"}) / sum(kube_pod_container_resource_limits{resource=\"memory\", namespace=\"cinacoin\"}) * 100",
             "legendFormat": "Memory Used %"
           }
         ],

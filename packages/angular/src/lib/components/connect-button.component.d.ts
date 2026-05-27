@@ -1,5 +1,5 @@
 import { OnInit, OnDestroy } from '@angular/core';
-import { CinaConnectService } from '../cinaconnect.service.js';
+import { CinacoinService } from '../cinacoin.service.js';
 /**
  * Button component that triggers the wallet connection modal.
  *
@@ -18,7 +18,7 @@ export declare class ConnectButtonComponent implements OnInit, OnDestroy {
     label?: string;
     loading: boolean;
     private _subscription?;
-    constructor(_service: CinaConnectService);
+    constructor(_service: CinacoinService);
     ngOnInit(): void;
     ngOnDestroy(): void;
     get displayLabel(): string;

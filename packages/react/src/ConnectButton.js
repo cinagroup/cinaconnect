@@ -1,10 +1,10 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useRef, useEffect } from 'react';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 /**
  * ConnectButton — React wrapper for the OCX ConnectButton Web Component.
  *
- * Automatically reads connection state from CinaConnectProvider context.
+ * Automatically reads connection state from CinacoinProvider context.
  *
  * ```tsx
  * <ConnectButton variant="primary" size="md" />
@@ -12,7 +12,7 @@ import { useCinaConnectContext } from './CinaConnectProvider.js';
  */
 export function ConnectButton({ label = 'Connect Wallet', variant = 'primary', size = 'md', showBalance = false, showAvatar = false, showNetwork = false, className, style, onClick, onDisconnect, }) {
     const ref = useRef(null);
-    const { account, status, connect, disconnect } = useCinaConnectContext();
+    const { account, status, connect, disconnect } = useCinacoinContext();
     useEffect(() => {
         const el = ref.current;
         if (!el)

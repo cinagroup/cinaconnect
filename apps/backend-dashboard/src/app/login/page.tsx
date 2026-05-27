@@ -42,7 +42,7 @@ export default function LoginPage() {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-indigo-500/20 border border-indigo-500/30 mb-4">
             <span className="text-3xl">🔢</span>
           </div>
-          <h1 className="text-3xl font-bold text-white">CinaConnect</h1>
+          <h1 className="text-3xl font-bold text-white">CinaCoin</h1>
           <p className="text-gray-400 mt-2">Backend Dashboard</p>
         </div>
 
@@ -50,7 +50,7 @@ export default function LoginPage() {
         <div className="bg-[#1a1d2e] border border-[#2a2d3e] rounded-2xl p-8 shadow-2xl">
           <h2 className="text-xl font-semibold text-white mb-2">Sign in with Wallet</h2>
           <p className="text-sm text-gray-400 mb-6">
-            Connect your Ethereum wallet to access the CinaConnect Backend Dashboard.
+            Connect your Ethereum wallet to access the CinaCoin Backend Dashboard.
             A signature will be requested — no gas fees required.
           </p>
 

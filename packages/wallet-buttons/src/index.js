@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/wallet-buttons
+ * @cinacoin/wallet-buttons
  *
  * Direct wallet connection buttons — no modal, no bloat.
  * Connect wallets individually with beautiful, customizable buttons.
@@ -7,8 +7,8 @@
  * @packageDocumentation
  * @example
  * ```tsx
- * import { WalletButton, WalletButtonGroup, WalletConnectButton } from '@cinaconnect/wallet-buttons';
- * import { useWalletButtons } from '@cinaconnect/wallet-buttons';
+ * import { WalletButton, WalletButtonGroup, WalletConnectButton } from '@cinacoin/wallet-buttons';
+ * import { useWalletButtons } from '@cinacoin/wallet-buttons';
  *
  * function App() {
  *   return (

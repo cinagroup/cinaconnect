@@ -1,23 +1,23 @@
 /**
- * @file Nuxt composables for CinaConnect.
+ * @file Nuxt composables for Cinacoin.
  *
  * These are auto-imported into every Nuxt page/component when
- * `@cinaconnect/nuxt` is installed.
+ * `@cinacoin/nuxt` is installed.
  *
  * Includes:
- * - useCinaConnect, useCinaConnectAccount, useCinaConnectNetwork (base)
+ * - useCinacoin, useCinacoinAccount, useCinacoinNetwork (base)
  * - useWalletCapabilities, useSendCalls, useCallsStatus, useAtomicBatch (EIP-5792)
  */
-import type { CinaConnect } from '@cinaconnect/vue'
+import type { Cinacoin } from '@cinacoin/vue'
 import { useNuxtApp } from '#imports'
 
-// Re-export EIP-5792 composables from @cinaconnect/vue for auto-import in Nuxt
+// Re-export EIP-5792 composables from @cinacoin/vue for auto-import in Nuxt
 export {
   useWalletCapabilities,
   useSendCalls,
   useCallsStatus,
   useAtomicBatch,
-} from '@cinaconnect/vue'
+} from '@cinacoin/vue'
 
 export type {
   UseWalletCapabilitiesReturn,
@@ -26,20 +26,20 @@ export type {
   UseAtomicBatchReturn,
   SendCallsOptions,
   AtomicBatchOptions,
-} from '@cinaconnect/vue'
+} from '@cinacoin/vue'
 
 /**
- * Access the CinaConnect application instance.
+ * Access the Cinacoin application instance.
  *
  * @example
  * ```ts
- * const { cinaConnect } = useCinaConnect()
+ * const { cinaConnect } = useCinacoin()
  * await cinaConnect.connect()
  * ```
  */
-export function useCinaConnect() {
+export function useCinacoin() {
   const nuxtApp = useNuxtApp()
-  const cinaConnect = nuxtApp.$cinaConnect as CinaConnect
+  const cinaConnect = nuxtApp.$cinaConnect as Cinacoin
 
   return { cinaConnect }
 }
@@ -49,11 +49,11 @@ export function useCinaConnect() {
  *
  * @example
  * ```ts
- * const { address, isConnected } = useCinaConnectAccount()
+ * const { address, isConnected } = useCinacoinAccount()
  * ```
  */
-export function useCinaConnectAccount() {
-  const { cinaConnect } = useCinaConnect()
+export function useCinacoinAccount() {
+  const { cinaConnect } = useCinacoin()
 
   return {
     /** Connected address, or `undefined`. */
@@ -80,12 +80,12 @@ export function useCinaConnectAccount() {
  *
  * @example
  * ```ts
- * const { networks, switchNetwork } = useCinaConnectNetwork()
+ * const { networks, switchNetwork } = useCinacoinNetwork()
  * switchNetwork('arbitrum')
  * ```
  */
-export function useCinaConnectNetwork() {
-  const { cinaConnect } = useCinaConnect()
+export function useCinacoinNetwork() {
+  const { cinaConnect } = useCinacoin()
 
   /**
    * Switch the connected wallet to the given network.

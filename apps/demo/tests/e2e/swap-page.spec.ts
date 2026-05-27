@@ -59,8 +59,8 @@ test.describe('Swap Page', () => {
     await expect(page.locator('text=Swap requires DEX aggregator API key').first()).toBeVisible();
   });
 
-  test('CinaConnect Swap SDK branding present', async ({ page }) => {
+  test('Cinacoin Swap SDK branding present', async ({ page }) => {
     await expect(page.locator('text=Powered by').first()).toBeVisible();
-    await expect(page.locator('text=CinaConnect Swap SDK').first()).toBeVisible();
+    await expect(page.locator('text=Cinacoin Swap SDK').first()).toBeVisible();
   });
 });

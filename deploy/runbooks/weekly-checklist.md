@@ -1,4 +1,4 @@
-# Weekly Ops Checklist — CinaConnect
+# Weekly Ops Checklist — Cinacoin
 
 ---
 
@@ -25,7 +25,7 @@
 - [ ] TLS certificate expiry > 30 days
 - [ ] Check all ingress TLS: relay, RPC, Grafana
 ```bash
-kubectl get certificates -n cinaconnect
+kubectl get certificates -n cinacoin
 ```
 
 ### [ ] Backup Verification

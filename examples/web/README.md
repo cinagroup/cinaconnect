@@ -1,6 +1,6 @@
-# CinaConnect Web Example
+# Cinacoin Web Example
 
-> 完整的 Web dApp 示例，展示 CinaConnect 核心功能。
+> 完整的 Web dApp 示例，展示 Cinacoin 核心功能。
 
 ## 功能
 
@@ -22,4 +22,4 @@ npm run dev
 
 - React 18 + TypeScript
 - Vite
-- CinaConnect Core SDK + React Adapter
+- Cinacoin Core SDK + React Adapter

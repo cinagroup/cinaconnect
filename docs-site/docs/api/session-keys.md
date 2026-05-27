@@ -1,11 +1,11 @@
 # Session Keys
 
-> `@cinaconnect/session-keys` — Session key management for ERC-4337 smart accounts.
+> `@cinacoin/session-keys` — Session key management for ERC-4337 smart accounts.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/session-keys
+npm install @cinacoin/session-keys
 ```
 
 ## Overview
@@ -15,7 +15,7 @@ Session keys enable temporary signing keys with configurable permissions and lim
 ## Usage
 
 ```typescript
-import { SessionKeys } from '@cinaconnect/session-keys'
+import { SessionKeys } from '@cinacoin/session-keys'
 
 const sessionKeys = new SessionKeys({
   smartAccountAddress: '0x...',

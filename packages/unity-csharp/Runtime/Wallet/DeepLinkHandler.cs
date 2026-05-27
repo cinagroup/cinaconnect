@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace CinaConnect
+namespace Cinacoin
 {
     /// <summary>
     /// Deep link handler for mobile builds (iOS/Android) and desktop.
@@ -225,7 +225,7 @@ namespace CinaConnect
 
         /// Build a WalletConnect v2 deep link callback URL for mobile wallets.
         /// After the wallet approves, it will redirect back to this URL with the session data.
-        public string BuildCallbackUrl(string protocol = "cinaconnect")
+        public string BuildCallbackUrl(string protocol = "cinacoin")
         {
             return $"{protocol}://wc-callback";
         }

@@ -9,8 +9,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@cinaconnect/swap-sdk': path.resolve(__dirname, '../../packages/swap-sdk/src/index.ts'),
-            '@cinaconnect/onramp-sdk': path.resolve(__dirname, '../../packages/onramp-sdk/src/index.ts'),
+            '@cinacoin/swap-sdk': path.resolve(__dirname, '../../packages/swap-sdk/src/index.ts'),
+            '@cinacoin/onramp-sdk': path.resolve(__dirname, '../../packages/onramp-sdk/src/index.ts'),
         },
     },
 });

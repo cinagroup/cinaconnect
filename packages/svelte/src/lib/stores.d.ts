@@ -1,5 +1,5 @@
 /**
- * Svelte stores wrapping @cinaconnect/core-sdk state.
+ * Svelte stores wrapping @cinacoin/core-sdk state.
  *
  * Provides reactive Svelte stores (writable, readable, derived) that
  * mirror the core-sdk state, automatically subscribing to events.
@@ -9,15 +9,15 @@
  * @packageDocumentation
  */
 import { type Readable, type Writable } from 'svelte/store';
-import { Connector } from '@cinaconnect/core-sdk';
-import type { Chain, ConnectionResult, ConnectionStatus } from '@cinaconnect/core-sdk';
+import { Connector } from '@cinacoin/core-sdk';
+import type { Chain, ConnectionResult, ConnectionStatus } from '@cinacoin/core-sdk';
 /**
  * Readable store: whether the wallet is currently connected.
  *
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { isConnected } from '@cinaconnect/svelte';
+ *   import { isConnected } from '@cinacoin/svelte';
  * </script>
  *
  * {#if $isConnected}
@@ -32,7 +32,7 @@ export declare const isConnected: Readable<boolean>;
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { address } from '@cinaconnect/svelte';
+ *   import { address } from '@cinacoin/svelte';
  * </script>
  *
  * <p>Address: {$address ?? 'none'}</p>
@@ -71,24 +71,24 @@ export declare const hasError: Readable<boolean>;
  */
 export declare const chains: Writable<Chain[]>;
 /**
- * Initialize the CinaConnect Svelte stores with a connector.
+ * Initialize the Cinacoin Svelte stores with a connector.
  *
  * Call this once during app setup (e.g., in `+layout.ts` or a root component).
  * Stores automatically subscribe to the connector's events.
  *
- * @param connector - An initialized connector from @cinaconnect/core-sdk.
+ * @param connector - An initialized connector from @cinacoin/core-sdk.
  * @param options - Optional configuration (chains, initial status).
  *
  * @example
  * ```ts
- * import { initCinaConnect } from '@cinaconnect/svelte';
+ * import { initCinacoin } from '@cinacoin/svelte';
  * import { MyConnector } from './my-connector';
  *
  * const connector = new MyConnector();
- * initCinaConnect(connector, { chains: [...] });
+ * initCinacoin(connector, { chains: [...] });
  * ```
  */
-export declare function initCinaConnect(connector: Connector, options?: {
+export declare function initCinacoin(connector: Connector, options?: {
     chains?: Chain[];
 }): void;
 /**
@@ -123,5 +123,5 @@ export declare function switchChain(chainId: number): Promise<void>;
  *
  * Call during app teardown or when re-initializing.
  */
-export declare function resetCinaConnect(): void;
+export declare function resetCinacoin(): void;
 //# sourceMappingURL=stores.d.ts.map

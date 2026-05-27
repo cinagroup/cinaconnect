@@ -1,11 +1,11 @@
 # Cosmos Adapter
 
-> `@cinaconnect/adapter-cosmos` — Cosmos blockchain adapter for CinaConnect.
+> `@cinacoin/adapter-cosmos` — Cosmos blockchain adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-cosmos
+npm install @cinacoin/adapter-cosmos
 ```
 
 ## Overview

@@ -1,6 +1,6 @@
 # Keys Server
 
-> CinaConnect 密钥管理服务 — 安全存储和管理用户加密密钥。
+> Cinacoin 密钥管理服务 — 安全存储和管理用户加密密钥。
 
 ## 架构
 
@@ -100,19 +100,19 @@ GET /v1/metrics
 ### Docker
 
 ```bash
-docker build -t cinaconnect/keys-server:latest .
+docker build -t cinacoin/keys-server:latest .
 docker run -p 3001:3001 \
   -e DATABASE_URL=postgres://user:pass@localhost:5432/keys \
   -e MASTER_ENCRYPTION_KEY=<key> \
-  cinaconnect/keys-server:latest
+  cinacoin/keys-server:latest
 ```
 
 ### Kubernetes
 
 ```bash
-helm install keys-server ./deploy/helm/cinaconnect \
+helm install keys-server ./deploy/helm/cinacoin \
   --set keysServer.replicaCount=2 \
-  --set global.imageRegistry=ghcr.io/cinaconnect
+  --set global.imageRegistry=ghcr.io/cinacoin
 ```
 
 ## 安全

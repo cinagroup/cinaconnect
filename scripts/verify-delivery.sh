@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# verify-delivery.sh — Verify CinaConnect delivery package completeness
+# verify-delivery.sh — Verify CinaCoin delivery package completeness
 #
 # Usage:
 #   ./scripts/verify-delivery.sh              # Full verification
@@ -102,7 +102,7 @@ check_min_count() {
 
 # ── Main ──
 echo ""
-info "CinaConnect — Delivery Verification"
+info "CinaCoin — Delivery Verification"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Repo: $REPO_ROOT"
 echo "  Date: $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
@@ -204,12 +204,12 @@ if [[ "$QUICK" != true ]]; then
   check_file "$REPO_ROOT/LICENSE" "LICENSE file"
 
   # Check key packages exist
-  check_dir "$REPO_ROOT/packages/core-sdk" "@cinaconnect/core-sdk"
-  check_dir "$REPO_ROOT/packages/core-ui" "@cinaconnect/core-ui"
-  check_dir "$REPO_ROOT/packages/react" "@cinaconnect/react"
-  check_dir "$REPO_ROOT/packages/i18n" "@cinaconnect/i18n"
-  check_dir "$REPO_ROOT/packages/cli" "@cinaconnect/cli"
-  check_dir "$REPO_ROOT/packages/bundler" "@cinaconnect/bundler"
+  check_dir "$REPO_ROOT/packages/core-sdk" "@cinacoin/core-sdk"
+  check_dir "$REPO_ROOT/packages/core-ui" "@cinacoin/core-ui"
+  check_dir "$REPO_ROOT/packages/react" "@cinacoin/react"
+  check_dir "$REPO_ROOT/packages/i18n" "@cinacoin/i18n"
+  check_dir "$REPO_ROOT/packages/cli" "@cinacoin/cli"
+  check_dir "$REPO_ROOT/packages/bundler" "@cinacoin/bundler"
 fi
 
 # ── 6. Deployment Readiness ──

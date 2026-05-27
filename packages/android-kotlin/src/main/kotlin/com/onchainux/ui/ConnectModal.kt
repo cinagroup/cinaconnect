@@ -17,7 +17,7 @@
  * }
  * ```
  */
-package com.cinaconnect.ui
+package com.cinacoin.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -45,7 +45,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.cinaconnect.core.CinaConnect
+import com.cinacoin.core.Cinacoin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -143,7 +143,7 @@ fun ConnectModal(
     recommendedWalletIds: List<String> = emptyList(),
     wallets: List<WalletInfo> = WalletInfo.defaults,
     wcUri: String? = null,
-    onChainUX: CinaConnect = CinaConnect.getInstance()
+    onChainUX: Cinacoin = Cinacoin.getInstance()
 ) {
     val context = LocalContext.current
     val colors = onChainUX.themeColors
@@ -265,7 +265,7 @@ private fun WalletListView(
     wallets: List<WalletInfo>,
     recommendedWalletIds: List<String>,
     deepLinkStatus: Map<String, DeepLinkState>,
-    colors: com.cinaconnect.core.ThemeColors,
+    colors: com.cinacoin.core.ThemeColors,
     onWalletSelect: (WalletInfo) -> Unit
 ) {
     LazyVerticalGrid(
@@ -291,7 +291,7 @@ private fun WalletCard(
     wallet: WalletInfo,
     isRecommended: Boolean,
     status: DeepLinkState?,
-    colors: com.cinaconnect.core.ThemeColors,
+    colors: com.cinacoin.core.ThemeColors,
     onSelect: () -> Unit
 ) {
     Card(
@@ -361,7 +361,7 @@ private fun WalletCard(
 }
 
 @Composable
-private fun SocialLoginView(colors: com.cinaconnect.core.ThemeColors, onSocialLogin: (String) -> Unit) {
+private fun SocialLoginView(colors: com.cinacoin.core.ThemeColors, onSocialLogin: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -386,7 +386,7 @@ private fun SocialLoginView(colors: com.cinaconnect.core.ThemeColors, onSocialLo
 private fun EmailLoginView(
     email: String,
     onEmailChange: (String) -> Unit,
-    colors: com.cinaconnect.core.ThemeColors,
+    colors: com.cinacoin.core.ThemeColors,
     onEmailSubmit: () -> Unit
 ) {
     Column(
@@ -421,7 +421,7 @@ private fun EmailLoginView(
 }
 
 @Composable
-private fun ScanView(wcUri: String?, colors: com.cinaconnect.core.ThemeColors) {
+private fun ScanView(wcUri: String?, colors: com.cinacoin.core.ThemeColors) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -457,7 +457,7 @@ private fun ScanView(wcUri: String?, colors: com.cinaconnect.core.ThemeColors) {
 
 private fun handleWalletSelect(
     wallet: WalletInfo,
-    onChainUX: CinaConnect,
+    onChainUX: Cinacoin,
     wcUri: String?,
     onDismiss: () -> Unit,
     onStatusChange: (DeepLinkState) -> Unit
@@ -476,7 +476,7 @@ private fun handleWalletSelect(
     }
 }
 
-private fun handleSocialLogin(provider: String, onChainUX: CinaConnect, onDismiss: () -> Unit) {
+private fun handleSocialLogin(provider: String, onChainUX: Cinacoin, onDismiss: () -> Unit) {
     val scope = CoroutineScope(Dispatchers.Main)
     scope.launch(Dispatchers.IO) {
         try {
@@ -486,7 +486,7 @@ private fun handleSocialLogin(provider: String, onChainUX: CinaConnect, onDismis
     }
 }
 
-private fun handleEmailLogin(onChainUX: CinaConnect, onDismiss: () -> Unit) {
+private fun handleEmailLogin(onChainUX: Cinacoin, onDismiss: () -> Unit) {
     val scope = CoroutineScope(Dispatchers.Main)
     scope.launch(Dispatchers.IO) {
         try {

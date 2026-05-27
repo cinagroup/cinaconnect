@@ -1,11 +1,11 @@
-# @cinaconnect/aa-sdk
+# @cinacoin/aa-sdk
 
 Account Abstraction SDK for building ERC-4337 compatible smart accounts. Includes smart account management, factory deployment, paymaster integration, and bundler client.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/aa-sdk
+npm install @cinacoin/aa-sdk
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/aa-sdk
 ### Smart Account
 
 ```ts
-import { SmartAccount } from '@cinaconnect/aa-sdk';
+import { SmartAccount } from '@cinacoin/aa-sdk';
 
 const account = await SmartAccount.create({
   owner: '0x...',
@@ -36,7 +36,7 @@ const batchResult = await account.executeBatch([
 ### Factory
 
 ```ts
-import { SmartAccountFactory } from '@cinaconnect/aa-sdk';
+import { SmartAccountFactory } from '@cinacoin/aa-sdk';
 
 const factory = new SmartAccountFactory({
   address: '0x...',
@@ -50,7 +50,7 @@ const { address, hash } = await factory.deploy('0xOwner');
 ### Paymaster
 
 ```ts
-import { PaymasterClient } from '@cinaconnect/aa-sdk';
+import { PaymasterClient } from '@cinacoin/aa-sdk';
 
 const paymaster = new PaymasterClient({
   url: 'https://paymaster.example.com',
@@ -67,7 +67,7 @@ const sponsored = await paymaster.sponsor({
 ### Bundler
 
 ```ts
-import { BundlerClient } from '@cinaconnect/aa-sdk';
+import { BundlerClient } from '@cinacoin/aa-sdk';
 
 const bundler = new BundlerClient({
   url: 'https://bundler.example.com',

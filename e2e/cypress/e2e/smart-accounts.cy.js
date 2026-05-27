@@ -2,7 +2,7 @@
 // ***************************************************************
 // Smart Account E2E Tests
 // Tests for smart account detection, deployment, batch execution,
-// and paymaster sponsorship in CinaConnect
+// and paymaster sponsorship in Cinacoin
 // ***************************************************************
 describe('Smart Accounts', () => {
     beforeEach(() => {

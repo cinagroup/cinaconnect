@@ -1,5 +1,38 @@
 [package]
-name = "cinaconnect-keys-server"
+name = "cinacoin-keys-server"
 version = "0.1.0"
 edition = "2021"
-description = "Key management server for CinaConnect"
+description = "Key management server for Cinacoin"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "chrono", "json", "uuid"] }
+redis = { version = "0.26", features = ["tokio-comp", "tokio-native-tls-comp"] }
+jsonwebtoken = "9"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+rand = "0.8"
+prometheus = "0.13"
+lazy_static = "1"
+hex = "0.4"
+base64 = "0.22"
+sha2 = "0.10"
+sha3 = "0.10"
+x25519-dalek = { version = "2", features = ["static_secrets"] }
+ed25519-dalek = { version = "2", features = ["rand_core"] }
+k256 = { version = "0.13", features = ["ecdsa"] }
+zeroize = "1"
+bs58 = "0.5"
+thiserror = "2"
+anyhow = "1"
+chacha20poly1305 = "0.10"
+hkdf = "0.12"
+
+[dev-dependencies]
+tempfile = "3"

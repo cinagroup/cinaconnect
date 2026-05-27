@@ -1,17 +1,17 @@
 /**
- * React hooks for CinaConnect.
+ * React hooks for Cinacoin.
  *
- * All hooks require being used within <CinaConnectProvider>.
+ * All hooks require being used within <CinacoinProvider>.
  */
-import { type CinaConnectContextValue } from './CinaConnectProvider.js';
+import { type CinacoinContextValue } from './CinacoinProvider.js';
 /**
- * useCinaConnect — access the full CinaConnect context.
+ * useCinacoin — access the full Cinacoin context.
  *
  * ```tsx
- * const { connect, disconnect, account, status } = useCinaConnect();
+ * const { connect, disconnect, account, status } = useCinacoin();
  * ```
  */
-export declare function useCinaConnect(): CinaConnectContextValue;
+export declare function useCinacoin(): CinacoinContextValue;
 /**
  * useAccount — access the current account state.
  *

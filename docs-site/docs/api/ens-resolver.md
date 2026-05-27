@@ -1,11 +1,11 @@
 # ENS Resolver
 
-> `@cinaconnect/ens-resolver` — ENS (Ethereum Name Service) resolver for CinaConnect.
+> `@cinacoin/ens-resolver` — ENS (Ethereum Name Service) resolver for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/ens-resolver
+npm install @cinacoin/ens-resolver
 ```
 
 ## Overview

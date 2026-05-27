@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { NotifyServer, type NotificationPayload, type NotificationChannel } from '@cinaconnect/notify-server';
+import { NotifyServer, type NotificationPayload, type NotificationChannel } from '@cinacoin/notify-server';
 
 describe('Notify Server — Subscription', () => {
   let server: NotifyServer;

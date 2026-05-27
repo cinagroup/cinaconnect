@@ -1,5 +1,5 @@
 /**
- * Fixtures — Common test fixtures for CinaConnect testing.
+ * Fixtures — Common test fixtures for Cinacoin testing.
  *
  * Pre-built addresses, signatures, ABIs, events, and configuration objects
  * that cover the most common testing scenarios.
@@ -31,7 +31,7 @@ export const HASHES = {
 // ── Typed Data (EIP-712) ────────────────────────────────────────────────────
 export const TYPED_DATA = {
     domain: {
-        name: "CinaConnect Test",
+        name: "Cinacoin Test",
         version: "1",
         chainId: 1,
         verifyingContract: ADDRESSES.contract,
@@ -51,7 +51,7 @@ export const TYPED_DATA = {
     message: {
         from: { name: "Alice", wallet: ADDRESSES.user1 },
         to: { name: "Bob", wallet: ADDRESSES.user2 },
-        contents: "Hello, CinaConnect!",
+        contents: "Hello, Cinacoin!",
     },
 };
 // ── ABIs ────────────────────────────────────────────────────────────────────

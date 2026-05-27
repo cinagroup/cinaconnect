@@ -12,11 +12,11 @@ export default defineConfig({
     hookTimeout: 10_000,
     // Use tsconfig paths for resolving local packages
     alias: {
-      '@cinaconnect/rpc-proxy': path.resolve(__dirname, 'packages/rpc-proxy/src'),
-      '@cinaconnect/keys-server': path.resolve(__dirname, 'packages/keys-server/src'),
-      '@cinaconnect/relay-server': path.resolve(__dirname, 'packages/relay-server/src'),
-      '@cinaconnect/notify-server': path.resolve(__dirname, 'packages/notify-server/src'),
-      '@cinaconnect/push-server': path.resolve(__dirname, 'packages/push-server/src'),
+      '@cinacoin/rpc-proxy': path.resolve(__dirname, 'packages/rpc-proxy/src'),
+      '@cinacoin/keys-server': path.resolve(__dirname, 'packages/keys-server/src'),
+      '@cinacoin/relay-server': path.resolve(__dirname, 'packages/relay-server/src'),
+      '@cinacoin/notify-server': path.resolve(__dirname, 'packages/notify-server/src'),
+      '@cinacoin/push-server': path.resolve(__dirname, 'packages/push-server/src'),
     },
     coverage: {
       provider: 'v8',

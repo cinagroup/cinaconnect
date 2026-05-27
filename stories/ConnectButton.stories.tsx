@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { ConnectButton } from '../packages/react/src/ConnectButton';
 
 const meta: Meta<typeof ConnectButton> = {
-  title: 'CinaConnect/ConnectButton',
+  title: 'CinaCoin/ConnectButton',
   component: ConnectButton,
   argTypes: {
     label: { control: 'text', description: 'Button text when disconnected.' },

@@ -1,8 +1,8 @@
 [package]
-name = "cinaconnect-erc6492"
+name = "cinacoin-erc6492"
 version = "0.1.0"
 edition = "2021"
-description = "ERC-6492 signature verification for CinaConnect"
+description = "ERC-6492 signature verification for Cinacoin"
 
 [dependencies]
 alloy-primitives = "0.8"

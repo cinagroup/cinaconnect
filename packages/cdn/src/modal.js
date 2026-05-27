@@ -3,9 +3,9 @@
  *
  * For script-tag usage:
  * ```html
- * <script src="https://cdn.cinaconnect.dev/connect.js"></script>
+ * <script src="https://cdn.cinacoin.dev/connect.js"></script>
  * <script>
- *   CinaConnect.renderConnectModal('#my-modal', {
+ *   Cinacoin.renderConnectModal('#my-modal', {
  *     projectId: 'your-project-id',
  *     theme: 'dark',
  *   });
@@ -25,13 +25,13 @@ let _address = null;
 export function renderConnectModal(selector, options = {}) {
     const element = document.querySelector(selector);
     if (!element) {
-        console.error(`[CinaConnect] Element "${selector}" not found`);
+        console.error(`[Cinacoin] Element "${selector}" not found`);
         return;
     }
     const config = { ...getConfig(), ...options };
     const missing = validateConfig(config);
     if (missing.length > 0) {
-        console.warn(`[CinaConnect] Missing config: ${missing.join(", ")}`);
+        console.warn(`[Cinacoin] Missing config: ${missing.join(", ")}`);
     }
     _isOpen = false;
     _currentView = options.defaultView ?? "connect";

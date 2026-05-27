@@ -1,6 +1,6 @@
 # 02 — Infrastructure & Backend Services Gap Analysis
 
-> CinaAuth/CinaConnect vs Reown (WalletConnect) Infrastructure  
+> CinaAuth/Cinacoin vs Reown (WalletConnect) Infrastructure  
 > Generated: 2026-05-16 UTC  
 > Scope: Phase 4 (Production) + Phase 5 (Optimization) design docs + deploy/ manifests
 
@@ -8,7 +8,7 @@
 
 ## 1. Executive Summary
 
-| Dimension | CinaAuth/CinaConnect | Reown | Verdict |
+| Dimension | CinaAuth/Cinacoin | Reown | Verdict |
 |-----------|-------------------|-------|---------|
 | Backend Services | Relay + RPC Proxy (custom) | push-server, notify-server, keys-server, erc6492, yttrium | **Gap** — missing push/notify/keys |
 | Infrastructure as Code | Helm chart + raw K8s manifests | Terraform (keys-server) + infra-as-code patterns | **Gap** — no Terraform/Pulumi |
@@ -19,7 +19,7 @@
 | Relay Server | Custom Rust relay with NATS + Redis | WalletConnect relay (proprietary, SaaS) | **Comparable** — custom implementation |
 | Push Notifications | Planned APNs/FCM (Phase 5 cost model) | Full push-server (Rust, APNs + FCM) + notify-server | **Major Gap** — no push implementation |
 
-**Bottom Line:** CinaConnect has a **stronger** infrastructure foundation (monitoring, cost management, IaC quality) than what Reown exposes publicly, but is **missing critical backend services** (push notifications, identity keys, ERC-6492 verification, smart account orchestration) that are core to Reown's value proposition.
+**Bottom Line:** Cinacoin has a **stronger** infrastructure foundation (monitoring, cost management, IaC quality) than what Reown exposes publicly, but is **missing critical backend services** (push notifications, identity keys, ERC-6492 verification, smart account orchestration) that are core to Reown's value proposition.
 
 ---
 
@@ -27,7 +27,7 @@
 
 ### 2.1 Push Notification Infrastructure
 
-| Feature | Reown | CinaAuth/CinaConnect | Gap |
+| Feature | Reown | CinaAuth/Cinacoin | Gap |
 |---------|-------|-------------------|-----|
 | **push-server** | ✅ Rust, 34 stars, production APNs2 + FCM | ❌ Not implemented | **P0 — Critical** |
 | **notify-server** | ✅ Rust, 22 stars, notify.walletconnect.com | ❌ Not implemented | **P0 — Critical** |
@@ -41,7 +41,7 @@
 - `a2` — battle-tested async APNs client (their most-starred utility repo)
 - `fcm-rust` — Firebase Cloud Messaging integration
 
-CinaConnect only mentions push notifications as a **cost line item** in Phase 5 ($50–200/mo). There is no push server implementation, no device registration flow, no notification routing logic.
+Cinacoin only mentions push notifications as a **cost line item** in Phase 5 ($50–200/mo). There is no push server implementation, no device registration flow, no notification routing logic.
 
 **Recommendations:**
 
@@ -55,7 +55,7 @@ CinaConnect only mentions push notifications as a **cost line item** in Phase 5 
 
 ### 2.2 Identity & Keys Management
 
-| Feature | Reown | CinaAuth/CinaConnect | Gap |
+| Feature | Reown | CinaAuth/Cinacoin | Gap |
 |---------|-------|-------------------|-----|
 | **keys-server** | ✅ HCL/Terraform, 17 stars — identity keys + invite keys for Chat SDK | ❌ Not implemented | **P0** |
 | **gauth-rs** | ✅ Google OAuth2 client (Rust, 0 stars) | ❌ No OAuth2 integration | **P2** |
@@ -66,7 +66,7 @@ CinaConnect only mentions push notifications as a **cost line item** in Phase 5 
 - Device-to-device encrypted communication
 - Key rotation and recovery
 
-CinaConnect has no equivalent identity key management. The Phase 3 design mentions "MPC module" for Phase 5 but there is no keys-server or key management infrastructure.
+Cinacoin has no equivalent identity key management. The Phase 3 design mentions "MPC module" for Phase 5 but there is no keys-server or key management infrastructure.
 
 **Recommendations:**
 
@@ -78,11 +78,11 @@ CinaConnect has no equivalent identity key management. The Phase 3 design mentio
 
 ### 2.3 Smart Account Infrastructure
 
-| Feature | Reown | CinaAuth/CinaConnect | Gap |
+| Feature | Reown | CinaAuth/Cinacoin | Gap |
 |---------|-------|-------------------|-----|
 | **yttrium** | ✅ Rust, 12 stars — cross-platform smart account library | ❌ Referenced in Phase 3 only (design doc) | **P0** |
 
-**Analysis:** Reown's `yttrium` is a cross-platform smart account library. CinaConnect Phase 3 has a detailed smart account design (Account Abstraction, UserOperations, bundler) but the actual implementation library is not yet built. The deploy/ directory has a `bundler/Dockerfile` but no yttrium-equivalent library.
+**Analysis:** Reown's `yttrium` is a cross-platform smart account library. Cinacoin Phase 3 has a detailed smart account design (Account Abstraction, UserOperations, bundler) but the actual implementation library is not yet built. The deploy/ directory has a `bundler/Dockerfile` but no yttrium-equivalent library.
 
 **Recommendations:**
 
@@ -90,7 +90,7 @@ CinaConnect has no equivalent identity key management. The Phase 3 design mentio
 |----------|--------|--------|
 | **P0** | Complete the bundler implementation (deploy/docker/bundler/Dockerfile exists but no code referenced) | 2–3 weeks |
 | **P0** | Build smart account SDK library (Rust + TypeScript) equivalent to yttrium | 3–4 weeks |
-| **P1** | Add bundler to Helm chart (currently missing from cinaconnect/values.yaml) | 2 days |
+| **P1** | Add bundler to Helm chart (currently missing from cinacoin/values.yaml) | 2 days |
 
 ---
 
@@ -99,7 +99,7 @@ CinaConnect has no equivalent identity key management. The Phase 3 design mentio
 ### 3.1 Helm Chart Assessment
 
 ```
-deploy/helm/cinaconnect/
+deploy/helm/cinacoin/
 ├── Chart.yaml              ✅ Complete (kubeVersion, maintainers, keywords)
 ├── values.yaml             ✅ Comprehensive (all services parameterized)
 ├── templates/
@@ -139,7 +139,7 @@ deploy/helm/cinaconnect/
 
 ### 3.2 Terraform / Cloud IaC
 
-| IaC Component | Reown | CinaAuth/CinaConnect | Gap |
+| IaC Component | Reown | CinaAuth/Cinacoin | Gap |
 |---------------|-------|-------------------|-----|
 | Terraform (keys-server) | ✅ HCL/Terraform repo | ❌ No Terraform | **P1** |
 | AWS resources | Not public | Budget alerts reference AWS CLI | **P2** |
@@ -160,7 +160,7 @@ deploy/helm/cinaconnect/
 
 ### 4.1 Stack Comparison
 
-| Component | CinaAuth/CinaConnect | Reown | Assessment |
+| Component | CinaAuth/Cinacoin | Reown | Assessment |
 |-----------|-------------------|-------|------------|
 | **Metrics** | Prometheus (v2.51.0) | Proprietary | ✅ **Advantage** — standard stack |
 | **Dashboards** | Grafana (10.4.0) | Proprietary | ✅ **Advantage** — full dashboards |
@@ -206,7 +206,7 @@ deploy/helm/cinaconnect/
 
 ## 5. Cost Management
 
-### 5.1 CinaConnect Cost Features
+### 5.1 Cinacoin Cost Features
 
 | Feature | Status | Details |
 |---------|--------|---------|
@@ -229,7 +229,7 @@ deploy/helm/cinaconnect/
 | Spot instance support | N/A |
 | Cost dashboard | Customer-facing billing portal only |
 
-**Assessment:** CinaConnect has a **massive advantage** in cost transparency and control. The built-in KEDA scalers, spot instance configs, budget alerts, and Prometheus cost rules provide visibility and control that Reown's SaaS model cannot match.
+**Assessment:** Cinacoin has a **massive advantage** in cost transparency and control. The built-in KEDA scalers, spot instance configs, budget alerts, and Prometheus cost rules provide visibility and control that Reown's SaaS model cannot match.
 
 **Recommendations:**
 
@@ -307,7 +307,7 @@ deploy/helm/cinaconnect/
 
 ### 7.3 Gaps vs Reown
 
-| Feature | Reown | CinaAuth/CinaConnect | Gap |
+| Feature | Reown | CinaAuth/Cinacoin | Gap |
 |---------|-------|-------------------|-----|
 | Node management | Managed infrastructure | Full K8s manifests + configs | **Advantage** — transparent |
 | Node monitoring | Not exposed | Prometheus metrics + alert rules | **Advantage** — observable |
@@ -328,7 +328,7 @@ deploy/helm/cinaconnect/
 
 ## 8. Relay Server Capabilities
 
-### 8.1 CinaConnect Relay
+### 8.1 Cinacoin Relay
 
 | Feature | Status | Implementation |
 |---------|--------|---------------|
@@ -354,7 +354,7 @@ deploy/helm/cinaconnect/
 
 ### 8.3 Comparison
 
-CinaConnect relay is a **clean-room implementation** with better observability and cost control. However, it lacks:
+Cinacoin relay is a **clean-room implementation** with better observability and cost control. However, it lacks:
 1. Push notification integration (needs push-server)
 2. Identity/Chat SDK integration (needs keys-server)
 3. ERC-6492 signature verification (needs erc6492 implementation)
@@ -387,7 +387,7 @@ The relay architecture (NATS + Redis) is **architecturally sound** and comparabl
 | 11 | **Jaeger memory-only** | Add persistent storage for Jaeger traces | 2 days |
 | 12 | **Node snapshot automation** | Automated backup/restore for blockchain nodes | 1–2 weeks |
 | 13 | **Solana security context** | Fix `runAsNonRoot: false` in Solana StatefulSet | 1 day |
-| 14 | **Bundler missing from Helm** | Add bundler to cinaconnect Helm chart | 2 days |
+| 14 | **Bundler missing from Helm** | Add bundler to cinacoin Helm chart | 2 days |
 | 15 | **Cost dashboard not deployed** | Deploy cost dashboard from design to Grafana | 2 days |
 
 ### P2 — Nice to Have
@@ -432,7 +432,7 @@ The relay architecture (NATS + Redis) is **architecturally sound** and comparabl
 
 ## 11. Competitive Assessment
 
-| Dimension | CinaConnect Score | Reown Score | Notes |
+| Dimension | Cinacoin Score | Reown Score | Notes |
 |-----------|:--------------:|:-----------:|-------|
 | Relay | 8/10 | 9/10 | Missing push/keys integration |
 | RPC Proxy | 8/10 | 7/10 | Better cost control, multi-provider |
@@ -446,8 +446,8 @@ The relay architecture (NATS + Redis) is **architecturally sound** and comparabl
 | Node Management | 8/10 | 6/10 | Transparent vs managed |
 | **Overall** | **6.2/10** | **6.8/10** | Strong foundation, missing key services |
 
-**Conclusion:** CinaConnect has built a **superior infrastructure platform** (monitoring, cost management, observability, deployment quality) compared to what Reown exposes. However, the **absence of push notification, identity key management, and ERC-6492 services** creates functional gaps that must be filled to achieve feature parity. The good news: these are **service additions**, not infrastructure rebuilds — the foundation is solid.
+**Conclusion:** Cinacoin has built a **superior infrastructure platform** (monitoring, cost management, observability, deployment quality) compared to what Reown exposes. However, the **absence of push notification, identity key management, and ERC-6492 services** creates functional gaps that must be filled to achieve feature parity. The good news: these are **service additions**, not infrastructure rebuilds — the foundation is solid.
 
 ---
 
-*Report generated 2026-05-16 | Part of CinaConnect vs Reown analysis series*
+*Report generated 2026-05-16 | Part of Cinacoin vs Reown analysis series*

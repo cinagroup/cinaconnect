@@ -1,5 +1,5 @@
 /**
- * React hooks for CinaConnect SIWX Cloud Authentication.
+ * React hooks for Cinacoin SIWX Cloud Authentication.
  *
  * Provides `useCloudAuth()` and `useCloudSession()` hooks for managing cloud
  * session state in React applications. Handles auto-refresh, event listeners,
@@ -32,7 +32,7 @@ import type {
  *
  * @example
  * ```tsx
- * import { useCloudAuth } from '@cinaconnect/siwx';
+ * import { useCloudAuth } from '@cinacoin/siwx';
  *
  * function AuthPanel() {
  *   const {
@@ -164,7 +164,7 @@ export function useCloudAuth(config: CloudAuthConfig): {
  *
  * @example
  * ```tsx
- * import { useCloudSession } from '@cinaconnect/siwx';
+ * import { useCloudSession } from '@cinacoin/siwx';
  *
  * function SessionInfo({ auth }: { auth: CloudAuth }) {
  *   const { data, status, refresh } = useCloudSession(auth);
@@ -260,7 +260,7 @@ export function useCloudSession(auth: CloudAuth): {
  *
  * @example
  * ```tsx
- * import { useCloudAuthEvents } from '@cinaconnect/siwx';
+ * import { useCloudAuthEvents } from '@cinacoin/siwx';
  *
  * function EventLogger({ auth }: { auth: CloudAuth }) {
  *   useCloudAuthEvents(auth, (event) => {

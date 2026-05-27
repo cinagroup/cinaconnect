@@ -4,7 +4,7 @@ import path from 'path';
 export default defineConfig({
   resolve: {
     alias: {
-      '@cinaconnect/core-sdk': path.resolve(__dirname, '../core-sdk/dist/index.js'),
+      '@cinacoin/core-sdk': path.resolve(__dirname, '../core-sdk/dist/index.js'),
     },
   },
   test: {

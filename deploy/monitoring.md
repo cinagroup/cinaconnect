@@ -1,16 +1,16 @@
-# CinaConnect — Cloudflare Workers Monitoring & Alerting Guide
+# Cinacoin — Cloudflare Workers Monitoring & Alerting Guide
 
 ## Overview
 
-This document covers the complete monitoring and alerting setup for the 5 CinaConnect Cloudflare Workers services:
+This document covers the complete monitoring and alerting setup for the 5 Cinacoin Cloudflare Workers services:
 
 | Service | Worker Name | URL |
 |---------|-------------|-----|
-| RPC Proxy | `cinaconnect-rpc-proxy` | `https://rpc-proxy.cinaconnect.com` |
-| Keys Server | `cinaconnect-keys-server` | `https://keys-server.cinaconnect.com` |
-| Relay Server | `cinaconnect-relay-server` | `wss://relay.cinaconnect.com` |
-| Notify Server | `cinaconnect-notify-server` | `https://notify.cinaconnect.com` |
-| Push Server | `cinaconnect-push-server` | `https://push.cinaconnect.com` |
+| RPC Proxy | `cinacoin-rpc-proxy` | `https://rpc-proxy.cinacoin.com` |
+| Keys Server | `cinacoin-keys-server` | `https://keys-server.cinacoin.com` |
+| Relay Server | `cinacoin-relay-server` | `wss://relay.cinacoin.com` |
+| Notify Server | `cinacoin-notify-server` | `https://notify.cinacoin.com` |
+| Push Server | `cinacoin-push-server` | `https://push.cinacoin.com` |
 
 ---
 
@@ -46,7 +46,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/graphql" \
             workersInvocationsAdaptive(
               limit: 100
               filter: {
-                scriptName: \"cinaconnect-rpc-proxy\"
+                scriptName: \"cinacoin-rpc-proxy\"
                 date_gt: \"$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)\"
               }
             ) {
@@ -137,7 +137,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/alert
     "filters": {
       "select": "sum",
       "where": {
-        "scriptName": "cinaconnect-rpc-proxy",
+        "scriptName": "cinacoin-rpc-proxy",
         "status": "5xx"
       },
       "threshold": 100,
@@ -170,12 +170,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/logpush/jobs" 
   -H "Authorization: Bearer $CF_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "cinaconnect-workers-logpush",
+    "name": "cinacoin-workers-logpush",
     "logpull_options": "fields=ClientIP,ClientRequestHost,ClientRequestMethod,ClientRequestURI,EdgeEndTimestamp,EdgeResponseBytes,EdgeResponseStatus,EdgeStartTimestamp,RayID,ScriptName,WorkerCPUTime,WorkerStatus",
-    "destination_conf": "s3://cinaconnect-logs/workers/{DATE}?region=auto&access-key-id=$S3_ACCESS_KEY&secret-access-key=$S3_SECRET_KEY",
+    "destination_conf": "s3://cinacoin-logs/workers/{DATE}?region=auto&access-key-id=$S3_ACCESS_KEY&secret-access-key=$S3_SECRET_KEY",
     "dataset": "workers_trace_events",
     "enabled": true,
-    "filter": "{\"where\": {\"scriptName\": {\"in\": [\"cinaconnect-rpc-proxy\",\"cinaconnect-keys-server\",\"cinaconnect-relay-server\",\"cinaconnect-notify-server\",\"cinaconnect-push-server\"]}}}"
+    "filter": "{\"where\": {\"scriptName\": {\"in\": [\"cinacoin-rpc-proxy\",\"cinacoin-keys-server\",\"cinacoin-relay-server\",\"cinacoin-notify-server\",\"cinacoin-push-server\"]}}}"
   }'
 ```
 
@@ -212,7 +212,7 @@ export default {
         path: new URL(request.url).pathname,
         status: response.status,
         duration_ms: Date.now() - startTime,
-        scriptName: 'cinaconnect-rpc-proxy'
+        scriptName: 'cinacoin-rpc-proxy'
       }))
 
       return response
@@ -225,7 +225,7 @@ export default {
         path: new URL(request.url).pathname,
         error: String(error),
         duration_ms: Date.now() - startTime,
-        scriptName: 'cinaconnect-rpc-proxy'
+        scriptName: 'cinacoin-rpc-proxy'
       }))
 
       return new Response('Internal Server Error', { status: 500 })
@@ -270,7 +270,7 @@ curl -X POST "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT_ID/dashb
   -H "Authorization: Bearer $CF_API_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "CinaConnect Workers — Production",
+    "name": "Cinacoin Workers — Production",
     "widgets": [
       {
         "title": "Requests by Service (24h)",

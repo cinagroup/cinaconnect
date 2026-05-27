@@ -96,7 +96,8 @@ export class SmartAccount {
       });
       this.state.nonce = nonce;
       return nonce;
-    } catch {
+    } catch (err) {
+      console.warn(`[SmartAccount] Failed to fetch nonce, using local value:`, err instanceof Error ? err.message : String(err));
       return this.state.nonce;
     }
   }
@@ -111,7 +112,8 @@ export class SmartAccount {
       });
       this.state.balance = balance;
       return balance;
-    } catch {
+    } catch (err) {
+      console.warn(`[SmartAccount] Failed to fetch balance, using local value:`, err instanceof Error ? err.message : String(err));
       return this.state.balance;
     }
   }

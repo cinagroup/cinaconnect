@@ -1,5 +1,5 @@
 /**
- * deepLink.ts — DeepLinkManager for @cinaconnect/react-native
+ * deepLink.ts — DeepLinkManager for @cinacoin/react-native
  *
  * Singleton deep-link manager that handles custom URI schemes,
  * wallet app redirects, and return-callback listening via
@@ -123,7 +123,7 @@ const WALLET_SCHEMES: Record<string, WalletSchemeConfig> = {
  * Usage:
  * ```ts
  * const dl = DeepLinkManager.getInstance();
- * await dl.init('cinaconnect://');
+ * await dl.init('cinacoin://');
  *
  * const url = dl.buildWalletUrl('metamask', 'wc', { uri: 'wc:...' });
  * await dl.openWallet(url);
@@ -180,7 +180,7 @@ export class DeepLinkManager {
    * Registers the app's own URI scheme so that wallets can return to it,
    * and sets up the `Linking` event listener.
    *
-   * @param scheme — The custom URI scheme for this app (e.g. `cinaconnect://`).
+   * @param scheme — The custom URI scheme for this app (e.g. `cinacoin://`).
    */
   async init(scheme: string): Promise<void> {
     if (this._initialised) return;
@@ -428,7 +428,7 @@ export class DeepLinkManager {
     if (Platform.OS === 'ios') {
       return 'https://'; // Universal-link style
     }
-    return 'cinaconnect://';
+    return 'cinacoin://';
   }
 
   // ── Callbacks ───────────────────────────────────────────────────────────

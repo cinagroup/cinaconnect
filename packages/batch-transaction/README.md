@@ -1,17 +1,17 @@
-# @cinaconnect/batch-transaction
+# @cinacoin/batch-transaction
 
-CinaConnect Batch Transaction SDK — atomic multi-operation builder with gas estimation.
+Cinacoin Batch Transaction SDK — atomic multi-operation builder with gas estimation.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/batch-transaction
+npm install @cinacoin/batch-transaction
 ```
 
 ## Usage
 
 ```ts
-import { BatchTransaction, BatchExecutor } from '@cinaconnect/batch-transaction';
+import { BatchTransaction, BatchExecutor } from '@cinacoin/batch-transaction';
 
 const batch = new BatchTransaction({ chainId: 1 });
 batch.add(createTransferOperation({ to: '0x...', amount: '1.0' }));

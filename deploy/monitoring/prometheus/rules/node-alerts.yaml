@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: node-alerts
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: prometheus
     component: alerting-rules
@@ -16,7 +16,7 @@ spec:
           for: 5m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "区块链节点不同步"
             description: "{{ $labels.chain }} 在 {{ $labels.region }} 不同步"
@@ -26,7 +26,7 @@ spec:
           for: 10m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "区块链节点 P2P 连接数过低"
             description: "{{ $labels.chain }} 在 {{ $labels.region }} 仅有 {{ $value }} 个 P2P 连接"
@@ -37,7 +37,7 @@ spec:
           for: 5m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "节点磁盘使用率 > 90%"
             description: "PVC {{ $labels.persistentvolumeclaim }} 仅剩 {{ $value | humanizePercentage }} 可用"
@@ -48,7 +48,7 @@ spec:
           for: 10m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "区块高度停滞"
             description: "{{ $labels.chain }} 在 {{ $labels.region }} 区块高度 10 分钟未变化"
@@ -59,7 +59,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Erigon 节点内存使用率 > 90%"
             description: "Pod {{ $labels.pod }} 内存使用率 {{ $value | humanizePercentage }}"

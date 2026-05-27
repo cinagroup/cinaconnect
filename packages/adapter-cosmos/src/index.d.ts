@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/adapter-cosmos
+ * @cinacoin/adapter-cosmos
  *
- * Cosmos ecosystem chain adapter for the CinaConnect SDK.
+ * Cosmos ecosystem chain adapter for the Cinacoin SDK.
  *
  * Provides support for Cosmos SDK chains including:
  * - Cosmos Hub (ATOM)
@@ -15,7 +15,7 @@
  *
  * @example
  * ```ts
- * import { CosmosAdapter, COSMOS_CHAINS } from '@cinaconnect/adapter-cosmos';
+ * import { CosmosAdapter, COSMOS_CHAINS } from '@cinacoin/adapter-cosmos';
  *
  * const cosmos = new CosmosAdapter({
  *   chainId: 'cosmoshub-4',

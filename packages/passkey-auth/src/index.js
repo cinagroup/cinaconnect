@@ -1,4 +1,4 @@
-// @cinaconnect/passkey-auth
+// @cinacoin/passkey-auth
 // WebAuthn-based passkey authentication
 export { PasskeyManager } from './passkey.js';
 export { WebAuthnClient, buildRegistrationOptions, buildAuthenticationOptions } from './webauthn.js';

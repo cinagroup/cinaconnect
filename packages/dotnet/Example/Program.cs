@@ -1,13 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using CinaConnect;
-using CinaConnect.Models;
-using CinaConnect.Services;
+using Cinacoin;
+using Cinacoin.Models;
+using Cinacoin.Services;
 
-namespace CinaConnect.Example;
+namespace Cinacoin.Example;
 
 /// <summary>
-/// Example usage of the CinaConnect .NET SDK.
+/// Example usage of the Cinacoin .NET SDK.
 /// Demonstrates client initialization, network enumeration, balance queries,
 /// account retrieval, session management, and transaction signing.
 /// </summary>
@@ -16,7 +16,7 @@ public class Program
     public static async Task Main(string[] args)
     {
         // Initialize the client with your project ID
-        await using var client = new CinaConnectClient("YOUR_PROJECT_ID");
+        await using var client = new CinacoinClient("YOUR_PROJECT_ID");
 
         // Use WalletService for high-level convenience operations
         await using var walletService = new WalletService(client);
@@ -66,7 +66,7 @@ public class Program
         // ─── Sign a Message ───
         var signature = await walletService.SignMessageAsync(
             connection.Accounts[0],
-            "Hello, CinaConnect!");
+            "Hello, Cinacoin!");
         Console.WriteLine($"\nSignature: {signature}");
 
         // ─── Send a Transaction ───

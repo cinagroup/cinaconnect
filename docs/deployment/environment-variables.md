@@ -1,6 +1,6 @@
 # Environment Variables Reference
 
-> Complete environment variable documentation for all CinaConnect services.
+> Complete environment variable documentation for all Cinacoin services.
 
 ## Table of Contents
 

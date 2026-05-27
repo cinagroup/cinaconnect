@@ -1,8 +1,8 @@
 /**
- * Cosmos-specific type definitions for the CinaConnect Cosmos adapter.
+ * Cosmos-specific type definitions for the Cinacoin Cosmos adapter.
  *
  * Compatible with CosmJS types while providing a simplified surface for
- * the @cinaconnect/core-sdk ChainAdapter interface.
+ * the @cinacoin/core-sdk ChainAdapter interface.
  */
 
 /* ------------------------------------------------------------------ */

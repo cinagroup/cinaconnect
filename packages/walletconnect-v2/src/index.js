@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/walletconnect-v2
+ * @cinacoin/walletconnect-v2
  *
- * WalletConnect v2 protocol implementation for CinaConnect.
+ * WalletConnect v2 protocol implementation for Cinacoin.
  * Provides pairing, session management, crypto utilities,
  * relay client, JSON-RPC methods, wallet registry, and
  * a unified WalletConnectClient.

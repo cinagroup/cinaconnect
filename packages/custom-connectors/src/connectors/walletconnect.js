@@ -8,7 +8,7 @@ const DEFAULT_METHODS = [
 ];
 const DEFAULT_EVENTS = ['chainChanged', 'accountsChanged'];
 /**
- * Full WalletConnect v2 connector using @cinaconnect/core-sdk SignClient.
+ * Full WalletConnect v2 connector using @cinacoin/core-sdk SignClient.
  *
  * Supports pairing via QR code URI, deep links, and direct session management.
  */
@@ -43,10 +43,10 @@ export class WalletConnectConnector {
     async init() {
         if (this._signClient)
             return;
-        const { SignClient } = await import('@cinaconnect/core-sdk');
+        const { SignClient } = await import('@cinacoin/core-sdk');
         const metadata = this._options.metadata ?? {
-            name: 'CinaConnect',
-            description: 'CinaConnect Wallet',
+            name: 'Cinacoin',
+            description: 'Cinacoin Wallet',
             url: typeof window !== 'undefined' ? window.location.origin : '',
             icons: [],
         };

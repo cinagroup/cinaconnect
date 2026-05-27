@@ -3,7 +3,7 @@ export type {
   UserOperation,
   UserOperationGasEstimate,
   UserOperationReceipt,
-  UserOperationStatus,
+  UserOpSimulationResult,
   SendUserOperationResult,
   BundlerConfig,
 } from './types';

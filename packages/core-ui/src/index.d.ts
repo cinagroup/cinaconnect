@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/core-ui
+ * @cinacoin/core-ui
  *
- * Main exports for CinaConnect Web Components.
+ * Main exports for Cinacoin Web Components.
  * Import this module to register all custom elements.
  */
 export { BaseLitElement } from './foundation/base-element.js';

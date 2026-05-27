@@ -1,4 +1,4 @@
-# CinaConnect Roadmap
+# Cinacoin Roadmap
 
 > **Last Updated:** 2026-05-18  
 > **Status Legend:**  
@@ -13,12 +13,12 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/core-sdk` | ✅ | **Built & published** — SignClient, Pairing API, Universal Provider |
-| `@cinaconnect/walletconnect-v2` | ✅ | Built — adapters commented out in core-sdk exports |
-| `@cinaconnect/chains` | ✅ | Built — Chain definition registry |
-| `@cinaconnect/core-ui` | ✅ | Built — Lit-based web components (modal & widgets) |
-| `@cinaconnect/rpc-proxy` | 🚧 | Built + **deployed on Cloudflare Workers** |
-| `@cinaconnect/keys-server` | 🚧 | Built + **deployed on Cloudflare Workers** |
+| `@cinacoin/core-sdk` | ✅ | **Built & published** — SignClient, Pairing API, Universal Provider |
+| `@cinacoin/walletconnect-v2` | ✅ | Built — adapters commented out in core-sdk exports |
+| `@cinacoin/chains` | ✅ | Built — Chain definition registry |
+| `@cinacoin/core-ui` | ✅ | Built — Lit-based web components (modal & widgets) |
+| `@cinacoin/rpc-proxy` | 🚧 | Built + **deployed on Cloudflare Workers** |
+| `@cinacoin/keys-server` | 🚧 | Built + **deployed on Cloudflare Workers** |
 
 ---
 
@@ -26,17 +26,17 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/adapter-ethereum` | ✅ | Built — EVM adapter (Wagmi / Ethers) |
-| `@cinaconnect/adapter-solana` | ✅ | Built — Solana SVM adapter |
-| `@cinaconnect/adapter-bitcoin` | ✅ | Built — Bitcoin BIP-122 adapter |
-| `@cinaconnect/adapter-ton` | ✅ | Built — TON adapter |
-| `@cinaconnect/adapter-tron` | ✅ | Built — TRON adapter |
-| `@cinaconnect/adapter-cosmos` | ✅ | Built — Cosmos adapter |
-| `@cinaconnect/adapter-sui` | ✅ | Built — Sui adapter |
-| `@cinaconnect/adapter-starknet` | ✅ | Built — Starknet adapter |
-| `@cinaconnect/adapter-near` | ✅ | Built — NEAR adapter |
-| `@cinaconnect/adapter-hedera` | ✅ | Built — Hedera adapter |
-| `@cinaconnect/adapter-xrpl` | ✅ | Built — XRPL adapter |
+| `@cinacoin/adapter-ethereum` | ✅ | Built — EVM adapter (Wagmi / Ethers) |
+| `@cinacoin/adapter-solana` | ✅ | Built — Solana SVM adapter |
+| `@cinacoin/adapter-bitcoin` | ✅ | Built — Bitcoin BIP-122 adapter |
+| `@cinacoin/adapter-ton` | ✅ | Built — TON adapter |
+| `@cinacoin/adapter-tron` | ✅ | Built — TRON adapter |
+| `@cinacoin/adapter-cosmos` | ✅ | Built — Cosmos adapter |
+| `@cinacoin/adapter-sui` | ✅ | Built — Sui adapter |
+| `@cinacoin/adapter-starknet` | ✅ | Built — Starknet adapter |
+| `@cinacoin/adapter-near` | ✅ | Built — NEAR adapter |
+| `@cinacoin/adapter-hedera` | ✅ | Built — Hedera adapter |
+| `@cinacoin/adapter-xrpl` | ✅ | Built — XRPL adapter |
 
 ---
 
@@ -44,18 +44,18 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/react` | ✅ | Built — React hooks & components **+ EIP-5792 hooks** (`useWalletCapabilities`, `useSendCalls`, `useAtomicBatch`, `useCallsStatus`) |
-| `@cinaconnect/next` | ✅ | Built — Next.js App Router support |
-| `@cinaconnect/vue` | ✅ | Built — Vue 3 plugin & composables |
-| `@cinaconnect/svelte` | ✅ | Built — Svelte 4/5 store & components |
-| `@cinaconnect/angular` | ✅ | Built — Angular support |
-| `@cinaconnect/nuxt` | ✅ | Built — Nuxt support |
-| `@cinaconnect/react-native` | ✅ 🔌 | Built — type definitions, native implementation needed |
-| `@cinaconnect/flutter-dart` | ✅ 🔌 | Built — type definitions, native implementation needed |
-| `@cinaconnect/android-kotlin` | ✅ | Built |
-| `@cinaconnect/ios-swift` | ✅ | Built |
-| `@cinaconnect/unity-csharp` | ✅ | Built — **21 C# files** (Editor, Runtime, UI, Tests) |
-| `@cinaconnect/dotnet` | ✅ | **Source written** — 22 C# files: `CinaConnectClient.cs`, Services (RelayClient, CryptoUtils, WalletService), Models (20 types), Example app, NuGet config |
+| `@cinacoin/react` | ✅ | Built — React hooks & components **+ EIP-5792 hooks** (`useWalletCapabilities`, `useSendCalls`, `useAtomicBatch`, `useCallsStatus`) |
+| `@cinacoin/next` | ✅ | Built — Next.js App Router support |
+| `@cinacoin/vue` | ✅ | Built — Vue 3 plugin & composables |
+| `@cinacoin/svelte` | ✅ | Built — Svelte 4/5 store & components |
+| `@cinacoin/angular` | ✅ | Built — Angular support |
+| `@cinacoin/nuxt` | ✅ | Built — Nuxt support |
+| `@cinacoin/react-native` | ✅ 🔌 | Built — type definitions, native implementation needed |
+| `@cinacoin/flutter-dart` | ✅ 🔌 | Built — type definitions, native implementation needed |
+| `@cinacoin/android-kotlin` | ✅ | Built |
+| `@cinacoin/ios-swift` | ✅ | Built |
+| `@cinacoin/unity-csharp` | ✅ | Built — **21 C# files** (Editor, Runtime, UI, Tests) |
+| `@cinacoin/dotnet` | ✅ | **Source written** — 22 C# files: `CinacoinClient.cs`, Services (RelayClient, CryptoUtils, WalletService), Models (20 types), Example app, NuGet config |
 
 ---
 
@@ -63,10 +63,10 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/siwe` | ✅ | Built — Sign-In With Ethereum (EIP-4361) |
-| `@cinaconnect/siwx` | ✅ | Built — Sign-In With X (CAIP-122, multi-chain) |
-| `@cinaconnect/social-login` | ✅ | Built — Email & social login (Magic.link) |
-| `@cinaconnect/passkey-auth` | ✅ | Built — Passkey / biometric authentication (WebAuthn) |
+| `@cinacoin/siwe` | ✅ | Built — Sign-In With Ethereum (EIP-4361) |
+| `@cinacoin/siwx` | ✅ | Built — Sign-In With X (CAIP-122, multi-chain) |
+| `@cinacoin/social-login` | ✅ | Built — Email & social login (Magic.link) |
+| `@cinacoin/passkey-auth` | ✅ | Built — Passkey / biometric authentication (WebAuthn) |
 
 ---
 
@@ -74,12 +74,12 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/aa-sdk` | ✅ | Built — ERC-4337 Account Abstraction SDK |
-| `@cinaconnect/bundler` | ✅ | Built — ERC-4337 Bundler |
-| `@cinaconnect/paymaster` | ✅ | Built — ERC-7677 Paymaster |
-| `@cinaconnect/erc6492` | ✅ | Built — ERC-6492 signature verification |
-| `@cinaconnect/session-keys` | ✅ | Built — Ephemeral session keys |
-| `@cinaconnect/ens-resolver` | ✅ | Built — ENS / readable account names |
+| `@cinacoin/aa-sdk` | ✅ | Built — ERC-4337 Account Abstraction SDK |
+| `@cinacoin/bundler` | ✅ | Built — ERC-4337 Bundler |
+| `@cinacoin/paymaster` | ✅ | Built — ERC-7677 Paymaster |
+| `@cinacoin/erc6492` | ✅ | Built — ERC-6492 signature verification |
+| `@cinacoin/session-keys` | ✅ | Built — Ephemeral session keys |
+| `@cinacoin/ens-resolver` | ✅ | Built — ENS / readable account names |
 
 ---
 
@@ -89,11 +89,11 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/swap-sdk` | ✅ 🔌 | Built — **SDK interface only**; requires your own DEX aggregator API key (1inch, 0x, etc.) |
-| `@cinaconnect/onramp-sdk` | ✅ 🔌 | Built — **SDK + iframe embed only**; requires Meld/Coinbase Pay API key |
-| `@cinaconnect/pay-ui` | ✅ | Built — Payment UI components |
-| `@cinaconnect/batch-transaction` | ✅ | Built — Batch transaction support |
-| `@cinaconnect/deposit` | ✅ | Built — Deposit utilities |
+| `@cinacoin/swap-sdk` | ✅ 🔌 | Built — **SDK interface only**; requires your own DEX aggregator API key (1inch, 0x, etc.) |
+| `@cinacoin/onramp-sdk` | ✅ 🔌 | Built — **SDK + iframe embed only**; requires Meld/Coinbase Pay API key |
+| `@cinacoin/pay-ui` | ✅ | Built — Payment UI components |
+| `@cinacoin/batch-transaction` | ✅ | Built — Batch transaction support |
+| `@cinacoin/deposit` | ✅ | Built — Deposit utilities |
 
 ---
 
@@ -101,10 +101,10 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/relay-server` | ✅ | Built — WebSocket relay server |
-| `@cinaconnect/notify-server` | ✅ | Built — Notification server |
-| `@cinaconnect/push-server` | ✅ | Built — Push notification server |
-| `@cinaconnect/cdn` | ✅ | Built — CDN asset delivery |
+| `@cinacoin/relay-server` | ✅ | Built — WebSocket relay server |
+| `@cinacoin/notify-server` | ✅ | Built — Notification server |
+| `@cinacoin/push-server` | ✅ | Built — Push notification server |
+| `@cinacoin/cdn` | ✅ | Built — CDN asset delivery |
 
 ---
 
@@ -112,24 +112,24 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/cli` | ✅ | Built — CLI scaffolding tool |
-| `@cinaconnect/testing` | ✅ | Built — Mock providers & test utilities |
-| `@cinaconnect/codemod` | ✅ | Built — Migration tool (Reown/AppKit → CinaConnect) |
-| `@cinaconnect/wallet-recommender` | ✅ | Built — Wallet recommendation engine |
-| `@cinaconnect/gas-estimator` | ✅ | Built — Gas estimation utilities |
-| `@cinaconnect/token-list` | ✅ | Built — Curated token registry |
-| `@cinaconnect/analytics` | ✅ | Built — Connection event analytics |
-| `@cinaconnect/config` | ✅ | Built — Remote configuration manager |
-| `@cinaconnect/design-tokens` | ✅ | Built — CSS design tokens |
-| `@cinaconnect/explorer` | ✅ | Built — Blockchain explorer components |
-| `@cinaconnect/blockchain-api` | ✅ | Built — REST API layer |
-| `@cinaconnect/wallet-buttons` | ✅ | Built — Standalone wallet button components |
-| `@cinaconnect/custom-connectors` | ✅ | Built — Custom wallet connector framework |
-| `@cinaconnect/multiwallet` | ✅ | Built — Multi-wallet management |
-| `@cinaconnect/kyc` | ✅ | Built — KYC compliance screening |
-| `@cinaconnect/cross-chain-sync` | ✅ | Built — Cross-chain state synchronization |
-| `@cinaconnect/safe-decoder` | ✅ | Built — Safe transaction decoder |
-| `@cinaconnect/travel-rule-demo` | ✅ | Built — Travel Rule compliance demo |
+| `@cinacoin/cli` | ✅ | Built — CLI scaffolding tool |
+| `@cinacoin/testing` | ✅ | Built — Mock providers & test utilities |
+| `@cinacoin/codemod` | ✅ | Built — Migration tool (Reown/AppKit → Cinacoin) |
+| `@cinacoin/wallet-recommender` | ✅ | Built — Wallet recommendation engine |
+| `@cinacoin/gas-estimator` | ✅ | Built — Gas estimation utilities |
+| `@cinacoin/token-list` | ✅ | Built — Curated token registry |
+| `@cinacoin/analytics` | ✅ | Built — Connection event analytics |
+| `@cinacoin/config` | ✅ | Built — Remote configuration manager |
+| `@cinacoin/design-tokens` | ✅ | Built — CSS design tokens |
+| `@cinacoin/explorer` | ✅ | Built — Blockchain explorer components |
+| `@cinacoin/blockchain-api` | ✅ | Built — REST API layer |
+| `@cinacoin/wallet-buttons` | ✅ | Built — Standalone wallet button components |
+| `@cinacoin/custom-connectors` | ✅ | Built — Custom wallet connector framework |
+| `@cinacoin/multiwallet` | ✅ | Built — Multi-wallet management |
+| `@cinacoin/kyc` | ✅ | Built — KYC compliance screening |
+| `@cinacoin/cross-chain-sync` | ✅ | Built — Cross-chain state synchronization |
+| `@cinacoin/safe-decoder` | ✅ | Built — Safe transaction decoder |
+| `@cinacoin/travel-rule-demo` | ✅ | Built — Travel Rule compliance demo |
 
 ---
 
@@ -137,8 +137,8 @@
 
 | Package | Status | Notes |
 |---------|--------|-------|
-| `@cinaconnect/telegram-miniapp` | ✅ | Built — Telegram Mini Apps integration |
-| `@cinaconnect/farcaster-miniapp` | ✅ | Built — Farcaster Mini Apps integration |
+| `@cinacoin/telegram-miniapp` | ✅ | Built — Telegram Mini Apps integration |
+| `@cinacoin/farcaster-miniapp` | ✅ | Built — Farcaster Mini Apps integration |
 
 ---
 
@@ -171,7 +171,7 @@
 **Comprehensive build status:** See [HONEST_AUDIT_V3.md](./HONEST_AUDIT_V3.md) for the full honest assessment of what's built vs. planned.
 
 **What this roadmap means:**  
-- ✅ = **Built** — dist/ directory exists (1 package published to npm: `@cinaconnect/core-sdk`)  
+- ✅ = **Built** — dist/ directory exists (1 package published to npm: `@cinacoin/core-sdk`)  
 - 🚧 = Built + **deployed & live on Cloudflare Workers** (RPC Proxy, Keys Server)  
 - ⬜ = scaffolding only, source needs to be written  
 - 🔌 = SDK interface layer only — **requires external API key or service** to function  

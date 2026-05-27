@@ -1,18 +1,18 @@
 {
-  "name": "@cinaconnect/deposit",
+  "name": "@cinacoin/deposit",
   "version": "0.2.0",
-  "description": "Deposit with Exchange feature for CinaConnect",
+  "description": "Deposit with Exchange feature for Cinacoin",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     },
     "./components": {
-      "import": "./dist/components/index.mjs",
+      "import": "./dist/components/index.js",
       "require": "./dist/components/index.js",
       "types": "./dist/components/index.d.ts"
     }
@@ -26,7 +26,7 @@
     "react-dom": ">=18.0.0"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/react": "^18.3.0",
@@ -38,5 +38,6 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "type": "module"
 }

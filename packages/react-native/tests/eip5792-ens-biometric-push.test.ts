@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/react-native — EIP-5792, ENS, Biometric, and Push.
+ * Tests for @cinacoin/react-native — EIP-5792, ENS, Biometric, and Push.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

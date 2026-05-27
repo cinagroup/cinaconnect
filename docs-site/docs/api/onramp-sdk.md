@@ -1,11 +1,11 @@
 # On-Ramp SDK
 
-> `@cinaconnect/onramp-sdk` — Fiat on-ramp aggregation SDK for CinaConnect.
+> `@cinacoin/onramp-sdk` — Fiat on-ramp aggregation SDK for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/onramp-sdk
+npm install @cinacoin/onramp-sdk
 ```
 
 ## Overview
@@ -15,7 +15,7 @@ Integrate multiple fiat on-ramp providers (MoonPay, Ramp, Transak, Stripe) to al
 ## Usage
 
 ```typescript
-import { OnRampSDK } from '@cinaconnect/onramp-sdk'
+import { OnRampSDK } from '@cinacoin/onramp-sdk'
 
 const onRamp = new OnRampSDK({
   providers: ['moonpay', 'ramp', 'transak', 'stripe'],

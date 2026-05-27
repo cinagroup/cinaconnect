@@ -1,5 +1,4 @@
 import type { Address, Hex, Hash, Chain, Transport, PublicClient } from 'viem';
-
 /**
  * ERC-4337 UserOperation interface matching the standard specification.
  */
@@ -52,6 +51,14 @@ export interface UserOperationReceipt {
 /** Result of sending a UserOperation */
 export interface SendUserOperationResult {
   userOpHash: Hash;
+}
+
+/** Result of simulating a UserOperation */
+export interface UserOpSimulationResult {
+  success: boolean;
+  gasUsed?: bigint;
+  revertReason?: string;
+  simulationType?: 'validation' | 'validation_and_execution';
 }
 
 /** Configuration for a BundlerClient */

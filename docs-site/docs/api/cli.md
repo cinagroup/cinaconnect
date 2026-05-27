@@ -1,20 +1,20 @@
 # CLI
 
-> `@cinaconnect/cli` — Command-line interface for CinaConnect.
+> `@cinacoin/cli` — Command-line interface for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install -g @cinaconnect/cli
+npm install -g @cinacoin/cli
 ```
 
 ## Usage
 
 ```bash
-cinaconnect init              # Initialize a new project
-cinaconnect connect           # Connect to a wallet
-cinaconnect deploy            # Deploy smart contracts
-cinaconnect monitor           # Monitor relay and bundler
+cinacoin init              # Initialize a new project
+cinacoin connect           # Connect to a wallet
+cinacoin deploy            # Deploy smart contracts
+cinacoin monitor           # Monitor relay and bundler
 ```
 
 ## Related

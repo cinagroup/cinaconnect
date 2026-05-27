@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:cinaconnect/cinaconnect.dart';
+import 'package:cinacoin/cinacoin.dart';
 
 void main() {
   group('Types', () {

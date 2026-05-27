@@ -1,14 +1,14 @@
 import { defineNuxtModule, addPlugin, addImportsDir, addComponent, addTemplate, createResolver } from '@nuxt/kit';
 /**
- * CinaConnect Nuxt module — provides wallet connection for Nuxt 3 apps.
+ * Cinacoin Nuxt module — provides wallet connection for Nuxt 3 apps.
  *
- * Automatically adds the @cinaconnect/vue plugin, runtime config,
+ * Automatically adds the @cinacoin/vue plugin, runtime config,
  * composables, and a connect-button component.
  */
 export default defineNuxtModule({
     meta: {
-        name: '@cinaconnect/nuxt',
-        configKey: 'cinaconnect',
+        name: '@cinacoin/nuxt',
+        configKey: 'cinacoin',
         compatibility: {
             nuxt: '^3.0.0',
         },
@@ -21,14 +21,14 @@ export default defineNuxtModule({
     setup(options, nuxt) {
         const { resolve } = createResolver(import.meta.url);
         // ── Runtime config ─────────────────────────────────────────────
-        nuxt.options.runtimeConfig.public.cinaconnect = {
+        nuxt.options.runtimeConfig.public.cinacoin = {
             projectId: options.projectId,
             networks: options.networks,
             metadata: options.metadata,
             themeMode: options.themeMode,
             themeVariables: options.themeVariables,
         };
-        // ── Vue plugin (auto-installs @cinaconnect/vue) ───────────────
+        // ── Vue plugin (auto-installs @cinacoin/vue) ───────────────
         addPlugin({
             src: resolve('./runtime/plugin'),
         });
@@ -45,26 +45,26 @@ export default defineNuxtModule({
         });
         // ── CSS theme variables ────────────────────────────────────────
         addTemplate({
-            filename: 'cinaconnect-theme.css',
+            filename: 'cinacoin-theme.css',
             getContents: () => {
                 const palette = {
-                    '--cinaconnect-color-accent': '#4F46E5',
-                    '--cinaconnect-color-accent-hover': '#4338CA',
-                    '--cinaconnect-color-bg': '#ffffff',
-                    '--cinaconnect-color-bg-secondary': '#f9fafb',
-                    '--cinaconnect-color-text': '#111827',
-                    '--cinaconnect-color-text-secondary': '#6b7280',
-                    '--cinaconnect-color-border': '#e5e7eb',
-                    '--cinaconnect-color-success': '#10b981',
-                    '--cinaconnect-color-error': '#ef4444',
-                    '--cinaconnect-radius': '12px',
+                    '--cinacoin-color-accent': '#4F46E5',
+                    '--cinacoin-color-accent-hover': '#4338CA',
+                    '--cinacoin-color-bg': '#ffffff',
+                    '--cinacoin-color-bg-secondary': '#f9fafb',
+                    '--cinacoin-color-text': '#111827',
+                    '--cinacoin-color-text-secondary': '#6b7280',
+                    '--cinacoin-color-border': '#e5e7eb',
+                    '--cinacoin-color-success': '#10b981',
+                    '--cinacoin-color-error': '#ef4444',
+                    '--cinacoin-radius': '12px',
                 };
                 const darkPalette = {
-                    '--cinaconnect-color-bg': '#111827',
-                    '--cinaconnect-color-bg-secondary': '#1f2937',
-                    '--cinaconnect-color-text': '#f9fafb',
-                    '--cinaconnect-color-text-secondary': '#9ca3af',
-                    '--cinaconnect-color-border': '#374151',
+                    '--cinacoin-color-bg': '#111827',
+                    '--cinacoin-color-bg-secondary': '#1f2937',
+                    '--cinacoin-color-text': '#f9fafb',
+                    '--cinacoin-color-text-secondary': '#9ca3af',
+                    '--cinacoin-color-border': '#374151',
                 };
                 const resolve = (vars) => Object.entries(vars)
                     .map(([k, v]) => `  ${k}: ${options.themeVariables?.[k] ?? v};`)
@@ -85,7 +85,7 @@ export default defineNuxtModule({
         });
         // Inject generated CSS into the app
         nuxt.hook('app:resolve', (app) => {
-            app.css.push('#build/cinaconnect-theme.css');
+            app.css.push('#build/cinacoin-theme.css');
         });
         // ── TypeScript augmentation ────────────────────────────────────
         nuxt.hook('prepare:types', ({ references }) => {

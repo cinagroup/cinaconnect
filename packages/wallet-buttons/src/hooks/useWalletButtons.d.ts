@@ -2,10 +2,10 @@
  * Hook: useWalletButtons
  *
  * Provides pre-configured wallet button data for 40+ wallets and
- * connection-state helpers backed by @cinaconnect/core-sdk.
+ * connection-state helpers backed by @cinacoin/core-sdk.
  */
 import { WalletButtonData } from '../types';
-import { Connector } from '@cinaconnect/core-sdk';
+import { Connector } from '@cinacoin/core-sdk';
 /**
  * Hook that exposes wallet-button data and connection state.
  *

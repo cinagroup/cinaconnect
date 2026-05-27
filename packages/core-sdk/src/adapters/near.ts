@@ -305,7 +305,9 @@ export function base58Decode(str: string): Uint8Array | null {
 /** Compute SHA-256 hash of input bytes. Uses Web Crypto API. */
 export async function sha256(input: Uint8Array): Promise<Uint8Array> {
   if (typeof crypto !== 'undefined' && crypto.subtle) {
-    const hash = await crypto.subtle.digest('SHA-256', input);
+    // Strict TS rejects Uint8Array<ArrayBufferLike> as BufferSource.
+    // Cast is safe: crypto.subtle only accepts ArrayBuffer-backed views.
+    const hash = await crypto.subtle.digest('SHA-256', input as unknown as BufferSource);
     return new Uint8Array(hash);
   }
   // Node.js fallback
@@ -391,7 +393,7 @@ export function formatNearBalance(yoctoNear: string | bigint | number): string {
  */
 export function parseNearAmount(near: string): bigint {
   const parts = near.split('.');
-  const intPart = BigInt(parts[0]);
+  const intPart = BigInt(parts[0] || '0');
   let fracPart = 0n;
   if (parts.length > 1) {
     const frac = parts[1].padEnd(24, '0').slice(0, 24);
@@ -965,7 +967,7 @@ class NearRpcClient {
   }
 
   /** Make a JSON-RPC call. */
-  private async call<T>(method: string, params: unknown[]): Promise<T> {
+  private async call<T>(method: string, params: unknown[] | Record<string, unknown>): Promise<T> {
     const id = ++this.idCounter;
     const resp = await fetch(this.rpcUrl, {
       method: 'POST',
@@ -1280,7 +1282,7 @@ export class NearChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }

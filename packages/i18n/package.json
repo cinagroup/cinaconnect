@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/i18n",
+  "name": "@cinacoin/i18n",
   "version": "2.0.0",
-  "description": "Internationalization package for CinaConnect wallet",
+  "description": "Internationalization package for Cinacoin wallet",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -31,5 +31,6 @@
   ],
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

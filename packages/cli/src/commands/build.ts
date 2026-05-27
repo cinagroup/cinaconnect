@@ -5,20 +5,20 @@ import { join } from 'node:path';
 import { spinner, warn } from '../utils/logger.js';
 
 // ============================================================
-// ocx build — Build CinaConnect SDK packages
+// ocx build — Build Cinacoin SDK packages
 // ============================================================
 
 export function buildCommand(cli: Command): void {
   cli
     .command('build')
-    .description('Build CinaConnect SDK packages')
+    .description('Build Cinacoin SDK packages')
     .option('--scope <package>', 'Build a specific package only')
     .option('--force', 'Force rebuild (clean dist first)')
     .option('--turbo', 'Use turbo for parallel builds (default)', true)
     .action(async (opts: { scope?: string; force?: boolean; turbo?: boolean }) => {
       const rootDir = findWorkspaceRoot();
       if (!rootDir) {
-        warn('Not in an CinaConnect workspace. Run this from the monorepo root.');
+        warn('Not in an Cinacoin workspace. Run this from the monorepo root.');
         process.exit(1);
       }
 

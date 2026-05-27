@@ -5,7 +5,7 @@
  * error codes, and envelope types — fully compatible with the WC v2
  * protocol specification.
  */
-import type { AppMetadata, RequiredNamespace } from '@cinaconnect/core-sdk';
+import type { AppMetadata, RequiredNamespace } from '@cinacoin/core-sdk';
 /** Standard WC v2 pairing error codes. */
 export declare const WC_PAIRING_ERRORS: {
     /** Invalid pairing proposal. */

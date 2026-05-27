@@ -72,7 +72,7 @@ public struct WalletNotification: Sendable {
     }
 }
 
-/// Handler for Apple Push Notifications in CinaConnect.
+/// Handler for Apple Push Notifications in Cinacoin.
 public final class PushNotificationHandler {
     
     /// Device token for APNs registration.
@@ -117,7 +117,7 @@ public final class PushNotificationHandler {
         let tokenString = deviceToken.map { String(format: "%02.2hhx", $0) }.joined()
         self.deviceToken = tokenString
         
-        // In production: send this token to your CinaConnect relay server
+        // In production: send this token to your Cinacoin relay server
         // to enable wallet-specific push notifications
         
         onTokenRegistered?(tokenString)
@@ -194,7 +194,7 @@ public final class PushNotificationHandler {
         
         let title = (alert["title"] as? String)
             ?? (userInfo["title"] as? String)
-            ?? "CinaConnect Notification"
+            ?? "Cinacoin Notification"
         let body = (alert["body"] as? String)
             ?? (userInfo["body"] as? String)
             ?? ""

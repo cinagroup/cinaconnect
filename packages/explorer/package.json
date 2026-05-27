@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/explorer",
+  "name": "@cinacoin/explorer",
   "version": "0.2.0",
   "description": "Explorer API — wallet/dApp discovery, logo fetching, registry",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -20,7 +20,7 @@
     "dev": "tsc --watch"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "peerDependencies": {
     "react": ">=17.0.0"
@@ -32,5 +32,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

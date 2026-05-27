@@ -7,7 +7,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import http from 'node:http';
-import { RpcProxy } from '@cinaconnect/rpc-proxy';
+import { RpcProxy } from '@cinacoin/rpc-proxy';
 
 const TEST_PORT = 18546;
 

@@ -1,0 +1,92 @@
+# Pod Disruption Budgets — ensure high availability during voluntary disruptions
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: relay-server-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 66%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: relay
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: rpc-proxy-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 66%
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rpc-proxy
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: nats-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: nats
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: redis-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: redis
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: bundler-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: bundler
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: push-server-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: push-server
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: keys-server-pdb
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: keys-server

@@ -1,6 +1,6 @@
 # Swap SDK API
 
-> `@cinaconnect/swap-sdk` — Multi-DEX swap routing with slippage protection.
+> `@cinacoin/swap-sdk` — Multi-DEX swap routing with slippage protection.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The Swap SDK aggregates quotes from multiple DEX providers (Uniswap, 1inch, 0x) 
 ## Installation
 
 ```bash
-npm install @cinaconnect/swap-sdk
+npm install @cinacoin/swap-sdk
 ```
 
 ## Quick Start
@@ -21,7 +21,7 @@ import {
   UniswapExecutor,
   OneInchExecutor,
   ZeroxExecutor,
-} from '@cinaconnect/swap-sdk'
+} from '@cinacoin/swap-sdk'
 
 // Set up executors
 const executors = [
@@ -59,7 +59,7 @@ console.log(`Best: ${best.quote.provider} → ${best.quote.toAmount}`)
 Fetches quotes from all configured DEX executors concurrently and returns the best one.
 
 ```typescript
-import { SwapQuoter } from '@cinaconnect/swap-sdk'
+import { SwapQuoter } from '@cinacoin/swap-sdk'
 
 const quoter = new SwapQuoter(executors, config?: Partial<QuoterConfig>)
 ```
@@ -114,7 +114,7 @@ Remove an executor by name.
 Manages executor lifecycle, caches quotes, and provides swap execution.
 
 ```typescript
-import { SwapRouter } from '@cinaconnect/swap-sdk'
+import { SwapRouter } from '@cinacoin/swap-sdk'
 
 const router = new SwapRouter(quoter)
 ```
@@ -183,7 +183,7 @@ interface SwapExecutor {
 Direct integration with Uniswap V2/V3 pools.
 
 ```typescript
-import { UniswapExecutor } from '@cinaconnect/swap-sdk'
+import { UniswapExecutor } from '@cinacoin/swap-sdk'
 
 const executor = new UniswapExecutor({
   rpcUrl: 'https://eth-rpc.example.com',
@@ -196,7 +196,7 @@ const executor = new UniswapExecutor({
 Uses the 1inch Aggregation API.
 
 ```typescript
-import { OneInchExecutor } from '@cinaconnect/swap-sdk'
+import { OneInchExecutor } from '@cinacoin/swap-sdk'
 
 const executor = new OneInchExecutor(process.env.ONEINCH_API_KEY)
 ```
@@ -206,7 +206,7 @@ const executor = new OneInchExecutor(process.env.ONEINCH_API_KEY)
 Uses the 0x Protocol API.
 
 ```typescript
-import { ZeroxExecutor } from '@cinaconnect/swap-sdk'
+import { ZeroxExecutor } from '@cinacoin/swap-sdk'
 
 const executor = new ZeroxExecutor(process.env.ZEROX_API_KEY)
 ```
@@ -320,7 +320,7 @@ import {
   getExchangeRate,
   percentDiff,
   adjustSlippageForVolatility,
-} from '@cinaconnect/swap-sdk'
+} from '@cinacoin/swap-sdk'
 ```
 
 ### `calculateMinimumReceived(toAmount: bigint, slippageBps: number): bigint`

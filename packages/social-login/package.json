@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/social-login",
+  "name": "@cinacoin/social-login",
   "version": "0.2.0",
-  "description": "CinaConnect Social Login — OAuth2 and email-based wallet authentication with deterministic HD wallet derivation",
+  "description": "Cinacoin Social Login — OAuth2 and email-based wallet authentication with deterministic HD wallet derivation",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -34,5 +34,6 @@
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

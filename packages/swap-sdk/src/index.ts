@@ -1,11 +1,11 @@
 /**
- * @cinaconnect/swap-sdk
+ * @cinacoin/swap-sdk
  *
- * CinaConnect Swap Aggregator SDK — multi-DEX swap routing with slippage protection.
+ * Cinacoin Swap Aggregator SDK — multi-DEX swap routing with slippage protection.
  *
  * @example
  * ```ts
- * import { SwapQuoter, SwapRouter, UniswapExecutor, OneInchExecutor, ZeroxExecutor } from '@cinaconnect/swap-sdk';
+ * import { SwapQuoter, SwapRouter, UniswapExecutor, OneInchExecutor, ZeroxExecutor } from '@cinacoin/swap-sdk';
  *
  * const executors = [
  *   new UniswapExecutor({ rpcUrl: 'https://eth-rpc.example.com' }),
@@ -49,7 +49,7 @@ export type { QuoterConfig } from "./quoter.js";
 
 // Router
 export { SwapRouter } from "./router.js";
-export type { SwapExecutor, RouterExecuteParams } from "./router.js";
+export type { SwapExecutor, RouterExecuteParams, GasEstimatorLike } from "./router.js";
 
 // Executors
 export { UniswapExecutor } from "./executors/uniswap.js";

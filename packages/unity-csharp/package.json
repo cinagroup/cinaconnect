@@ -1,6 +1,6 @@
 {
-  "name": "com.cinaconnect.unity",
-  "displayName": "CinaConnect Unity SDK",
+  "name": "com.cinacoin.unity",
+  "displayName": "Cinacoin Unity SDK",
   "version": "0.2.0",
   "unity": "2021.3",
   "description": "Web3 wallet connection SDK for Unity. Supports WalletConnect v2, EVM chains (Ethereum, Polygon, Arbitrum, Optimism, BSC), Solana, SIWE authentication, and push notifications for mobile builds.",
@@ -18,8 +18,8 @@
   "category": "Unity",
   "license": "MIT",
   "author": {
-    "name": "CinaConnect Team",
-    "url": "https://cinaconnect.com"
+    "name": "Cinacoin Team",
+    "url": "https://cinacoin.com"
   },
   "dependencies": {
     "com.unity.nuget.newtonsoft-json": "3.0.2"
@@ -30,5 +30,6 @@
       "description": "Basic wallet connection demo scene with connect button and modal UI.",
       "path": "Samples~/ConnectDemo"
     }
-  ]
+  ],
+  "private": true
 }

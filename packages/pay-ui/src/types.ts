@@ -11,14 +11,14 @@ import type {
   SwapTransaction,
   SwapReceipt,
   TokenInfo,
-} from "@cinaconnect/swap-sdk";
+} from "@cinacoin/swap-sdk";
 import type {
   OnRampQuote,
   OnRampQuoteParams,
   OnRampProviderId,
   OnRampWidgetParams,
   OnRampResult,
-} from "@cinaconnect/onramp-sdk";
+} from "@cinacoin/onramp-sdk";
 
 // ============================================================
 // Swap Widget Types

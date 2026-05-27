@@ -1,11 +1,11 @@
 # Sui Adapter
 
-> `@cinaconnect/adapter-sui` — Sui blockchain adapter for CinaConnect.
+> `@cinacoin/adapter-sui` — Sui blockchain adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-sui
+npm install @cinacoin/adapter-sui
 ```
 
 ## Overview

@@ -10,7 +10,7 @@ import type {
   OnRampQuoteParams,
   OnRampProviderId,
   OnRampResult,
-} from "@cinaconnect/onramp-sdk";
+} from "@cinacoin/onramp-sdk";
 import type {
   OnRampWidgetCoreConfig,
   OnRampWidgetCoreState,

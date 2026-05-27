@@ -1,4 +1,4 @@
-# CinaConnect 后端仪表板配置
+# Cinacoin 后端仪表板配置
 
 ## 问题说明
 
@@ -23,11 +23,11 @@
 在仪表板的 Settings 页面（https://backend-dashboard.pages.dev/settings）中，可以手动配置每个服务的端点 URL。
 
 **默认配置**：
-- RPC Proxy: `https://cinaconnect-rpc-proxy.cinagroup.workers.dev`
-- Keys Server: `https://cinaconnect-keys-server.cinagroup.workers.dev`
-- Relay Server: `https://cinaconnect-relay-server.cinagroup.workers.dev`
-- Notify Server: `https://cinaconnect-notify-server.cinagroup.workers.dev`
-- Push Server: `https://cinaconnect-push-server.cinagroup.workers.dev`
+- RPC Proxy: `https://cinacoin-rpc-proxy.cinagroup.workers.dev`
+- Keys Server: `https://cinacoin-keys-server.cinagroup.workers.dev`
+- Relay Server: `https://cinacoin-relay-server.cinagroup.workers.dev`
+- Notify Server: `https://cinacoin-notify-server.cinagroup.workers.dev`
+- Push Server: `https://cinacoin-push-server.cinagroup.workers.dev`
 
 ### 方案 3：环境变量配置
 
@@ -35,11 +35,11 @@
 
 ```bash
 # .env.local
-NEXT_PUBLIC_RPC_PROXY_URL=https://cinaconnect-rpc-proxy.cinagroup.workers.dev
-NEXT_PUBLIC_KEYS_SERVER_URL=https://cinaconnect-keys-server.cinagroup.workers.dev
-NEXT_PUBLIC_RELAY_SERVER_URL=https://cinaconnect-relay-server.cinagroup.workers.dev
-NEXT_PUBLIC_NOTIFY_SERVER_URL=https://cinaconnect-notify-server.cinagroup.workers.dev
-NEXT_PUBLIC_PUSH_SERVER_URL=https://cinaconnect-push-server.cinagroup.workers.dev
+NEXT_PUBLIC_RPC_PROXY_URL=https://cinacoin-rpc-proxy.cinagroup.workers.dev
+NEXT_PUBLIC_KEYS_SERVER_URL=https://cinacoin-keys-server.cinagroup.workers.dev
+NEXT_PUBLIC_RELAY_SERVER_URL=https://cinacoin-relay-server.cinagroup.workers.dev
+NEXT_PUBLIC_NOTIFY_SERVER_URL=https://cinacoin-notify-server.cinagroup.workers.dev
+NEXT_PUBLIC_PUSH_SERVER_URL=https://cinacoin-push-server.cinagroup.workers.dev
 ```
 
 ## Workers CORS 配置
@@ -67,10 +67,10 @@ function corsHeaders(origin: string | null): Record<string, string> {
 **示例**：
 ```bash
 # 健康检查
-curl https://cinaconnect-rpc-proxy.cinagroup.workers.dev/health
+curl https://cinacoin-rpc-proxy.cinagroup.workers.dev/health
 
 # 指标
-curl https://cinaconnect-rpc-proxy.cinagroup.workers.dev/metrics
+curl https://cinacoin-rpc-proxy.cinagroup.workers.dev/metrics
 ```
 
 ## 部署更新

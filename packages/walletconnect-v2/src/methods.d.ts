@@ -5,7 +5,7 @@
  * message signing, and chain operations. Compatible with EIP-155 (EVM)
  * and Solana namespaces.
  */
-import type { TransactionRequest } from '@cinaconnect/core-sdk';
+import type { TransactionRequest } from '@cinacoin/core-sdk';
 import type { RequiredNamespace } from './types.js';
 /** Standard EVM methods supported by most wallets. */
 export declare const WC_METHODS: readonly ["eth_sendTransaction", "eth_signTransaction", "personal_sign", "eth_signTypedData", "eth_signTypedData_v4", "eth_sign", "wallet_switchEthereumChain", "wallet_addEthereumChain", "wallet_getPermissions", "wallet_requestPermissions", "wallet_watchAsset", "wallet_scanQRCode", "eth_accounts", "eth_chainId", "eth_call", "eth_getBalance", "eth_estimateGas", "eth_gasPrice", "eth_blockNumber", "eth_getTransactionCount", "eth_getTransactionByHash", "eth_getTransactionReceipt", "eth_getLogs"];

@@ -1,5 +1,5 @@
 /**
- * linkMode.ts — LinkModeManager for @cinaconnect/react-native
+ * linkMode.ts — LinkModeManager for @cinacoin/react-native
  *
  * High-level link-mode integration that coordinates deep linking with
  * wallet connection flows. Automatically detects if a wallet is installed
@@ -7,10 +7,10 @@
  *
  * Usage:
  * ```ts
- * import { LinkModeManager } from '@cinaconnect/react-native';
+ * import { LinkModeManager } from '@cinacoin/react-native';
  *
  * const lm = LinkModeManager.getInstance();
- * await lm.init('cinaconnect://');
+ * await lm.init('cinacoin://');
  *
  * const result = await lm.connectWithLink('metamask', 'eip155');
  * ```
@@ -96,7 +96,7 @@ export class LinkModeManager {
    * Sets up deep-link listeners, app-state monitoring, and return-callback
    * routing.
    *
-   * @param appScheme — The app's custom URI scheme (e.g. `'cinaconnect://'`).
+   * @param appScheme — The app's custom URI scheme (e.g. `'cinacoin://'`).
    */
   async init(appScheme: string): Promise<void> {
     if (this._initialised) return;

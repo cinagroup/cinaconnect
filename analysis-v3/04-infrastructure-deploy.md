@@ -1,4 +1,4 @@
-# CinaConnect Infrastructure & Deployment Analysis
+# Cinacoin Infrastructure & Deployment Analysis
 
 > **Date:** 2026-05-25  
 > **Scope:** Server-side infrastructure + Cloudflare Workers deployment status  
@@ -173,7 +173,7 @@
 |--------|--------|
 | Type | Node.js CLI (commander) |
 | Commands | `init`, `add`, `build`, `test` |
-| Package | `@cinaconnect/cli` |
+| Package | `@cinacoin/cli` |
 
 **Note:** Developer tooling, not infrastructure.
 
@@ -184,7 +184,7 @@
 | Aspect | Status |
 |--------|--------|
 | Type | AST transform library |
-| Transforms | AppKit→CinaConnect, WCv1→v2, RainbowKit→CinaConnect, ConnectKit→CinaConnect |
+| Transforms | AppKit→Cinacoin, WCv1→v2, RainbowKit→Cinacoin, ConnectKit→Cinacoin |
 
 **Note:** Migration tooling for adopters. No server.
 
@@ -223,9 +223,9 @@
 |---------|--------------|-----------------|-----|-----|---------------|
 | relay-server | ✅ Yes | ✅ RELAY_SESSION | ✅ RELAY_CACHE | ❌ | ✅ relay.cinacoin.com |
 | rpc-proxy | ✅ Yes | ❌ | ✅ RPC_CACHE | ❌ | ✅ rpc.cinacoin.com |
-| keys-server | ✅ Yes | ❌ | ✅ KEYS_CACHE | ✅ cinaconnect-keys | ✅ keys.cinacoin.com |
+| keys-server | ✅ Yes | ❌ | ✅ KEYS_CACHE | ✅ cinacoin-keys | ✅ keys.cinacoin.com |
 | push-server | ✅ Yes | ❌ | ✅ DEVICE_TOKENS | ❌ | ✅ push.cinacoin.com |
-| notify-server | ✅ Yes | ❌ | ✅ SUBSCRIPTION_CACHE | ✅ cinaconnect-notifications | ✅ notify.cinacoin.com |
+| notify-server | ✅ Yes | ❌ | ✅ SUBSCRIPTION_CACHE | ✅ cinacoin-notifications | ✅ notify.cinacoin.com |
 
 ### 2.2 Deployment Scripts
 
@@ -275,7 +275,7 @@
 
 ## 4. Missing Infrastructure (vs Reown/AppKit)
 
-### 4.1 What CinaConnect Has
+### 4.1 What Cinacoin Has
 
 | Component | Status |
 |-----------|--------|
@@ -296,7 +296,7 @@
 
 ### 4.2 What's Missing vs Reown
 
-| Component | Reown Has | CinaConnect Status | Gap |
+| Component | Reown Has | Cinacoin Status | Gap |
 |-----------|-----------|-------------------|-----|
 | **Explorer/Block Explorer** | Blockchain explorer UI | ✅ Component library exists | No standalone explorer app |
 | **Paymaster** | Gas sponsorship | ❌ No server (only `paymaster` package directory) | Missing gas sponsorship server |

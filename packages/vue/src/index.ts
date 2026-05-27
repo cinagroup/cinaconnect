@@ -1,19 +1,19 @@
 /**
- * @cinaconnect/vue
+ * @cinacoin/vue
  *
- * Vue 3 adapter for CinaConnect white-label UI toolkit.
+ * Vue 3 adapter for Cinacoin white-label UI toolkit.
  */
 
-export { default as CinaConnectProvider } from './CinaConnectProvider.vue.js';
-export type { CinaConnectProviderProps } from './CinaConnectProvider.vue.js';
+export { default as CinaCoinProvider } from './CinaCoinProvider.vue.js';
+export type { CinaCoinProviderProps } from './CinaCoinProvider.vue.js';
 
 export { ONCHAINUX_KEY } from './types.js';
-export type { CinaConnectConfig, CinaConnectContext, AccountState, Connector, ChainConfig, ThemeMode } from './types.js';
+export type { CinacoinConfig, CinacoinContext, AccountState, Connector, ChainConfig, ThemeMode } from './types.js';
 
 export { OcxConnectButton, OcxConnectModal, OcxChainSwitcher } from './components.js';
 
 export {
-  useCinaConnect,
+  useCinacoin,
   useAccount,
   useChainId,
   useConnect,
@@ -36,3 +36,6 @@ export type {
   SendCallsOptions,
   AtomicBatchOptions,
 } from './composables.js';
+
+// Connector manager for real wallet connections
+export { ConnectorManager } from './connectorManager.js';

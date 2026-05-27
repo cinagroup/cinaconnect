@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-bitcoin
+# @cinacoin/adapter-bitcoin
 
-Native Bitcoin wallet connectors for CinaConnect — Unisat, Leather, OKX, SatsConnect, Xverse, Wallet Standard.
+Native Bitcoin wallet connectors for Cinacoin — Unisat, Leather, OKX, SatsConnect, Xverse, Wallet Standard.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-bitcoin
+npm install @cinacoin/adapter-bitcoin
 ```
 
 ## Usage
 
 ```ts
-import { BitcoinAdapter } from '@cinaconnect/adapter-bitcoin';
+import { BitcoinAdapter } from '@cinacoin/adapter-bitcoin';
 
 const adapter = new BitcoinAdapter({
   networks: ['mainnet', 'testnet'],

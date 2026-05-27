@@ -1,10 +1,10 @@
 # Explorer
 
-> `@cinaconnect/explorer` — Transaction and wallet explorer for CinaConnect.
+> `@cinacoin/explorer` — Transaction and wallet explorer for Cinacoin.
 
 ## Overview
 
-A block explorer interface for monitoring transactions, wallet activity, and smart contract interactions within the CinaConnect ecosystem.
+A block explorer interface for monitoring transactions, wallet activity, and smart contract interactions within the Cinacoin ecosystem.
 
 ## Features
 

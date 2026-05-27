@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# CinaConnect Cloudflare Deployment Script
+# CinaCoin Cloudflare Deployment Script
 # Uses API token for authentication (no browser required)
 
 CLOUDFLARE_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"  # Set via environment or .env
@@ -37,7 +37,7 @@ deploy_service() {
 }
 
 # Main
-info "CinaConnect Cloudflare Deployment"
+info "CinaCoin Cloudflare Deployment"
 info "Account: CinaGroup ($CLOUDFLARE_ACCOUNT_ID)"
 echo ""
 
@@ -65,8 +65,8 @@ cd "$PROJECT_ROOT"
 # Health Status Page
 info "Deploying Health Status Page to Pages..."
 cd "$PROJECT_ROOT/apps/health-status"
-CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages project create cinaconnect-health-status --production-branch main 2>/dev/null || true
-CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy . --project-name=cinaconnect-health-status
+CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages project create cinacoin-health-status --production-branch main 2>/dev/null || true
+CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy . --project-name=cinacoin-health-status
 log "Health Status Page deployed to Pages!"
 
 cd "$PROJECT_ROOT"
@@ -74,21 +74,21 @@ cd "$PROJECT_ROOT"
 # API Documentation Site
 info "Deploying API Documentation Site to Pages..."
 cd "$PROJECT_ROOT/docs-site"
-CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages project create cinaconnect-docs --production-branch main 2>/dev/null || true
-CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy .vitepress/dist --project-name=cinaconnect-docs
+CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages project create cinacoin-docs --production-branch main 2>/dev/null || true
+CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy .vitepress/dist --project-name=cinacoin-docs
 log "API Documentation Site deployed to Pages!"
 
 echo ""
 log "🎉 All Cloudflare deployments completed!"
 echo ""
 echo "Deployed Workers (.cinagroup.workers.dev):"
-echo "  • cinaconnect-rpc-proxy"
-echo "  • cinaconnect-keys-server"
-echo "  • cinaconnect-relay-server"
-echo "  • cinaconnect-notify-server"
-echo "  • cinaconnect-push-server"
+echo "  • cinacoin-rpc-proxy"
+echo "  • cinacoin-keys-server"
+echo "  • cinacoin-relay-server"
+echo "  • cinacoin-notify-server"
+echo "  • cinacoin-push-server"
 echo ""
 echo "Deployed Pages (.pages.dev):"
 echo "  • backend-dashboard"
-echo "  • cinaconnect-health-status"
-echo "  • cinaconnect-docs"
+echo "  • cinacoin-health-status"
+echo "  • cinacoin-docs"

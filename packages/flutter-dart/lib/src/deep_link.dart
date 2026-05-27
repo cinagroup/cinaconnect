@@ -12,7 +12,7 @@ class DeepLinkManager {
 
   DeepLinkManager._();
 
-  /// Register a URI scheme (e.g., 'cinaconnect://').
+  /// Register a URI scheme (e.g., 'cinacoin://').
   void registerScheme(String scheme) {
     _registeredScheme = scheme;
   }

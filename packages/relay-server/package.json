@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/relay-server",
+  "name": "@cinacoin/relay-server",
   "version": "0.2.0",
-  "description": "WalletConnect relay server for CinaConnect — HTTP/WebSocket relay interface",
+  "description": "WalletConnect relay server for Cinacoin — HTTP/WebSocket relay interface",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -23,8 +23,8 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/walletconnect-v2": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/walletconnect-v2": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -33,5 +33,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

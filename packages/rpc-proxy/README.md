@@ -1,6 +1,6 @@
 # RPC Proxy
 
-> CinaConnect RPC 代理 — 多提供者智能路由与缓存层。
+> Cinacoin RPC 代理 — 多提供者智能路由与缓存层。
 
 ## 架构
 
@@ -23,7 +23,7 @@
                                    └─────────────┘
 ```
 
-RPC Proxy 是 CinaConnect 的 RPC 请求路由层。它智能地将请求分发到多个区块链 RPC 提供者，使用 Redis 缓存常见响应，并通过去重机制减少上游调用。
+RPC Proxy 是 Cinacoin 的 RPC 请求路由层。它智能地将请求分发到多个区块链 RPC 提供者，使用 Redis 缓存常见响应，并通过去重机制减少上游调用。
 
 ## 技术栈
 
@@ -120,20 +120,20 @@ rpc:{chain_id}:{method}:{params_hash}
 ### Docker
 
 ```bash
-docker build -t cinaconnect/rpc-proxy:latest .
+docker build -t cinacoin/rpc-proxy:latest .
 docker run -p 8545:8545 \
   -e REDIS_URL=redis://redis-cluster:6379 \
   -e PROVIDERS_FILE=/config/providers.yaml \
   -v ./providers.yaml:/config/providers.yaml \
-  cinaconnect/rpc-proxy:latest
+  cinacoin/rpc-proxy:latest
 ```
 
 ### Kubernetes
 
 ```bash
-helm install rpc-proxy ./deploy/helm/cinaconnect \
+helm install rpc-proxy ./deploy/helm/cinacoin \
   --set rpcProxy.replicaCount=3 \
-  --set global.imageRegistry=ghcr.io/cinaconnect
+  --set global.imageRegistry=ghcr.io/cinacoin
 ```
 
 ## 监控

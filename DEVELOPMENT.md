@@ -1,6 +1,6 @@
 # Development Guide
 
-This document covers the internal development workflow for the CinaConnect monorepo. It's aimed at contributors who want to understand how the project is structured and how to work with it effectively.
+This document covers the internal development workflow for the Cinacoin monorepo. It's aimed at contributors who want to understand how the project is structured and how to work with it effectively.
 
 ---
 
@@ -19,10 +19,10 @@ This document covers the internal development workflow for the CinaConnect monor
 
 ## Monorepo Structure
 
-CinaConnect is a **pnpm monorepo** managed by [Turborepo](https://turbo.build/repo). All packages live under `packages/`, apps under `apps/`, and example projects under `examples/`.
+Cinacoin is a **pnpm monorepo** managed by [Turborepo](https://turbo.build/repo). All packages live under `packages/`, apps under `apps/`, and example projects under `examples/`.
 
 ```
-cinaconnect/
+cinacoin/
 ├── apps/                    # Deployable applications
 │   ├── demo/                # Next.js demo app (main showcase)
 │   └── demo-react/          # React-only demo app
@@ -66,23 +66,23 @@ cinaconnect/
 
 ### Package Naming
 
-All packages use the `@cinaconnect/` scope:
+All packages use the `@cinacoin/` scope:
 
 ```
-@cinaconnect/core-sdk
-@cinaconnect/react
-@cinaconnect/adapter-ethereum
-@cinaconnect/aa-sdk
+@cinacoin/core-sdk
+@cinacoin/react
+@cinacoin/adapter-ethereum
+@cinacoin/aa-sdk
 ```
 
 ### Dependency Flow
 
 ```
-apps/demo → @cinaconnect/react → @cinaconnect/core-ui → @cinaconnect/core-sdk
+apps/demo → @cinacoin/react → @cinacoin/core-ui → @cinacoin/core-sdk
                                                           ↓
-                                                    @cinaconnect/adapter-*
+                                                    @cinacoin/adapter-*
                                                           ↓
-                                                    @cinaconnect/chains
+                                                    @cinacoin/chains
 ```
 
 Internal dependencies use the `workspace:*` protocol:
@@ -90,7 +90,7 @@ Internal dependencies use the `workspace:*` protocol:
 ```json
 {
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   }
 }
 ```
@@ -119,7 +119,7 @@ We use [Turborepo](https://turbo.build/repo) for task orchestration. The pipelin
 pnpm run build
 
 # Build a single package and its dependencies
-pnpm run build --filter=@cinaconnect/react
+pnpm run build --filter=@cinacoin/react
 
 # Run tests only for changed packages
 pnpm run test --filter=...[HEAD^1]
@@ -150,7 +150,7 @@ cd packages/your-package
 
 ```json
 {
-  "name": "@cinaconnect/your-package",
+  "name": "@cinacoin/your-package",
   "version": "0.0.0",
   "description": "Description of your package",
   "type": "module",
@@ -173,7 +173,7 @@ cd packages/your-package
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
@@ -220,8 +220,8 @@ packages:
 ```bash
 # From the root
 pnpm install
-pnpm run build --filter=@cinaconnect/your-package
-pnpm run test --filter=@cinaconnect/your-package
+pnpm run build --filter=@cinacoin/your-package
+pnpm run test --filter=@cinacoin/your-package
 ```
 
 ### Step 7: Write a README
@@ -236,7 +236,7 @@ Create `README.md` in your package directory with:
 
 ## How to Add a New Chain Adapter
 
-Chain adapters allow CinaConnect to interact with new blockchains. Follow these steps:
+Chain adapters allow Cinacoin to interact with new blockchains. Follow these steps:
 
 ### Step 1: Create the Adapter Package
 
@@ -245,15 +245,15 @@ mkdir packages/adapter-<chain>
 cd packages/adapter-<chain>
 ```
 
-Use the same `package.json` and `tsconfig.json` structure as [above](#step-2-create-packagejson), adjusting the name to `@cinaconnect/adapter-<chain>`.
+Use the same `package.json` and `tsconfig.json` structure as [above](#step-2-create-packagejson), adjusting the name to `@cinacoin/adapter-<chain>`.
 
 ### Step 2: Implement the Adapter Interface
 
-The adapter should implement the standard interface defined in `@cinaconnect/core-sdk`. At minimum:
+The adapter should implement the standard interface defined in `@cinacoin/core-sdk`. At minimum:
 
 ```typescript
 // src/adapter.ts
-import type { ChainAdapter, WalletProvider, ConnectionInfo } from '@cinaconnect/core-sdk';
+import type { ChainAdapter, WalletProvider, ConnectionInfo } from '@cinacoin/core-sdk';
 
 export class ChainAdapter implements ChainAdapter {
   readonly chainId: string;
@@ -297,7 +297,7 @@ export function discoverWallets(): WalletInfo[] {
 
 ### Step 4: Add Chain Definitions
 
-If the chain isn't already in `@cinaconnect/chains`, add it:
+If the chain isn't already in `@cinacoin/chains`, add it:
 
 ```typescript
 // In packages/chains/src/<chain>.ts
@@ -326,7 +326,7 @@ export { discoverWallets } from './discovery.js';
 // test/adapter.test.ts
 import { describe, it, expect, vi } from 'vitest';
 import { ChainAdapter } from '../src/adapter.js';
-import { createMockProvider } from '@cinaconnect/testing';
+import { createMockProvider } from '@cinacoin/testing';
 
 describe('ChainAdapter', () => {
   it('should connect and return connection info', async () => {
@@ -345,7 +345,7 @@ If this adapter should be included in the universal provider, register it:
 
 ```typescript
 // In packages/core-sdk/src/adapters/index.ts
-import { ChainAdapter } from '@cinaconnect/adapter-<chain>';
+import { ChainAdapter } from '@cinacoin/adapter-<chain>';
 
 export const allAdapters = [
   // ... existing adapters
@@ -357,8 +357,8 @@ export const allAdapters = [
 
 ```bash
 pnpm install
-pnpm run build --filter=@cinaconnect/adapter-<chain>
-pnpm run test --filter=@cinaconnect/adapter-<chain>
+pnpm run build --filter=@cinacoin/adapter-<chain>
+pnpm run test --filter=@cinacoin/adapter-<chain>
 ```
 
 Test in the demo app by importing the adapter and verifying connection works.
@@ -376,14 +376,14 @@ Test in the demo app by importing the adapter and verifying connection works.
 pnpm run build --verbosity=2
 
 # Build a single package with full output
-pnpm run build --filter=@cinaconnect/core-sdk -- --verbose
+pnpm run build --filter=@cinacoin/core-sdk -- --verbose
 ```
 
 #### Debug Type Errors
 
 ```bash
 # See the full type error context
-pnpm run typecheck --filter=@cinaconnect/core-sdk
+pnpm run typecheck --filter=@cinacoin/core-sdk
 
 # Or run tsc directly for more verbose output
 cd packages/core-sdk && npx tsc --noEmit --pretty
@@ -401,7 +401,7 @@ ls packages/core-sdk/dist/
 node -e "console.log(require('./packages/core-sdk/package.json').exports)"
 
 # Verify the module resolves
-node -e "import('@cinaconnect/core-sdk').then(m => console.log(Object.keys(m)))"
+node -e "import('@cinacoin/core-sdk').then(m => console.log(Object.keys(m)))"
 ```
 
 ### Vitest
@@ -457,7 +457,7 @@ If changes to a workspace package aren't reflected in the demo app:
 
 ```bash
 # 1. Ensure the package is built
-pnpm run build --filter=@cinaconnect/react
+pnpm run build --filter=@cinacoin/react
 
 # 2. Clear Next.js cache
 cd apps/demo && rm -rf .next
@@ -482,7 +482,7 @@ const core = new Core({
 
 | Issue | Fix |
 |-------|-----|
-| `Cannot find module '@cinaconnect/...'` | Run `pnpm install` at root, then `pnpm run build` |
+| `Cannot find module '@cinacoin/...'` | Run `pnpm install` at root, then `pnpm run build` |
 | TypeScript errors after pulling | `pnpm install && pnpm run build --force` |
 | Demo app shows old code | Clear `.next` cache and restart dev server |
 | Tests pass locally but fail in CI | Run `pnpm run ci` locally — CI runs typecheck + lint too |
@@ -571,7 +571,7 @@ cd packages/core-sdk
 pnpm link --global
 
 # In a consuming project
-pnpm link --global @cinaconnect/core-sdk
+pnpm link --global @cinacoin/core-sdk
 ```
 
 Or use pnpm's workspace protocol directly — any local project that includes this monorepo as a dependency will get live packages via `workspace:*`.

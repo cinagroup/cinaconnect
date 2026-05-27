@@ -1,8 +1,8 @@
 /**
- * CinaConnectProvider — React Native context provider with real WalletConnect v2 integration.
+ * CinaCoinProvider — React Native context provider with real WalletConnect v2 integration.
  *
  * Wraps the app and provides chain state, connection methods, and theming.
- * Uses @cinaconnect/walletconnect-v2 for real WC v2 protocol communication.
+ * Uses @cinacoin/walletconnect-v2 for real WC v2 protocol communication.
  */
 
 import React, {
@@ -15,7 +15,7 @@ import React, {
   useRef,
   type ReactNode,
 } from 'react';
-import type { Session, WcClientEvent } from '@cinaconnect/walletconnect-v2';
+import type { Session, WcClientEvent } from '@cinacoin/walletconnect-v2';
 import {
   WcSessionManager,
   WcRelay,
@@ -30,8 +30,8 @@ import {
   getDefaultRequiredNamespaces,
   buildSendTransaction,
   buildPersonalSign,
-} from '@cinaconnect/walletconnect-v2';
-import type { TransactionRequest, AppMetadata } from '@cinaconnect/core-sdk';
+} from '@cinacoin/walletconnect-v2';
+import type { TransactionRequest, AppMetadata } from '@cinacoin/core-sdk';
 
 /** Supported theme modes. */
 export type ThemeMode = 'dark' | 'light' | 'minimal';
@@ -82,7 +82,7 @@ export interface AccountState {
 }
 
 /** Configuration passed to provider. */
-export interface CinaConnectConfig {
+export interface CinaCoinConfig {
   /** Relay server URL. */
   relayUrl?: string;
   /** Project ID. */
@@ -97,8 +97,8 @@ export interface CinaConnectConfig {
 }
 
 /** Context value. */
-export interface CinaConnectContextValue {
-  config: CinaConnectConfig;
+export interface CinaCoinContextValue {
+  config: CinaCoinConfig;
   connectors: Connector[];
   wallets: WalletInfo[];
   account: AccountState;
@@ -188,20 +188,20 @@ const THEME_COLORS: Record<ThemeMode, ThemeColors> = {
   },
 };
 
-const CinaConnectContext = createContext<CinaConnectContextValue | null>(null);
+const CinaCoinContext = createContext<CinaCoinContextValue | null>(null);
 
-/** Hook to access CinaConnect context. Throws if used outside provider. */
-export function useCinaConnectContext(): CinaConnectContextValue {
-  const ctx = useContext(CinaConnectContext);
+/** Hook to access CinaCoin context. Throws if used outside provider. */
+export function useCinaCoinContext(): CinaCoinContextValue {
+  const ctx = useContext(CinaCoinContext);
   if (!ctx) {
-    throw new Error('useCinaConnectContext must be used within <CinaConnectProvider>');
+    throw new Error('useCinaCoinContext must be used within <CinaCoinProvider>');
   }
   return ctx;
 }
 
 /** Provider props. */
-export interface CinaConnectProviderProps {
-  config: CinaConnectConfig;
+export interface CinaCoinProviderProps {
+  config: CinaCoinConfig;
   children: ReactNode;
 }
 
@@ -252,9 +252,9 @@ function extractChainId(caip2: string): number {
 }
 
 /**
- * CinaConnectProvider for React Native with real WC v2 support.
+ * CinaCoinProvider for React Native with real WC v2 support.
  */
-export function CinaConnectProvider({ config, children }: CinaConnectProviderProps): JSX.Element {
+export function CinaCoinProvider({ config, children }: CinaCoinProviderProps): JSX.Element {
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
   const [account, setAccount] = useState<AccountState>({
     address: null,
@@ -336,7 +336,7 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
   /** Create a new pairing and return the WC v2 URI. */
   const createPairingUri = useCallback(async (): Promise<string> => {
     if (!sessionManagerRef.current) {
-      throw new Error('CinaConnect not configured with relayUrl and metadata');
+      throw new Error('CinaCoin not configured with relayUrl and metadata');
     }
     const uri = await sessionManagerRef.current.initiatePairing();
     setWcUri(uri);
@@ -346,7 +346,7 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
   /** Connect using a WC v2 URI. */
   const connectWithUri = useCallback(async (uri: string): Promise<void> => {
     if (!sessionManagerRef.current) {
-      throw new Error('CinaConnect not configured with relayUrl and metadata');
+      throw new Error('CinaCoin not configured with relayUrl and metadata');
     }
     setStatus('connecting');
     try {
@@ -491,7 +491,7 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
     [],
   );
 
-  const value = useMemo<CinaConnectContextValue>(
+  const value = useMemo<CinaCoinContextValue>(
     () => ({
       config,
       connectors,
@@ -533,6 +533,6 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
   );
 
   return (
-    <CinaConnectContext.Provider value={value}>{children}</CinaConnectContext.Provider>
+    <CinaCoinContext.Provider value={value}>{children}</CinaCoinContext.Provider>
   );
 }

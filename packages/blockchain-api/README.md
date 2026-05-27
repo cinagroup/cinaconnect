@@ -1,17 +1,17 @@
-# @cinaconnect/blockchain-api
+# @cinacoin/blockchain-api
 
-Managed Blockchain API (ENS, balance history, tx lookup) for CinaConnect.
+Managed Blockchain API (ENS, balance history, tx lookup) for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/blockchain-api
+npm install @cinacoin/blockchain-api
 ```
 
 ## Usage
 
 ```ts
-import { BlockchainApiClient } from '@cinaconnect/blockchain-api';
+import { BlockchainApiClient } from '@cinacoin/blockchain-api';
 
 const client = createBlockchainApi({ apiKey: 'YOUR_API_KEY' });
 const balance = await client.getBalance('0x...');

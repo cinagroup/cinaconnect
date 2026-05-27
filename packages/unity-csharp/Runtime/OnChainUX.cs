@@ -3,24 +3,24 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using CinaConnect.WalletConnect;
-using CinaConnect.Chain;
+using Cinacoin.WalletConnect;
+using Cinacoin.Chain;
 
-namespace CinaConnect
+namespace Cinacoin
 {
     /// <summary>
-    /// CinaConnect Main Singleton Runtime Class.
+    /// Cinacoin Main Singleton Runtime Class.
     /// 
     /// Unity singleton that manages wallet connections, chain switching,
     /// and signing operations. Matches the core-sdk API surface.
     /// 
     /// Usage:
-    ///   CinaConnectManager.Instance.Initialize(projectId, metadata);
-    ///   var result = await CinaConnectManager.Instance.ConnectAsync("metamask");
+    ///   CinacoinManager.Instance.Initialize(projectId, metadata);
+    ///   var result = await CinacoinManager.Instance.ConnectAsync("metamask");
     /// </summary>
-    public class CinaConnectManager : MonoBehaviour
+    public class CinacoinManager : MonoBehaviour
     {
-        private static CinaConnectManager _instance;
+        private static CinacoinManager _instance;
         private static readonly object _lock = new object();
         private static bool _applicationIsQuitting;
 
@@ -60,7 +60,7 @@ namespace CinaConnect
         public delegate void OnError(string error);
         public event OnError OnErrorEvent;
 
-        public static CinaConnectManager Instance
+        public static CinacoinManager Instance
         {
             get
             {
@@ -70,12 +70,12 @@ namespace CinaConnect
                 {
                     if (_instance == null)
                     {
-                        _instance = FindObjectOfType<CinaConnectManager>();
+                        _instance = FindObjectOfType<CinacoinManager>();
 
                         if (_instance == null)
                         {
-                            var go = new GameObject("[CinaConnect]");
-                            _instance = go.AddComponent<CinaConnectManager>();
+                            var go = new GameObject("[Cinacoin]");
+                            _instance = go.AddComponent<CinacoinManager>();
                             DontDestroyOnLoad(go);
                         }
                     }
@@ -108,7 +108,7 @@ namespace CinaConnect
         /// Deep link handler.
         public DeepLinkHandler DeepLinks => _deepLinkHandler;
 
-        /// Initialize CinaConnect with project configuration.
+        /// Initialize Cinacoin with project configuration.
         public void Initialize(string projectId, AppMetadata metadata)
         {
             _projectId = projectId;
@@ -119,20 +119,20 @@ namespace CinaConnect
             _walletManager = new WalletManager(projectId, metadata, _relayUrl);
             _evmAdapter = new EvmAdapter();
 
-            // Connect wallet manager events to CinaConnect events
+            // Connect wallet manager events to Cinacoin events
             _walletManager.OnStatusChange += HandleWalletStatusChange;
             _walletManager.OnSessionConnected += HandleSessionConnected;
             _walletManager.OnSessionDisconnected += HandleSessionDisconnected;
             _walletManager.OnError += HandleWalletError;
             _walletManager.OnQRCodeGenerated += HandleQRCodeGenerated;
 
-            Log($"CinaConnect initialized (v{CinaConnectVersion.Value})");
+            Log($"Cinacoin initialized (v{CinacoinVersion.Value})");
         }
 
         /// Initialize from serialized configuration.
         public void InitializeFromConfig(string configJson)
         {
-            var config = JsonConvert.DeserializeObject<CinaConnectConfig>(configJson);
+            var config = JsonConvert.DeserializeObject<CinacoinConfig>(configJson);
             Initialize(config.ProjectId, config.Metadata);
         }
 
@@ -257,9 +257,9 @@ namespace CinaConnect
         /// Restore a persisted session.
         public async Task<SessionState> RestoreAsync()
         {
-            if (PlayerPrefs.HasKey("CinaConnect_Session"))
+            if (PlayerPrefs.HasKey("Cinacoin_Session"))
             {
-                var json = PlayerPrefs.GetString("CinaConnect_Session");
+                var json = PlayerPrefs.GetString("Cinacoin_Session");
                 try
                 {
                     var data = JsonConvert.DeserializeObject<SessionData>(json);
@@ -335,7 +335,7 @@ namespace CinaConnect
         {
             Log($"QR code generated for {walletName}");
             // Find ConnectModal and show QR
-            var modal = FindObjectOfType<CinaConnect.UI.ConnectModal>();
+            var modal = FindObjectOfType<Cinacoin.UI.ConnectModal>();
             if (modal != null)
             {
                 modal.ShowQR(uri, walletName);
@@ -368,20 +368,20 @@ namespace CinaConnect
                     Accounts = _currentAccounts,
                     ChainId = _currentChainId
                 };
-                PlayerPrefs.SetString("CinaConnect_Session", JsonConvert.SerializeObject(data));
+                PlayerPrefs.SetString("Cinacoin_Session", JsonConvert.SerializeObject(data));
                 PlayerPrefs.Save();
             }
         }
 
         private void ClearSession()
         {
-            PlayerPrefs.DeleteKey("CinaConnect_Session");
+            PlayerPrefs.DeleteKey("Cinacoin_Session");
         }
 
         private void Log(string message)
         {
             if (_enableDebugLogs)
-                Debug.Log($"[CinaConnect] {message}");
+                Debug.Log($"[Cinacoin] {message}");
         }
 
         private void OnApplicationQuit()
@@ -409,9 +409,9 @@ namespace CinaConnect
         }
     }
 
-    /// Configuration for CinaConnect initialization.
+    /// Configuration for Cinacoin initialization.
     [System.Serializable]
-    public class CinaConnectConfig
+    public class CinacoinConfig
     {
         [JsonProperty("projectId")]
         public string ProjectId;

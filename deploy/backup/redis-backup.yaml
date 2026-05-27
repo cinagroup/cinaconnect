@@ -1,4 +1,4 @@
-# CinaConnect — Redis Backup CronJob
+# Cinacoin — Redis Backup CronJob
 # Automated daily RDB snapshots with 30-day retention
 ---
 apiVersion: batch/v1
@@ -7,7 +7,7 @@ metadata:
   name: redis-backup
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "cinaconnect.labels" . | nindent 4 }}
+    {{- include "cinacoin.labels" . | nindent 4 }}
     component: backup
 spec:
   schedule: "0 3 * * *"  # Daily at 3:00 AM UTC (after postgres backup)
@@ -21,7 +21,7 @@ spec:
       template:
         metadata:
           labels:
-            {{- include "cinaconnect.labels" . | nindent 12 }}
+            {{- include "cinacoin.labels" . | nindent 12 }}
             component: redis-backup
         spec:
           restartPolicy: Never

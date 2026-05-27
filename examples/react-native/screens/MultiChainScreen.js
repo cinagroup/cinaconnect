@@ -1,14 +1,14 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, } from 'react-native';
-import { useCinaConnect } from '@cinaconnect/react-native';
+import { useCinacoin } from '@cinacoin/react-native';
 const CHAIN_BALANCES = [
     { chainId: 1, name: 'Ethereum', symbol: 'ETH', balance: '1.2345', usdValue: '$3,703.50', icon: '🔷' },
     { chainId: 137, name: 'Polygon', symbol: 'MATIC', balance: '500.00', usdValue: '$450.00', icon: '🟣' },
     { chainId: 42161, name: 'Arbitrum', symbol: 'ETH', balance: '0.5000', usdValue: '$1,500.00', icon: '🔵' },
 ];
 export function MultiChainScreen() {
-    const { account, chainId, switchChain } = useCinaConnect();
+    const { account, chainId, switchChain } = useCinacoin();
     const [selectedChain, setSelectedChain] = useState(1);
     if (!account) {
         return (_jsx(View, { style: styles.container, children: _jsx(Text, { style: styles.noAccount, children: "\u8BF7\u5148\u8FDE\u63A5\u94B1\u5305\u67E5\u770B\u8D44\u4EA7" }) }));

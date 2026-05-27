@@ -1,8 +1,8 @@
 {
-  "name": "cinaconnect-demo",
+  "name": "cinacoin-demo",
   "version": "0.1.1",
   "private": true,
-  "description": "CinaConnect Demo App",
+  "description": "Cinacoin Demo App",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -11,10 +11,10 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/core-ui": "workspace:*",
-    "@cinaconnect/react": "workspace:*",
-    "@cinaconnect/siwe": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/core-ui": "workspace:*",
+    "@cinacoin/react": "workspace:*",
+    "@cinacoin/siwe": "workspace:*",
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"

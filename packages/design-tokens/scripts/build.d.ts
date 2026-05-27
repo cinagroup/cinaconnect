@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Build script for @cinaconnect/design-tokens
+ * Build script for @cinacoin/design-tokens
  *
  * 1. Reads token JSON files.
  * 2. Generates a combined CSS file under dist/css/variables.css.

@@ -20,7 +20,7 @@ import {
   filter,
   take,
 } from 'rxjs/operators';
-import { Connector } from '@cinaconnect/core-sdk';
+import { Connector } from '@cinacoin/core-sdk';
 import {
   walletGetCapabilities,
   walletSendCalls,
@@ -43,8 +43,8 @@ import {
   type GetCallsStatusResult,
   type AtomicBatchConfig,
   type AtomicBatchResult,
-} from '@cinaconnect/core-sdk';
-import { CINA_CONNECT_INSTANCE } from '../cinaconnect.tokens.js';
+} from '@cinacoin/core-sdk';
+import { CINA_CONNECT_INSTANCE } from '../cinacoin.tokens.js';
 
 /** EIP-1193 provider shape used for EIP-5792 RPC calls. */
 interface Eip1193Provider {

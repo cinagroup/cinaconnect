@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/testing — Testing utilities for CinaConnect
+ * @cinacoin/testing — Testing utilities for Cinacoin
  *
  * Export all testing utilities from a single entry point.
  */

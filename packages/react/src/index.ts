@@ -1,16 +1,16 @@
 /**
- * @cinaconnect/react
+ * @cinacoin/react
  *
- * React adapter for CinaConnect white-label UI toolkit.
+ * React adapter for Cinacoin white-label UI toolkit.
  *
  * Provides:
- * - CinaConnectProvider (React context)
+ * - CinacoinProvider (React context)
  * - React wrapper components for OCX Web Components
  * - React hooks for on-chain state access
  */
 
-export { CinaConnectProvider, useCinaConnectContext } from './CinaConnectProvider.js';
-export type { CinaConnectConfig, CinaConnectContextValue, ChainConfig, ThemeMode } from './CinaConnectProvider.js';
+export { CinacoinProvider, useCinacoinContext } from './CinacoinProvider.js';
+export type { CinacoinConfig, CinacoinContextValue, ChainConfig, ThemeMode } from './CinacoinProvider.js';
 
 export { ConnectButton } from './ConnectButton.js';
 export type { ConnectButtonProps } from './ConnectButton.js';
@@ -21,7 +21,7 @@ export type { ConnectModalProps } from './ConnectModal.js';
 export { ChainSwitcher } from './ChainSwitcher.js';
 export type { ChainSwitcherProps } from './ChainSwitcher.js';
 
-export { useCinaConnect, useAccount, useChainId, useConnect, useDisconnect } from './hooks.js';
+export { useCinacoin, useAccount, useChainId, useConnect, useDisconnect } from './hooks.js';
 
 // EIP-5792 Wallet Call API hooks
 export {

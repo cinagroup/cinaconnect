@@ -1,5 +1,5 @@
 /**
- * Type definitions for @cinaconnect/vue
+ * Type definitions for @cinacoin/vue
  */
 /** Supported theme modes. */
 export type ThemeMode = 'dark' | 'light' | 'minimal';
@@ -33,8 +33,8 @@ export interface AccountState {
     chainSymbol: string;
     ensName?: string;
 }
-/** CinaConnect configuration. */
-export interface CinaConnectConfig {
+/** Cinacoin configuration. */
+export interface CinacoinConfig {
     projectId?: string;
     chains?: ChainConfig[];
     theme?: {
@@ -49,9 +49,9 @@ export interface CinaConnectConfig {
     };
     recommendedWallets?: string[];
 }
-/** Context value provided by CinaConnectProvider. */
-export interface CinaConnectContext {
-    config: CinaConnectConfig;
+/** Context value provided by CinacoinProvider. */
+export interface CinacoinContext {
+    config: CinacoinConfig;
     connectors: import('vue').Ref<Connector[]>;
     account: import('vue').Ref<AccountState>;
     status: import('vue').Ref<'disconnected' | 'connecting' | 'connected' | 'error'>;
@@ -60,6 +60,6 @@ export interface CinaConnectContext {
     switchChain: (chainId: number) => Promise<void>;
     isSwitchingChain: import('vue').Ref<boolean>;
 }
-/** Injection key for CinaConnect context. */
+/** Injection key for Cinacoin context. */
 export declare const ONCHAINUX_KEY: unique symbol;
 //# sourceMappingURL=types.d.ts.map

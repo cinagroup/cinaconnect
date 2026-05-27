@@ -7,7 +7,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { PushServer, type PushNotification } from '@cinaconnect/push-server';
+import { PushServer, type PushNotification } from '@cinacoin/push-server';
 
 describe('Push Server — Configuration', () => {
   it('should instantiate with minimal config', () => {
@@ -20,7 +20,7 @@ describe('Push Server — Configuration', () => {
       apns: {
         keyId: 'key123',
         teamId: 'team456',
-        bundleId: 'com.cinaconnect.app',
+        bundleId: 'com.cinacoin.app',
         privateKey: '-----BEGIN PRIVATE KEY-----\ntest\n-----END PRIVATE KEY-----',
       },
     });
@@ -42,7 +42,7 @@ describe('Push Server — Configuration', () => {
       apns: {
         keyId: 'key123',
         teamId: 'team456',
-        bundleId: 'com.cinaconnect.app',
+        bundleId: 'com.cinacoin.app',
         privateKey: 'test',
       },
       fcm: {
@@ -63,7 +63,7 @@ describe('Push Server — APNs Delivery', () => {
       apns: {
         keyId: 'test-key-id',
         teamId: 'test-team-id',
-        bundleId: 'com.cinaconnect.test',
+        bundleId: 'com.cinacoin.test',
         privateKey: 'test-private-key',
       },
     });
@@ -165,7 +165,7 @@ describe('Push Server — FCM Delivery', () => {
       platform: 'android',
       title: 'Data Push',
       body: 'With extras',
-      data: { action: 'open_wallet', deepLink: 'cinaconnect://wallet' },
+      data: { action: 'open_wallet', deepLink: 'cinacoin://wallet' },
     };
     const result = await server.send(notification);
     expect(result.success).toBe(true);
@@ -206,7 +206,7 @@ describe('Push Server — Batch Delivery', () => {
       apns: {
         keyId: 'batch-key',
         teamId: 'batch-team',
-        bundleId: 'com.cinaconnect.batch',
+        bundleId: 'com.cinacoin.batch',
         privateKey: 'test',
       },
       fcm: {

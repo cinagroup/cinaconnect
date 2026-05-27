@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/cli add command.
+ * Tests for @cinacoin/cli add command.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -93,7 +93,7 @@ describe('addCommand', () => {
     const { addCommand } = await import('../src/commands/add.js');
     addCommand(mockCli);
 
-    expect(mockCommand.argument).toHaveBeenCalledWith('<addon>', 'Addon to add (e.g., @cinaconnect/react)');
+    expect(mockCommand.argument).toHaveBeenCalledWith('<addon>', 'Addon to add (e.g., @cinacoin/react)');
   });
 
   it('should accept --dev option', async () => {

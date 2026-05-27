@@ -1,13 +1,13 @@
 /**
- * @cinaconnect/adapter-xrpl
+ * @cinacoin/adapter-xrpl
  *
- * XRP Ledger chain adapter for CinaConnect.
+ * XRP Ledger chain adapter for Cinacoin.
  *
  * Supports Xaman (formerly Xumm), Fireblocks, and Ledger.
  *
  * @example
  * ```ts
- * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinaconnect/adapter-xrpl';
+ * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinacoin/adapter-xrpl';
  *
  * // Announce providers for EIP-6963 discovery
  * announceXrplProviders();

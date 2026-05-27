@@ -6,20 +6,20 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 - A wallet that supports EIP-5792 (e.g., latest MetaMask, Coinbase Wallet)
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react @cinaconnect/batch-transaction
+npm install @cinacoin/core-sdk @cinacoin/react @cinacoin/batch-transaction
 ```
 
 ## Quick Start
 
 ```tsx
-import { BatchTransaction, createTransferOperation, createApproveOperation } from '@cinaconnect/batch-transaction'
-import { useAtomicBatch, useSendCalls } from '@cinaconnect/react'
+import { BatchTransaction, createTransferOperation, createApproveOperation } from '@cinacoin/batch-transaction'
+import { useAtomicBatch, useSendCalls } from '@cinacoin/react'
 
 // Build a batch
 const batch = new BatchTransaction({ chainId: 1, atomic: true })
@@ -54,7 +54,7 @@ import {
   createApproveOperation,
   createSwapOperation,
   createCustomOperation,
-} from '@cinaconnect/batch-transaction'
+} from '@cinacoin/batch-transaction'
 
 async function runBatchExample(fromAddress: string) {
   // Step 1: Create a batch
@@ -116,8 +116,8 @@ async function runBatchExample(fromAddress: string) {
 ```tsx
 // src/components/AtomicBatchDemo.tsx
 import { useState } from 'react'
-import { useAtomicBatch, useSendCalls, useWalletCapabilities } from '@cinaconnect/react'
-import { useAccount } from '@cinaconnect/react'
+import { useAtomicBatch, useSendCalls, useWalletCapabilities } from '@cinacoin/react'
+import { useAccount } from '@cinacoin/react'
 
 function AtomicBatchDemo() {
   const account = useAccount()
@@ -211,9 +211,9 @@ function AtomicBatchDemo() {
 
 ```tsx
 import { useState } from 'react'
-import { useAccount } from '@cinaconnect/react'
-import { useAtomicBatch } from '@cinaconnect/react'
-import { BatchTransaction, createApproveOperation, createSwapOperation } from '@cinaconnect/batch-transaction'
+import { useAccount } from '@cinacoin/react'
+import { useAtomicBatch } from '@cinacoin/react'
+import { BatchTransaction, createApproveOperation, createSwapOperation } from '@cinacoin/batch-transaction'
 
 function OneClickSwap() {
   const account = useAccount()
@@ -281,7 +281,7 @@ function OneClickSwap() {
 ### 4. Wallet Capabilities Discovery
 
 ```tsx
-import { useWalletCapabilities } from '@cinaconnect/react'
+import { useWalletCapabilities } from '@cinacoin/react'
 
 function WalletFeatures() {
   const { capabilities, isLoading } = useWalletCapabilities()

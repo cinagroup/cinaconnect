@@ -177,9 +177,9 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
           methods: ['eth_sendTransaction', 'personal_sign'],
           events: ['chainChanged', 'accountsChanged'],
           metadata: {
-            name: 'CinaConnect Demo',
-            description: 'CinaConnect Demo Application',
-            url: 'https://cinaconnect-demo.pages.dev',
+            name: 'CinaCoin Demo',
+            description: 'CinaCoin Demo Application',
+            url: 'https://cinacoin-demo.pages.dev',
             icons: ['https://avatars.githubusercontent.com/u/37784886'],
           },
         })

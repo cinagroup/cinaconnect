@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# CinaConnect Cloudflare Workers Deployment Script (Workers Only)
+# CinaCoin Cloudflare Workers Deployment Script (Workers Only)
 # Uses API token for authentication (no browser required)
 
 CLOUDFLARE_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"  # Set via environment or .env
@@ -37,7 +37,7 @@ deploy_worker() {
 }
 
 # Main
-info "CinaConnect Cloudflare Workers Deployment"
+info "CinaCoin Cloudflare Workers Deployment"
 info "Account: CinaGroup ($CLOUDFLARE_ACCOUNT_ID)"
 echo ""
 
@@ -52,15 +52,15 @@ echo ""
 log "🎉 All Cloudflare Workers deployed successfully!"
 echo ""
 echo "Deployed Workers (.cinagroup.workers.dev):"
-echo "  • cinaconnect-rpc-proxy"
-echo "  • cinaconnect-keys-server"
-echo "  • cinaconnect-relay-server"
-echo "  • cinaconnect-notify-server"
-echo "  • cinaconnect-push-server"
+echo "  • cinacoin-rpc-proxy"
+echo "  • cinacoin-keys-server"
+echo "  • cinacoin-relay-server"
+echo "  • cinacoin-notify-server"
+echo "  • cinacoin-push-server"
 echo ""
 echo "Health check endpoints:"
-echo "  • https://cinaconnect-rpc-proxy.cinagroup.workers.dev/health"
-echo "  • https://cinaconnect-keys-server.cinagroup.workers.dev/health"
-echo "  • https://cinaconnect-relay-server.cinagroup.workers.dev/health"
-echo "  • https://cinaconnect-notify-server.cinagroup.workers.dev/health"
-echo "  • https://cinaconnect-push-server.cinagroup.workers.dev/health"
+echo "  • https://cinacoin-rpc-proxy.cinagroup.workers.dev/health"
+echo "  • https://cinacoin-keys-server.cinagroup.workers.dev/health"
+echo "  • https://cinacoin-relay-server.cinagroup.workers.dev/health"
+echo "  • https://cinacoin-notify-server.cinagroup.workers.dev/health"
+echo "  • https://cinacoin-push-server.cinagroup.workers.dev/health"

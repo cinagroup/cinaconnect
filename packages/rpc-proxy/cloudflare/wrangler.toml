@@ -1,6 +1,7 @@
-name = "cinaconnect-rpc-proxy"
+name = "cinacoin-rpc-proxy"
 main = "worker.ts"
 compatibility_date = "2024-01-01"
+account_id = "7ea8e46d8210bad342fa7595f7935fea"
 
 # ── Production variables ───────────────────────────────────────
 # Secrets (set via wrangler secret put, NOT in this file):
@@ -17,8 +18,8 @@ REQUEST_TIMEOUT_MS = "30000"
 # ── KV Namespaces ──────────────────────────────────────────────
 [[kv_namespaces]]
 binding = "RPC_CACHE"
-id = ""                        # ← fill with production KV namespace ID
-preview_id = ""                 # ← fill with preview KV namespace ID
+id = "f91dde2603b44c2f830d42330be9778a"
+preview_id = "f91dde2603b44c2f830d42330be9778a"
 
 # ── Durable Objects (optional future use) ──────────────────────
 # [[durable_objects.bindings]]
@@ -27,12 +28,12 @@ preview_id = ""                 # ← fill with preview KV namespace ID
 
 # ── Routes ─────────────────────────────────────────────────────
 # routes = [
-#   { pattern = "rpc.cinaconnect.com/*", zone_name = "cinaconnect.com" }
+#   { pattern = "rpc.cinacoin.com/*", zone_name = "cinacoin.com" }
 # ]
 
 # ── Staging environment ────────────────────────────────────────
 [env.staging]
-name = "cinaconnect-rpc-proxy-staging"
+name = "cinacoin-rpc-proxy-staging"
 
 [env.staging.vars]
 CACHE_TTL = 60

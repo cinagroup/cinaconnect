@@ -30,7 +30,7 @@ function defaultTransactions(): Transaction[] {
  * balances, and transaction history.
  *
  * Currently provides a mock/stub implementation. Connect to
- * `@cinaconnect/core-sdk` for real on-chain execution.
+ * `@cinacoin/core-sdk` for real on-chain execution.
  *
  * @example
  * ```tsx

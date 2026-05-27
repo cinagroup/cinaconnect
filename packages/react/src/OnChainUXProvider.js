@@ -1,26 +1,26 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
-const CinaConnectContext = createContext(null);
-/** Hook to access the CinaConnect context. Throws if used outside provider. */
-export function useCinaConnectContext() {
-    const ctx = useContext(CinaConnectContext);
+const CinacoinContext = createContext(null);
+/** Hook to access the Cinacoin context. Throws if used outside provider. */
+export function useCinacoinContext() {
+    const ctx = useContext(CinacoinContext);
     if (!ctx) {
-        throw new Error('useCinaConnectContext must be used within <CinaConnectProvider>');
+        throw new Error('useCinacoinContext must be used within <CinacoinProvider>');
     }
     return ctx;
 }
 /**
- * CinaConnectProvider — React context provider for CinaConnect.
+ * CinacoinProvider — React context provider for Cinacoin.
  *
  * Wraps the app and provides chain state, connection methods, and theming.
  *
  * ```tsx
- * <CinaConnectProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
+ * <CinacoinProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
  *   <App />
- * </CinaConnectProvider>
+ * </CinacoinProvider>
  * ```
  */
-export function CinaConnectProvider({ config, children }) {
+export function CinacoinProvider({ config, children }) {
     const [status, setStatus] = useState('disconnected');
     const [account, setAccount] = useState({
         address: null,
@@ -105,6 +105,6 @@ export function CinaConnectProvider({ config, children }) {
         }
         return themeVars;
     }, [config.theme?.variables]);
-    return (_jsx(CinaConnectContext.Provider, { value: value, children: _jsx("div", { className: `ocx-root ocx-theme-${config.theme?.mode ?? 'dark'}`, style: themeStyle, children: children }) }));
+    return (_jsx(CinacoinContext.Provider, { value: value, children: _jsx("div", { className: `ocx-root ocx-theme-${config.theme?.mode ?? 'dark'}`, style: themeStyle, children: children }) }));
 }
 //# sourceMappingURL=OnChainUXProvider.js.map

@@ -1,4 +1,4 @@
-import type { SessionState } from "@cinaconnect/core-sdk";
+import type { SessionState } from "@cinacoin/core-sdk";
 import type { ConnectionRecord, ActiveConnection, MultiwalletState, Namespace } from "./types.js";
 
 /**

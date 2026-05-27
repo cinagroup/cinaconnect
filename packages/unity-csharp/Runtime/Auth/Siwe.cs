@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-namespace CinaConnect.Auth
+namespace Cinacoin.Auth
 {
     /// <summary>
     /// SIWE (Sign-In with Ethereum) implementation for Unity.

@@ -1,6 +1,6 @@
 # Infrastructure API — Generated Overview
 
-> Auto-generated reference for CinaConnect infrastructure components. For the hand-written guides, see [Bundler API](../../api/bundler.md) and [Paymaster](../../api/paymaster.md).
+> Auto-generated reference for Cinacoin infrastructure components. For the hand-written guides, see [Bundler API](../../api/bundler.md) and [Paymaster](../../api/paymaster.md).
 
 ## Components
 
@@ -8,7 +8,7 @@
 
 | Package | Language | Entry |
 |---------|----------|-------|
-| `@cinaconnect/bundler` | Rust | `packages/bundler/src/main.rs` |
+| `@cinacoin/bundler` | Rust | `packages/bundler/src/main.rs` |
 
 | Module | File | Description |
 |--------|------|-------------|
@@ -26,11 +26,11 @@
 
 | Package | Language | Entry |
 |---------|----------|-------|
-| `@cinaconnect/paymaster` | Solidity | `packages/paymaster/contracts/` |
+| `@cinacoin/paymaster` | Solidity | `packages/paymaster/contracts/` |
 
 | Contract | File | Description |
 |----------|------|-------------|
-| `CinaConnectPaymaster` | `CinaConnectPaymaster.sol` | Base paymaster implementation |
+| `CinacoinPaymaster` | `CinacoinPaymaster.sol` | Base paymaster implementation |
 | `VerifyingPaymaster` | `VerifyingPaymaster.sol` | Off-chain signature verification |
 | `TokenPaymaster` | `TokenPaymaster.sol` | ERC-20 token gas payment |
 | `UpgradeablePaymaster` | `UpgradeablePaymaster.sol` | UUPS upgradeable variant |
@@ -41,26 +41,26 @@
 
 | Package | Language | Entry |
 |---------|----------|-------|
-| `@cinaconnect/relay-server` | Rust | `packages/relay-server/` |
+| `@cinacoin/relay-server` | Rust | `packages/relay-server/` |
 
 ### RPC Proxy (Rust)
 
 | Package | Language | Entry |
 |---------|----------|-------|
-| `@cinaconnect/rpc-proxy` | Rust | `packages/rpc-proxy/` |
+| `@cinacoin/rpc-proxy` | Rust | `packages/rpc-proxy/` |
 
 ### Deployment (Helm)
 
 | Component | Template |
 |-----------|----------|
-| Bundler | `deploy/helm/cinaconnect/templates/bundler/` |
-| Relay | `deploy/helm/cinaconnect/templates/relay/` |
-| RPC Proxy | `deploy/helm/cinaconnect/templates/rpc-proxy/` |
-| NATS | `deploy/helm/cinaconnect/templates/nats/` |
-| Redis | `deploy/helm/cinaconnect/templates/redis/` |
-| Keys Server | `deploy/helm/cinaconnect/templates/keys-server/` |
-| Push Server | `deploy/helm/cinaconnect/templates/push-server/` |
-| Monitoring | `deploy/helm/cinaconnect/templates/monitoring/` |
+| Bundler | `deploy/helm/cinacoin/templates/bundler/` |
+| Relay | `deploy/helm/cinacoin/templates/relay/` |
+| RPC Proxy | `deploy/helm/cinacoin/templates/rpc-proxy/` |
+| NATS | `deploy/helm/cinacoin/templates/nats/` |
+| Redis | `deploy/helm/cinacoin/templates/redis/` |
+| Keys Server | `deploy/helm/cinacoin/templates/keys-server/` |
+| Push Server | `deploy/helm/cinacoin/templates/push-server/` |
+| Monitoring | `deploy/helm/cinacoin/templates/monitoring/` |
 
 ## See Also
 

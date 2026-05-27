@@ -113,7 +113,7 @@
     "accountType": "smart",
     "paymaster": {
       "address": "0xPaymaster1234567890abcdef1234567890abcdef12",
-      "sponsorName": "CinaConnect Paymaster",
+      "sponsorName": "Cinacoin Paymaster",
       "sponsored": true,
       "userGasCost": "0",
       "actualGasCost": "5250000000000000"

@@ -1,13 +1,13 @@
 # Configuration
 
-> Full configuration options for CinaConnect.
+> Full configuration options for Cinacoin.
 
 ## Core Configuration
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core-sdk'
+import { Cinacoin } from '@cinacoin/core-sdk'
 
-const cinaconnect = new CinaConnect({
+const cinacoin = new Cinacoin({
   // Required
   projectId: 'your-project-id',
   relayUrl: 'wss://relay.yourdomain.com/v1',
@@ -31,7 +31,7 @@ const cinaconnect = new CinaConnect({
 # docker-compose.yml
 services:
   relay-server:
-    image: cinaconnect/relay-server:latest
+    image: cinacoin/relay-server:latest
     environment:
       - NATS_URL=nats://nats:4222
       - REDIS_URL=redis://redis:6379
@@ -45,7 +45,7 @@ services:
 ```yaml
 services:
   rpc-proxy:
-    image: cinaconnect/rpc-proxy:latest
+    image: cinacoin/rpc-proxy:latest
     environment:
       - PROVIDERS=alchemy,infura,quicknode
       - CACHE_TTL=60

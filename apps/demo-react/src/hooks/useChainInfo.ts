@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
-const RPC_PROXY_BASE = 'https://cinaconnect-rpc-proxy.cinagroup.workers.dev/rpc'
+const RPC_PROXY_BASE = 'https://cinacoin-rpc-proxy.cinagroup.workers.dev/rpc'
 
 interface ChainInfo {
   blockNumber: string | null

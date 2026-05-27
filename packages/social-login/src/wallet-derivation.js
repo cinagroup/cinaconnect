@@ -22,7 +22,7 @@ import { randomBytes, createHash } from 'crypto';
  */
 export function deriveSeedFromIdentity(providerId, identifier, derivationKey) {
     // Create a unique seed using HKDF-like construction
-    const salt = 'cinaconnect-social-login-v1';
+    const salt = 'cinacoin-social-login-v1';
     const info = `${providerId}:${identifier}`;
     // HKDF-Extract
     const prk = createHmac(derivationKey || salt, salt).digest('sha256');
@@ -61,7 +61,7 @@ export function deriveAddressFromSeed(seed) {
  * @param salt - Optional salt for additional security.
  * @returns Derived Ethereum address.
  */
-export function deriveAddressFromEmail(email, salt = 'cinaconnect-email-v1') {
+export function deriveAddressFromEmail(email, salt = 'cinacoin-email-v1') {
     const seed = createHash('sha256')
         .update(`${salt}:${email.toLowerCase().trim()}`)
         .digest();
@@ -86,7 +86,7 @@ export function deriveAddressFromEmail(email, salt = 'cinaconnect-email-v1') {
  */
 export function deriveAddressFromProvider(provider, userId, email) {
     const identifier = email ? `${userId}:${email}` : userId;
-    const seed = deriveSeedFromIdentity(userId, identifier, `cinaconnect-${provider}`);
+    const seed = deriveSeedFromIdentity(userId, identifier, `cinacoin-${provider}`);
     return deriveAddressFromSeed(seed);
 }
 /**

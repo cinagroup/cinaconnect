@@ -21,7 +21,7 @@ export declare function copyTemplate(templatePath: string, destPath: string): vo
  */
 export declare function findUp(filename: string): string | null;
 /**
- * Resolve the CinaConnect monorepo root.
+ * Resolve the Cinacoin monorepo root.
  */
 export declare function resolveMonorepoRoot(): string | null;
 //# sourceMappingURL=fs.d.ts.map

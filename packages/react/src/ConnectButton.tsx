@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, type CSSProperties } from 'react';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinaCoinContext } from './CinaCoinProvider.js';
 
 /** Props for the React ConnectButton wrapper. */
 export interface ConnectButtonProps {
@@ -28,7 +28,7 @@ export interface ConnectButtonProps {
 /**
  * ConnectButton — React wrapper for the OCX ConnectButton Web Component.
  *
- * Automatically reads connection state from CinaConnectProvider context.
+ * Automatically reads connection state from CinaCoinProvider context.
  *
  * ```tsx
  * <ConnectButton variant="primary" size="md" />
@@ -47,7 +47,7 @@ export function ConnectButton({
   onDisconnect,
 }: ConnectButtonProps): JSX.Element {
   const ref = useRef<HTMLElement>(null);
-  const { account, status, connect, disconnect } = useCinaConnectContext();
+  const { account, status, connect, disconnect } = useCinaCoinContext();
 
   useEffect(() => {
     const el = ref.current;

@@ -30,7 +30,7 @@ interface ActiveSession {
 
 // ─── Default storage prefix ──────────────────────────────────────────────────
 
-const DEFAULT_PREFIX = '@cinaconnect/embedded-wallet';
+const DEFAULT_PREFIX = '@cinacoin/embedded-wallet';
 
 /**
  * High-level wallet lifecycle manager.

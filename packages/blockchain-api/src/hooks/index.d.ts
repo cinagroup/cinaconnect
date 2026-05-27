@@ -10,7 +10,7 @@
  *     useReverseENS,
  *     useTokenMetadata,
  *     useTokenPortfolio,
- *   } from "@cinaconnect/blockchain-api/hooks";
+ *   } from "@cinacoin/blockchain-api/hooks";
  */
 export { useBalance, useTransactionHistory, useENS, useReverseENS, useTokenMetadata, } from "./useBlockchainApi.js";
 export { useTokenPortfolio } from "./useTokenPortfolio.js";

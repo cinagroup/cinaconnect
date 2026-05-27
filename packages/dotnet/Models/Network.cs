@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace CinaConnect.Models;
+namespace Cinacoin.Models;
 
 /// <summary>
 /// Represents a blockchain network.
-/// Matches <c>CinaConnect.Models.Network</c> in the TypeScript type definitions.
+/// Matches <c>Cinacoin.Models.Network</c> in the TypeScript type definitions.
 /// </summary>
 public record Network
 {

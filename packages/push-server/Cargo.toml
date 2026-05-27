@@ -1,5 +1,23 @@
 [package]
-name = "cinaconnect-push-server"
+name = "cinacoin-push-server"
 version = "0.1.0"
 edition = "2021"
-description = "Push notification server for CinaConnect"
+description = "Push notification server for Cinacoin"
+
+[dependencies]
+axum = "0.7"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+redis = { version = "0.26", features = ["tokio-comp", "aio"] }
+prometheus = "0.13"
+lazy_static = "1"
+reqwest = { version = "0.12", features = ["json"] }
+jsonwebtoken = "9"
+ring = "0.17"
+moka = { version = "0.12", features = ["future"] }

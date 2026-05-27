@@ -1,21 +1,21 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import type { ChainConfig } from '@cinaconnect/react';
+import type { ChainConfig } from '@cinacoin/react';
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
 
 /**
- * Options for creating a server-side CinaConnect client.
+ * Options for creating a server-side Cinacoin client.
  */
 export interface ServerClientOptions {
-  /** CinaConnect project ID. */
+  /** Cinacoin project ID. */
   projectId: string;
 
   /** Supported chains (optional — defaults to Ethereum mainnet). */
   chains?: ChainConfig[];
 
-  /** Cookie name for the session token. @default 'cinaconnect-session' */
+  /** Cookie name for the session token. @default 'cinacoin-session' */
   cookieName?: string;
 
   /** SIWE domain for message verification. @default process.env.NEXT_PUBLIC_URL or hostname */
@@ -46,7 +46,7 @@ export interface ServerSession {
 }
 
 /**
- * Server-side CinaConnect client instance.
+ * Server-side Cinacoin client instance.
  */
 export interface ServerClient {
   /**
@@ -102,13 +102,13 @@ const defaultChain: ChainConfig = {
 // ---------------------------------------------------------------------------
 
 /**
- * Create a server-side CinaConnect client for use in API routes, middleware,
+ * Create a server-side Cinacoin client for use in API routes, middleware,
  * and server components.
  *
  * ```ts
  * const client = createServerClient({
- *   projectId: process.env.CINACONNECT_PROJECT_ID!,
- *   secret: process.env.CINACONNECT_SECRET,
+ *   projectId: process.env.CINACOIN_PROJECT_ID!,
+ *   secret: process.env.CINACOIN_SECRET,
  * });
  *
  * const session = await client.getSession(req);
@@ -118,7 +118,7 @@ const defaultChain: ChainConfig = {
  * @returns A ServerClient instance with auth utilities.
  */
 export function createServerClient(options: ServerClientOptions): ServerClient {
-  const cookieName = options.cookieName ?? 'cinaconnect-session';
+  const cookieName = options.cookieName ?? 'cinacoin-session';
 
   return {
     async getSession(req: NextRequest | Request): Promise<ServerSession | null> {
@@ -153,16 +153,16 @@ export function createServerClient(options: ServerClientOptions): ServerClient {
 let _serverClient: ServerClient | null = null;
 
 /**
- * Get (or lazily create) the singleton server-side CinaConnect client.
+ * Get (or lazily create) the singleton server-side Cinacoin client.
  *
  * Call this once during initialization. Subsequent calls return the same instance.
  *
  * ```ts
- * import { getCinaConnectServer } from '@cinaconnect/next/server';
+ * import { getCinacoinServer } from '@cinacoin/next/server';
  *
  * // In an API route:
  * export async function GET(req: Request) {
- *   const client = getCinaConnectServer({ projectId: 'your-id' });
+ *   const client = getCinacoinServer({ projectId: 'your-id' });
  *   const session = await client.getSession(req);
  *   return Response.json({ address: session?.address });
  * }
@@ -171,7 +171,7 @@ let _serverClient: ServerClient | null = null;
  * @param options - Configuration options (used only on first call).
  * @returns The singleton ServerClient instance.
  */
-export function getCinaConnectServer(options: ServerClientOptions): ServerClient {
+export function getCinacoinServer(options: ServerClientOptions): ServerClient {
   if (!_serverClient) {
     _serverClient = createServerClient(options);
   }
@@ -191,7 +191,7 @@ interface GetSessionOptions {
 }
 
 /**
- * Extract a CinaConnect session from a Next.js request's cookies.
+ * Extract a Cinacoin session from a Next.js request's cookies.
  *
  * Reads the session cookie, decodes it, and validates the token.
  * Returns `null` if no valid session is found.
@@ -209,15 +209,23 @@ interface GetSessionOptions {
  */
 export async function getSession(
   req: NextRequest | Request,
-  options: GetSessionOptions = { cookieName: 'cinaconnect-session' }
+  options: GetSessionOptions = { cookieName: 'cinacoin-session' }
 ): Promise<ServerSession | null> {
   const cookieName = options.cookieName;
 
   let cookieValue: string | null = null;
 
-  // Handle NextRequest (edge runtime)
-  if ('cookies' in req && typeof (req as NextRequest).cookies === 'function') {
-    cookieValue = (req as NextRequest).cookies().get(cookieName)?.value ?? null;
+  // Handle NextRequest (edge/runtime) — cookies is a getter in Next.js 14+
+  if ('cookies' in req) {
+    const reqAsAny = req as any;
+    const reqCookies = reqAsAny.cookies;
+    if (typeof reqCookies === 'function') {
+      // cookies() is a function — call it
+      cookieValue = reqCookies().get(cookieName)?.value ?? null;
+    } else if (reqCookies && typeof reqCookies.get === 'function') {
+      // cookies is an object with .get()
+      cookieValue = reqCookies.get(cookieName)?.value ?? null;
+    }
   }
   // Handle standard Web Request with Cookie header
   else if ('headers' in req) {
@@ -330,8 +338,10 @@ export async function verifySiweMessage(
   }
 
   // Recover the signer address from the message and signature
+  // viem v2 requires `hash` — we hash the message first (personal_sign / eth_sign)
+  const msgHash = hashMessage(message);
   const recovered = await recoverAddress({
-    message,
+    hash: msgHash,
     signature: signature as `0x${string}`,
   });
 
@@ -455,7 +465,7 @@ function parseSiweMessage(message: string): ParsedSiweMessage | null {
 // ---------------------------------------------------------------------------
 
 /**
- * Wrap a Next.js API route handler with CinaConnect authentication.
+ * Wrap a Next.js API route handler with Cinacoin authentication.
  *
  * The handler receives the `req` and the validated `session` as arguments.
  * If authentication fails, returns a 401 response automatically.
@@ -465,9 +475,9 @@ function parseSiweMessage(message: string): ParsedSiweMessage | null {
  *
  * ```ts
  * // app/api/profile/route.ts
- * import { withCinaConnectAuth } from '@cinaconnect/next/server';
+ * import { withCinacoinAuth } from '@cinacoin/next/server';
  *
- * export const GET = withCinaConnectAuth(async (req, session) => {
+ * export const GET = withCinacoinAuth(async (req, session) => {
  *   return Response.json({ address: session.address });
  * });
  * ```
@@ -476,7 +486,7 @@ function parseSiweMessage(message: string): ParsedSiweMessage | null {
  * @param options - Optional server client configuration.
  * @returns A wrapped handler that enforces authentication.
  */
-export function withCinaConnectAuth<
+export function withCinacoinAuth<
   T extends NextRequest | Request,
   R extends NextResponse | Response,
 >(
@@ -484,9 +494,9 @@ export function withCinaConnectAuth<
   options?: Partial<ServerClientOptions>
 ): (req: T) => Promise<R> {
   const client = createServerClient({
-    projectId: options?.projectId ?? process.env.CINACONNECT_PROJECT_ID ?? '',
-    cookieName: options?.cookieName ?? 'cinaconnect-session',
-    secret: options?.secret ?? process.env.CINACONNECT_SECRET,
+    projectId: options?.projectId ?? process.env.CINACOIN_PROJECT_ID ?? '',
+    cookieName: options?.cookieName ?? 'cinacoin-session',
+    secret: options?.secret ?? process.env.CINACOIN_SECRET,
     chains: options?.chains,
     domain: options?.domain ?? process.env.NEXT_PUBLIC_URL,
   });
@@ -502,7 +512,7 @@ export function withCinaConnectAuth<
  * ```ts
  * // middleware.ts
  * import { NextResponse } from 'next/server';
- * import { requireAuth } from '@cinaconnect/next/server';
+ * import { requireAuth } from '@cinacoin/next/server';
  *
  * export const middleware = requireAuth({
  *   loginUrl: '/login',
@@ -524,12 +534,12 @@ export function requireAuth(options?: {
   /** Paths that do not require authentication. */
   publicPaths?: string[];
 
-  /** Cookie name for the session token. @default 'cinaconnect-session' */
+  /** Cookie name for the session token. @default 'cinacoin-session' */
   cookieName?: string;
 }) {
   const loginUrl = options?.loginUrl ?? '/login';
   const publicPaths = options?.publicPaths ?? [];
-  const cookieName = options?.cookieName ?? 'cinaconnect-session';
+  const cookieName = options?.cookieName ?? 'cinacoin-session';
 
   return async function middleware(req: NextRequest) {
     const { NextResponse } = await import('next/server');

@@ -1,11 +1,11 @@
 # Multiwallet
 
-> `@cinaconnect/multiwallet` — Multi-wallet management for CinaConnect.
+> `@cinacoin/multiwallet` — Multi-wallet management for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/multiwallet
+npm install @cinacoin/multiwallet
 ```
 
 ## Overview

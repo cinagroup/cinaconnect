@@ -1,9 +1,9 @@
 /**
- * @fileoverview Barrel exports for @cinaconnect/i18n.
+ * @fileoverview Barrel exports for @cinacoin/i18n.
  *
  * Import everything from this single entry point:
  *
- *   import { useTranslation, I18nProvider, createI18n, detectLocale } from '@cinaconnect/i18n';
+ *   import { useTranslation, I18nProvider, createI18n, detectLocale } from '@cinacoin/i18n';
  */
 
 /* ---- Types ---- */
@@ -40,3 +40,8 @@ export * as zhCN from './locales/zh-CN';
 export * as es from './locales/es';
 export * as ja from './locales/ja';
 export * as ko from './locales/ko';
+export * as fr from './locales/fr';
+export * as de from './locales/de';
+export * as ru from './locales/ru';
+export * as ptBR from './locales/pt-BR';
+export * as ar from './locales/ar';

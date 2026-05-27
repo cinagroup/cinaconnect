@@ -291,7 +291,7 @@ export class ConnectModal extends BaseLitElement {
           </div>
 
           <div class="footer">
-            ${t('powered_by', { brand: 'CinaConnect' })}
+            ${t('powered_by', { brand: 'Cinacoin' })}
           </div>
         </div>
       </div>

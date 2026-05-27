@@ -1,5 +1,5 @@
 /**
- * Notification types and delivery for CinaConnect.
+ * Notification types and delivery for Cinacoin.
  * Supports push, email, and webhook notifications.
  */
 
@@ -139,7 +139,7 @@ export class NotifyServer {
    */
   getMetrics(): unknown {
     return {
-      service: "cinaconnect-notify-server",
+      service: "cinacoin-notify-server",
       subscriptions_count: this.subscriptions.size,
       delivery_log_size: this.deliveryLog.length,
       timestamp: Date.now(),

@@ -1,11 +1,11 @@
 /**
- * Embedded wallet shim — local type declarations that mirror @cinaconnect/embedded-wallet.
+ * Embedded wallet shim — local type declarations that mirror @cinacoin/embedded-wallet.
  *
  * This file provides inline types to avoid a hard peer dependency at build time.
  * At runtime, these types are compatible with the actual embedded-wallet package.
  *
  * In production, replace these with real imports:
- *   export { EmbeddedWallet, WalletManager } from '@cinaconnect/embedded-wallet';
+ *   export { EmbeddedWallet, WalletManager } from '@cinacoin/embedded-wallet';
  */
 
 /** Supported authentication methods for wallet creation and recovery. */
@@ -67,7 +67,7 @@ export interface SignedTransaction {
  * Embedded wallet with secp256k1 key pair derived from auth identifier + salt.
  *
  * NOTE: This is a type-only shim. The actual implementation lives in
- * @cinaconnect/embedded-wallet. At runtime, replace with the real class.
+ * @cinacoin/embedded-wallet. At runtime, replace with the real class.
  */
 export class EmbeddedWallet {
   readonly walletId!: string;
@@ -80,11 +80,11 @@ export class EmbeddedWallet {
     _identifier: string,
     _salt?: Uint8Array
   ): { privateKey: Uint8Array; salt: Uint8Array; publicKey: Uint8Array; address: string } {
-    throw new Error('EmbeddedWallet.deriveKeys is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.deriveKeys is not available — import from @cinacoin/embedded-wallet');
   }
 
   static create(_walletId: string, _authMethod: AuthMethod, _identifier: string): EmbeddedWallet {
-    throw new Error('EmbeddedWallet.create is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.create is not available — import from @cinacoin/embedded-wallet');
   }
 
   static recover(
@@ -93,19 +93,19 @@ export class EmbeddedWallet {
     _identifier: string,
     _salt: Uint8Array
   ): EmbeddedWallet {
-    throw new Error('EmbeddedWallet.recover is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.recover is not available — import from @cinacoin/embedded-wallet');
   }
 
   getAccount(): { address: string; publicKey: string } {
-    throw new Error('EmbeddedWallet.getAccount is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.getAccount is not available — import from @cinacoin/embedded-wallet');
   }
 
   exportPrivateKey(): string {
-    throw new Error('EmbeddedWallet.exportPrivateKey is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.exportPrivateKey is not available — import from @cinacoin/embedded-wallet');
   }
 
   signTransaction(_tx: UnsignedTransaction): SignedTransaction {
-    throw new Error('EmbeddedWallet.signTransaction is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('EmbeddedWallet.signTransaction is not available — import from @cinacoin/embedded-wallet');
   }
 }
 
@@ -113,17 +113,17 @@ export class EmbeddedWallet {
  * High-level wallet lifecycle manager.
  *
  * NOTE: This is a type-only shim. The actual implementation lives in
- * @cinaconnect/embedded-wallet. At runtime, replace with the real class.
+ * @cinacoin/embedded-wallet. At runtime, replace with the real class.
  */
 export class WalletManager {
   constructor(_config: EmbeddedWalletConfig) {}
 
   async create(_authMethod: AuthMethod, _identifier: string, _label?: string): Promise<WalletSession> {
-    throw new Error('WalletManager.create is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.create is not available — import from @cinacoin/embedded-wallet');
   }
 
   async login(_identifier: string): Promise<WalletSession> {
-    throw new Error('WalletManager.login is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.login is not available — import from @cinacoin/embedded-wallet');
   }
 
   logout(_walletId?: string): void {}
@@ -133,19 +133,19 @@ export class WalletManager {
   }
 
   async linkProvider(_walletId: string, _provider: string, _externalId: string): Promise<LinkedProvider> {
-    throw new Error('WalletManager.linkProvider is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.linkProvider is not available — import from @cinacoin/embedded-wallet');
   }
 
   async unlinkProvider(_walletId: string, _providerId: string): Promise<void> {
-    throw new Error('WalletManager.unlinkProvider is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.unlinkProvider is not available — import from @cinacoin/embedded-wallet');
   }
 
   async backup(_walletId: string, _password: string): Promise<WalletBackup> {
-    throw new Error('WalletManager.backup is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.backup is not available — import from @cinacoin/embedded-wallet');
   }
 
   async restoreFromBackup(_backup: WalletBackup, _password: string): Promise<WalletSession> {
-    throw new Error('WalletManager.restoreFromBackup is not available — import from @cinaconnect/embedded-wallet');
+    throw new Error('WalletManager.restoreFromBackup is not available — import from @cinacoin/embedded-wallet');
   }
 
   getWallet(_walletId: string): EmbeddedWallet | undefined {

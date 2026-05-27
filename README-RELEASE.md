@@ -1,12 +1,12 @@
-# 🎉 CinaConnect v1.0.0 — Connect Everything On-Chain
+# 🎉 Cinacoin v1.0.0 — Connect Everything On-Chain
 
-**CinaConnect** is an open-source, all-in-one SDK for building seamless on-chain experiences. This is our **first stable release** — a fully self-hosted, white-label Web3 toolkit providing wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
+**Cinacoin** is an open-source, all-in-one SDK for building seamless on-chain experiences. This is our **first stable release** — a fully self-hosted, white-label Web3 toolkit providing wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines.
 
 ---
 
 ## What's New
 
-CinaConnect v1.0.0 represents the culmination of extensive development, delivering a **complete alternative to Reown AppKit** with no licensing restrictions, no MAU caps, and full infrastructure autonomy.
+Cinacoin v1.0.0 represents the culmination of extensive development, delivering a **complete alternative to Reown AppKit** with no licensing restrictions, no MAU caps, and full infrastructure autonomy.
 
 ### ✨ Key Features
 
@@ -61,31 +61,31 @@ CinaConnect v1.0.0 represents the culmination of extensive development, deliveri
 
 ```bash
 # Install with npm
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 
 # Or pnpm
-pnpm add @cinaconnect/react @cinaconnect/adapter-ethereum
+pnpm add @cinacoin/react @cinacoin/adapter-ethereum
 
 # Or yarn
-yarn add @cinaconnect/react @cinaconnect/adapter-ethereum
+yarn add @cinacoin/react @cinacoin/adapter-ethereum
 ```
 
 ### Quick Example
 
 ```tsx
-import { CinaConnectProvider, useCinaConnect } from '@cinaconnect/react'
-import { EthereumAdapter } from '@cinaconnect/adapter-ethereum'
+import { CinacoinProvider, useCinacoin } from '@cinacoin/react'
+import { EthereumAdapter } from '@cinacoin/adapter-ethereum'
 
 function App() {
   return (
-    <CinaConnectProvider adapters={[new EthereumAdapter()]}>
+    <CinacoinProvider adapters={[new EthereumAdapter()]}>
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 
 function ConnectButton() {
-  const { connect, account } = useCinaConnect()
+  const { connect, account } = useCinacoin()
   return (
     <button onClick={() => connect()}>
       {account ? `Connected: ${account.address}` : 'Connect Wallet'}
@@ -98,9 +98,9 @@ function ConnectButton() {
 
 ## Migration from Reown AppKit
 
-See our [migration guide](https://cinaconnect.dev/docs/migration/from-appkit) for step-by-step instructions. Key differences:
+See our [migration guide](https://cinacoin.dev/docs/migration/from-appkit) for step-by-step instructions. Key differences:
 
-| Feature | Reown AppKit | CinaConnect |
+| Feature | Reown AppKit | Cinacoin |
 |---------|-------------|-------------|
 | License | Community License (MAU cap) | **MIT** (no restrictions) |
 | Infrastructure | Mandatory Reown Relay | **Self-hosted** (your relay) |
@@ -112,7 +112,7 @@ See our [migration guide](https://cinaconnect.dev/docs/migration/from-appkit) fo
 
 ## Breaking Changes from v0.x
 
-v1.0.0 is the first stable release. If you've been using v0.1.x or v0.2.x, review the [migration guide](https://cinaconnect.dev/docs/migration/v0-to-v1).
+v1.0.0 is the first stable release. If you've been using v0.1.x or v0.2.x, review the [migration guide](https://cinacoin.dev/docs/migration/v0-to-v1).
 
 Key changes:
 - All public APIs are now frozen — no breaking changes until v2.0.0
@@ -123,26 +123,26 @@ Key changes:
 
 ## Documentation
 
-- 📖 [Getting Started](https://cinaconnect.dev/docs)
-- 🔌 [API Reference](https://cinaconnect.dev/api)
-- 📱 [Mobile SDKs](https://cinaconnect.dev/docs/mobile)
-- 🏗️ [Architecture](https://cinaconnect.dev/docs/architecture)
-- 🔒 [Security](https://cinaconnect.dev/docs/security)
-- 🚀 [Deployment](https://cinaconnect.dev/docs/deployment)
+- 📖 [Getting Started](https://cinacoin.dev/docs)
+- 🔌 [API Reference](https://cinacoin.dev/api)
+- 📱 [Mobile SDKs](https://cinacoin.dev/docs/mobile)
+- 🏗️ [Architecture](https://cinacoin.dev/docs/architecture)
+- 🔒 [Security](https://cinacoin.dev/docs/security)
+- 🚀 [Deployment](https://cinacoin.dev/docs/deployment)
 
 ---
 
 ## Full Changelog
 
-See [CHANGELOG.md](https://github.com/cinaconnect/cinaconnect/blob/main/CHANGELOG.md) for detailed changes.
+See [CHANGELOG.md](https://github.com/cinacoin/cinacoin/blob/main/CHANGELOG.md) for detailed changes.
 
 ---
 
 ## Contributors
 
-Built by the CinaConnect team. Special thanks to 十三先生 (Mr. Thirteen) for project vision and architecture.
+Built by the Cinacoin team. Special thanks to 十三先生 (Mr. Thirteen) for project vision and architecture.
 
 ---
 
 **License:** MIT  
-**Repository:** https://github.com/cinaconnect/cinaconnect
+**Repository:** https://github.com/cinacoin/cinacoin

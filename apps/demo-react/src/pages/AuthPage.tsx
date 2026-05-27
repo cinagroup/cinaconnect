@@ -45,12 +45,12 @@ export default function AuthPage() {
 
   const chains = ['Ethereum', 'Polygon', 'Arbitrum', 'Base'];
 
-  const siweMessage = `cinaconnect-demo.pages.dev wants you to sign in with your Ethereum account:
+  const siweMessage = `cinacoin-demo.pages.dev wants you to sign in with your Ethereum account:
 0x7a3F8C12dE4bF5678901234567890AbCdEfE82b
 
-I accept the Terms of Service: https://cinaconnect.com/terms
+I accept the Terms of Service: https://cinacoin.com/terms
 
-URI: https://cinaconnect-demo.pages.dev/
+URI: https://cinacoin-demo.pages.dev/
 Version: 1
 Chain ID: 1
 Nonce: 8b3f9a2c
@@ -76,7 +76,7 @@ Issued At: 2026-05-17T13:45:00.000Z`;
       {/* Nav */}
       <nav className="border-b border-gray-800/50 bg-gray-950/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaConnect</a>
+          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaCoin</a>
           <div className="flex items-center gap-1">
             <a href="/" className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Home</a>
             <a href="/swap" className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Swap</a>
@@ -218,9 +218,9 @@ Issued At: 2026-05-17T13:45:00.000Z`;
 
         {/* Comparison */}
         <div className="mt-8 bg-gray-900/80 backdrop-blur rounded-2xl border border-gray-800 p-6">
-          <h2 className="text-lg font-semibold mb-4">CinaConnect vs Reown</h2>
+          <h2 className="text-lg font-semibold mb-4">CinaCoin vs Reown</h2>
           <table className="w-full text-sm">
-            <thead><tr className="border-b border-gray-800 text-gray-500 text-xs"><th className="text-left p-2 font-normal">Feature</th><th className="text-center p-2 font-normal">CinaConnect</th><th className="text-center p-2 font-normal">Reown</th></tr></thead>
+            <thead><tr className="border-b border-gray-800 text-gray-500 text-xs"><th className="text-left p-2 font-normal">Feature</th><th className="text-center p-2 font-normal">CinaCoin</th><th className="text-center p-2 font-normal">Reown</th></tr></thead>
             <tbody>
               {[['Wallet Login','✅','✅'],['Social Login','✅','❌'],['Passkey Auth','✅','❌'],['Email Login','✅','❌'],['SIWE','✅','✅'],['Self-Hosted','✅','❌'],['Open Source','✅','Partial'],['Free Forever','✅','Paid tiers']].map(([f, a, b], i) => (
                 <tr key={f} className="border-b border-gray-800/50 hover:bg-gray-800/30">

@@ -1,5 +1,5 @@
 /**
- * @fileoverview Type definitions for @cinaconnect/explorer
+ * @fileoverview Type definitions for @cinacoin/explorer
  * Core data shapes used across wallet, dApp, and chain discovery.
  */
 
@@ -120,7 +120,7 @@ export interface BlockExplorer {
   apiUrl?: string;
 }
 
-/** Extended chain metadata beyond @cinaconnect/chains. */
+/** Extended chain metadata beyond @cinacoin/chains. */
 export interface ChainInfo {
   /** CAIP-2 chain ID, e.g. `'eip155:1'`. */
   id: string;

@@ -60,18 +60,18 @@
 ### 2.1 Helm Chart 结构
 
 ```yaml
-# cinaconnect/Chart.yaml
+# cinacoin/Chart.yaml
 apiVersion: v2
-name: cinaconnect
-description: CinaConnect Production Deployment
+name: cinacoin
+description: Cinacoin Production Deployment
 version: 1.0.0
 appVersion: "1.0.0"
 
-# cinaconnect/values.yaml
+# cinacoin/values.yaml
 global:
   environment: production
   region: us-east-1
-  imageRegistry: ghcr.io/cinaconnect
+  imageRegistry: ghcr.io/cinacoin
 
 relay:
   replicaCount: 3
@@ -93,7 +93,7 @@ relay:
     port: 8080
   ingress:
     enabled: true
-    host: relay.cinaconnect.com
+    host: relay.cinacoin.com
     tls:
       enabled: true
       secretName: relay-tls
@@ -169,7 +169,7 @@ monitoring:
     receivers:
       - name: slack
         slack_configs:
-          - channel: '#cinaconnect-alerts'
+          - channel: '#cinacoin-alerts'
       - name: pagerduty
         pagerduty_configs:
           - service_key: "PD_SERVICE_KEY"
@@ -215,7 +215,7 @@ spec:
               app: relay-server
       containers:
       - name: relay
-        image: ghcr.io/cinaconnect/relay-server:1.0.0
+        image: ghcr.io/cinacoin/relay-server:1.0.0
         ports:
         - name: ws
           containerPort: 8080
@@ -448,7 +448,7 @@ metrics:
 ```json
 {
   "dashboard": {
-    "title": "CinaConnect 全局监控",
+    "title": "Cinacoin 全局监控",
     "panels": [
       {
         "title": "Relay WebSocket 连接数",
@@ -646,7 +646,7 @@ route:
 receivers:
   - name: default-receiver
     slack_configs:
-      - channel: '#cinaconnect-alerts'
+      - channel: '#cinacoin-alerts'
         send_resolved: true
         title: '{{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.summary }}\n{{ .Annotations.description }}\n{{ end }}'
@@ -722,7 +722,7 @@ data:
         Name         loki
         Match        *
         Url          http://loki:3100
-        Labels       {job="cinaconnect", region="${REGION}"}
+        Labels       {job="cinacoin", region="${REGION}"}
         Auto_Kubernetes_Labels true
 ```
 
@@ -732,7 +732,7 @@ data:
 # OpenTelemetry 配置
 otel:
   service:
-    name: cinaconnect
+    name: cinacoin
     version: "1.0.0"
   
   traces:
@@ -801,15 +801,15 @@ jobs:
       
       - name: Build Docker image
         run: |
-          docker build -t ghcr.io/cinaconnect/${{ matrix.service }}:${{ github.sha }} \
-            -t ghcr.io/cinaconnect/${{ matrix.service }}:latest \
+          docker build -t ghcr.io/cinacoin/${{ matrix.service }}:${{ github.sha }} \
+            -t ghcr.io/cinacoin/${{ matrix.service }}:latest \
             -f docker/${{ matrix.service }}/Dockerfile .
       
       - name: Push to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-          docker push ghcr.io/cinaconnect/${{ matrix.service }}:${{ github.sha }}
-          docker push ghcr.io/cinaconnect/${{ matrix.service }}:latest
+          docker push ghcr.io/cinacoin/${{ matrix.service }}:${{ github.sha }}
+          docker push ghcr.io/cinacoin/${{ matrix.service }}:latest
 
   deploy-staging:
     needs: build
@@ -822,7 +822,7 @@ jobs:
       
       - name: Deploy to staging
         run: |
-          helm upgrade --install cinaconnect ./helm/cinaconnect \
+          helm upgrade --install cinacoin ./helm/cinacoin \
             --namespace staging \
             --set global.environment=staging \
             --set relay.image.tag=${{ github.sha }} \
@@ -841,7 +841,7 @@ jobs:
       - name: Deploy to production (canary)
         run: |
           # Canary deployment: 10% traffic
-          helm upgrade --install cinaconnect-canary ./helm/cinaconnect \
+          helm upgrade --install cinacoin-canary ./helm/cinacoin \
             --namespace production \
             --set global.environment=production \
             --set relay.image.tag=${{ github.sha }} \
@@ -856,13 +856,13 @@ jobs:
           ERROR_RATE=$(curl -s http://grafana/api/v1/query?query=rpc_error_rate | jq '.data.result[0].value[1]')
           if (( $(echo "$ERROR_RATE > 0.01" | bc -l) )); then
             echo "Canary failed: error rate ${ERROR_RATE}"
-            helm rollback cinaconnect-canary --namespace production
+            helm rollback cinacoin-canary --namespace production
             exit 1
           fi
       
       - name: Full rollout
         run: |
-          helm upgrade --install cinaconnect ./helm/cinaconnect \
+          helm upgrade --install cinacoin ./helm/cinacoin \
             --namespace production \
             --set global.environment=production \
             --set relay.image.tag=${{ github.sha }} \

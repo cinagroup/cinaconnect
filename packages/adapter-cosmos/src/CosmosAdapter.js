@@ -1,5 +1,5 @@
 /**
- * Cosmos Chain Adapter for CinaConnect.
+ * Cosmos Chain Adapter for Cinacoin.
  *
  * Provides a unified interface for interacting with Cosmos SDK chains:
  * Cosmos Hub, Osmosis, Injective, Celestia, and more.
@@ -114,7 +114,7 @@ export const COSMOS_CHAIN_INFO = {
     },
 };
 /**
- * Cosmos chain adapter implementing the CinaConnect `ChainAdapter` pattern.
+ * Cosmos chain adapter implementing the Cinacoin `ChainAdapter` pattern.
  *
  * Wraps a wallet connector (Keplr or Leap) with chain-specific operations:
  * connecting, signing, transferring tokens, and querying balances.
@@ -141,7 +141,7 @@ export class CosmosAdapter {
         }
     }
     /* ---- Configuration ---- */
-    /** Set the CinaConnect connector (optional for Cosmos adapters). */
+    /** Set the Cinacoin connector (optional for Cosmos adapters). */
     setConnector(_connector) {
         // Cosmos adapters use wallet connectors (Keplr/Leap) directly.
     }

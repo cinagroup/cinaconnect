@@ -1,24 +1,24 @@
-using CinaConnect.Models;
+using Cinacoin.Models;
 
-namespace CinaConnect.Services;
+namespace Cinacoin.Services;
 
 /// <summary>
 /// Service for high-level wallet operations.
-/// Wraps <see cref="CinaConnectClient"/> with convenience methods for common
+/// Wraps <see cref="CinacoinClient"/> with convenience methods for common
 /// wallet interactions including balance queries, network enumeration,
 /// transaction building, and connection management.
 /// </summary>
 public sealed class WalletService : IAsyncDisposable
 {
-    private readonly CinaConnectClient _client;
+    private readonly CinacoinClient _client;
     private bool _disposed;
 
     /// <summary>
     /// Creates a new WalletService instance.
     /// </summary>
-    /// <param name="client">The CinaConnect client to use.</param>
+    /// <param name="client">The Cinacoin client to use.</param>
     /// <exception cref="ArgumentNullException">Thrown when <paramref name="client"/> is null.</exception>
-    public WalletService(CinaConnectClient client)
+    public WalletService(CinacoinClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }

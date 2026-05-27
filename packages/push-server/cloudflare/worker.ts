@@ -1,5 +1,5 @@
 /**
- * CinaConnect Push Server — Cloudflare Worker
+ * Cinacoin Push Server — Cloudflare Worker
  *
  * Push notification delivery via APNs (iOS) and FCM (Android).
  */

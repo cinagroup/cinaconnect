@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-xrpl
+# @cinacoin/adapter-xrpl
 
-XRP Ledger chain adapter for CinaConnect — Xaman (formerly Xumm), Fireblocks, Ledger.
+XRP Ledger chain adapter for Cinacoin — Xaman (formerly Xumm), Fireblocks, Ledger.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-xrpl
+npm install @cinacoin/adapter-xrpl
 ```
 
 ## Usage
 
 ```ts
-import { XrplAdapter } from '@cinaconnect/adapter-xrpl';
+import { XrplAdapter } from '@cinacoin/adapter-xrpl';
 
 const adapter = new XrplAdapter();
 await adapter.connect({ connectorId: 'xaman' });

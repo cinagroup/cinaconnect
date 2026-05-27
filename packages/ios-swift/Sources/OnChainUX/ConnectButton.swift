@@ -55,7 +55,7 @@ public enum ConnectButtonVariant: String, CaseIterable {
 
 /// SwiftUI Connect Button component.
 public struct ConnectButton: View {
-    @EnvironmentObject private var onChainUX: CinaConnect
+    @EnvironmentObject private var onChainUX: Cinacoin
     
     /// Button text when disconnected.
     public var label: String
@@ -214,7 +214,7 @@ public struct ConnectButton: View {
                 try await onChainUX.connect(connectorId: "metamask")
                 onPress?()
             } catch {
-                // Error state is handled by CinaConnect
+                // Error state is handled by Cinacoin
             }
         }
     }

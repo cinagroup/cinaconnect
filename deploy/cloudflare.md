@@ -4,11 +4,11 @@
 
 | 服务 | 描述 | Worker 名称 | 端口 | 协议 |
 |------|------|-----------|------|------|
-| **RPC Proxy** | 链路由、缓存、限流 | `cinaconnect-rpc-proxy` | 443 | HTTPS |
-| **Keys Server** | 密钥管理、加密、会话 | `cinaconnect-keys-server` | 443 | HTTPS |
-| **Relay Server** | WebSocket 中继、会话管理 | `cinaconnect-relay-server` | 443 | WebSocket |
-| **Notify Server** | 推送、邮件、Webhook 通知 | `cinaconnect-notify-server` | 443 | HTTPS |
-| **Push Server** | APNs、FCM 推送发送 | `cinaconnect-push-server` | 443 | HTTPS |
+| **RPC Proxy** | 链路由、缓存、限流 | `cinacoin-rpc-proxy` | 443 | HTTPS |
+| **Keys Server** | 密钥管理、加密、会话 | `cinacoin-keys-server` | 443 | HTTPS |
+| **Relay Server** | WebSocket 中继、会话管理 | `cinacoin-relay-server` | 443 | WebSocket |
+| **Notify Server** | 推送、邮件、Webhook 通知 | `cinacoin-notify-server` | 443 | HTTPS |
+| **Push Server** | APNs、FCM 推送发送 | `cinacoin-push-server` | 443 | HTTPS |
 
 ---
 
@@ -45,13 +45,13 @@ wrangler kv:namespace create "DEVICE_TOKENS" --preview
 
 ```bash
 # Keys Server D1
-wrangler d1 create cinaconnect-keys --preview
+wrangler d1 create cinacoin-keys --preview
 
 # Notify Server D1
-wrangler d1 create cinaconnect-notifications --preview
+wrangler d1 create cinacoin-notifications --preview
 
 # Push Server D1
-wrangler d1 create cinaconnect-push --preview
+wrangler d1 create cinacoin-push --preview
 ```
 
 创建后，将返回的 `database_id` 替换到对应 `wrangler.toml` 文件中。
@@ -130,11 +130,11 @@ wrangler secret put APNS_PRODUCTION
 
 | 服务 | 健康检查端点 |
 |------|-------------|
-| RPC Proxy | `https://rpc-proxy.cinaconnect.com/health` |
-| Keys Server | `https://keys-server.cinaconnect.com/health` |
-| Relay Server | `wss://relay.cinaconnect.com/health` |
-| Notify Server | `https://notify.cinaconnect.com/health` |
-| Push Server | `https://push.cinaconnect.com/health` |
+| RPC Proxy | `https://rpc-proxy.cinacoin.com/health` |
+| Keys Server | `https://keys-server.cinacoin.com/health` |
+| Relay Server | `wss://relay.cinacoin.com/health` |
+| Notify Server | `https://notify.cinacoin.com/health` |
+| Push Server | `https://push.cinacoin.com/health` |
 
 ---
 
@@ -177,7 +177,7 @@ wrangler secret put APNS_PRODUCTION
 
 1. 检查 Worker 是否正在运行：`wrangler status`
 2. 检查日志：`wrangler tail`
-3. 检查域名配置（需要绑定到 CinaConnect 域名）
+3. 检查域名配置（需要绑定到 Cinacoin 域名）
 
 ### WebSocket 连接失败
 

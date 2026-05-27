@@ -1,14 +1,14 @@
 /**
- * @cinaconnect/pay-ui
+ * @cinacoin/pay-ui
  *
- * CinaConnect Pay UI Components — Swap & On-Ramp widgets.
+ * Cinacoin Pay UI Components — Swap & On-Ramp widgets.
  *
  * Built with React + Web Components architecture.
  * Core logic is framework-agnostic (SwapWidgetCore, OnRampWidgetCore).
  *
  * @example
  * ```tsx
- * import { SwapWidget, OnRampWidget } from '@cinaconnect/pay-ui';
+ * import { SwapWidget, OnRampWidget } from '@cinacoin/pay-ui';
  *
  * // Swap widget
  * <SwapWidget

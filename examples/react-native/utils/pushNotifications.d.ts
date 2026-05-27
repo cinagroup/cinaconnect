@@ -1,5 +1,5 @@
 /**
- * Push Notification Registration for CinaConnect React Native.
+ * Push Notification Registration for Cinacoin React Native.
  *
  * Real FCM/APNs token registration for:
  * - Transaction status updates

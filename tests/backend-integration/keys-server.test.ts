@@ -6,7 +6,7 @@
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
-import { KeyManager } from '@cinaconnect/keys-server';
+import { KeyManager } from '@cinacoin/keys-server';
 
 describe('Keys Server — Key Management', () => {
   let km: KeyManager;

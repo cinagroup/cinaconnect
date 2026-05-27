@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // ============================================================
-// Tests for @cinaconnect/onramp-sdk OnRampWidget
+// Tests for @cinacoin/onramp-sdk OnRampWidget
 // ============================================================
 
 // Mock DOM APIs for browser environment

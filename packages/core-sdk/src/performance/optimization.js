@@ -1,5 +1,5 @@
 /**
- * Performance Optimization Utilities for @cinaconnect/core-sdk
+ * Performance Optimization Utilities for @cinacoin/core-sdk
  *
  * Provides request batching, result caching, and other performance
  * primitives used across the SDK to minimize latency and redundant work.

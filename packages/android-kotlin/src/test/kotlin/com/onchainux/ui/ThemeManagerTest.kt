@@ -1,4 +1,4 @@
-package com.cinaconnect.core
+package com.cinacoin.core
 
 import org.junit.Test
 import org.junit.Assert.*

@@ -12,7 +12,7 @@ import { join, basename } from "node:path";
 import { createHash } from "node:crypto";
 
 const CDN_VERSION = process.env.CDN_VERSION || "0.2.0";
-const R2_BUCKET = process.env.R2_BUCKET || "cinaconnect-cdn";
+const R2_BUCKET = process.env.R2_BUCKET || "cinacoin-cdn";
 const DIST_DIR = join(import.meta.dirname, "..", "dist");
 const OUTPUT_DIR = join(import.meta.dirname, "..", "cdn-dist");
 
@@ -99,8 +99,8 @@ async function main() {
 
   console.log(`\n✅ Upload complete: ${uploaded} uploaded, ${failed} failed`);
   console.log(`\n📍 CDN URLs:`);
-  console.log(`   Latest: https://cdn.cinaconnect.dev/v1/cinaconnect.js`);
-  console.log(`   Pinned: https://cdn.cinaconnect.dev/v${CDN_VERSION}/cinaconnect.js`);
+  console.log(`   Latest: https://cdn.cinacoin.dev/v1/cinacoin.js`);
+  console.log(`   Pinned: https://cdn.cinacoin.dev/v${CDN_VERSION}/cinacoin.js`);
 }
 
 main().catch((err) => {

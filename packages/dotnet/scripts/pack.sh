@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# pack.sh — Build and pack the CinaConnect NuGet package
+# pack.sh — Build and pack the CinaCoin NuGet package
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
@@ -7,7 +7,7 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 
 cd "$PROJECT_DIR"
 
-echo "=== CinaConnect .NET SDK — Pack ==="
+echo "=== CinaCoin .NET SDK — Pack ==="
 echo "Project directory: $PROJECT_DIR"
 
 # Clean previous builds

@@ -7,11 +7,16 @@ import type { LocaleCode, LocaleInfo } from '../../types';
 /* ------------------------------------------------------------------ */
 
 const LOCALE_INFO: Record<string, LocaleInfo> = {
-  'en-US': { code: 'en-US', name: 'English (US)', nativeName: 'English (US)' },
-  'zh-CN': { code: 'zh-CN', name: 'Chinese (Simplified)', nativeName: '简体中文' },
-  es:      { code: 'es',      name: 'Spanish',               nativeName: 'Español' },
-  ja:      { code: 'ja',      name: 'Japanese',              nativeName: '日本語' },
-  ko:      { code: 'ko',      name: 'Korean',                nativeName: '한국어' },
+  'en-US':  { code: 'en-US',  name: 'English (US)',         nativeName: 'English (US)' },
+  'zh-CN':  { code: 'zh-CN',  name: 'Chinese (Simplified)', nativeName: '简体中文' },
+  es:       { code: 'es',      name: 'Spanish',              nativeName: 'Español' },
+  ja:       { code: 'ja',      name: 'Japanese',             nativeName: '日本語' },
+  ko:       { code: 'ko',      name: 'Korean',               nativeName: '한국어' },
+  fr:       { code: 'fr',      name: 'French',               nativeName: 'Français' },
+  de:       { code: 'de',      name: 'German',               nativeName: 'Deutsch' },
+  ru:       { code: 'ru',      name: 'Russian',              nativeName: 'Русский' },
+  'pt-BR':  { code: 'pt-BR',   name: 'Portuguese (Brazil)',  nativeName: 'Português (BR)' },
+  ar:       { code: 'ar',      name: 'Arabic',               nativeName: 'العربية' },
 };
 
 /* ------------------------------------------------------------------ */

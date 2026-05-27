@@ -1,11 +1,11 @@
 # Custom Connectors
 
-> `@cinaconnect/custom-connectors` — Custom wallet connector framework for CinaConnect.
+> `@cinacoin/custom-connectors` — Custom wallet connector framework for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/custom-connectors
+npm install @cinacoin/custom-connectors
 ```
 
 ## Overview

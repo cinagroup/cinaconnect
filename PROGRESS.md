@@ -1,4 +1,4 @@
-# CinaConnect Progress Report
+# Cinacoin Progress Report
 
 > Generated: 2026-05-18 06:20 UTC  
 > Source: Monorepo audit + documentation sync
@@ -7,14 +7,14 @@
 
 ## 📊 Executive Summary
 
-CinaConnect has reached **80-85% overall completion**. All package source code is written, 64+ packages have been built, and the demo app features **6 pages with real wallet connection logic**.
+Cinacoin has reached **80-85% overall completion**. All package source code is written, 64+ packages have been built, and the demo app features **6 pages with real wallet connection logic**.
 
 ### Key Numbers
 | Metric | Value |
 |--------|-------|
 | Total packages | ~72 (monorepo) / 64 (core ecosystem) |
 | Built with dist/ | 64+ |
-| npm published | 1 (`@cinaconnect/core-sdk`) |
+| npm published | 1 (`@cinacoin/core-sdk`) |
 | Test files | 104+ |
 | Commits | 53+ |
 | Cloudflare deployments | 2 (RPC Proxy + Keys Server) |
@@ -28,7 +28,7 @@ CinaConnect has reached **80-85% overall completion**. All package source code i
 
 ### 1. .NET SDK Completed
 - **22 C# files** written across `packages/dotnet/`
-- Structure: `CinaConnectClient.cs`, Services (RelayClient, CryptoUtils, WalletService), 20 Model types, Example app, NuGet config
+- Structure: `CinacoinClient.cs`, Services (RelayClient, CryptoUtils, WalletService), 20 Model types, Example app, NuGet config
 - Ready for `dotnet build`
 
 ### 2. Demo App — Real Wallet Connections
@@ -45,7 +45,7 @@ The Next.js demo app (`apps/demo/`) now has **6 functional pages**:
 **Total demo code: 3,236 lines across 5 pages**
 
 ### 3. EIP-5792 React Hooks Added
-`@cinaconnect/react` now includes:
+`@cinacoin/react` now includes:
 - `useWalletCapabilities` — discover wallet capabilities per chain
 - `useSendCalls` — batch multiple calls into single wallet interaction
 - `useAtomicBatch` — build and execute atomic batch transactions

@@ -1,4 +1,4 @@
-# FINAL Detailed Infrastructure Comparison: CinaAuth/CinaConnect vs Reown
+# FINAL Detailed Infrastructure Comparison: CinaAuth/Cinacoin vs Reown
 
 > **Generated:** 2026-05-16 UTC  
 > **Scope:** Source-level code review of all CinaAuth packages vs Reown public repositories  
@@ -8,11 +8,11 @@
 
 ## 0. Executive Summary
 
-The previous analysis (02-infrastructure.md) assessed CinaAuth/CinaConnect based on design documents and Helm manifests. **This report is different — it reviews actual source code.** The findings are mixed: CinaConnect has **implemented more services than the prior report assumed**, but **deep code-level review reveals significant gaps in production readiness**.
+The previous analysis (02-infrastructure.md) assessed CinaAuth/Cinacoin based on design documents and Helm manifests. **This report is different — it reviews actual source code.** The findings are mixed: Cinacoin has **implemented more services than the prior report assumed**, but **deep code-level review reveals significant gaps in production readiness**.
 
 **Key discovery:** push-server, keys-server, relay-server, rpc-proxy, and bundler all exist as source packages. However, keys-server handlers are **stubs** (return hardcoded values with `TODO: Persist to PostgreSQL`), push-server FCM OAuth2 is **placeholder** (JWT signing not implemented), and the relay-server has a **critical architectural flaw** (message routing logs but doesn't deliver).
 
-| Dimension | CinaAuth/CinaConnect | Reown | Verdict |
+| Dimension | CinaAuth/Cinacoin | Reown | Verdict |
 |-----------|-------------------|-------|---------|
 | push-server (APNs+FCM) | Implemented, but FCM signing is placeholder | Production (a2 + fcm-rust + push-server) | **Partial** |
 | keys-server | Implemented as stub (no DB persistence) | Production (HCL/Terraform, real key management) | **Gap** |
@@ -45,7 +45,7 @@ The previous analysis (02-infrastructure.md) assessed CinaAuth/CinaConnect based
 | Router | `src/router.rs` | ✅ Complete | 6 routes |
 | Config | `src/config.rs` | ✅ Complete | 25 env vars with defaults |
 | Dockerfile | `deploy/docker/push-server/` | ✅ Multi-stage | Non-root, healthcheck |
-| Helm deployment | `deploy/helm/cinaconnect/` | ❌ Missing | Not in values.yaml or templates |
+| Helm deployment | `deploy/helm/cinacoin/` | ❌ Missing | Not in values.yaml or templates |
 
 ### 1.2 APNs Client Assessment
 
@@ -261,7 +261,7 @@ The **scaffolding** is production-quality (routing, middleware, metrics, migrati
 | Config | `src/config.rs` | ✅ Complete | 15 config fields, TLS support, sensible defaults |
 | Metrics | — | ✅ Complete | 10+ Prometheus metrics |
 | Dockerfile | `deploy/docker/relay-server/Dockerfile` | ✅ Multi-stage | Non-root, healthcheck |
-| Helm | `deploy/helm/cinaconnect/templates/relay/` | ✅ Complete | Deployment, HPA, Service, Ingress with TLS |
+| Helm | `deploy/helm/cinacoin/templates/relay/` | ✅ Complete | Deployment, HPA, Service, Ingress with TLS |
 
 ### 3.2 Crypto — Strong
 
@@ -434,7 +434,7 @@ Comprehensive ERC-4337 bundler with proper reputation, mempool, and gas oracle. 
 
 **Structure:**
 ```
-deploy/helm/cinaconnect/
+deploy/helm/cinacoin/
 ├── Chart.yaml                  ✅ kubeVersion, maintainers, keywords
 ├── values.yaml                 ✅ Comprehensive parameterization
 └── templates/
@@ -775,4 +775,4 @@ Reown's (formerly WalletConnect) backend services are partially open-source:
 
 ---
 
-*Report generated 2026-05-16 | Source-level analysis of all CinaAuth/CinaConnect infrastructure packages*
+*Report generated 2026-05-16 | Source-level analysis of all CinaAuth/Cinacoin infrastructure packages*

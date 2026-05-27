@@ -1,7 +1,7 @@
-# CinaConnect CDN — Cloudflare Pages Deployment
+# Cinacoin CDN — Cloudflare Pages Deployment
 # Deploy the built CDN bundle to Cloudflare Pages for versioned, cached hosting.
 
-name = "cinaconnect-cdn"
+name = "cinacoin-cdn"
 pages_build_output_dir = "cdn-dist"
 compatibility_date = "2024-12-01"
 

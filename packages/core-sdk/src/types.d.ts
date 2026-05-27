@@ -1,5 +1,5 @@
 /**
- * Core type definitions for the CinaConnect SDK.
+ * Core type definitions for the Cinacoin SDK.
  */
 /** Supported blockchain network types. */
 export type ChainNamespace = 'eip155' | 'solana' | 'bip121' | 'bip122' | 'tron' | 'ton' | 'polkadot';

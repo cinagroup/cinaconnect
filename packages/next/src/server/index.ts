@@ -1,12 +1,12 @@
 /**
- * @cinaconnect/next/server
+ * @cinacoin/next/server
  *
  * Server-side utilities for Next.js API routes, middleware, server components, and Edge Runtime.
  */
 
 export {
   createServerClient,
-  getCinaConnectServer,
+  getCinacoinServer,
 } from './core.js';
 
 export type {
@@ -18,14 +18,14 @@ export type {
 export {
   getSession,
   verifySiweMessage,
-  withCinaConnectAuth,
+  withCinacoinAuth,
   requireAuth,
 } from './middleware.js';
 
 // Edge Runtime
 export {
   getEdgeSession,
-  withCinaConnectAuthEdge,
+  withCinacoinAuthEdge,
   requireAuthEdge,
   createSessionCookieHeader,
 } from './edge.js';
@@ -59,3 +59,27 @@ export type {
   AuthenticateWithWalletParams,
   AuthenticateResult,
 } from './actions.js';
+
+// CSRF Protection
+export {
+  generateCsrfToken,
+  createCsrfCookieHeader,
+  getCsrfTokenFromCookie,
+  getCsrfTokenFromHeader,
+  csrfMiddleware,
+  withCsrfProtection,
+  getClientCsrfToken,
+  csrfFetch,
+  CSRF_COOKIE_NAME,
+  CSRF_HEADER_NAME,
+} from './csrf.js';
+
+// Security Headers (CSP, etc.)
+export {
+  buildCspString,
+  withSecurityHeaders,
+  securityHeadersMiddleware,
+  applySecurityHeadersToResponse,
+} from './securityHeaders.js';
+
+export type { SecurityHeadersOptions } from './securityHeaders.js';

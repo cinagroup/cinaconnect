@@ -1,6 +1,6 @@
 # Git Workflow Guide
 
-This document defines the Git workflow standards for CinaConnect. All contributors should follow these conventions to maintain a clean, traceable history.
+This document defines the Git workflow standards for Cinacoin. All contributors should follow these conventions to maintain a clean, traceable history.
 
 ---
 
@@ -19,7 +19,7 @@ This document defines the Git workflow standards for CinaConnect. All contributo
 
 ## Branch Model
 
-CinaConnect uses a **trunk-based development** model with short-lived feature branches:
+Cinacoin uses a **trunk-based development** model with short-lived feature branches:
 
 ```
 main ────────────────────────────────────────▶  (stable, always deployable)
@@ -80,7 +80,7 @@ my-branch            # Missing type prefix
 
 ## Commit Message Format
 
-CinaConnect follows **[Conventional Commits](https://www.conventionalcommits.org/)** for structured, machine-readable commit messages. This enables automated changelog generation and semantic versioning.
+Cinacoin follows **[Conventional Commits](https://www.conventionalcommits.org/)** for structured, machine-readable commit messages. This enables automated changelog generation and semantic versioning.
 
 ### Format
 
@@ -197,7 +197,7 @@ feat(adapter-solana): add Phantom wallet EIP-6963 discovery
 
 ### Semantic Versioning
 
-CinaConnect follows **[SemVer 2.0.0](https://semver.org/)**:
+Cinacoin follows **[SemVer 2.0.0](https://semver.org/)**:
 
 ```
 MAJOR.MINOR.PATCH
@@ -288,7 +288,7 @@ See [git-commands.md](./git-commands.md) for more details.
 
 ### How It Works
 
-CinaConnect uses **[Changesets](https://github.com/changesets/changesets)** for version management and changelog generation:
+Cinacoin uses **[Changesets](https://github.com/changesets/changesets)** for version management and changelog generation:
 
 1. **Contributors create changesets** when opening PRs with user-facing changes:
    ```bash
@@ -321,7 +321,7 @@ The changelog is organized by version, with changes grouped by package:
 ```markdown
 ## 1.1.0
 
-### @cinaconnect/core-sdk
+### @cinacoin/core-sdk
 
 #### Minor Changes
 
@@ -331,7 +331,7 @@ The changelog is organized by version, with changes grouped by package:
 
 - Fixed race condition in relay transport
 
-### @cinaconnect/react
+### @cinacoin/react
 
 #### Minor Changes
 

@@ -16,7 +16,7 @@ describe('encrypt / decrypt roundtrip', () => {
   it('should encrypt and decrypt back to original plaintext', () => {
     const key = new Uint8Array(32);
     crypto.getRandomValues(key);
-    const plaintext = new TextEncoder().encode('Hello, CinaConnect!');
+    const plaintext = new TextEncoder().encode('Hello, Cinacoin!');
     const encrypted = encrypt(key, plaintext);
     expect(typeof encrypted).toBe('string');
     expect(encrypted.length).toBeGreaterThan(0);

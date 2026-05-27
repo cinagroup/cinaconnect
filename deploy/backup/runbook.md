@@ -1,8 +1,8 @@
-# CinaConnect — Backup & Recovery Runbook
+# Cinacoin — Backup & Recovery Runbook
 
 ## Overview
 
-This document describes backup procedures, recovery processes, and operational guidelines for CinaConnect data stores.
+This document describes backup procedures, recovery processes, and operational guidelines for Cinacoin data stores.
 
 ## Data Stores
 
@@ -19,24 +19,24 @@ This document describes backup procedures, recovery processes, and operational g
 
 1. **Verify backup completion** — Check CronJob status:
    ```bash
-   kubectl get cronjob -n cinaconnect | grep backup
-   kubectl get jobs -n cinaconnect -l component=backup --sort-by=.status.startTime
+   kubectl get cronjob -n cinacoin | grep backup
+   kubectl get jobs -n cinacoin -l component=backup --sort-by=.status.startTime
    ```
 
 2. **Verify S3 uploads** — Check latest backups in S3:
    ```bash
-   aws s3 ls s3://cinaconnect-backups/postgres/ --human-readable --sort date | tail -5
-   aws s3 ls s3://cinaconnect-backups/redis/ --human-readable --sort date | tail -5
+   aws s3 ls s3://cinacoin-backups/postgres/ --human-readable --sort date | tail -5
+   aws s3 ls s3://cinacoin-backups/redis/ --human-readable --sort date | tail -5
    ```
 
 3. **Test restore (weekly)** — Restore latest backup to staging:
    ```bash
    # PostgreSQL
-   aws s3 cp s3://cinaconnect-backups/postgres/postgres_latest.sql.gz - \
-     | gunzip | psql -h staging-db -U cinaconnect -d cinaconnect_test
+   aws s3 cp s3://cinacoin-backups/postgres/postgres_latest.sql.gz - \
+     | gunzip | psql -h staging-db -U cinacoin -d cinacoin_test
 
    # Redis
-   aws s3 cp s3://cinaconnect-backups/redis/redis_latest.rdb.gz - \
+   aws s3 cp s3://cinacoin-backups/redis/redis_latest.rdb.gz - \
      | gunzip > /tmp/dump.rdb
    redis-cli -h staging-redis CONFIG SET dbfilename dump.rdb
    redis-cli -h staging-redis BGSAVE
@@ -50,7 +50,7 @@ This document describes backup procedures, recovery processes, and operational g
 
 1. Identify the recovery point:
    ```bash
-   aws s3 ls s3://cinaconnect-backups/postgres/ --human-readable --sort date
+   aws s3 ls s3://cinacoin-backups/postgres/ --human-readable --sort date
    ```
 
 2. Stop keys-server to prevent writes:
@@ -61,14 +61,14 @@ This document describes backup procedures, recovery processes, and operational g
 3. Restore from backup:
    ```bash
    BACKUP_FILE="postgres_YYYYMMDD_HHMMSS.sql.gz"
-   aws s3 cp "s3://cinaconnect-backups/postgres/${BACKUP_FILE}" - \
-     | gunzip | psql -h production-db -U cinaconnect -d cinaconnect
+   aws s3 cp "s3://cinacoin-backups/postgres/${BACKUP_FILE}" - \
+     | gunzip | psql -h production-db -U cinacoin -d cinacoin
    ```
 
 4. Verify restoration:
    ```bash
-   psql -h production-db -U cinaconnect -d cinaconnect -c "SELECT count(*) FROM keys;"
-   psql -h production-db -U cinaconnect -d cinaconnect -c "SELECT count(*) FROM sessions;"
+   psql -h production-db -U cinacoin -d cinacoin -c "SELECT count(*) FROM keys;"
+   psql -h production-db -U cinacoin -d cinacoin -c "SELECT count(*) FROM sessions;"
    ```
 
 5. Restart keys-server:
@@ -102,7 +102,7 @@ This document describes backup procedures, recovery processes, and operational g
 3. Restore from backup:
    ```bash
    BACKUP_FILE="redis_YYYYMMDD_HHMMSS.rdb.gz"
-   aws s3 cp "s3://cinaconnect-backups/redis/${BACKUP_FILE}" - \
+   aws s3 cp "s3://cinacoin-backups/redis/${BACKUP_FILE}" - \
      | gunzip > /data/dump.rdb
 
    redis-cli -h production-redis SHUTDOWN NOSAVE
@@ -148,7 +148,7 @@ If Redis is used only for caching (no persistent data):
 
 | Role | Contact | Escalation |
 |------|---------|------------|
-| On-call Engineer | PagerDuty: #cinaconnect-oncall | 5 min |
+| On-call Engineer | PagerDuty: #cinacoin-oncall | 5 min |
 | Platform Lead | Slack: @platform-lead | 15 min |
 | Database Admin | Slack: @dba-team | 30 min |
 | VP Engineering | Phone (last resort) | 1 hour |

@@ -1,7 +1,7 @@
 /**
  * Swap SDK Type Definitions
  *
- * Defines the core types for the CinaConnect Swap Aggregator SDK.
+ * Defines the core types for the Cinacoin Swap Aggregator SDK.
  */
 
 import type { Address, WalletClient, PublicClient, Transport, Chain, Account } from "viem";

@@ -31,8 +31,8 @@ export interface AccountState {
     chainSymbol: string;
     ensName?: string;
 }
-/** CinaConnect configuration passed to the provider. */
-export interface CinaConnectConfig {
+/** Cinacoin configuration passed to the provider. */
+export interface CinacoinConfig {
     /** Project ID (for analytics / relay). */
     projectId?: string;
     /** Supported chains. */
@@ -53,10 +53,10 @@ export interface CinaConnectConfig {
     /** Recommended wallet IDs (for ordering in UI). */
     recommendedWallets?: string[];
 }
-/** Context value exposed by CinaConnectProvider. */
-export interface CinaConnectContextValue {
+/** Context value exposed by CinacoinProvider. */
+export interface CinacoinContextValue {
     /** Current configuration. */
-    config: CinaConnectConfig;
+    config: CinacoinConfig;
     /** Available connectors. */
     connectors: Connector[];
     /** Current account state. */
@@ -72,23 +72,23 @@ export interface CinaConnectContextValue {
     /** Whether a chain switch is in progress. */
     isSwitchingChain: boolean;
 }
-/** Hook to access the CinaConnect context. Throws if used outside provider. */
-export declare function useCinaConnectContext(): CinaConnectContextValue;
+/** Hook to access the Cinacoin context. Throws if used outside provider. */
+export declare function useCinacoinContext(): CinacoinContextValue;
 /** Provider props. */
-export interface CinaConnectProviderProps {
-    config: CinaConnectConfig;
+export interface CinacoinProviderProps {
+    config: CinacoinConfig;
     children: ReactNode;
 }
 /**
- * CinaConnectProvider — React context provider for CinaConnect.
+ * CinacoinProvider — React context provider for Cinacoin.
  *
  * Wraps the app and provides chain state, connection methods, and theming.
  *
  * ```tsx
- * <CinaConnectProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
+ * <CinacoinProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
  *   <App />
- * </CinaConnectProvider>
+ * </CinacoinProvider>
  * ```
  */
-export declare function CinaConnectProvider({ config, children }: CinaConnectProviderProps): JSX.Element;
+export declare function CinacoinProvider({ config, children }: CinacoinProviderProps): JSX.Element;
 //# sourceMappingURL=OnChainUXProvider.d.ts.map

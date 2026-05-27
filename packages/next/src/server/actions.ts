@@ -1,12 +1,12 @@
 /**
- * @cinaconnect/next/server — Next.js Server Actions.
+ * @cinacoin/next/server — Next.js Server Actions.
  *
  * Server actions for wallet authentication and SIWE verification
  * in Next.js App Router.
  *
  * ```tsx
  * 'use server';
- * import { authenticateWithWallet, createSiweSession } from '@cinaconnect/next/server/actions';
+ * import { authenticateWithWallet, createSiweSession } from '@cinacoin/next/server/actions';
  * ```
  *
  * @see https://nextjs.org/docs/app/building-your-application/data-fetching/server-actions-and-mutations
@@ -85,7 +85,7 @@ function generateNonce(): string {
  *
  * ```tsx
  * 'use client';
- * import { createSiweSession } from '@cinaconnect/next/server/actions';
+ * import { createSiweSession } from '@cinacoin/next/server/actions';
  *
  * async function handleSignIn() {
  *   const { nonce, message } = await createSiweSession({
@@ -151,7 +151,7 @@ export async function createSiweSession(
  *
  * ```tsx
  * 'use client';
- * import { authenticateWithWallet } from '@cinaconnect/next/server/actions';
+ * import { authenticateWithWallet } from '@cinacoin/next/server/actions';
  *
  * async function login() {
  *   const result = await authenticateWithWallet({
@@ -174,7 +174,7 @@ export async function authenticateWithWallet(
 ): Promise<AuthenticateResult> {
   try {
     const domain = params.domain ?? process.env.NEXT_PUBLIC_URL;
-    const projectId = params.projectId ?? process.env.CINACONNECT_PROJECT_ID ?? '';
+    const projectId = params.projectId ?? process.env.CINACOIN_PROJECT_ID ?? '';
 
     // Verify the SIWE message and recover the address
     const recoveredAddress = await verifySiweMessage(params.message, params.signature, {
@@ -208,24 +208,12 @@ export async function authenticateWithWallet(
 
     // Set the session cookie
     const cookieStore = await cookies();
-    const cookieHeader = createSessionCookieHeader(token, {
-      domain: process.env.NEXT_PUBLIC_URL,
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: expiresAt - Math.floor(Date.now() / 1000),
-    });
-
-    // Use the Next.js cookies API to set the session
-    // Note: In server actions, we set cookies via the cookies() API
-    cookieStore.set('cinaconnect-session', token, {
+    cookieStore.set('cinacoin-session', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       path: '/',
       maxAge: expiresAt - Math.floor(Date.now() / 1000),
-      domain: process.env.NEXT_PUBLIC_URL,
     });
 
     return {
@@ -252,7 +240,7 @@ export async function authenticateWithWallet(
  *
  * ```ts
  * 'use server';
- * import { createServerAction } from '@cinaconnect/next/server/actions';
+ * import { createServerAction } from '@cinacoin/next/server/actions';
  *
  * export const getProfile = createServerAction(async (session) => {
  *   return { address: session.address, name: 'User' };
@@ -268,7 +256,7 @@ export function createServerAction<T>(
   return async () => {
     try {
       const cookieStore = await cookies();
-      const cookieValue = cookieStore.get('cinaconnect-session')?.value;
+      const cookieValue = cookieStore.get('cinacoin-session')?.value;
 
       if (!cookieValue) {
         return { error: 'Unauthorized: no session found' };
@@ -278,6 +266,21 @@ export function createServerAction<T>(
       const decoded = JSON.parse(atob(cookieValue)) as ServerSession;
       if (!decoded.address || decoded.expiresAt < Math.floor(Date.now() / 1000)) {
         return { error: 'Unauthorized: session expired' };
+      }
+
+      // Check token refresh — extend if within 1 hour of expiry
+      const oneHour = 3600;
+      if (decoded.expiresAt - Math.floor(Date.now() / 1000) < oneHour) {
+        const newExpiry = Math.floor(Date.now() / 1000) + 86400;
+        decoded.expiresAt = newExpiry;
+        const newToken = btoa(JSON.stringify(decoded));
+        cookieStore.set('cinacoin-session', newToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          path: '/',
+          maxAge: 86400,
+        });
       }
 
       return await handler(decoded);

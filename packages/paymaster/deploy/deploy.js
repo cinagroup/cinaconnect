@@ -1,7 +1,7 @@
 /**
- * CinaConnect Paymaster Deployment Script
+ * Cinacoin Paymaster Deployment Script
  *
- * Deploys CinaConnectPaymaster, VerifyingPaymaster, and TokenPaymaster
+ * Deploys CinacoinPaymaster, VerifyingPaymaster, and TokenPaymaster
  * to the configured network using viem.
  *
  * Usage:
@@ -57,7 +57,7 @@ const ENTRY_POINTS = {
 // ============================================================
 async function deploy(config) {
     console.log("=".repeat(60));
-    console.log("CinaConnect Paymaster Deployment");
+    console.log("Cinacoin Paymaster Deployment");
     console.log("=".repeat(60));
     const chain = config.chain || sepolia;
     const rpcUrl = config.rpcUrl || chain.rpcUrls.default.http[0];
@@ -82,9 +82,9 @@ async function deploy(config) {
     const balance = await publicClient.getBalance({ address: account.address });
     console.log(`Balance: ${balance} wei\n`);
     // Read compiled bytecode
-    const bytecode = readBytecode("CinaConnectPaymaster");
-    // Deploy CinaConnectPaymaster
-    console.log("Deploying CinaConnectPaymaster...");
+    const bytecode = readBytecode("CinacoinPaymaster");
+    // Deploy CinacoinPaymaster
+    console.log("Deploying CinacoinPaymaster...");
     const paymasterHash = await walletClient.deployContract({
         abi: paymasterAbi,
         bytecode: bytecode,
@@ -94,7 +94,7 @@ async function deploy(config) {
         hash: paymasterHash,
     });
     const paymasterAddress = paymasterReceipt.contractAddress;
-    console.log(`✅ CinaConnectPaymaster deployed at: ${paymasterAddress}`);
+    console.log(`✅ CinacoinPaymaster deployed at: ${paymasterAddress}`);
     // Deploy VerifyingPaymaster
     console.log("\nDeploying VerifyingPaymaster...");
     const verifyingBytecode = readBytecode("VerifyingPaymaster");
@@ -128,7 +128,7 @@ async function deploy(config) {
         chainId: chain.id,
         entryPoint,
         contracts: {
-            cinaconnectPaymaster: paymasterAddress,
+            cinacoinPaymaster: paymasterAddress,
             verifyingPaymaster: verifyingAddress,
             tokenPaymaster: tokenAddress,
         },

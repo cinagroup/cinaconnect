@@ -1,6 +1,6 @@
 import React from 'react';
-import { useExplorer } from '@cinaconnect/explorer';
-import type { SearchFilter } from '@cinaconnect/explorer';
+import { useExplorer } from '@cinacoin/explorer';
+import type { SearchFilter } from '@cinacoin/explorer';
 
 /**
  * Searchable wallet list with icons, chain/platform filters, and quick connect.
@@ -31,34 +31,34 @@ export function WalletSearch({
     : getPopularWallets().slice(0, maxResults);
 
   return (
-    <div className={`cinaconnect-wallet-search ${className}`}>
+    <div className={`cinacoin-wallet-search ${className}`}>
       <input
         type="text"
         placeholder="Search wallets..."
         value={searchQuery}
         onChange={e => setSearchQuery(e.target.value)}
-        className="cinaconnect-search-input"
+        className="cinacoin-search-input"
       />
-      <div className="cinaconnect-wallet-list">
+      <div className="cinacoin-wallet-list">
         {wallets.map(wallet => (
           <button
             key={wallet.id}
             onClick={() => onConnect(wallet.id)}
-            className="cinaconnect-wallet-list-item"
+            className="cinacoin-wallet-list-item"
           >
             <img
               src={getWalletLogo(wallet.id)}
               alt={wallet.name}
               width={32}
               height={32}
-              className="cinaconnect-wallet-icon"
+              className="cinacoin-wallet-icon"
             />
-            <span className="cinaconnect-wallet-name">{wallet.name}</span>
-            {wallet.popular && <span className="cinaconnect-popular-badge">Popular</span>}
+            <span className="cinacoin-wallet-name">{wallet.name}</span>
+            {wallet.popular && <span className="cinacoin-popular-badge">Popular</span>}
           </button>
         ))}
         {wallets.length === 0 && (
-          <p className="cinaconnect-empty-state">No wallets found</p>
+          <p className="cinacoin-empty-state">No wallets found</p>
         )}
       </div>
     </div>

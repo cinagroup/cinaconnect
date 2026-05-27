@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: erigon-ethereum-config
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: erigon-ethereum
     chain: ethereum

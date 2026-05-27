@@ -1,5 +1,5 @@
 /**
- * CinaConnect Relay Server — Cloudflare Worker + Durable Objects
+ * Cinacoin Relay Server — Cloudflare Worker + Durable Objects
  *
  * Handles WalletConnect relay signaling via Durable Objects
  * for WebSocket session management.
@@ -48,7 +48,7 @@ function handleMetrics(): Response {
     : "0.00";
 
   return jsonResponse({
-    service: "cinaconnect-relay-server",
+    service: "cinacoin-relay-server",
     uptime_ms: uptime,
     uptime_readable: formatUptime(uptime),
     request_count: metrics.requestCount,

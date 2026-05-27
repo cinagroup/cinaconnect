@@ -1,8 +1,8 @@
 /**
- * Account Abstraction types for @cinaconnect/aa-sdk
+ * Account Abstraction types for @cinacoin/aa-sdk
  *
  * Designed to be compatible with ERC-4337 UserOperation specification
- * and the cinaconnect bundler RPC interface.
+ * and the cinacoin bundler RPC interface.
  */
 
 import type { Address, Hash, Hex, Chain } from 'viem';

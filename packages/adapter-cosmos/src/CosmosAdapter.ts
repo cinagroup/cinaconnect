@@ -1,5 +1,5 @@
 /**
- * Cosmos Chain Adapter for CinaConnect.
+ * Cosmos Chain Adapter for Cinacoin.
  *
  * Provides a unified interface for interacting with Cosmos SDK chains:
  * Cosmos Hub, Osmosis, Injective, Celestia, and more.
@@ -24,8 +24,8 @@
  * @packageDocumentation
  */
 
-import type { Connector } from '@cinaconnect/core-sdk';
-import type { Chain } from '@cinaconnect/core-sdk';
+import type { Connector } from '@cinacoin/core-sdk';
+import type { Chain } from '@cinacoin/core-sdk';
 import { KeplrConnector } from './connectors/keplr.js';
 import { LeapConnector } from './connectors/leap.js';
 import type { CosmosWalletConnector, CosmosChainId, Coin, TxResult, TransferParams } from './types.js';
@@ -160,7 +160,7 @@ export interface CosmosConnectResult {
 }
 
 /**
- * Cosmos chain adapter implementing the CinaConnect `ChainAdapter` pattern.
+ * Cosmos chain adapter implementing the Cinacoin `ChainAdapter` pattern.
  *
  * Wraps a wallet connector (Keplr or Leap) with chain-specific operations:
  * connecting, signing, transferring tokens, and querying balances.
@@ -198,7 +198,7 @@ export class CosmosAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector (optional for Cosmos adapters). */
+  /** Set the Cinacoin connector (optional for Cosmos adapters). */
   setConnector(_connector: Connector): void {
     // Cosmos adapters use wallet connectors (Keplr/Leap) directly.
   }
@@ -564,6 +564,9 @@ export class CosmosAdapter {
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`Cosmos RPC error ${response.status}: ${response.statusText}`);
+    }
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
     return parseInt(data.result.block.header.height, 10);
@@ -615,6 +618,9 @@ export class CosmosAdapter {
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`Cosmos RPC error ${response.status}: ${response.statusText}`);
+    }
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
     return { accountNumber: 0, sequence: 0 };
@@ -644,6 +650,9 @@ export class CosmosAdapter {
       }),
     });
 
+    if (!response.ok) {
+      throw new Error(`Cosmos RPC error ${response.status}: ${response.statusText}`);
+    }
     const data = await response.json();
     if (data.error) throw new Error(data.error.message);
 

@@ -22,9 +22,11 @@ mod tests;
 use std::io;
 use std::time::{SystemTime, UNIX_EPOCH};
 
+use actix_tls::accept::openssl::TlsAcceptor;
 use actix_web::{web, App, HttpServer};
+use openssl::ssl::{SslAcceptor, SslFiletype, SslMethod};
 use redis::Client;
-use tracing::info;
+use tracing::{info, warn};
 
 use crate::config::Config;
 use crate::health::{create_pairing, health, init as init_metrics, metrics, Metrics, UptimeTracker};
@@ -86,7 +88,7 @@ async fn main() -> io::Result<()> {
     let uptime = web::Data::new(UptimeTracker::new());
     let start_time = web::Data::new(std::time::Instant::now());
 
-    let server = HttpServer::new({
+    let app_factory = {
         let state = state.clone();
         let config = config.clone();
         let metrics = metrics.clone();
@@ -109,16 +111,36 @@ async fn main() -> io::Result<()> {
                 .service(create_pairing)
                 .route("/v1", web::get().to(ws_route))
         }
-    })
-    .bind(&config.listen_addr)?;
-
-    info!(addr = %config.listen_addr, "relay server listening");
+    };
 
     if config.tls_enabled() {
-        // TLS setup would go here in production
-        // For now, we just start without TLS since the TLS deps are complex
+        let cert_path = config.tls_cert_path.as_ref().unwrap();
+        let key_path = config.tls_key_path.as_ref().unwrap();
+
+        // Verify certificate files exist before attempting to bind
+        if !std::path::Path::new(cert_path).exists() {
+            panic!("TLS certificate file not found: {}", cert_path);
+        }
+        if !std::path::Path::new(key_path).exists() {
+            panic!("TLS private key file not found: {}", key_path);
+        }
+
+        // Build OpenSSL acceptor
+        let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls())?;
+        builder.set_certificate_file(cert_path, SslFiletype::PEM)?;
+        builder.set_private_key_file(key_path, SslFiletype::PEM)?;
+        builder.check_private_key()?;
+
+        let server = HttpServer::new(app_factory)
+            .bind_openssl(&config.listen_addr, builder)?;
+
+        info!(addr = %config.listen_addr, cert = %cert_path, "relay server listening (TLS)");
         server.run().await
     } else {
+        let server = HttpServer::new(app_factory)
+            .bind(&config.listen_addr)?;
+
+        info!(addr = %config.listen_addr, "relay server listening (plaintext)");
         server.run().await
     }
 }

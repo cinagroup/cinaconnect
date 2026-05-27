@@ -30,32 +30,34 @@ const DEFAULT_SCOPES = ['openid', 'email', 'name'];
  * Note: In production, use the `jose` library for proper JWT generation.
  * This is a placeholder showing the required claims structure.
  */
+/**
+ * Generate an Apple client_secret JWT.
+ *
+ * Apple requires a JWT signed with your private key as the client_secret.
+ *
+ * @param params - Apple login parameters.
+ * @returns JWT client_secret string.
+ *
+ * Uses `jose` to generate a properly signed ES256 JWT with the
+ * required claims (iss, iat, exp, aud, sub).
+ */
 export async function generateAppleClientSecret(params: AppleLoginParams): Promise<string> {
-  // Apple requires a JWT with these claims:
-  // - iss: Team ID
-  // - iat: current time
-  // - exp: max 6 months from now
-  // - aud: "https://appleid.apple.com"
-  // - sub: Client ID (Services ID)
-  //
-  // Signed with ES256 using your private key.
-  //
-  // In production, use:
-  //   import { SignJWT } from 'jose';
-  //   const key = await importSPKI(params.privateKey, 'ES256');
-  //   return new SignJWT({})
-  //     .setProtectedHeader({ alg: 'ES256', kid: params.keyId })
-  //     .setIssuer(params.teamId)
-  //     .setAudience('https://appleid.apple.com')
-  //     .setSubject(params.clientId)
-  //     .setIssuedAt()
-  //     .setExpirationTime('6m')
-  //     .sign(key);
+  const { SignJWT, importPKCS8 } = await import('jose');
 
-  throw new Error(
-    'Apple client_secret generation requires the jose library. ' +
-    'Install with: npm install jose'
-  );
+  const key = await importPKCS8(params.privateKey, 'ES256');
+
+  const now = Math.floor(Date.now() / 1000);
+  // Apple allows up to 6 months; we use 30 days for safety and rotation.
+  const exp = now + 30 * 24 * 60 * 60;
+
+  return new SignJWT({})
+    .setProtectedHeader({ alg: 'ES256', kid: params.keyId })
+    .setIssuer(params.teamId)
+    .setAudience('https://appleid.apple.com')
+    .setSubject(params.clientId)
+    .setIssuedAt(now)
+    .setExpirationTime(exp)
+    .sign(key);
 }
 
 /**
@@ -194,28 +196,33 @@ export async function loginWithApple(
 /**
  * Verify an Apple ID token's signature.
  *
- * Apple publishes their public keys at a well-known URL.
+ * Fetches Apple's JWKS and verifies the JWT signature using `jose`.
  *
  * @param idToken - Apple ID token.
- * @returns True if the token signature is valid.
+ * @param audience - Expected audience (client ID) for validation.
+ * @returns True if the token signature is valid and audience matches.
  */
-export async function verifyAppleToken(idToken: string): Promise<boolean> {
-  // Fetch Apple's public keys
-  const keysResponse = await fetch('https://appleid.apple.com/auth/keys');
-  if (!keysResponse.ok) {
-    throw new Error('Failed to fetch Apple public keys');
+export async function verifyAppleToken(idToken: string, audience?: string): Promise<boolean> {
+  const { jwtVerify, createRemoteJWKSet } = await import('jose');
+
+  const JWKS = createRemoteJWKSet(new URL('https://appleid.apple.com/auth/keys'), {
+    cooldownDuration: 600_000, // 10 min cache
+    timeoutDuration: 10_000,
+  });
+
+  const { payload } = await jwtVerify(idToken, JWKS, {
+    algorithms: ['RS256'],
+    audience,
+    issuer: 'https://appleid.apple.com',
+  });
+
+  // Double-check that the token is not expired
+  const exp = payload.exp;
+  if (exp && typeof exp === 'number' && Math.floor(Date.now() / 1000) >= exp) {
+    return false;
   }
 
-  const { keys } = await keysResponse.json();
-
-  // In production, use jose to verify:
-  //   import { jwtVerify, createRemoteJWKSet } from 'jose';
-  //   const JWKS = createRemoteJWKSet(new URL('https://appleid.apple.com/auth/keys'));
-  //   await jwtVerify(idToken, JWKS);
-
-  // Placeholder: in a real implementation, verify the JWT signature
-  // against Apple's published keys using jose or similar library
-  return keys.length > 0;
+  return true;
 }
 
 function generateState(): string {

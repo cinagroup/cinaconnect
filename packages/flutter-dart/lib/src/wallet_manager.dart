@@ -17,8 +17,8 @@ import 'wallet_registry.dart';
 import 'deep_link_handler.dart';
 
 /// Session storage key for encrypted persistence.
-const String _sessionStorageKey = 'cinaconnect_encrypted_session';
-const String _sessionExpiryKey = 'cinaconnect_session_expiry';
+const String _sessionStorageKey = 'cinacoin_encrypted_session';
+const String _sessionExpiryKey = 'cinacoin_session_expiry';
 
 /// Default session TTL: 7 days.
 const Duration _defaultSessionTtl = Duration(days: 7);

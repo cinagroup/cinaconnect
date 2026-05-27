@@ -1,4 +1,4 @@
-# 📊 CinaConnect vs Reown — 完整深度分析报告 (v3 Master Summary)
+# 📊 Cinacoin vs Reown — 完整深度分析报告 (v3 Master Summary)
 
 > **日期**: 2026-05-25  
 > **分析师**: 5个子agent并行审计  
@@ -8,9 +8,9 @@
 
 ## 🎯 执行摘要
 
-| 维度 | CinaConnect | Reown AppKit | 评估 |
+| 维度 | Cinacoin | Reown AppKit | 评估 |
 |------|-------------|-------------|------|
-| **总包数** | 72 | ~30 | CinaConnect +42 |
+| **总包数** | 72 | ~30 | Cinacoin +42 |
 | **SDK核心得分** | **80/100** | 90/100 | 坚实基础，缺6条链适配器 |
 | **Framework/UI得分** | **80%** | 90% | React领先，EIP-5792最强 |
 | **Mobile/Game得分** | **80%** | 85% | 4个SDK生产就绪 |
@@ -109,7 +109,7 @@
 
 ---
 
-## 🏆 CinaConnect 十大竞争优势
+## 🏆 Cinacoin 十大竞争优势
 
 | # | 优势 | 包 | Reown状态 |
 |---|------|-----|----------|
@@ -146,7 +146,7 @@
 ## 📐 架构对比
 
 ```
-Reown AppKit架构:                    CinaConnect架构:
+Reown AppKit架构:                    Cinacoin架构:
 ┌─ Controllers (10+)                  ┌─ Connector (抽象基类)
 ├─ ProxyController (快照状态)          ├─ SessionManager (状态机)
 ├─ Cloud Infrastructure               ├─ Zustand Store (轻量)
@@ -175,7 +175,7 @@ Reown AppKit架构:                    CinaConnect架构:
 2. **修复 iOS Package.swift 路径**
    ```bash
    # 方案A: 重命名目录
-   mv packages/ios-swift/Sources/OnChainUX packages/ios-swift/Sources/CinaConnect
+   mv packages/ios-swift/Sources/OnChainUX packages/ios-swift/Sources/Cinacoin
    # 方案B: 修改 Package.swift 源路径
    ```
 
@@ -218,7 +218,7 @@ Reown AppKit架构:                    CinaConnect架构:
 
 ## 💡 战略建议
 
-**CinaConnect已具备与Reown竞争的实力（78-82%完成度），且有10项独特优势。**
+**Cinacoin已具备与Reown竞争的实力（78-82%完成度），且有10项独特优势。**
 
 短期聚焦：
 - **修复部署阻断问题**（deploy-all.sh、iOS构建、bundler stub）
@@ -238,4 +238,4 @@ Reown AppKit架构:                    CinaConnect架构:
 
 ---
 
-*CinaConnect v3 深度审计完成 — 2026-05-25*
+*Cinacoin v3 深度审计完成 — 2026-05-25*

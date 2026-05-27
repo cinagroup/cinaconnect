@@ -15,7 +15,7 @@ import type {
   Chain,
   Account,
 } from "viem";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, zeroAddress } from "viem";
 
 // ============================================================
 // Constants
@@ -177,13 +177,15 @@ export class UniswapExecutor implements SwapExecutor {
     }
 
     // Fallback: construct a placeholder quote
+    // When no on-chain quote is available, we return a structural quote
+    // with toAmount = 0 (caller must verify before execution)
     const route: SwapRoute[] = [
       {
         protocol: "uniswap-v3",
         fromToken: params.fromToken,
         toToken: params.toToken,
         fromAmount: params.fromAmount,
-        toAmount: params.fromAmount,
+        toAmount: 0n,
         gasEstimate: 185_000n,
       },
     ];
@@ -193,11 +195,11 @@ export class UniswapExecutor implements SwapExecutor {
       fromToken: params.fromToken,
       toToken: params.toToken,
       fromAmount: params.fromAmount,
-      toAmount: params.fromAmount,
+      toAmount: 0n,
       priceImpact: 0,
       route,
       gasEstimate: 185_000n,
-      minimumReceived: calculateMinimumReceived(params.fromAmount, params.slippageBps),
+      minimumReceived: calculateMinimumReceived(0n, params.slippageBps),
       provider: this.name,
       expiresAt: Date.now() + 30_000,
       chainId: params.chainId,
@@ -336,8 +338,10 @@ export class UniswapExecutor implements SwapExecutor {
           {
             tokenIn: fromToken,
             tokenOut: toToken,
-            fee: 3000,
-            recipient: toToken,
+            fee: this.extractFeeFromRoute(route) ?? 3000,
+            recipient: quote.route[0].toToken === "native"
+              ? quote.route[quote.route.length - 1].toToken === "native" ? zeroAddress : (quote.route[quote.route.length - 1].toToken as `0x${string}`)
+              : route.toToken === "native" ? zeroAddress : (route.toToken as `0x${string}`),
             amountIn: quote.fromAmount,
             amountOutMinimum: minimumReceived,
             sqrtPriceLimitX96: 0n,
@@ -362,9 +366,17 @@ export class UniswapExecutor implements SwapExecutor {
       const token = (hop.fromToken as `0x${string}`).slice(2);
       path += token;
       if (i < quote.route.length - 1) {
-        path += "000bb8";
+        const fee = this.extractFeeFromRoute(hop) ?? 3000;
+        path += fee.toString(16).padStart(6, "0");
       }
     }
+    // Add final token
+    const lastHop = quote.route[quote.route.length - 1];
+    const lastToken = (lastHop.toToken as `0x${string}`).slice(2);
+    path += lastToken;
+
+    const lastRouteToken = quote.route[quote.route.length - 1].toToken;
+    const recipient = lastRouteToken === "native" ? zeroAddress : (lastRouteToken as `0x${string}`);
 
     return encodeFunctionData({
       abi: UNISWAP_ROUTER_ABI,
@@ -372,12 +384,20 @@ export class UniswapExecutor implements SwapExecutor {
       args: [
         {
           path: (`0x${path}` as `0x${string}`),
-          recipient: quote.route[quote.route.length - 1].toToken as `0x${string}`,
+          recipient,
           amountIn: quote.fromAmount,
           amountOutMinimum: minimumReceived,
         },
       ],
     });
+  }
+
+  /**
+   * Extract fee tier from a route protocol string (e.g., 'uniswap-v3-3000' → 3000).
+   */
+  private extractFeeFromRoute(route: { protocol: string }): number | null {
+    const match = route.protocol.match(/-(\d{3,6})$/);
+    return match ? parseInt(match[1], 10) : null;
   }
 
   async getSupportedTokens(chainId: number): Promise<TokenInfo[]> {

@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace CinaConnect.UI
+namespace Cinacoin.UI
 {
     /// <summary>
     /// Unity UI Connect Modal panel.
@@ -186,7 +186,7 @@ namespace CinaConnect.UI
             else
             {
                 // Fallback: generate a placeholder texture
-                Debug.LogWarning("[CinaConnect:ConnectModal] QR generation failed. Using placeholder.");
+                Debug.LogWarning("[Cinacoin:ConnectModal] QR generation failed. Using placeholder.");
                 _qrCodeImage.texture = CreatePlaceholderQR(uri);
             }
         }

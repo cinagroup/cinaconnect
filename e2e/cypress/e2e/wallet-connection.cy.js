@@ -1,7 +1,7 @@
 "use strict";
 // ***************************************************************
 // Wallet Connection E2E Tests
-// Tests for wallet connect/disconnect flow in CinaConnect
+// Tests for wallet connect/disconnect flow in Cinacoin
 // ***************************************************************
 describe('Wallet Connection', () => {
     beforeEach(() => {

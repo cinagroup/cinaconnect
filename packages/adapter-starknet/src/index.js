@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/adapter-starknet
+ * @cinacoin/adapter-starknet
  *
- * Starknet chain adapter for the CinaConnect SDK.
+ * Starknet chain adapter for the Cinacoin SDK.
  * Supports Argent X and Braavos wallets with native account abstraction.
  *
  * @packageDocumentation

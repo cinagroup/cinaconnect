@@ -1,6 +1,6 @@
-# Migration Example: RainbowKit → CinaConnect
+# Migration Example: RainbowKit → Cinacoin
 
-> Full before/after example showing a typical RainbowKit + wagmi dApp migrated to CinaConnect.
+> Full before/after example showing a typical RainbowKit + wagmi dApp migrated to Cinacoin.
 
 ## Scenario
 
@@ -180,29 +180,29 @@ function SignInPanel() {
 }
 ```
 
-## After (CinaConnect)
+## After (Cinacoin)
 
 ```tsx
 // App.tsx
 import {
-  CinaConnectProvider,
+  CinacoinProvider,
   ConnectButton,
   ConnectModal,
   useAccount,
   useConnect,
   useDisconnect,
-  useCinaConnect,
-} from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
-import { generateMessage } from '@cinaconnect/siwe'
-import { Connector } from '@cinaconnect/core-sdk'
-import '@cinaconnect/design-tokens/base.css'
+  useCinacoin,
+} from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
+import { generateMessage } from '@cinacoin/siwe'
+import { Connector } from '@cinacoin/core-sdk'
+import '@cinacoin/design-tokens/base.css'
 import { useState } from 'react'
 
 export default function App() {
   return (
-    <CinaConnectProvider
-      projectId={process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!}
+    <CinacoinProvider
+      projectId={process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!}
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
         { id: 'eip155:137', name: 'Polygon', rpcUrl: 'https://rpc.yourdomain.com/polygon' },
@@ -223,7 +223,7 @@ export default function App() {
         <ChainManager />
         <SignInPanel />
       </main>
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 
@@ -290,7 +290,7 @@ function WalletPanel() {
 }
 
 function ChainManager() {
-  const { chainId, switchChain } = useCinaConnect()
+  const { chainId, switchChain } = useCinacoin()
 
   return (
     <section style={{ marginBottom: 24 }}>
@@ -307,7 +307,7 @@ function ChainManager() {
 
 function SignInPanel() {
   const account = useAccount()
-  const { signMessage } = useCinaConnect()
+  const { signMessage } = useCinacoin()
 
   async function signIn() {
     if (!account) return
@@ -355,15 +355,15 @@ function SignInPanel() {
 
 ## Key Changes Summary
 
-| Area | RainbowKit | CinaConnect |
+| Area | RainbowKit | Cinacoin |
 |------|-----------|-------------|
-| Provider | `WagmiProvider` + `RainbowKitProvider` + `QueryClientProvider` | Single `CinaConnectProvider` |
-| Connect Button | `<ConnectButton />` from RainbowKit | `<ConnectButton />` from CinaConnect |
+| Provider | `WagmiProvider` + `RainbowKitProvider` + `QueryClientProvider` | Single `CinacoinProvider` |
+| Connect Button | `<ConnectButton />` from RainbowKit | `<ConnectButton />` from Cinacoin |
 | Connect Modal | `useConnectModal().openConnectModal()` | `<ConnectModal isOpen={...} />` |
 | Chain Switching | `useSwitchChain({ chainId: N })` | `switchChain('eip155:N')` |
-| Account | `useAccount()` from wagmi | `useAccount()` from CinaConnect |
-| Signing | `useSignMessageAsync()` from wagmi | `signMessage()` from CinaConnect |
-| SIWE | `SiweMessage` from siwe package | `generateMessage` from @cinaconnect/siwe |
+| Account | `useAccount()` from wagmi | `useAccount()` from Cinacoin |
+| Signing | `useSignMessageAsync()` from wagmi | `signMessage()` from Cinacoin |
+| SIWE | `SiweMessage` from siwe package | `generateMessage` from @cinacoin/siwe |
 | Dependencies | 6+ packages | 3 packages |
 | QueryClient | Required | Not needed |
 | Infrastructure | Reown Cloud | Self-hosted Relay + RPC Proxy |
@@ -373,9 +373,9 @@ function SignInPanel() {
 Run the codemod to handle the bulk of the migration:
 
 ```bash
-npx cinaconnect-codemod \
+npx cinacoin-codemod \
   --src-dir ./src \
-  --transform rainbowkit-to-cinaconnect \
+  --transform rainbowkit-to-cinacoin \
   --verbose
 ```
 
@@ -388,6 +388,6 @@ Then manually review:
 ## Next Steps
 
 - [Migrate from RainbowKit Guide](/guide/migrate-from-rainbowkit) — Full migration reference
-- [Quick Start](/guide/quick-start) — CinaConnect basics
+- [Quick Start](/guide/quick-start) — Cinacoin basics
 - [React API](/api/react) — Hook documentation
 - [SIWE Auth Example](/examples/siwe-auth) — Authentication setup

@@ -1,4 +1,4 @@
-# CinaConnect — 第三轮最终审计报告 (FRESH AUDIT)
+# Cinacoin — 第三轮最终审计报告 (FRESH AUDIT)
 
 > **时间**: 2026-05-17 03:15 UTC  
 > **方法**: 从头开始全面扫描，不依赖前轮结论  
@@ -8,7 +8,7 @@
 
 ## 📊 总体评分
 
-| 维度 | CinaConnect | Reown | 状态 |
+| 维度 | Cinacoin | Reown | 状态 |
 |------|:---------:|:-----:|:----:|
 | Core SDK | **8.5/10** | 8.5/10 | ✅ 持平 |
 | 链适配器 | **9.5/10** | 7.0/10 | 🟢 领先 (+3 适配器) |
@@ -19,13 +19,13 @@
 | 开发者体验 | **8.3/10** | 7.5/10 | 🟢 领先 |
 | **综合** | **~8.8/10** | **~7.6/10** | **🟢 反超** |
 
-> **功能覆盖率 ~98%**。CinaConnect 在基础设施、高级功能和链覆盖上大幅领先 Reown。
+> **功能覆盖率 ~98%**。Cinacoin 在基础设施、高级功能和链覆盖上大幅领先 Reown。
 
 ---
 
-## 📦 包对等映射 (28 Reown → CinaConnect)
+## 📦 包对等映射 (28 Reown → Cinacoin)
 
-| # | Reown 包 | CinaConnect 等价物 | 状态 | 备注 |
+| # | Reown 包 | Cinacoin 等价物 | 状态 | 备注 |
 |---|---------|-----------------|------|------|
 | 1 | `appkit` (core) | `core-sdk` | ✅ | 8,605 LOC, 11 适配器 |
 | 2 | `appkit-utils` | `core-sdk` (吸收) | ✅ | 内部集成 |
@@ -60,7 +60,7 @@
 
 ---
 
-## 🆕 CinaConnect 独占包 (无 Reown 等价物)
+## 🆕 Cinacoin 独占包 (无 Reown 等价物)
 
 ### JS/TS 客户端 (18 个)
 | 包 | LOC (src) | 用途 |
@@ -206,9 +206,9 @@
 
 ## 📈 与 Reown 完整 29 仓库对比
 
-Reown 组织下实际仓库远超 29 个，核心产品相关仓库约 28 个包。CinaConnect 在 **核心功能** 上达到 ~98% 覆盖率。
+Reown 组织下实际仓库远超 29 个，核心产品相关仓库约 28 个包。Cinacoin 在 **核心功能** 上达到 ~98% 覆盖率。
 
-### CinaConnect 领先领域
+### Cinacoin 领先领域
 1. **自建基础设施**: 6 个 Rust 服务器 + 1 个 Go 代理，Reown 纯云服务
 2. **链覆盖**: 11 个适配器 vs Reown 8 个 (多 ethers6, viem, 通用 EVM)
 3. **高级功能**: session-keys, social-login, passkey-auth 均为独家
@@ -218,12 +218,12 @@ Reown 组织下实际仓库远超 29 个，核心产品相关仓库约 28 个包
 7. **无障碍**: WCAG AA 完整测试，Reown 基础
 8. **CI/CD**: 7 条流水线 + Canary 回滚
 
-### CinaConnect 落后领域
-1. **codemod 迁移工具**: Reown 有，CinaConnect 无
-2. **testing 工具包**: Reown 有，CinaConnect 无
-3. **社区**: Reown 5400+ stars，CinaConnect 0
-4. **Svelte/Nuxt 绑定**: Reown 有，CinaConnect 无
-5. **生产验证**: Reown 已用于生产多年，CinaConnect 架构阶段
+### Cinacoin 落后领域
+1. **codemod 迁移工具**: Reown 有，Cinacoin 无
+2. **testing 工具包**: Reown 有，Cinacoin 无
+3. **社区**: Reown 5400+ stars，Cinacoin 0
+4. **Svelte/Nuxt 绑定**: Reown 有，Cinacoin 无
+5. **生产验证**: Reown 已用于生产多年，Cinacoin 架构阶段
 
 ---
 
@@ -252,13 +252,13 @@ Reown 组织下实际仓库远超 29 个，核心产品相关仓库约 28 个包
 3. ✅ 补充 `ens-resolver` 测试
 
 ### 短期 (1-2 周)
-4. 构建 `@cinaconnect/testing` 包 (mock provider + 测试工具)
+4. 构建 `@cinacoin/testing` 包 (mock provider + 测试工具)
 5. 修复 ethers5/6 适配器接口缺失
 6. 实现 `safe-decoder` 解码逻辑
 7. 深化 iOS/Unity 测试
 
 ### 中期 (2-4 周)
-8. 构建 `@cinaconnect/codemod` (Web3Modal→CinaConnect 迁移)
+8. 构建 `@cinacoin/codemod` (Web3Modal→Cinacoin 迁移)
 9. 实现 `travel-rule-demo` VASP 集成
 10. Svelte 绑定
 11. 社区启动 (文档站点上线、README 完善)

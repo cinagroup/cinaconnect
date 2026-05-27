@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# release-tag.sh — Create and push a release tag for CinaConnect
+# release-tag.sh — Create and push a release tag for CinaCoin
 #
 # Usage:
 #   ./scripts/release-tag.sh              # Interactive mode
@@ -39,7 +39,7 @@ error()   { echo -e "${RED}✗  $1${NC}" >&2; }
 usage() {
   echo "Usage: $0 [TAG] [--dry-run]"
   echo ""
-  echo "Create and push a release tag for CinaConnect."
+  echo "Create and push a release tag for CinaCoin."
   echo ""
   echo "Arguments:"
   echo "  TAG         Version tag (e.g., v1.1.0). If omitted, prompts interactively."
@@ -188,7 +188,7 @@ confirm() {
 # ── Main ──
 main() {
   echo ""
-  info "CinaConnect — Release Tag Script"
+  info "CinaCoin — Release Tag Script"
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo ""
 
@@ -224,7 +224,7 @@ main() {
 
     echo ""
     success "Release workflow triggered on GitHub Actions"
-    echo "  Track progress: https://github.com/cinaconnect/cinaconnect/actions"
+    echo "  Track progress: https://github.com/cinacoin/cinacoin/actions"
     echo ""
     echo "Next steps:"
     echo "  • Monitor the release workflow in GitHub Actions"

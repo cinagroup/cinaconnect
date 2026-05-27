@@ -3,14 +3,14 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
  * ConnectModal — Native React Native modal with real WalletConnect v2 deep linking.
  *
  * Integrates real WC v2 pairing via WalletConnectProvider, deep linking via
- * react-native Linking API, and the CinaConnect wallet registry for a real
+ * react-native Linking API, and the Cinacoin wallet registry for a real
  * connection flow with actual wallet apps.
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { Modal, View, Text, TouchableOpacity, StyleSheet, ScrollView, TextInput, Image, Linking, Alert, Platform, } from 'react-native';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 import { useWalletConnect, WALLET_DEEP_LINKS } from './WalletConnectProvider.js';
-import { buildWalletDeepLink, buildWalletUniversalLink } from '@cinaconnect/walletconnect-v2';
+import { buildWalletDeepLink, buildWalletUniversalLink } from '@cinacoin/walletconnect-v2';
 const DEFAULT_WALLETS = [
     { id: 'metamask', name: 'MetaMask', description: 'Browser extension & mobile',
         deepLink: 'metamask://', universalLink: 'https://metamask.app.link',
@@ -59,7 +59,7 @@ const DEFAULT_WALLETS = [
  */
 export function ConnectModal({ visible, onClose, defaultView = 'wallets', recommendedWalletIds = [], wallets = DEFAULT_WALLETS, fallbackTimeoutMs = 1500, }) {
     const [currentView, setCurrentView] = useState(defaultView);
-    const { connect, themeColors, wcUri: ctxWcUri } = useCinaConnectContext();
+    const { connect, themeColors, wcUri: ctxWcUri } = useCinacoinContext();
     // Real WC v2 provider (may not be available)
     let createPairingUri = null;
     let connectWithUri = null;
@@ -75,7 +75,7 @@ export function ConnectModal({ visible, onClose, defaultView = 'wallets', recomm
         wcConnecting = wc.connecting;
     }
     catch {
-        // WalletConnectProvider not in tree — use CinaConnectProvider fallback
+        // WalletConnectProvider not in tree — use CinacoinProvider fallback
     }
     const [email, setEmail] = useState('');
     const [deepLinkStatus, setDeepLinkStatus] = useState({});
@@ -125,7 +125,7 @@ export function ConnectModal({ visible, onClose, defaultView = 'wallets', recomm
                 setDeepLinkStatus(prev => ({ ...prev, [wallet.id]: 'success' }));
             }
             else if (wallet.supportsWalletConnect && ctxWcUri) {
-                // Fallback to CinaConnectProvider wcUri
+                // Fallback to CinacoinProvider wcUri
                 const deepLink = buildWalletDeepLink(wallet.id, ctxWcUri);
                 if (deepLink) {
                     const canOpen = await Linking.canOpenURL(deepLink);
@@ -237,7 +237,7 @@ export function ConnectModal({ visible, onClose, defaultView = 'wallets', recomm
                                     borderColor: themeColors.border,
                                     backgroundColor: currentView === view ? themeColors.bgCard : 'transparent',
                                 },
-                            ], onPress: () => setCurrentView(view), children: _jsx(Text, { style: [styles.tabText, { color: currentView === view ? themeColors.textPrimary : themeColors.textSecondary }], children: view.charAt(0).toUpperCase() + view.slice(1) }) }, view))) }), _jsx(ScrollView, { style: styles.content, children: renderView() }), _jsx(View, { style: styles.footer, children: _jsx(Text, { style: [styles.footerText, { color: themeColors.textTertiary }], children: "Powered by CinaConnect" }) })] }) }) }));
+                            ], onPress: () => setCurrentView(view), children: _jsx(Text, { style: [styles.tabText, { color: currentView === view ? themeColors.textPrimary : themeColors.textSecondary }], children: view.charAt(0).toUpperCase() + view.slice(1) }) }, view))) }), _jsx(ScrollView, { style: styles.content, children: renderView() }), _jsx(View, { style: styles.footer, children: _jsx(Text, { style: [styles.footerText, { color: themeColors.textTertiary }], children: "Powered by Cinacoin" }) })] }) }) }));
 }
 const styles = StyleSheet.create({
     overlay: {

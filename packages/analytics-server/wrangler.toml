@@ -1,16 +1,16 @@
-name = "cinaconnect-analytics"
+name = "cinacoin-analytics"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
 
 # Production environment
 [env.production]
-name = "cinaconnect-analytics-prod"
+name = "cinacoin-analytics-prod"
 
 # D1 Database
 [[d1_databases]]
 binding = "DB"
-database_name = "CinaConnectAnalytics"
+database_name = "CinacoinAnalytics"
 database_id = "YOUR_D1_DATABASE_ID"
 migrations_dir = "migrations"
 

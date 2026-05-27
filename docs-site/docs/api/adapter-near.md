@@ -1,11 +1,11 @@
 # NEAR Adapter
 
-> `@cinaconnect/adapter-near` — NEAR Protocol adapter for CinaConnect.
+> `@cinacoin/adapter-near` — NEAR Protocol adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-near
+npm install @cinacoin/adapter-near
 ```
 
 ## Overview

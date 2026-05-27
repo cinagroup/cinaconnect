@@ -10,7 +10,7 @@
  *     useReverseENS,
  *     useTokenMetadata,
  *     useTokenPortfolio,
- *   } from "@cinaconnect/blockchain-api/hooks";
+ *   } from "@cinacoin/blockchain-api/hooks";
  */
 
 export {

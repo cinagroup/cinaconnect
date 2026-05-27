@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/i18n
+ * @cinacoin/i18n
  *
- * Internationalization and localization for CinaConnect.
+ * Internationalization and localization for CinaCoin.
  * Lightweight i18n with React integration.
  */
 

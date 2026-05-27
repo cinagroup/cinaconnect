@@ -1,16 +1,16 @@
 # Testing
 
-> `@cinaconnect/testing` — Testing utilities for CinaConnect.
+> `@cinacoin/testing` — Testing utilities for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/testing --save-dev
+npm install @cinacoin/testing --save-dev
 ```
 
 ## Overview
 
-Mock providers, test wallets, and simulation utilities for testing CinaConnect integrations.
+Mock providers, test wallets, and simulation utilities for testing Cinacoin integrations.
 
 ## Related
 

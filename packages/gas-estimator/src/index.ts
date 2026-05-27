@@ -1,4 +1,4 @@
-// @cinaconnect/gas-estimator
+// @cinacoin/gas-estimator
 // Gas estimation for EVM and Solana
 
 export { GasEstimator } from './estimator.js';
@@ -16,4 +16,7 @@ export type {
   GasCache,
   GasPriceData,
   GasEstimationResult,
+  ChainConfig,
+  RpcResponse,
 } from './types.js';
+export { DEFAULT_CHAINS } from './types.js';

@@ -8,7 +8,7 @@
  * - Event listener counting
  *
  * Usage:
- *   import { createMemoryTracker, detectLeaks } from '@cinaconnect/performance-utils/memory-leak';
+ *   import { createMemoryTracker, detectLeaks } from '@cinacoin/performance-utils/memory-leak';
  */
 
 export interface MemorySnapshot {

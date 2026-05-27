@@ -1,20 +1,20 @@
 # Vue
 
-> `@cinaconnect/vue` — Vue 3 composition API adapter for CinaConnect.
+> `@cinacoin/vue` — Vue 3 composition API adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/vue @cinaconnect/core-sdk
+npm install @cinacoin/vue @cinacoin/core-sdk
 ```
 
 ## Usage
 
 ```vue
 <script setup>
-import { useCinaConnect } from '@cinaconnect/vue'
+import { useCinacoin } from '@cinacoin/vue'
 
-const { connect, disconnect, account } = useCinaConnect()
+const { connect, disconnect, account } = useCinacoin()
 </script>
 
 <template>
@@ -25,7 +25,7 @@ const { connect, disconnect, account } = useCinaConnect()
 
 ## Composables
 
-- `useCinaConnect()` — Core SDK instance
+- `useCinacoin()` — Core SDK instance
 - `useAccount()` — Current account
 - `useConnect()` — Connect helper
 - `useDisconnect()` — Disconnect helper

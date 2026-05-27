@@ -1,19 +1,19 @@
-# CinaConnect — SLO/SLI Configuration
+# Cinacoin — SLO/SLI Configuration
 # Service Level Objectives for all critical services
 # Based on Google SRE methodology
 ---
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: cinaconnect-slo-monitor
+  name: cinacoin-slo-monitor
   namespace: monitoring
   labels:
-    project: cinaconnect
+    project: cinacoin
     managed-by: helm
 spec:
   selector:
     matchLabels:
-      project: cinaconnect
+      project: cinacoin
   endpoints:
     - port: metrics
       interval: 15s
@@ -23,13 +23,13 @@ spec:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: cinaconnect-slo-config
+  name: cinacoin-slo-config
   namespace: monitoring
   labels:
-    project: cinaconnect
+    project: cinacoin
 data:
   slo-config.yaml: |
-    service: cinaconnect
+    service: cinacoin
     environment: production
 
     slo_targets:

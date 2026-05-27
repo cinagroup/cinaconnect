@@ -39,7 +39,7 @@ const AUTH_METHODS = [
 ];
 
 const TOP_DAPPS = [
-  { name: "CinaConnect Demo", users: 28500, growth: 12.4 },
+  { name: "CinaCoin Demo", users: 28500, growth: 12.4 },
   { name: "Hainai DeFi Portal", users: 15200, growth: 8.7 },
   { name: "CinaSwap", users: 12800, growth: 15.2 },
   { name: "Telegram Mini App", users: 9400, growth: 22.1 },

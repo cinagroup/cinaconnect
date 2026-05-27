@@ -5,8 +5,8 @@ import AuthProvider from "@/lib/AuthProvider";
 import AuthGuard from "@/components/AuthGuard";
 
 export const metadata: Metadata = {
-  title: "CinaConnect — Backend Dashboard",
-  description: "Management dashboard for CinaConnect Cloudflare Workers services",
+  title: "CinaCoin — Backend Dashboard",
+  description: "Management dashboard for CinaCoin Cloudflare Workers services",
 };
 
 export default function RootLayout({

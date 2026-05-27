@@ -1,6 +1,6 @@
-# @cinaconnect/relay-server
+# @cinacoin/relay-server
 
-Relay server for CinaConnect WebSocket connections and message routing.
+Relay server for Cinacoin WebSocket connections and message routing.
 
 ## Installation
 

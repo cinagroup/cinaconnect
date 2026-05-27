@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/testing",
+  "name": "@cinacoin/testing",
   "version": "0.2.0",
-  "description": "Testing utilities for CinaConnect — mock providers, wallets, chains, and transactions",
+  "description": "Testing utilities for Cinacoin — mock providers, wallets, chains, and transactions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -20,7 +20,7 @@
     "clean": "rm -rf dist"
   },
   "keywords": [
-    "cinaconnect",
+    "cinacoin",
     "testing",
     "mock",
     "eip-1193",

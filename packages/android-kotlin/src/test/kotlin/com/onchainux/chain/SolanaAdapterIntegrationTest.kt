@@ -1,4 +1,4 @@
-package com.cinaconnect.chain
+package com.cinacoin.chain
 
 import kotlinx.coroutines.runBlocking
 import org.junit.Test

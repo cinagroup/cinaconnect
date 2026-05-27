@@ -1,7 +1,7 @@
-import type { Connector } from '@cinaconnect/core-sdk';
+import type { Connector } from '@cinacoin/core-sdk';
 import type { HederaConnector, HederaPlatform, HederaFeature, HederaConnectionResult, HederaConnectorEvents, HederaNetwork, HbarTransferParams, TokenTransferParams, ContractCallParams } from './types';
 /**
- * Hedera Hashgraph chain adapter for CinaConnect.
+ * Hedera Hashgraph chain adapter for Cinacoin.
  *
  * Supports Blade Wallet, HashPack, and Kantara Wallet.
  * Provides HBAR transfers, token transfers, smart contract calls,
@@ -9,7 +9,7 @@ import type { HederaConnector, HederaPlatform, HederaFeature, HederaConnectionRe
  *
  * @example
  * ```ts
- * import { HederaAdapter } from '@cinaconnect/adapter-hedera';
+ * import { HederaAdapter } from '@cinacoin/adapter-hedera';
  *
  * const adapter = new HederaAdapter();
  * adapter.registerConnector(new HashPackConnector());
@@ -56,7 +56,7 @@ export declare class HederaAdapter implements HederaConnector {
      */
     getRecommendedConnectors(): HederaConnector[];
     /**
-     * Set the underlying CinaConnect core connector.
+     * Set the underlying Cinacoin core connector.
      */
     setConnector(connector: Connector): void;
     get supportedFeatures(): HederaFeature[];

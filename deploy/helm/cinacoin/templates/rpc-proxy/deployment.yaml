@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rpc-proxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: rpc-proxy
+    component: proxy
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.rpcProxy.replicaCount }}
+  selector:
+    matchLabels:
+      app: rpc-proxy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: rpc-proxy
+        component: proxy
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.rpcProxy.ports.metrics }}"
+        prometheus.io/path: "/metrics"
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: rpc-proxy
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.rpcProxy.image.repository }}:{{ .Values.rpcProxy.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.rpcProxy.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.rpcProxy.ports.http }}
+              protocol: TCP
+            - name: metrics
+              containerPort: {{ .Values.rpcProxy.ports.metrics }}
+              protocol: TCP
+          env:
+            - name: REDIS_URL
+              value: {{ .Values.rpcProxy.env.REDIS_URL | quote }}
+            - name: PROVIDERS_FILE
+              value: {{ .Values.rpcProxy.env.PROVIDERS_FILE | quote }}
+            - name: REGION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['topology.kubernetes.io/region']
+          {{- with .Values.rpcProxy.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.rpcProxy.livenessProbe.path }}
+              port: {{ .Values.rpcProxy.livenessProbe.port }}
+            initialDelaySeconds: {{ .Values.rpcProxy.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.rpcProxy.livenessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.rpcProxy.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: {{ .Values.rpcProxy.readinessProbe.path }}
+              port: {{ .Values.rpcProxy.readinessProbe.port }}
+            initialDelaySeconds: {{ .Values.rpcProxy.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ .Values.rpcProxy.readinessProbe.periodSeconds }}
+            failureThreshold: {{ .Values.rpcProxy.readinessProbe.failureThreshold }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

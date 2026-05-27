@@ -1,13 +1,13 @@
 /**
- * CinaConnect Android SDK — Main class.
+ * Cinacoin Android SDK — Main class.
  *
- * Provides the core `CinaConnect` manager for Android applications.
+ * Provides the core `Cinacoin` manager for Android applications.
  * Configured once at app launch, provides access to wallet connections,
  * chain state, and theme configuration.
  *
  * ## Usage
  * ```kotlin
- * val config = CinaConnectConfig(
+ * val config = CinacoinConfig(
  *     projectId = "your-project-id",
  *     chains = listOf(ChainConfig.ethereum, ChainConfig.polygon),
  *     metadata = AppMetadata(
@@ -18,7 +18,7 @@
  *     )
  * )
  *
- * val onChainUX = CinaConnect.initialize(config)
+ * val onChainUX = Cinacoin.initialize(config)
  * ```
  *
  * @property config Current configuration
@@ -26,33 +26,33 @@
  * @property deepLinkHandler Deep link handler
  * @property pushNotificationHandler FCM push handler
  */
-package com.cinaconnect.core
+package com.cinacoin.core
 
-import com.cinaconnect.wallet.WalletManager
-import com.cinaconnect.deeplink.DeepLinkHandler
-import com.cinaconnect.push.FcmHandler
+import com.cinacoin.wallet.WalletManager
+import com.cinacoin.deeplink.DeepLinkHandler
+import com.cinacoin.push.FcmHandler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 /**
- * Central CinaConnect manager for Android.
+ * Central Cinacoin manager for Android.
  */
-class CinaConnect private constructor() {
+class Cinacoin private constructor() {
 
     /** Shared singleton instance. */
     companion object {
         @Volatile
-        private var INSTANCE: CinaConnect? = null
+        private var INSTANCE: Cinacoin? = null
 
         /** Get or create the shared instance. */
-        fun getInstance(): CinaConnect =
+        fun getInstance(): Cinacoin =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: CinaConnect().also { INSTANCE = it }
+                INSTANCE ?: Cinacoin().also { INSTANCE = it }
             }
 
-        /** Initialize CinaConnect with configuration. */
-        fun initialize(config: CinaConnectConfig): CinaConnect =
+        /** Initialize Cinacoin with configuration. */
+        fun initialize(config: CinacoinConfig): Cinacoin =
             getInstance().apply { configure(config) }
     }
 
@@ -60,7 +60,7 @@ class CinaConnect private constructor() {
     val version: String = "0.1.0"
 
     /** Current configuration. */
-    var config: CinaConnectConfig? = null
+    var config: CinacoinConfig? = null
         private set
 
     /** Wallet manager for connection operations. */
@@ -93,9 +93,9 @@ class CinaConnect private constructor() {
         get() = ThemeColors(_themeMode.value)
 
     /**
-     * Configure CinaConnect with app-specific settings.
+     * Configure Cinacoin with app-specific settings.
      */
-    fun configure(config: CinaConnectConfig) {
+    fun configure(config: CinacoinConfig) {
         this.config = config
         _themeMode.value = config.themeMode
         _activeChainId.value = config.chains.firstOrNull()?.chainId ?: 1
@@ -133,7 +133,7 @@ class CinaConnect private constructor() {
      * Switch to a different chain.
      */
     suspend fun switchChain(chainId: Int) {
-        val config = config ?: throw IllegalStateException("CinaConnect not configured")
+        val config = config ?: throw IllegalStateException("Cinacoin not configured")
         if (config.chains.none { it.chainId == chainId }) {
             throw IllegalArgumentException("Chain $chainId not supported")
         }
@@ -157,8 +157,8 @@ class CinaConnect private constructor() {
 // Configuration types (shared with other modules)
 // ============================================================
 
-/** Configuration passed to CinaConnect at startup. */
-data class CinaConnectConfig(
+/** Configuration passed to Cinacoin at startup. */
+data class CinacoinConfig(
     val projectId: String? = null,
     val chains: List<ChainConfig>,
     val themeMode: ThemeMode = ThemeMode.DARK,

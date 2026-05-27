@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: cost-alerts
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: prometheus
     component: alerting-rules
@@ -17,7 +17,7 @@ spec:
           for: 0m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "每日 RPC 成本超过 $50 预算"
             description: "当日 RPC 调用成本估计: ${{ $value }}"
@@ -28,7 +28,7 @@ spec:
           for: 30m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "外部 RPC 调用速率过高"
             description: "外部 RPC 调用速率: {{ $value }}/s"
@@ -39,7 +39,7 @@ spec:
           for: 0m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Spot 实例即将被中断"
             description: "实例 {{ $labels.instance_id }} 将在 2 分钟内被回收"
@@ -50,7 +50,7 @@ spec:
           for: 0m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "月度预算使用已达 80%"
             description: "计算资源使用率达到 80%，请检查成本趋势"
@@ -61,7 +61,7 @@ spec:
           for: 0m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "存储容量使用 > 85%"
             description: "总存储使用率: {{ $value | humanizePercentage }}"

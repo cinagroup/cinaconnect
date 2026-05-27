@@ -1,4 +1,4 @@
-# CinaConnect API Documentation — Deployment Guide
+# Cinacoin API Documentation — Deployment Guide
 
 VitePress-based documentation site deployed to Cloudflare Pages.
 
@@ -12,7 +12,7 @@ VitePress-based documentation site deployed to Cloudflare Pages.
 │  • Source: docs-site/                   │
 │  • Build: `npm run build` (VitePress)   │
 │  • Output: docs/.vitepress/dist         │
-│  • URL: docs.cinaconnect.com (custom)   │
+│  • URL: docs.cinacoin.com (custom)   │
 └─────────────────────────────────────────┘
 ```
 
@@ -40,7 +40,7 @@ wrangler login
 # 3. Build and deploy
 cd docs-site
 npm run build
-wrangler pages deploy docs/.vitepress/dist --project-name=cinaconnect-docs
+wrangler pages deploy docs/.vitepress/dist --project-name=cinacoin-docs
 ```
 
 ## GitHub Actions (Automatic Deployment)
@@ -65,17 +65,17 @@ Set these in your repository settings (`Settings → Secrets and variables → A
 1. Go to [Cloudflare API Tokens](https://dash.cloudflare.com/profile/api-tokens)
 2. Click **Create Token**
 3. Use the **Edit Cloudflare Pages** template
-4. Scope it to your account and the `cinaconnect-docs` project
+4. Scope it to your account and the `cinacoin-docs` project
 5. Copy the token and add it as `CLOUDFLARE_API_TOKEN` in GitHub secrets
 
 ## Custom Domain
 
-### docs.cinaconnect.com
+### docs.cinacoin.com
 
 1. Deploy once to Cloudflare Pages (manual or via CI)
-2. In the [Cloudflare Pages dashboard](https://dash.cloudflare.com/?to=/:account/pages), go to **cinaconnect-docs**
+2. In the [Cloudflare Pages dashboard](https://dash.cloudflare.com/?to=/:account/pages), go to **cinacoin-docs**
 3. Navigate to **Custom domains** → **Set up a custom domain**
-4. Enter `docs.cinaconnect.com`
+4. Enter `docs.cinacoin.com`
 5. Cloudflare will automatically provision an SSL certificate and DNS record
 6. Verify the domain is active (propagation takes ~5 minutes)
 
@@ -97,7 +97,7 @@ Set these in your repository settings (`Settings → Secrets and variables → A
 ### Pages not found after deploy
 - Verify `docs/.vitepress/dist` exists after build
 - Check Cloudflare Pages deployment logs in the dashboard
-- Ensure the project name matches: `cinaconnect-docs`
+- Ensure the project name matches: `cinacoin-docs`
 
 ### Custom domain not working
 - DNS propagation can take up to 24 hours (usually <5 min on Cloudflare)

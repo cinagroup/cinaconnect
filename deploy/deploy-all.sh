@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# deploy-all.sh — Deploy all CinaConnect Cloudflare Workers services
+# deploy-all.sh — Deploy all CinaCoin Cloudflare Workers services
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -19,14 +19,14 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [OPTIONS]
 
-Deploy all CinaConnect Cloudflare Workers services in sequence.
+Deploy all CinaCoin Cloudflare Workers services in sequence.
 
 Services deployed:
-  1. cinaconnect-rpc-proxy     — RPC Proxy (chain routing, caching, rate limiting)
-  2. cinaconnect-keys-server   — Keys Server (key management, encryption, sessions)
-  3. cinaconnect-relay-server  — Relay Server (WebSocket relay, real-time messaging)
-  4. cinaconnect-notify-server — Notify Server (notification dispatch)
-  5. cinaconnect-push-server   — Push Server (push notification delivery)
+  1. cinacoin-rpc-proxy     — RPC Proxy (chain routing, caching, rate limiting)
+  2. cinacoin-keys-server   — Keys Server (key management, encryption, sessions)
+  3. cinacoin-relay-server  — Relay Server (WebSocket relay, real-time messaging)
+  4. cinacoin-notify-server — Notify Server (notification dispatch)
+  5. cinacoin-push-server   — Push Server (push notification delivery)
 
 Options:
   -e, --environment ENV   Target environment (staging|production) [default: production]
@@ -71,7 +71,7 @@ esac
 # ── Deploy functions ────────────────────────────────────────────
 deploy_rpc_proxy() {
   info "═══════════════════════════════════════════"
-  info " Deploying: cinaconnect-rpc-proxy"
+  info " Deploying: cinacoin-rpc-proxy"
   info "═══════════════════════════════════════════"
   local args=("-e" "$ENVIRONMENT")
   [[ "$DRY_RUN" == true ]] && args+=("--dry-run")
@@ -80,7 +80,7 @@ deploy_rpc_proxy() {
 
 deploy_keys_server() {
   info "═══════════════════════════════════════════"
-  info " Deploying: cinaconnect-keys-server"
+  info " Deploying: cinacoin-keys-server"
   info "═══════════════════════════════════════════"
   local args=("-e" "$ENVIRONMENT")
   [[ "$DRY_RUN" == true ]] && args+=("--dry-run")
@@ -90,7 +90,7 @@ deploy_keys_server() {
 
 deploy_relay_server() {
   info "═══════════════════════════════════════════"
-  info " Deploying: cinaconnect-relay-server"
+  info " Deploying: cinacoin-relay-server"
   info "═══════════════════════════════════════════"
   local args=("-e" "$ENVIRONMENT")
   [[ "$DRY_RUN" == true ]] && args+=("--dry-run")
@@ -99,7 +99,7 @@ deploy_relay_server() {
 
 deploy_notify_server() {
   info "═══════════════════════════════════════════"
-  info " Deploying: cinaconnect-notify-server"
+  info " Deploying: cinacoin-notify-server"
   info "═══════════════════════════════════════════"
   local args=("-e" "$ENVIRONMENT")
   [[ "$DRY_RUN" == true ]] && args+=("--dry-run")
@@ -108,7 +108,7 @@ deploy_notify_server() {
 
 deploy_push_server() {
   info "═══════════════════════════════════════════"
-  info " Deploying: cinaconnect-push-server"
+  info " Deploying: cinacoin-push-server"
   info "═══════════════════════════════════════════"
   local args=("-e" "$ENVIRONMENT")
   [[ "$DRY_RUN" == true ]] && args+=("--dry-run")
@@ -120,7 +120,7 @@ TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 RESULTS=()
 OVERALL_EXIT=0
 
-info "CinaConnect Cloudflare Workers — Deploy All"
+info "CinaCoin Cloudflare Workers — Deploy All"
 info "Environment: $ENVIRONMENT"
 info "Dry run: $DRY_RUN"
 info "Service filter: $SERVICE_FILTER"

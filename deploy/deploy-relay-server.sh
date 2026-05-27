@@ -23,7 +23,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-info "Deploying cinaconnect-relay-server ($ENVIRONMENT)"
+info "Deploying cinacoin-relay-server ($ENVIRONMENT)"
 if [[ "$DRY_RUN" == true ]]; then
   warn "Dry run mode — no actual deployment"
   exit 0
@@ -43,4 +43,4 @@ else
   wrangler deploy
 fi
 
-log "cinaconnect-relay-server deployed successfully!"
+log "cinacoin-relay-server deployed successfully!"

@@ -4,7 +4,7 @@ import { WorkerHealthProvider } from '@/lib/WorkerHealthProvider';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'CinaConnect — Wallet Connection Toolkit',
+  title: 'CinaCoin — Wallet Connection Toolkit',
   description: 'Open-source wallet connection toolkit for 16 chains',
 }
 

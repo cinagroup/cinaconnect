@@ -31,7 +31,7 @@ export default defineConfig({
     plugins: [tsResolver()],
     resolve: {
         alias: {
-            '@cinaconnect/siwe': path.resolve(__dirname, '../siwe/src/index.ts'),
+            '@cinacoin/siwe': path.resolve(__dirname, '../siwe/src/index.ts'),
         },
     },
     test: {

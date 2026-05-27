@@ -5,7 +5,7 @@
  * extend, delete, emit (notifications). Uses X25519 key exchange for
  * establishing an encrypted session channel on top of pairing.
  */
-import { EventEmitter } from '@cinaconnect/core-sdk';
+import { EventEmitter } from '@cinacoin/core-sdk';
 import { generateKeypair, sharedSecret, bytesToHex, hexToBytes, encrypt, decrypt } from './crypto.js';
 import { sha256 } from '@noble/hashes/sha2.js';
 import { WcRelay } from './relay.js';

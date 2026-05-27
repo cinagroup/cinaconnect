@@ -5,10 +5,10 @@
  * and adds WC v2–specific helpers: Type-0/Type-1 envelopes, HMAC
  * authentication, topic derivation per spec.
  */
-export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, type X25519Keypair, } from '@cinaconnect/core-sdk';
-export { encrypt as coreEncrypt, decrypt as coreDecrypt, deriveSymmetricKey, deriveTopic, generateNonce, } from '@cinaconnect/core-sdk';
-import { type X25519Keypair } from '@cinaconnect/core-sdk';
-import { encrypt as _encrypt, decrypt as _decrypt } from '@cinaconnect/core-sdk';
+export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, type X25519Keypair, } from '@cinacoin/core-sdk';
+export { encrypt as coreEncrypt, decrypt as coreDecrypt, deriveSymmetricKey, deriveTopic, generateNonce, } from '@cinacoin/core-sdk';
+import { type X25519Keypair } from '@cinacoin/core-sdk';
+import { encrypt as _encrypt, decrypt as _decrypt } from '@cinacoin/core-sdk';
 export { _encrypt as encrypt, _decrypt as decrypt };
 /**
  * Generate a random 32-byte symmetric key (for pairing channel).

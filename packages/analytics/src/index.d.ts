@@ -1,11 +1,11 @@
 /**
- * @cinaconnect/analytics
+ * @cinacoin/analytics
  *
- * CinaConnect Analytics SDK — GDPR-compliant event tracking and metrics.
+ * Cinacoin Analytics SDK — GDPR-compliant event tracking and metrics.
  *
  * @example
  * ```ts
- * import { EventTracker, InMemoryProvider, ConsentManager } from '@cinaconnect/analytics';
+ * import { EventTracker, InMemoryProvider, ConsentManager } from '@cinacoin/analytics';
  *
  * const tracker = new EventTracker();
  * tracker.addProvider(new InMemoryProvider());

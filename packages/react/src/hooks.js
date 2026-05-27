@@ -1,18 +1,18 @@
 /**
- * React hooks for CinaConnect.
+ * React hooks for Cinacoin.
  *
- * All hooks require being used within <CinaConnectProvider>.
+ * All hooks require being used within <CinacoinProvider>.
  */
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 /**
- * useCinaConnect — access the full CinaConnect context.
+ * useCinacoin — access the full Cinacoin context.
  *
  * ```tsx
- * const { connect, disconnect, account, status } = useCinaConnect();
+ * const { connect, disconnect, account, status } = useCinacoin();
  * ```
  */
-export function useCinaConnect() {
-    return useCinaConnectContext();
+export function useCinacoin() {
+    return useCinacoinContext();
 }
 /**
  * useAccount — access the current account state.
@@ -22,7 +22,7 @@ export function useCinaConnect() {
  * ```
  */
 export function useAccount() {
-    const { account } = useCinaConnectContext();
+    const { account } = useCinacoinContext();
     return account;
 }
 /**
@@ -33,7 +33,7 @@ export function useAccount() {
  * ```
  */
 export function useChainId() {
-    const { account } = useCinaConnectContext();
+    const { account } = useCinacoinContext();
     return account.chainId;
 }
 /**
@@ -47,7 +47,7 @@ export function useChainId() {
  * ```
  */
 export function useConnect() {
-    const { connect, status, isSwitchingChain } = useCinaConnectContext();
+    const { connect, status, isSwitchingChain } = useCinacoinContext();
     return { connect, status, isSwitchingChain };
 }
 /**
@@ -60,7 +60,7 @@ export function useConnect() {
  * ```
  */
 export function useDisconnect() {
-    const { disconnect } = useCinaConnectContext();
+    const { disconnect } = useCinacoinContext();
     return { disconnect };
 }
 //# sourceMappingURL=hooks.js.map

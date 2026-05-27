@@ -1,21 +1,21 @@
-# Migration Guide: RainbowKit → CinaConnect
+# Migration Guide: RainbowKit → Cinacoin
 
-> Complete guide for migrating from RainbowKit + wagmi to CinaConnect.
+> Complete guide for migrating from RainbowKit + wagmi to Cinacoin.
 
 ## Overview
 
-RainbowKit is a popular React wallet connector that sits on top of wagmi. CinaConnect provides equivalent and expanded functionality — wallet connection UI, multi-chain support, SIWE auth, and self-hosted infrastructure — without any third-party branding or cloud dependency.
+RainbowKit is a popular React wallet connector that sits on top of wagmi. Cinacoin provides equivalent and expanded functionality — wallet connection UI, multi-chain support, SIWE auth, and self-hosted infrastructure — without any third-party branding or cloud dependency.
 
 ## Architecture Comparison
 
-| Layer | RainbowKit Stack | CinaConnect |
+| Layer | RainbowKit Stack | Cinacoin |
 |-------|-----------------|-------------|
-| UI Components | `@rainbow-me/rainbowkit` | `@cinaconnect/react` (ConnectButton, ConnectModal, ChainSwitcher) |
-| Hooks & Logic | `wagmi` | `@cinaconnect/react` (useCinaConnect, useAccount, useConnect) |
-| Transport | WalletConnect Cloud | Self-hosted CinaConnect Relay |
+| UI Components | `@rainbow-me/rainbowkit` | `@cinacoin/react` (ConnectButton, ConnectModal, ChainSwitcher) |
+| Hooks & Logic | `wagmi` | `@cinacoin/react` (useCinacoin, useAccount, useConnect) |
+| Transport | WalletConnect Cloud | Self-hosted Cinacoin Relay |
 | RPC | Alchemy/Infura/etc. | Self-hosted RPC Proxy with intelligent routing |
-| Chain Config | `wagmi` chains | `@cinaconnect/core-sdk` ChainConfig |
-| SIWE Auth | `siwe` + custom | `@cinaconnect/siwe` built-in |
+| Chain Config | `wagmi` chains | `@cinacoin/core-sdk` ChainConfig |
+| SIWE Auth | `siwe` + custom | `@cinacoin/siwe` built-in |
 | Multi-chain | Via wagmi | Native multi-chain adapters |
 
 ## Step-by-Step Migration
@@ -26,10 +26,10 @@ RainbowKit is a popular React wallet connector that sits on top of wagmi. CinaCo
 npm uninstall @rainbow-me/rainbowkit wagmi viem @wagmi/connectors
 ```
 
-### 2. Install CinaConnect
+### 2. Install Cinacoin
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/react @cinaconnect/core-sdk
+npm install @cinacoin/core @cinacoin/react @cinacoin/core-sdk
 ```
 
 ### 3. Replace Provider Setup
@@ -65,17 +65,17 @@ function App() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
 // App.tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 function App() {
   return (
-    <CinaConnectProvider
-      projectId="your-cinaconnect-project-id"
+    <CinacoinProvider
+      projectId="your-cinacoin-project-id"
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
         { id: 'eip155:137', name: 'Polygon', rpcUrl: 'https://rpc.yourdomain.com/polygon' },
@@ -91,7 +91,7 @@ function App() {
       }}
     >
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
@@ -108,10 +108,10 @@ function Header() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { ConnectButton } from '@cinaconnect/react'
+import { ConnectButton } from '@cinacoin/react'
 
 function Header() {
   return (
@@ -128,22 +128,22 @@ function Header() {
 
 #### API Mapping Table
 
-| wagmi Hook | CinaConnect Hook | Notes |
+| wagmi Hook | Cinacoin Hook | Notes |
 |------------|-----------------|-------|
 | `useAccount()` | `useAccount()` | Same name, equivalent return shape |
 | `useConnect()` | `useConnect()` | Same name, walletId-based API |
 | `useDisconnect()` | `useDisconnect()` | Same name |
-| `useSwitchChain()` | `useCinaConnect()` → `switchChain` | Integrated into main context |
+| `useSwitchChain()` | `useCinacoin()` → `switchChain` | Integrated into main context |
 | `useBalance()` | `useAccount()` → `account.balance` | Balance is part of account state |
-| `useNetwork()` | `useChainId()` / `useCinaConnect()` | Chain info from context |
-| `usePublicClient()` | Use RPC Proxy directly | CinaConnect RPC Proxy handles this |
-| `useWalletClient()` | `useCinaConnect()` → `connect()` | Connector access |
-| `useEnsName()` | `useCinaConnect()` → `ensName` | ENS resolution built-in |
-| `useEnsAvatar()` | `useCinaConnect()` → `ensAvatar` | ENS avatar built-in |
-| `useSignMessage()` | `useCinaConnect()` → `signMessage()` | Typed method |
-| `useSendTransaction()` | `useCinaConnect()` → `signTransaction()` | Typed method |
-| `useContractRead()` | Use RPC Proxy + ethers/viem directly | CinaConnect handles transport |
-| `useContractWrite()` | Use RPC Proxy + ethers/viem directly | CinaConnect handles transport |
+| `useNetwork()` | `useChainId()` / `useCinacoin()` | Chain info from context |
+| `usePublicClient()` | Use RPC Proxy directly | Cinacoin RPC Proxy handles this |
+| `useWalletClient()` | `useCinacoin()` → `connect()` | Connector access |
+| `useEnsName()` | `useCinacoin()` → `ensName` | ENS resolution built-in |
+| `useEnsAvatar()` | `useCinacoin()` → `ensAvatar` | ENS avatar built-in |
+| `useSignMessage()` | `useCinacoin()` → `signMessage()` | Typed method |
+| `useSendTransaction()` | `useCinacoin()` → `signTransaction()` | Typed method |
+| `useContractRead()` | Use RPC Proxy + ethers/viem directly | Cinacoin handles transport |
+| `useContractWrite()` | Use RPC Proxy + ethers/viem directly | Cinacoin handles transport |
 
 #### Before (wagmi)
 
@@ -183,16 +183,16 @@ function WalletPanel() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { useAccount, useConnect, useDisconnect, useCinaConnect } from '@cinaconnect/react'
+import { useAccount, useConnect, useDisconnect, useCinacoin } from '@cinacoin/react'
 
 function WalletPanel() {
   const account = useAccount()
   const { connect, status } = useConnect()
   const { disconnect } = useDisconnect()
-  const { switchChain, ensName, ensAvatar, signMessage } = useCinaConnect()
+  const { switchChain, ensName, ensAvatar, signMessage } = useCinacoin()
 
   const isConnected = account !== null
 
@@ -223,9 +223,9 @@ function WalletPanel() {
 
 ### 1. Connector API Difference
 
-RainbowKit uses wagmi's connector objects. CinaConnect uses wallet ID strings.
+RainbowKit uses wagmi's connector objects. Cinacoin uses wallet ID strings.
 
-| RainbowKit (wagmi) | CinaConnect |
+| RainbowKit (wagmi) | Cinacoin |
 |--------------------|-------------|
 | `connect({ connector: injected() })` | `connect('metamask')` |
 | `connect({ connector: walletConnectConnector })` | `connect('walletconnect')` |
@@ -233,25 +233,25 @@ RainbowKit uses wagmi's connector objects. CinaConnect uses wallet ID strings.
 
 ### 2. Chain ID Format
 
-| RainbowKit | CinaConnect |
+| RainbowKit | Cinacoin |
 |------------|-------------|
 | `chainId: 1` (number) | `id: 'eip155:1'` (CAIP-2 string) |
 | `chains: [mainnet]` from wagmi/chains | `chains: [{ id, name, rpcUrl }]` custom config |
 
 ### 3. No QueryClient Required
 
-RainbowKit requires `@tanstack/react-query`. CinaConnect does not — it uses its own state management.
+RainbowKit requires `@tanstack/react-query`. Cinacoin does not — it uses its own state management.
 
 ### 4. No wagmi/viem Dependency
 
-CinaConnect is self-contained. You can still use viem or ethers.js for contract interactions on top of CinaConnect's transport layer.
+Cinacoin is self-contained. You can still use viem or ethers.js for contract interactions on top of Cinacoin's transport layer.
 
 ### 5. Custom Connectors
 
-| RainbowKit | CinaConnect |
+| RainbowKit | Cinacoin |
 |------------|-------------|
 | Custom wagmi connector | Custom adapter via `ChainAdapter` interface |
-| `createConnector()` | Implement `ChainAdapter` from `@cinaconnect/core-sdk` |
+| `createConnector()` | Implement `ChainAdapter` from `@cinacoin/core-sdk` |
 
 ## Migration Examples
 
@@ -298,13 +298,13 @@ function Content() {
 #### After
 
 ```tsx
-import { CinaConnectProvider, ConnectButton, useAccount } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider, ConnectButton, useAccount } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 export default function App() {
   return (
-    <CinaConnectProvider
-      projectId={process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!}
+    <CinacoinProvider
+      projectId={process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!}
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
         { id: 'eip155:137', name: 'Polygon', rpcUrl: 'https://rpc.yourdomain.com/polygon' },
@@ -315,7 +315,7 @@ export default function App() {
         <ConnectButton />
         <Content />
       </div>
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 
@@ -353,10 +353,10 @@ function CustomTrigger() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { ConnectModal } from '@cinaconnect/react'
+import { ConnectModal } from '@cinacoin/react'
 import { useState } from 'react'
 
 function CustomTrigger() {
@@ -415,13 +415,13 @@ function ChainManager() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { useCinaConnect, ChainSwitcher } from '@cinaconnect/react'
+import { useCinacoin, ChainSwitcher } from '@cinacoin/react'
 
 function ChainManager() {
-  const { chainId, switchChain } = useCinaConnect()
+  const { chainId, switchChain } = useCinacoin()
 
   return (
     <div>
@@ -443,10 +443,10 @@ function ChainManager() {
 
 If you were using WalletConnect Cloud relay with RainbowKit:
 
-| Component | RainbowKit | CinaConnect |
+| Component | RainbowKit | Cinacoin |
 |-----------|-----------|-------------|
 | WalletConnect Relay | `projectId` → Reown Cloud | Your Relay Server (`wss://relay.yourdomain.com/v1`) |
-| RPC Provider | Alchemy/Infura configured in wagmi | CinaConnect RPC Proxy with intelligent routing |
+| RPC Provider | Alchemy/Infura configured in wagmi | Cinacoin RPC Proxy with intelligent routing |
 
 Deploy self-hosted infrastructure:
 
@@ -462,42 +462,42 @@ cargo build --release
 ./target/release/rpc-proxy --config rpc-config.yaml
 
 # Or use Helm for full deployment
-helm install cinaconnect ./deploy/helm/cinaconnect \
-  --namespace cinaconnect \
+helm install cinacoin ./deploy/helm/cinacoin \
+  --namespace cinacoin \
   --create-namespace
 ```
 
 ## Automated Migration
 
-Use the CinaConnect codemod to automate the bulk of the migration:
+Use the Cinacoin codemod to automate the bulk of the migration:
 
 ```bash
 # Install codemod
-npm install -D @cinaconnect/codemod
+npm install -D @cinacoin/codemod
 
-# Run RainbowKit → CinaConnect transform
-npx cinaconnect-codemod --src-dir ./src --transform rainbowkit-to-cinaconnect
+# Run RainbowKit → Cinacoin transform
+npx cinacoin-codemod --src-dir ./src --transform rainbowkit-to-cinacoin
 
 # Dry run to preview changes
-npx cinaconnect-codemod --src-dir ./src --transform rainbowkit-to-cinaconnect --dry-run --verbose
+npx cinacoin-codemod --src-dir ./src --transform rainbowkit-to-cinacoin --dry-run --verbose
 ```
 
 ## Migration Checklist
 
 ### Pre-Migration
 
-- [ ] Set up CinaConnect Relay Server
-- [ ] Set up CinaConnect RPC Proxy
+- [ ] Set up Cinacoin Relay Server
+- [ ] Set up Cinacoin RPC Proxy
 - [ ] Deploy to staging environment
 - [ ] Configure supported chains
 
 ### Code Migration
 
 - [ ] Remove `@rainbow-me/rainbowkit`, `wagmi`, `viem`, `@tanstack/react-query`
-- [ ] Install `@cinaconnect/core`, `@cinaconnect/react`, `@cinaconnect/core-sdk`
-- [ ] Replace `RainbowKitProvider` + `WagmiProvider` with `CinaConnectProvider`
-- [ ] Replace `ConnectButton` from RainbowKit with CinaConnect `ConnectButton`
-- [ ] Replace wagmi hooks with CinaConnect hooks
+- [ ] Install `@cinacoin/core`, `@cinacoin/react`, `@cinacoin/core-sdk`
+- [ ] Replace `RainbowKitProvider` + `WagmiProvider` with `CinacoinProvider`
+- [ ] Replace `ConnectButton` from RainbowKit with Cinacoin `ConnectButton`
+- [ ] Replace wagmi hooks with Cinacoin hooks
 - [ ] Update chain configuration format (number → CAIP-2)
 - [ ] Update connector API (connector objects → wallet ID strings)
 - [ ] Test all wallet connection flows
@@ -520,7 +520,7 @@ npx cinaconnect-codemod --src-dir ./src --transform rainbowkit-to-cinaconnect --
 
 ## Next Steps
 
-- See [CinaConnect Quick Start](/guide/quick-start) for a full walkthrough
+- See [Cinacoin Quick Start](/guide/quick-start) for a full walkthrough
 - See [React API Reference](/api/react) for detailed hook documentation
 - See [Multi-Chain Example](/examples/multi-chain) for advanced multi-chain setups
 - See [Migrate from Reown](/guide/migrate-from-reown) for full infrastructure migration details

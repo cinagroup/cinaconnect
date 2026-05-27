@@ -1,11 +1,11 @@
 # Core UI
 
-> `@cinaconnect/core-ui` — Framework-agnostic UI components built with Web Components (Lit).
+> `@cinacoin/core-ui` — Framework-agnostic UI components built with Web Components (Lit).
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-ui
+npm install @cinacoin/core-ui
 ```
 
 ## Usage

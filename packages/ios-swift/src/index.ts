@@ -85,10 +85,10 @@ export interface SwiftSessionInfo {
 }
 
 /**
- * CinaConnect SDK interface for Swift.
+ * Cinacoin SDK interface for Swift.
  * Implement this in your Swift bridge layer.
  */
-export interface SwiftCinaConnectSDK {
+export interface SwiftCinacoinSDK {
   /** Initialize the SDK with configuration */
   initialize(config: { projectId: string; metadata?: Record<string, string> }): Promise<void>;
 

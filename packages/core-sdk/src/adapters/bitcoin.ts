@@ -252,13 +252,18 @@ export class BitcoinChainAdapter {
     }
 
     const url = `${this.rpcUrl}/address/${address}/utxo`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch UTXOs: ${response.statusText}`);
-    }
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Bitcoin RPC error ${response.status}: ${response.statusText}`);
+      }
 
-    const utxos: UTXO[] = await response.json();
-    return utxos.reduce((sum, utxo) => sum + utxo.value, 0);
+      const utxos: UTXO[] = await response.json();
+      return utxos.reduce((sum, utxo) => sum + utxo.value, 0);
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Bitcoin RPC error')) throw err;
+      throw new Error(`Bitcoin getBalance failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   /**
@@ -285,12 +290,17 @@ export class BitcoinChainAdapter {
     }
 
     const url = `${this.rpcUrl}/address/${address}/utxo`;
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`Failed to fetch UTXOs: ${response.statusText}`);
-    }
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Bitcoin RPC error ${response.status}: ${response.statusText}`);
+      }
 
-    return response.json() as Promise<UTXO[]>;
+      return response.json() as Promise<UTXO[]>;
+    } catch (err: unknown) {
+      if (err instanceof Error && err.message.startsWith('Bitcoin RPC error')) throw err;
+      throw new Error(`Bitcoin getUTXOs failed: ${err instanceof Error ? err.message : String(err)}`);
+    }
   }
 
   /**

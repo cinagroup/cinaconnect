@@ -1,4 +1,4 @@
-# CinaConnect — Cloudflare Deployment Guide
+# Cinacoin — Cloudflare Deployment Guide
 
 ## Architecture
 
@@ -19,7 +19,7 @@
 
 | Component | Target | Compatibility | Notes |
 |-----------|--------|---------------|-------|
-| @cinaconnect/core-sdk | N/A (browser lib) | ✅ 100% | No Node.js APIs, pure Web + @noble |
+| @cinacoin/core-sdk | N/A (browser lib) | ✅ 100% | No Node.js APIs, pure Web + @noble |
 | React/Vue/Svelte/etc | N/A (browser) | ✅ 100% | Pure browser code |
 | RPC Proxy | Workers | ✅ Ready | HTTP proxy + KV caching |
 | Keys Server | Workers + D1 | ✅ Ready | D1 (SQLite) replaces PostgreSQL |

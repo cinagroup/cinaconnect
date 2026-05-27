@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# check-health.sh — Health check for CinaConnect Cloudflare Workers
+# check-health.sh — Health check for CinaCoin Cloudflare Workers
 set -euo pipefail
 
 # ── Colors ──────────────────────────────────────────────────────
@@ -63,8 +63,8 @@ done
 
 # ── URLs ────────────────────────────────────────────────────────
 # Use environment variables if set, otherwise use default domains/worker URLs
-RPC_PROXY_URL="${RPC_PROXY_URL:-https://cinaconnect-rpc-proxy.workers.dev}"
-KEYS_SERVER_URL="${KEYS_SERVER_URL:-https://cinaconnect-keys-server.workers.dev}"
+RPC_PROXY_URL="${RPC_PROXY_URL:-https://cinacoin-rpc-proxy.workers.dev}"
+KEYS_SERVER_URL="${KEYS_SERVER_URL:-https://cinacoin-keys-server.workers.dev}"
 RELAY_SERVER_URL="${RELAY_SERVER_URL:-https://relay.cinacoin.com}"
 NOTIFY_SERVER_URL="${NOTIFY_SERVER_URL:-https://notify.cinacoin.com}"
 PUSH_SERVER_URL="${PUSH_SERVER_URL:-https://push.cinacoin.com}"
@@ -118,7 +118,7 @@ check_endpoint() {
 }
 
 # ── Run checks ──────────────────────────────────────────────────
-info "CinaConnect Cloudflare Workers — Health Check"
+info "CinaCoin Cloudflare Workers — Health Check"
 info "Environment: $ENVIRONMENT"
 info "Timeout: ${TIMEOUT}s | Retries: $RETRIES"
 info "Timestamp: $(date -u +%Y-%m-%dT%H:%M:%SZ)"

@@ -3,9 +3,9 @@
  *
  * For script-tag usage:
  * ```html
- * <script src="https://cdn.cinaconnect.dev/connect.js"></script>
+ * <script src="https://cdn.cinacoin.dev/connect.js"></script>
  * <script>
- *   CinaConnect.renderConnectButton('#my-button', {
+ *   Cinacoin.renderConnectButton('#my-button', {
  *     projectId: 'your-project-id',
  *     theme: 'dark',
  *   });
@@ -25,14 +25,14 @@ let _options = null;
 export function renderConnectButton(selector, options = {}) {
     const element = document.querySelector(selector);
     if (!element) {
-        console.error(`[CinaConnect] Element "${selector}" not found`);
+        console.error(`[Cinacoin] Element "${selector}" not found`);
         return;
     }
     const config = { ...getConfig(), ...options };
     _options = options;
     const missing = validateConfig(config);
     if (missing.length > 0) {
-        console.warn(`[CinaConnect] Missing config: ${missing.join(", ")}`);
+        console.warn(`[Cinacoin] Missing config: ${missing.join(", ")}`);
     }
     const btn = document.createElement("button");
     btn.className = "ocx-connect-button";
@@ -91,7 +91,7 @@ async function handleConnect(btn, config) {
         btn.textContent = config.label ?? "Connect Wallet";
         btn.style.opacity = "1";
         btn.style.pointerEvents = "auto";
-        console.error("[CinaConnect] Connection failed:", err);
+        console.error("[Cinacoin] Connection failed:", err);
     }
 }
 function handleDisconnect(btn, config) {

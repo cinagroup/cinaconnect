@@ -3,7 +3,7 @@
  */
 import { EventEmitter } from './events.js';
 /** Session storage key for persistence. */
-const SESSION_STORAGE_KEY = 'cinaconnect_session';
+const SESSION_STORAGE_KEY = 'cinacoin_session';
 /**
  * SessionManager controls the connection lifecycle.
  *

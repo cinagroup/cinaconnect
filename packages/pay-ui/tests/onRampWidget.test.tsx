@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { OnRampWidgetCore } from "../src/OnRampWidgetCore.js";
-import type { OnRampQuote, OnRampResult } from "@cinaconnect/onramp-sdk";
+import type { OnRampQuote, OnRampResult } from "@cinacoin/onramp-sdk";
 
 // ── Test Fixtures ──────────────────────────────────────────
 

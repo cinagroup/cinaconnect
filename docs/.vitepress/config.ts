@@ -3,9 +3,9 @@ import { defineConfig } from 'vitepress'
 const isProd = process.env.NODE_ENV === 'production'
 
 export default defineConfig({
-  title: 'CinaConnect',
+  title: 'Cinacoin',
   description: '自有品牌链上 UX 工具包 — Self-hosted Wallet Connection Toolkit',
-  base: isProd ? '/cinaconnect/' : '/',
+  base: isProd ? '/cinacoin/' : '/',
   lang: 'zh-CN',
   locales: {
     root: {
@@ -29,7 +29,7 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/logo.svg',
-    siteTitle: 'CinaConnect',
+    siteTitle: 'Cinacoin',
 
     nav: [
       { text: '指南', link: '/guide/quick-start' },
@@ -148,16 +148,16 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/cinaconnect/cinaconnect' },
+      { icon: 'github', link: 'https://github.com/cinacoin/cinacoin' },
     ],
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 CinaConnect',
+      copyright: 'Copyright © 2026 Cinacoin',
     },
 
     editLink: {
-      pattern: 'https://github.com/cinaconnect/cinaconnect/edit/main/docs/:path',
+      pattern: 'https://github.com/cinacoin/cinacoin/edit/main/docs/:path',
       text: '在 GitHub 上编辑此页',
     },
 
@@ -183,7 +183,7 @@ export default defineConfig({
         // Algolia 配置 — 替换为实际值
         appId: 'YOUR_ALGOLIA_APP_ID',
         apiKey: 'YOUR_ALGOLIA_API_KEY',
-        indexName: 'cinaconnect',
+        indexName: 'cinacoin',
         // placeholder: '搜索文档…',
         // translations: {
         //   button: {

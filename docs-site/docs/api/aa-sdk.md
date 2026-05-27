@@ -1,11 +1,11 @@
 # AA SDK
 
-> `@cinaconnect/aa-sdk` — Account Abstraction (ERC-4337) SDK.
+> `@cinacoin/aa-sdk` — Account Abstraction (ERC-4337) SDK.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/aa-sdk @cinaconnect/core-sdk
+npm install @cinacoin/aa-sdk @cinacoin/core-sdk
 ```
 
 ## Overview
@@ -15,7 +15,7 @@ The AA SDK provides tools for interacting with ERC-4337 smart accounts, includin
 ## Usage
 
 ```typescript
-import { AASDK } from '@cinaconnect/aa-sdk'
+import { AASDK } from '@cinacoin/aa-sdk'
 
 const aa = new AASDK({
   bundlerUrl: 'https://bundler.yourdomain.com/v1',

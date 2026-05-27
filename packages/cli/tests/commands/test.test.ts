@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/cli test command.
+ * Tests for @cinacoin/cli test command.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';

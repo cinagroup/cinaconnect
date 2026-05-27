@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# CinaConnect Documentation Site Build Script
+# CinaCoin Documentation Site Build Script
 # This script installs dependencies and builds the VitePress docs site.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 DOCS_SITE_DIR="$PROJECT_DIR/docs-site"
 
-echo "📦 CinaConnect Docs Site Build"
+echo "📦 CinaCoin Docs Site Build"
 echo "=============================="
 
 # Install dependencies

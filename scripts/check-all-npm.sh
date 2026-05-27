@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "Checking @cinaconnect NPM packages accurately..."
+echo "Checking @cinacoin NPM packages accurately..."
 echo ""
 
 # List all 72 local packages
@@ -19,8 +19,8 @@ LOCAL_PACKAGES=(
     blockchain-api
     bundler
     cdn
-    cinaconnect-i18n
-    cinaconnect-ui-theme
+    cinacoin-i18n
+    cinacoin-ui-theme
     cli
     codemod
     config
@@ -85,7 +85,7 @@ PUBLISHED=0
 UNPUBLISHED=0
 
 for pkg in "${LOCAL_PACKAGES[@]}"; do
-    FULL_PKG="@cinaconnect/$pkg"
+    FULL_PKG="@cinacoin/$pkg"
     version=$(npm view "$FULL_PKG" version 2>/dev/null)
     if [ -n "$version" ]; then
         echo "✓ $FULL_PKG - v$version"

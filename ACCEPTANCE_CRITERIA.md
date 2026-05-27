@@ -1,103 +1,103 @@
-# CinaConnect — Project Acceptance Criteria
+# Cinacoin — Project Acceptance Criteria
 
 > **Version:** 1.0  
 > **Date:** 2026-05-18  
-> **Project:** CinaConnect v1.0 — Self-hosted Wallet Connection Toolkit  
+> **Project:** Cinacoin v1.0 — Self-hosted Wallet Connection Toolkit  
 > **Status:** 99% Complete — Ready for formal acceptance review  
 
-This document defines the formal acceptance criteria for the CinaConnect v1.0 release. It is intended for project handoff, customer acceptance sign-off, and internal quality gates.
+This document defines the formal acceptance criteria for the Cinacoin v1.0 release. It is intended for project handoff, customer acceptance sign-off, and internal quality gates.
 
 ---
 
 ## 1. Functional Requirements
 
-### 1.1 Core SDK (`@cinaconnect/core-sdk`)
+### 1.1 Core SDK (`@cinacoin/core-sdk`)
 - [x] SignClient implementation with WebSocket transport
 - [x] Pairing API for secure wallet pairing
 - [x] Universal Provider for cross-chain session management
-- [x] Published to npm registry (`@cinaconnect/core-sdk`)
+- [x] Published to npm registry (`@cinacoin/core-sdk`)
 
 ### 1.2 Chain Adapters (11/11)
-- [x] `@cinaconnect/adapter-ethereum` — EVM (Wagvi / Ethers.js)
-- [x] `@cinaconnect/adapter-solana` — Solana SVM
-- [x] `@cinaconnect/adapter-bitcoin` — Bitcoin BIP-122
-- [x] `@cinaconnect/adapter-ton` — TON
-- [x] `@cinaconnect/adapter-tron` — TRON
-- [x] `@cinaconnect/adapter-cosmos` — Cosmos
-- [x] `@cinaconnect/adapter-sui` — Sui
-- [x] `@cinaconnect/adapter-starknet` — Starknet
-- [x] `@cinaconnect/adapter-near` — NEAR
-- [x] `@cinaconnect/adapter-hedera` — Hedera
-- [x] `@cinaconnect/adapter-xrpl` — XRPL
+- [x] `@cinacoin/adapter-ethereum` — EVM (Wagvi / Ethers.js)
+- [x] `@cinacoin/adapter-solana` — Solana SVM
+- [x] `@cinacoin/adapter-bitcoin` — Bitcoin BIP-122
+- [x] `@cinacoin/adapter-ton` — TON
+- [x] `@cinacoin/adapter-tron` — TRON
+- [x] `@cinacoin/adapter-cosmos` — Cosmos
+- [x] `@cinacoin/adapter-sui` — Sui
+- [x] `@cinacoin/adapter-starknet` — Starknet
+- [x] `@cinacoin/adapter-near` — NEAR
+- [x] `@cinacoin/adapter-hedera` — Hedera
+- [x] `@cinacoin/adapter-xrpl` — XRPL
 
 ### 1.3 Framework SDKs (12/12)
-- [x] `@cinaconnect/react` — React hooks + components (+ EIP-5792 hooks)
-- [x] `@cinaconnect/next` — Next.js App Router support
-- [x] `@cinaconnect/vue` — Vue 3 plugin & composables
-- [x] `@cinaconnect/svelte` — Svelte 4/5 support
-- [x] `@cinaconnect/angular` — Angular support
-- [x] `@cinaconnect/nuxt` — Nuxt support
-- [x] `@cinaconnect/react-native` — Type definitions (SDK layer)
-- [x] `@cinaconnect/flutter-dart` — Type definitions (SDK layer)
-- [x] `@cinaconnect/android-kotlin` — Android SDK
-- [x] `@cinaconnect/ios-swift` — iOS SDK
-- [x] `@cinaconnect/unity-csharp` — Unity SDK (21 C# files)
-- [x] `@cinaconnect/dotnet` — .NET SDK (22 C# files)
+- [x] `@cinacoin/react` — React hooks + components (+ EIP-5792 hooks)
+- [x] `@cinacoin/next` — Next.js App Router support
+- [x] `@cinacoin/vue` — Vue 3 plugin & composables
+- [x] `@cinacoin/svelte` — Svelte 4/5 support
+- [x] `@cinacoin/angular` — Angular support
+- [x] `@cinacoin/nuxt` — Nuxt support
+- [x] `@cinacoin/react-native` — Type definitions (SDK layer)
+- [x] `@cinacoin/flutter-dart` — Type definitions (SDK layer)
+- [x] `@cinacoin/android-kotlin` — Android SDK
+- [x] `@cinacoin/ios-swift` — iOS SDK
+- [x] `@cinacoin/unity-csharp` — Unity SDK (21 C# files)
+- [x] `@cinacoin/dotnet` — .NET SDK (22 C# files)
 
 ### 1.4 Authentication (4/4)
-- [x] `@cinaconnect/siwe` — Sign-In With Ethereum (EIP-4361)
-- [x] `@cinaconnect/siwx` — Sign-In With X (CAIP-122, multi-chain)
-- [x] `@cinaconnect/social-login` — Email & social login (Magic.link)
-- [x] `@cinaconnect/passkey-auth` — Passkey / biometric (WebAuthn)
+- [x] `@cinacoin/siwe` — Sign-In With Ethereum (EIP-4361)
+- [x] `@cinacoin/siwx` — Sign-In With X (CAIP-122, multi-chain)
+- [x] `@cinacoin/social-login` — Email & social login (Magic.link)
+- [x] `@cinacoin/passkey-auth` — Passkey / biometric (WebAuthn)
 
 ### 1.5 Smart Accounts (6/6)
-- [x] `@cinaconnect/aa-sdk` — ERC-4337 Account Abstraction
-- [x] `@cinaconnect/bundler` — ERC-4337 Bundler
-- [x] `@cinaconnect/paymaster` — ERC-7677 Paymaster
-- [x] `@cinaconnect/erc6492` — ERC-6492 signature verification
-- [x] `@cinaconnect/session-keys` — Ephemeral session keys
-- [x] `@cinaconnect/ens-resolver` — ENS / readable account names
+- [x] `@cinacoin/aa-sdk` — ERC-4337 Account Abstraction
+- [x] `@cinacoin/bundler` — ERC-4337 Bundler
+- [x] `@cinacoin/paymaster` — ERC-7677 Paymaster
+- [x] `@cinacoin/erc6492` — ERC-6492 signature verification
+- [x] `@cinacoin/session-keys` — Ephemeral session keys
+- [x] `@cinacoin/ens-resolver` — ENS / readable account names
 
 ### 1.6 Payments (5/5)
-- [x] `@cinaconnect/swap-sdk` — DEX aggregator SDK interface
-- [x] `@cinaconnect/onramp-sdk` — Fiat-to-crypto on-ramp SDK
-- [x] `@cinaconnect/pay-ui` — Payment UI components
-- [x] `@cinaconnect/batch-transaction` — Batch transaction support
-- [x] `@cinaconnect/deposit` — Deposit utilities
+- [x] `@cinacoin/swap-sdk` — DEX aggregator SDK interface
+- [x] `@cinacoin/onramp-sdk` — Fiat-to-crypto on-ramp SDK
+- [x] `@cinacoin/pay-ui` — Payment UI components
+- [x] `@cinacoin/batch-transaction` — Batch transaction support
+- [x] `@cinacoin/deposit` — Deposit utilities
 
-> **Note:** `swap-sdk` and `onramp-sdk` are SDK-layer interfaces that require external API keys (DEX aggregator, Meld/Coinbase Pay). This is by design — CinaConnect provides the integration layer, not the underlying services.
+> **Note:** `swap-sdk` and `onramp-sdk` are SDK-layer interfaces that require external API keys (DEX aggregator, Meld/Coinbase Pay). This is by design — Cinacoin provides the integration layer, not the underlying services.
 
 ### 1.7 Infrastructure (6/6)
-- [x] `@cinaconnect/relay-server` — WebSocket relay server (Rust)
-- [x] `@cinaconnect/rpc-proxy` — RPC proxy (deployed on Cloudflare Workers)
-- [x] `@cinaconnect/keys-server` — Key management (deployed on Cloudflare Workers)
-- [x] `@cinaconnect/notify-server` — Notification server
-- [x] `@cinaconnect/push-server` — Push notification server (Rust)
-- [x] `@cinaconnect/cdn` — CDN asset delivery
+- [x] `@cinacoin/relay-server` — WebSocket relay server (Rust)
+- [x] `@cinacoin/rpc-proxy` — RPC proxy (deployed on Cloudflare Workers)
+- [x] `@cinacoin/keys-server` — Key management (deployed on Cloudflare Workers)
+- [x] `@cinacoin/notify-server` — Notification server
+- [x] `@cinacoin/push-server` — Push notification server (Rust)
+- [x] `@cinacoin/cdn` — CDN asset delivery
 
 ### 1.8 Developer Tools & Utilities (18/18)
-- [x] `@cinaconnect/cli` — CLI scaffolding tool
-- [x] `@cinaconnect/testing` — Mock providers & test utilities
-- [x] `@cinaconnect/codemod` — Migration tool (Reown/AppKit → CinaConnect)
-- [x] `@cinaconnect/wallet-recommender` — Wallet recommendation engine
-- [x] `@cinaconnect/gas-estimator` — Gas estimation utilities
-- [x] `@cinaconnect/token-list` — Curated token registry
-- [x] `@cinaconnect/analytics` — Connection event analytics
-- [x] `@cinaconnect/config` — Remote configuration manager
-- [x] `@cinaconnect/design-tokens` — CSS design tokens
-- [x] `@cinaconnect/explorer` — Blockchain explorer components
-- [x] `@cinaconnect/blockchain-api` — REST API layer
-- [x] `@cinaconnect/wallet-buttons` — Standalone wallet button components
-- [x] `@cinaconnect/custom-connectors` — Custom wallet connector framework
-- [x] `@cinaconnect/multiwallet` — Multi-wallet management
-- [x] `@cinaconnect/kyc` — KYC compliance screening
-- [x] `@cinaconnect/cross-chain-sync` — Cross-chain state synchronization
-- [x] `@cinaconnect/safe-decoder` — Safe transaction decoder (Rust)
-- [x] `@cinaconnect/travel-rule-demo` — Travel Rule compliance demo
+- [x] `@cinacoin/cli` — CLI scaffolding tool
+- [x] `@cinacoin/testing` — Mock providers & test utilities
+- [x] `@cinacoin/codemod` — Migration tool (Reown/AppKit → Cinacoin)
+- [x] `@cinacoin/wallet-recommender` — Wallet recommendation engine
+- [x] `@cinacoin/gas-estimator` — Gas estimation utilities
+- [x] `@cinacoin/token-list` — Curated token registry
+- [x] `@cinacoin/analytics` — Connection event analytics
+- [x] `@cinacoin/config` — Remote configuration manager
+- [x] `@cinacoin/design-tokens` — CSS design tokens
+- [x] `@cinacoin/explorer` — Blockchain explorer components
+- [x] `@cinacoin/blockchain-api` — REST API layer
+- [x] `@cinacoin/wallet-buttons` — Standalone wallet button components
+- [x] `@cinacoin/custom-connectors` — Custom wallet connector framework
+- [x] `@cinacoin/multiwallet` — Multi-wallet management
+- [x] `@cinacoin/kyc` — KYC compliance screening
+- [x] `@cinacoin/cross-chain-sync` — Cross-chain state synchronization
+- [x] `@cinacoin/safe-decoder` — Safe transaction decoder (Rust)
+- [x] `@cinacoin/travel-rule-demo` — Travel Rule compliance demo
 
 ### 1.9 Platform Integrations (2/2)
-- [x] `@cinaconnect/telegram-miniapp` — Telegram Mini Apps
-- [x] `@cinaconnect/farcaster-miniapp` — Farcaster Mini Apps
+- [x] `@cinacoin/telegram-miniapp` — Telegram Mini Apps
+- [x] `@cinacoin/farcaster-miniapp` — Farcaster Mini Apps
 
 ### 1.10 Demo Application
 - [x] Home page (`/`) — Wallet connection entry point
@@ -180,7 +180,7 @@ This document defines the formal acceptance criteria for the CinaConnect v1.0 re
 - [x] Architecture diagram
 - [x] Package status tables
 - [x] Troubleshooting guide
-- [x] Migration guide (Reown/AppKit → CinaConnect)
+- [x] Migration guide (Reown/AppKit → Cinacoin)
 - [ ] **Pending:** SDK reference for each platform (Android, iOS, Unity, .NET)
 
 ---
@@ -189,7 +189,7 @@ This document defines the formal acceptance criteria for the CinaConnect v1.0 re
 
 ### 5.1 npm Publication
 - [x] `@changesets/cli` configured in monorepo
-- [x] `@cinaconnect/core-sdk` published (1 package live)
+- [x] `@cinacoin/core-sdk` published (1 package live)
 - [ ] **Pending:** Publish remaining 63+ packages
 - [ ] **Pending:** Enable adapter exports in core-sdk (ethers5/6, wagmi, solana, viem, siwe, eip5792)
 - [ ] **Pending:** Verify npm install works for each published package
@@ -264,7 +264,7 @@ This document defines the formal acceptance criteria for the CinaConnect v1.0 re
 | Deployment ready | ⚠️ | 2/3 services live; npm publish pending |
 | Known issues documented | ✅ | 8 issues catalogued with workarounds |
 
-**Overall Assessment:** CinaConnect v1.0 meets functional requirements for acceptance. Remaining items (npm publishing, security audit, test coverage) are tracked as post-release backlog and do not block acceptance of the core SDK and framework packages.
+**Overall Assessment:** Cinacoin v1.0 meets functional requirements for acceptance. Remaining items (npm publishing, security audit, test coverage) are tracked as post-release backlog and do not block acceptance of the core SDK and framework packages.
 
 ---
 

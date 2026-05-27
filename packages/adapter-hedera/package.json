@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/adapter-hedera",
+  "name": "@cinacoin/adapter-hedera",
   "version": "1.0.0",
-  "description": "Hedera Hashgraph chain adapter for CinaConnect — Blade Wallet, HashPack, Kantara Wallet",
+  "description": "Hedera Hashgraph chain adapter for Cinacoin — Blade Wallet, HashPack, Kantara Wallet",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
   "peerDependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {
     "@hashgraph/sdk": "^2.49.0"
@@ -26,5 +26,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

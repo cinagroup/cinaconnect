@@ -7,7 +7,7 @@
 //! - eth_getUserOperationByHash
 //! - eth_getUserOperationReceipt
 //! - eth_supportedEntryPoints
-//! - Custom methods (cinaconnect_*)
+//! - Custom methods (cinacoin_*)
 //! - Method-not-found errors
 //! - Health check endpoint
 //! - Metrics endpoint
@@ -160,7 +160,7 @@ fn rpc_get_config_returns_config() {
     rt.block_on(async {
         let state = make_test_state().await;
 
-        let request = make_rpc_request("cinaconnect_getBundlerConfig", None);
+        let request = make_rpc_request("cinacoin_getBundlerConfig", None);
         let response = handle_rpc_request(&state, request).await;
 
         assert!(response.result.is_some());
@@ -182,7 +182,7 @@ fn rpc_reputation_stats_returns_array() {
     rt.block_on(async {
         let state = make_test_state().await;
 
-        let request = make_rpc_request("cinaconnect_getReputationStats", None);
+        let request = make_rpc_request("cinacoin_getReputationStats", None);
         let response = handle_rpc_request(&state, request).await;
 
         assert!(response.result.is_some());

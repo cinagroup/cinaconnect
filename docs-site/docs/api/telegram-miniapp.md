@@ -1,16 +1,16 @@
 # Telegram Mini App
 
-> `@cinaconnect/telegram-miniapp` — Telegram Mini App integration for CinaConnect.
+> `@cinacoin/telegram-miniapp` — Telegram Mini App integration for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/telegram-miniapp
+npm install @cinacoin/telegram-miniapp
 ```
 
 ## Overview
 
-Integrate CinaConnect wallet connections directly into Telegram Mini Apps using the Telegram Web App API.
+Integrate Cinacoin wallet connections directly into Telegram Mini Apps using the Telegram Web App API.
 
 ## Features
 

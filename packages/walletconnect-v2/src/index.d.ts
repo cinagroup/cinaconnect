@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/walletconnect-v2
+ * @cinacoin/walletconnect-v2
  *
- * WalletConnect v2 protocol implementation for CinaConnect.
+ * WalletConnect v2 protocol implementation for Cinacoin.
  * Provides pairing, session management, crypto utilities,
  * relay client, JSON-RPC methods, wallet registry, and
  * a unified WalletConnectClient.
@@ -12,7 +12,7 @@ export type { Pairing, ParsedWcUri, Session, SessionNamespace, SessionProposal, 
 export { WC_PAIRING_ERRORS, WC_SESSION_ERRORS, WC_JSON_RPC_ERRORS, } from './types.js';
 export type { WcErrorCode } from './types.js';
 export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce, generateSymKey, generateTopic, deriveSharedSecret, deriveSessionTopic, deriveAuthKey, computeHmac, verifyHmac, encodeType0Envelope, decodeType0Envelope, encodeType1Envelope, decodeType1Envelope, isValidTopic, isValidSymKey, base64ToHex, hexToBase64, coreEncrypt, coreDecrypt, } from './crypto.js';
-export type { X25519Keypair } from '@cinaconnect/core-sdk';
+export type { X25519Keypair } from '@cinacoin/core-sdk';
 export { WcRelay } from './relay.js';
 export type { RelayState } from './relay.js';
 export { parseWcUri, formatWcUri, createPairing, approvePairing, deletePairing, rejectPairing, pairingPing, encryptPairingMessage, decryptPairingMessage, isValidWcUri, isPairingExpired, isPairingValid, } from './pairing.js';

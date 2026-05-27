@@ -1,7 +1,7 @@
 /**
- * @cinaconnect/adapter-near
+ * @cinacoin/adapter-near
  *
- * NEAR chain adapter for the CinaConnect SDK.
+ * NEAR chain adapter for the Cinacoin SDK.
  * Supports NEAR Wallet, Here Wallet, and Meteor Wallet.
  *
  * @packageDocumentation

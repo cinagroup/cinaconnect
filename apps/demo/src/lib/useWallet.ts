@@ -205,7 +205,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
       });
       setStatus('connected');
       connectedRef.current = true;
-      localStorage.setItem('cinaconnect_wallet', JSON.stringify({ address, balance, chainId }));
+      localStorage.setItem('cinacoin_wallet', JSON.stringify({ address, balance, chainId }));
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to fetch account data';
       setError(message);
@@ -216,7 +216,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
   /** Restore session from localStorage on mount. */
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const saved = localStorage.getItem('cinaconnect_wallet');
+    const saved = localStorage.getItem('cinacoin_wallet');
     if (saved) {
       try {
         const data = JSON.parse(saved);
@@ -252,7 +252,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
         setAccount({ address: null, balance: '0.0000', chainId: null, chainName: '', chainSymbol: 'ETH' });
         setStatus('disconnected');
         connectedRef.current = false;
-        localStorage.removeItem('cinaconnect_wallet');
+        localStorage.removeItem('cinacoin_wallet');
         return;
       }
       const addr = accounts[0] as string;
@@ -275,7 +275,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
           chainSymbol: chain?.symbol ?? 'ETH',
         };
         if (connectedRef.current && prev.address) {
-          localStorage.setItem('cinaconnect_wallet', JSON.stringify({
+          localStorage.setItem('cinacoin_wallet', JSON.stringify({
             address: prev.address,
             chainId,
             balance: prev.balance,
@@ -289,7 +289,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
       setAccount({ address: null, balance: '0.0000', chainId: null, chainName: '', chainSymbol: 'ETH' });
       setStatus('disconnected');
       connectedRef.current = false;
-      localStorage.removeItem('cinaconnect_wallet');
+      localStorage.removeItem('cinacoin_wallet');
     };
 
     eth.on('accountsChanged', handleAccountsChanged);
@@ -327,7 +327,7 @@ export function useWallet(options: UseWalletOptions = {}): UseWalletReturn {
     setStatus('disconnected');
     setError(null);
     connectedRef.current = false;
-    localStorage.removeItem('cinaconnect_wallet');
+    localStorage.removeItem('cinacoin_wallet');
   }, []);
 
   return { account, status, error, connectors, connect, disconnect };

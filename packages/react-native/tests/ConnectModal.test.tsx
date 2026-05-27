@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // ============================================================
-// Tests for @cinaconnect/react-native ConnectModal
+// Tests for @cinacoin/react-native ConnectModal
 // ============================================================
 
 // Mock react-native before importing the component
@@ -55,8 +55,8 @@ vi.mock('react-native', () => ({
 }));
 
 // Mock the context provider
-vi.mock('../src/CinaConnectProvider', () => ({
-  useCinaConnectContext: vi.fn(() => ({
+vi.mock('../src/CinaCoinProvider', () => ({
+  useCinaCoinContext: vi.fn(() => ({
     connect: vi.fn().mockResolvedValue(undefined),
     connectWithUri: vi.fn().mockResolvedValue(undefined),
     createPairing: vi.fn().mockResolvedValue('wc:mock@2?relay-protocol=irn&symKey=mock'),
@@ -81,7 +81,7 @@ vi.mock('../src/CinaConnectProvider', () => ({
 }));
 
 // Mock walletconnect-v2
-vi.mock('@cinaconnect/walletconnect-v2', () => ({
+vi.mock('@cinacoin/walletconnect-v2', () => ({
   WALLET_REGISTRY: [
     {
       id: 'metamask',
@@ -187,7 +187,7 @@ describe('ConnectModal', () => {
 
   describe('deep linking', () => {
     it('should build deep link with WC URI', () => {
-      const { buildWalletDeepLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletDeepLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:test@2?relay-protocol=irn&symKey=test';
       const link = buildWalletDeepLink('metamask', uri);
       expect(link).toContain('metamask://');
@@ -195,7 +195,7 @@ describe('ConnectModal', () => {
     });
 
     it('should build universal link as fallback', () => {
-      const { buildWalletUniversalLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletUniversalLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:test@2?relay-protocol=irn&symKey=test';
       const link = buildWalletUniversalLink('metamask', uri);
       expect(link).toContain('https://');
@@ -206,8 +206,8 @@ describe('ConnectModal', () => {
   describe('wallet selection', () => {
     it('should call onClose after successful connection', async () => {
       const onClose = vi.fn();
-      const { useCinaConnectContext } = require('../src/CinaConnectProvider');
-      const { connect } = useCinaConnectContext();
+      const { useCinaCoinContext } = require('../src/CinaCoinProvider');
+      const { connect } = useCinaCoinContext();
 
       await connect('email');
       expect(connect).toHaveBeenCalledWith('email');

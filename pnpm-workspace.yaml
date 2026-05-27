@@ -2,3 +2,8 @@ packages:
   - "packages/*"
   - "apps/*"
   - "examples/*"
+  - "!packages/unity-csharp" # Unity UPM package, not npm-installable
+  - "!packages/ios-swift"   # iOS Swift package, not npm-installable
+  - "!packages/flutter-dart" # Flutter/Dart package, not npm-installable
+  - "!packages/android-kotlin" # Android/Kotlin, not npm-installable
+  - "!packages/dotnet"       # .NET package, not npm-installable

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/design-tokens",
+  "name": "@cinacoin/design-tokens",
   "version": "0.2.0",
-  "description": "Design tokens for CinaConnect white-label UI toolkit",
+  "description": "Design tokens for Cinacoin white-label UI toolkit",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

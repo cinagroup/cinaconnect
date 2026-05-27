@@ -27,7 +27,7 @@ import { jsxs as _jsxs, jsx as _jsx, Fragment as _Fragment } from "react/jsx-run
  */
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Alert, Animated, Dimensions, } from 'react-native';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const SCAN_FRAME_SIZE = Math.min(SCREEN_WIDTH * 0.7, 280);
 /**
@@ -38,7 +38,7 @@ const SCAN_FRAME_SIZE = Math.min(SCREEN_WIDTH * 0.7, 280);
  * simulated scan button for testing without camera hardware.
  */
 export function QRScanner({ visible, onClose, onScan, onError, scanFrameColor, devMode = __DEV__, }) {
-    const { connectWithUri, connect, themeColors, wcUri } = useCinaConnectContext();
+    const { connectWithUri, connect, themeColors, wcUri } = useCinacoinContext();
     const [scanning, setScanning] = useState(false);
     const [hasPermission, setHasPermission] = useState(null);
     const [error, setError] = useState(null);
@@ -118,7 +118,7 @@ export function QRScanner({ visible, onClose, onScan, onError, scanFrameColor, d
         setError(null);
         // Use the existing pairing URI, or fall back to a test URI
         const testUri = wcUri ??
-            'wc:7f4b7e3c-1a2b-4c5d-8e9f-0a1b2c3d4e5f@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinaconnect.io%2Fv1&symKey=abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
+            'wc:7f4b7e3c-1a2b-4c5d-8e9f-0a1b2c3d4e5f@2?relay-protocol=waku&relay-url=wss%3A%2F%2Frelay.cinacoin.io%2Fv1&symKey=abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
         connectWithUri(testUri)
             .then(() => {
             onScan(testUri);

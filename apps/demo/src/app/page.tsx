@@ -281,7 +281,7 @@ export default function HomePage() {
         {/* Title */}
         <h1 className="text-6xl sm:text-7xl font-extrabold tracking-tight">
           <span className="bg-gradient-to-r from-blue-400 via-violet-400 to-purple-500 bg-clip-text text-transparent">
-            CinaConnect
+            CinaCoin
           </span>
         </h1>
 
@@ -341,7 +341,7 @@ export default function HomePage() {
                 <span className="size-3 rounded-full bg-yellow-500/60" />
                 <span className="size-3 rounded-full bg-green-500/60" />
               </div>
-              <span className="text-xs text-gray-500 font-mono ml-2">CinaConnect Demo</span>
+              <span className="text-xs text-gray-500 font-mono ml-2">CinaCoin Demo</span>
             </div>
             <div className="flex items-center gap-2">
               <span
@@ -636,7 +636,7 @@ export default function HomePage() {
             Ready to get started?
           </h2>
           <p className="text-gray-500 mb-8 max-w-md mx-auto">
-            Start building with CinaConnect. Open source, self-hosted, and free forever.
+            Start building with CinaCoin. Open source, self-hosted, and free forever.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4">
             <Link
@@ -656,7 +656,7 @@ export default function HomePage() {
       <footer className="w-full max-w-4xl px-4 py-8 border-t border-gray-800/50">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <p className="text-xs text-gray-600">
-            © 2026 CinaConnect. Open source under MIT License.
+            © 2026 CinaCoin. Open source under MIT License.
           </p>
           <div className="flex items-center gap-4">
             <Link href="/swap" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
@@ -667,7 +667,7 @@ export default function HomePage() {
             </Link>
             <span className="text-xs text-gray-700">|</span>
             <a
-              href="https://github.com/cinaseek/cinaconnect"
+              href="https://github.com/cinaseek/cinacoin"
               target="_blank"
               rel="noopener noreferrer"
               className="text-xs text-gray-500 hover:text-gray-300 transition-colors"

@@ -1,18 +1,18 @@
 # GCP Budget Alert Template
-# Usage: gcloud beta billing budgets create --display-name="CinaConnect Monthly Budget" \
+# Usage: gcloud beta billing budgets create --display-name="Cinacoin Monthly Budget" \
 #   --budget-amount=7000 --threshold-rule=percent=50,type=forecasted-spend \
 #   --threshold-rule=percent=80,type=forecasted-spend \
 #   --threshold-rule=percent=100,type=actual-spend \
-#   --projects=cinaconnect-prod --notification-emails=ops@cinaconnect.com
+#   --projects=cinacoin-prod --notification-emails=ops@cinacoin.com
 
 budget:
   amount:
     currencyCode: USD
     units: "7000"
-  displayName: CinaConnect Monthly Budget
+  displayName: Cinacoin Monthly Budget
   budgetFilter:
     projects:
-      - projects/cinaconnect-prod
+      - projects/cinacoin-prod
   thresholdRules:
     - thresholdPercent: 0.5
       spendBasis: FORECASTED_SPEND
@@ -26,7 +26,7 @@ budget:
 # Usage: aws budgets create-budget --cli-input-json file://aws-budget.json
 
 awsBudget:
-  BudgetName: cinaconnect-monthly-budget
+  BudgetName: cinacoin-monthly-budget
   BudgetType: COST
   TimeUnit: MONTHLY
   BudgetLimit:
@@ -34,7 +34,7 @@ awsBudget:
     Unit: USD
   CostFilters:
     TagKeyValue:
-      - "user:Project$cinaconnect"
+      - "user:Project$cinacoin"
   Notifications:
     - NotificationType: ACTUAL
       ComparisonOperator: GREATER_THAN

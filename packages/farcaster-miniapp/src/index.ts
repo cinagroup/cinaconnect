@@ -1,5 +1,5 @@
 /**
- * CinaConnect Farcaster Mini App SDK.
+ * Cinacoin Farcaster Mini App SDK.
  *
  * Wallet connectivity and identity for Farcaster Mini Apps,
  * including Sign-In with Farcaster (SIWF).

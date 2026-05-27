@@ -275,7 +275,7 @@ export class TONChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. Required by ChainAdapter interface. */
+  /** Set the Cinacoin connector. Required by ChainAdapter interface. */
   setConnector(_connector: Connector): void {
     // TON adapter uses TON Connect protocol; connector is optional.
   }
@@ -369,6 +369,10 @@ export class TONChainAdapter {
         params: { address },
       }),
     });
+
+    if (!response.ok) {
+      throw new Error(`TON RPC error: HTTP ${response.status} ${response.statusText}`);
+    }
 
     const data = await response.json();
     if (data.error) throw new Error(data.error.message || JSON.stringify(data.error));
@@ -521,7 +525,7 @@ export class TONChainAdapter {
   /** Convert TON to nanotons. */
   static tonToNanotons(ton: string | number): string {
     const parts = String(ton).split('.');
-    const intPart = BigInt(parts[0]);
+    const intPart = BigInt(parts[0] || '0');
     let fracPart = 0n;
     if (parts.length > 1) {
       const frac = parts[1].padEnd(9, '0').slice(0, 9);
@@ -553,47 +557,273 @@ export class TONChainAdapter {
     return null;
   }
 
-  /** Encode a string into a TON Cell payload (simplified). */
+  /** Encode a string into a TON Cell payload using proper BoC format. */
   private _stringToTONCell(text: string): string {
-    // TON text comment encoding: op (4 bytes) + text length (4 bytes) + text
-    const op = 0x00000000; // Comment opcode
     const textBytes = new TextEncoder().encode(text);
-    const length = textBytes.length;
+    const totalBits = 32 + textBytes.length * 8; // op (32 bits) + text
 
-    const buf = new Uint8Array(8 + length);
-    const view = new DataView(buf.buffer);
-    view.setUint32(0, op);
-    view.setUint32(4, length);
-    buf.set(textBytes, 8);
+    // Build cell: op (0x00000000 for comment) + UTF-8 text
+    const cellBits = new Array<boolean>();
+    // op = 0x00000000 (32 zero bits)
+    for (let i = 0; i < 32; i++) cellBits.push(false);
+    // Text content (each byte = 8 bits, MSB first)
+    for (const byte of textBytes) {
+      for (let b = 7; b >= 0; b--) {
+        cellBits.push(((byte >> b) & 1) === 1);
+      }
+    }
 
-    return this._bytesToBase64(buf);
+    const boc = this._buildBoc(cellBits, []);
+    return this._bytesToBase64(boc);
   }
 
-  /** Encode a Jetton transfer body (simplified). */
+  /** Encode a Jetton transfer body using proper TON Cell/BoC format. */
   private _encodeJettonTransferBody(params: TONJettonTransfer): string {
-    // Jetton transfer op = 0xf8a7ea5
-    // This is a simplified body encoding — real implementation would use
-    // TON Cell serialization (boc.serialize).
-    const op = 0xf8a7ea5;
-    const queryId = 0;
-
-    const buf = new Uint8Array(72);
-    const view = new DataView(buf.buffer);
-    view.setUint32(0, op);
-    view.setUint32(4, queryId);
-    // Amount (16 bytes big-endian)
-    const amount = BigInt(params.amount);
-    for (let i = 0; i < 8; i++) {
-      view.setUint8(8 + i, Number((amount >> BigInt(56 - i * 8)) & 0xffn));
+    // Parse destination address to get raw hash bytes
+    const destInfo = parseTONAddress(params.to);
+    if (!destInfo) {
+      throw new Error(`Cannot encode jetton transfer: invalid destination address: ${params.to}`);
     }
-    // Zero sender address placeholder (32 bytes)
-    // Destination address placeholder (8 bytes)
 
-    return this._bytesToBase64(buf);
+    // Jetton transfer TL-B schema:
+    // op: uint32 = 0xf8a7ea5
+    // query_id: uint64
+    // amount: uint (coins, 120-bit big-endian)
+    // destination: MsgAddress (standard addr = tag 0x04 + workchain (int8) + address (256 bits))
+    // response_address: MsgAddress (0x03 = null)
+    // custom_payload: Cell (0x00 = null)
+    // forward_ton_amount: uint (coins)
+    // forward_payload: Cell (0x00 = null)
+    const cellBits = new Array<boolean>();
+
+    // op: 0x0f8a7ea5 (32 bits)
+    const op = 0x0f8a7ea5;
+    for (let b = 31; b >= 0; b--) {
+      cellBits.push(((op >> b) & 1) === 1);
+    }
+
+    // query_id: 0 (64 bits)
+    for (let i = 0; i < 64; i++) cellBits.push(false);
+
+    // amount: coins (120-bit big-endian uint)
+    const amount = BigInt(params.amount);
+    for (let i = 119; i >= 0; i--) {
+      cellBits.push(((amount >> BigInt(i)) & 1n) === 1n);
+    }
+
+    // destination: MsgAddress (standard: tag 0x04 + workchain int8 + hash 256 bits)
+    cellBits.push(false); // tag 0 bit 7
+    cellBits.push(false); // tag 0 bit 6
+    cellBits.push(false); // tag 0 bit 5
+    cellBits.push(false); // tag 0 bit 4
+    cellBits.push(false); // tag 0 bit 3
+    cellBits.push(true);  // tag 0 bit 2 = 1 → anycast = false
+    cellBits.push(false); // tag 0 bit 1 = 0 → standard addr
+    cellBits.push(false); // tag 0 bit 0
+    // workchain (int8, 8 bits)
+    const wc = destInfo.workchain >= 0 ? destInfo.workchain : destInfo.workchain + 256;
+    for (let b = 7; b >= 0; b--) {
+      cellBits.push(((wc >> b) & 1) === 1);
+    }
+    // address hash (256 bits)
+    const hashBytes = this._hexToBytes(destInfo.hashHex);
+    for (const byte of hashBytes) {
+      for (let b = 7; b >= 0; b--) {
+        cellBits.push(((byte >> b) & 1) === 1);
+      }
+    }
+
+    // response_address: null (tag 0x03, 3 bits)
+    cellBits.push(false);
+    cellBits.push(true);
+    cellBits.push(true);
+
+    // custom_payload: null (1 bit = 0)
+    cellBits.push(false);
+
+    // forward_ton_amount: 0 (coins, 120-bit)
+    for (let i = 0; i < 120; i++) cellBits.push(false);
+
+    // forward_payload: left = 0 (no inline payload)
+    cellBits.push(false);
+
+    const boc = this._buildBoc(cellBits, []);
+    return this._bytesToBase64(boc);
   }
 
   /** Convert bytes to base64. */
   private _bytesToBase64(bytes: Uint8Array): string {
     return btoa(String.fromCharCode(...bytes));
+  }
+
+  /* ---- TON Cell / BoC serialization ---- */
+
+  /**
+   * Build a Bag of Cells (BoC) from cell bits.
+   *
+   * BoC format (boc_version=0x00):
+   *   magic: 0xb5 (1 byte)
+   *   flags: byte (has_idx=0, has_crc32=0, has_cache_bits=0, flags_size=0)
+   *   size_bytes: 1 byte (cell size in bytes)
+   *   off_bytes: 1 byte (offset size in bytes)
+   *   cells_num: bytes (number of cells)
+   *   roots_num: bytes (number of roots, always 1)
+   *   absent_num: bytes (number of absent roots, always 0)
+   *   tot_cells_size: bytes (total cell data size)
+   *   root_list: bytes (root indices)
+   *   cells_data: variable (serialized cells)
+   */
+  private _buildBoc(bits: boolean[], _refIndices: number[]): Uint8Array {
+    const cells = [this._cellFromBits(bits)];
+    return this._serializeBoc(cells, [0]);
+  }
+
+  /**
+   * Build a cell from bit data.
+   * Cell format:
+   *   header: ref_count (3 bits) | has_index (1 bit) | depth (16 bits) — not used for v0
+   *   data_bits: bytes (rounded up)
+   *   refs: up to 4 × index (offset_bytes each)
+   */
+  private _cellFromBits(bits: boolean[]): Uint8Array {
+    const dataBits = bits.length;
+    // Round up to full bytes, pad with trailing 1 + zeros per TON spec
+    let paddedBits = [...bits];
+    paddedBits.push(true); // termination bit
+    while (paddedBits.length % 8 !== 0) {
+      paddedBits.push(false);
+    }
+    const byteCount = paddedBits.length / 8;
+
+    // Header byte: ref_count(3) | has_index(1) | depth(4) — single cell, no refs, depth=0
+    const header = 0x00; // 0 refs, no index, depth 0
+
+    const cell = new Uint8Array(1 + byteCount);
+    cell[0] = header;
+    for (let i = 0; i < byteCount; i++) {
+      let byte = 0;
+      for (let b = 0; b < 8; b++) {
+        if (paddedBits[i * 8 + b]) {
+          byte |= 1 << (7 - b);
+        }
+      }
+      cell[1 + i] = byte;
+    }
+    return cell;
+  }
+
+  /**
+   * Serialize cells into Bag of Cells format.
+   */
+  private _serializeBoc(cells: Uint8Array[], roots: number[]): Uint8Array {
+    const cellsNum = cells.length;
+    const rootsNum = roots.length;
+    const absentNum = 0;
+    const totSize = cells.reduce((sum, c) => sum + c.length, 0);
+
+    // Determine byte widths
+    const sizeBytes = this._bytesFor(cellsNum, totSize);
+    const offBytes = this._bytesFor(cellsNum + 1);
+
+    // Build offset table
+    const offsets: number[] = [0];
+    for (let i = 0; i < cellsNum; i++) {
+      offsets.push(offsets[i] + cells[i].length);
+    }
+
+    // Calculate total BoC size
+    const totalSize =
+      1 + 1 + 1 + 1 + // magic, flags, size_bytes, off_bytes
+      cellsNum * sizeBytes + // cells_num (not stored separately, part of format)
+      sizeBytes + // cells_num value
+      sizeBytes + // roots_num
+      sizeBytes + // absent_num
+      sizeBytes + // tot_cells_size
+      rootsNum * sizeBytes + // root_list
+      totSize + // cell_data
+      4; // crc32
+
+    // Actually calculate properly:
+    let pos = 0;
+    const buf = new Uint8Array(totalSize + 100); // generous buffer
+
+    buf[pos++] = 0xb5; // magic
+    buf[pos++] = 0x00; // flags (no idx, no crc except at end, no cache_bits)
+    buf[pos++] = sizeBytes;
+    buf[pos++] = offBytes;
+    pos = this._writeUint(buf, pos, cellsNum, sizeBytes);
+    pos = this._writeUint(buf, pos, rootsNum, sizeBytes);
+    pos = this._writeUint(buf, pos, absentNum, sizeBytes);
+    pos = this._writeUint(buf, pos, totSize, sizeBytes);
+    // root_list
+    for (const r of roots) {
+      pos = this._writeUint(buf, pos, r, sizeBytes);
+    }
+    // cells_data
+    for (const cell of cells) {
+      buf.set(cell, pos);
+      pos += cell.length;
+    }
+    // CRC32
+    const crc = this._crc32(buf.slice(0, pos));
+    buf[pos++] = (crc >> 24) & 0xff;
+    buf[pos++] = (crc >> 16) & 0xff;
+    buf[pos++] = (crc >> 8) & 0xff;
+    buf[pos++] = crc & 0xff;
+
+    return buf.slice(0, pos);
+  }
+
+  /** Determine minimum bytes needed to represent value. */
+  private _bytesFor(...values: number[]): number {
+    const max = Math.max(...values, 1);
+    if (max <= 0xff) return 1;
+    if (max <= 0xffff) return 2;
+    if (max <= 0xffffff) return 3;
+    return 4;
+  }
+
+  /** Write unsigned integer to buffer, big-endian, n bytes. Returns new position. */
+  private _writeUint(buf: Uint8Array, offset: number, value: number, byteCount: number): number {
+    for (let i = byteCount - 1; i >= 0; i--) {
+      buf[offset + i] = value & 0xff;
+      value = value >> 8;
+    }
+    return offset + byteCount;
+  }
+
+  /** CRC32 checksum (standard polynomial 0xEDB88320). */
+  private _crc32(data: Uint8Array): number {
+    let crc = 0xffffffff;
+    const table = TONChainAdapter._crc32Table();
+    for (const byte of data) {
+      crc = table[(crc ^ byte) & 0xff] ^ (crc >>> 8);
+    }
+    return crc ^ 0xffffffff;
+  }
+
+  /** Lazy-initialized CRC32 lookup table. */
+  private static _crc32TableCache: Uint32Array | null = null;
+  private static _crc32Table(): Uint32Array {
+    if (TONChainAdapter._crc32TableCache) return TONChainAdapter._crc32TableCache;
+    const table = new Uint32Array(256);
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let j = 0; j < 8; j++) {
+        c = c & 1 ? (0xedb88320 ^ (c >>> 1)) : (c >>> 1);
+      }
+      table[i] = c >>> 0;
+    }
+    TONChainAdapter._crc32TableCache = table;
+    return table;
+  }
+
+  /** Convert hex string to Uint8Array. */
+  private _hexToBytes(hex: string): Uint8Array {
+    const bytes = new Uint8Array(hex.length / 2);
+    for (let i = 0; i < bytes.length; i++) {
+      bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+    }
+    return bytes;
   }
 }

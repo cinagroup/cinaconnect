@@ -2,7 +2,7 @@
 set -e
 
 # Cloudflare Workers Health Check Script
-# Checks the status of all deployed CinaConnect Cloudflare Workers
+# Checks the status of all deployed CinaCoin Cloudflare Workers
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
@@ -16,12 +16,12 @@ NC='\033[0m' # No Color
 
 # Worker endpoints (replace with actual URLs after deployment)
 WORKERS=(
-    "wss://relay.cinaconnect.com/health"
-    "https://notify.cinaconnect.com/health"
-    "https://push.cinaconnect.com/health"
+    "wss://relay.cinacoin.com/health"
+    "https://notify.cinacoin.com/health"
+    "https://push.cinacoin.com/health"
 )
 
-echo -e "${BLUE}🔍 CinaConnect Cloudflare Workers Health Check${NC}"
+echo -e "${BLUE}🔍 CinaCoin Cloudflare Workers Health Check${NC}"
 echo ""
 
 # Check if curl is available

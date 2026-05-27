@@ -1,21 +1,21 @@
-import type { MetaOptions } from '@cinaconnect/core-sdk';
+import type { MetaOptions } from '@cinacoin/core-sdk';
 /**
- * Network identifiers supported by CinaConnect.
+ * Network identifiers supported by Cinacoin.
  */
-export type CinaConnectNetwork = 'mainnet' | 'testnet' | 'arbitrum' | 'arbitrum-sepolia' | 'base' | 'base-sepolia' | 'optimism' | 'optimism-sepolia' | 'polygon' | 'polygon-mumbai' | string;
+export type CinacoinNetwork = 'mainnet' | 'testnet' | 'arbitrum' | 'arbitrum-sepolia' | 'base' | 'base-sepolia' | 'optimism' | 'optimism-sepolia' | 'polygon' | 'polygon-mumbai' | string;
 /**
- * Module options for the Nuxt 3 CinaConnect module.
+ * Module options for the Nuxt 3 Cinacoin module.
  */
-export interface CinaConnectModuleOptions {
+export interface CinacoinModuleOptions {
     /**
-     * CinaConnect project ID (from https://cloud.cinaconnect.com).
+     * Cinacoin project ID (from https://cloud.cinacoin.com).
      */
     projectId: string;
     /**
      * Network keys to enable (e.g. ['mainnet', 'arbitrum', 'base']).
      * Defaults to ['mainnet'].
      */
-    networks?: CinaConnectNetwork[];
+    networks?: CinacoinNetwork[];
     /**
      * WalletConnect metadata for the connection.
      */
@@ -31,11 +31,11 @@ export interface CinaConnectModuleOptions {
     themeVariables?: Record<string, string>;
 }
 /**
- * CinaConnect Nuxt module — provides wallet connection for Nuxt 3 apps.
+ * Cinacoin Nuxt module — provides wallet connection for Nuxt 3 apps.
  *
- * Automatically adds the @cinaconnect/vue plugin, runtime config,
+ * Automatically adds the @cinacoin/vue plugin, runtime config,
  * composables, and a connect-button component.
  */
-declare const _default: import("nuxt/schema").NuxtModule<CinaConnectModuleOptions, CinaConnectModuleOptions, false>;
+declare const _default: import("nuxt/schema").NuxtModule<CinacoinModuleOptions, CinacoinModuleOptions, false>;
 export default _default;
 //# sourceMappingURL=module.d.ts.map

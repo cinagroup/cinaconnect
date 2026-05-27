@@ -4,7 +4,7 @@
  * Usage — import individual handlers into your Next.js app:
  *
  *   // app/api/balance/route.ts
- *   export { POST } from "@cinaconnect/blockchain-api/server";
+ *   export { POST } from "@cinacoin/blockchain-api/server";
  *
  * Or copy the handler bodies if you need custom auth / middleware.
  */

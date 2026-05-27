@@ -1,6 +1,6 @@
 ---
 name: ✨ Feature Request
-about: Suggest a new feature or enhancement for CinaConnect
+about: Suggest a new feature or enhancement for Cinacoin
 title: "[FEATURE] "
 labels: enhancement
 assignees: ""
@@ -20,7 +20,7 @@ assignees: ""
 
 ```ts
 // Example of how the new API might look
-import { newFeature } from '@cinaconnect/...';
+import { newFeature } from '@cinacoin/...';
 
 // Usage example
 ```
@@ -37,13 +37,13 @@ import { newFeature } from '@cinaconnect/...';
 
 ### Affected Package(s)
 
-<!-- Which @cinaconnect/* package(s) would this affect? -->
+<!-- Which @cinacoin/* package(s) would this affect? -->
 
-- [ ] `@cinaconnect/core-sdk`
-- [ ] `@cinaconnect/react` (or another UI framework package)
-- [ ] `@cinaconnect/adapter-*` (specify which)
-- [ ] `@cinaconnect/chains`
-- [ ] `@cinaconnect/aa-sdk`
+- [ ] `@cinacoin/core-sdk`
+- [ ] `@cinacoin/react` (or another UI framework package)
+- [ ] `@cinacoin/adapter-*` (specify which)
+- [ ] `@cinacoin/chains`
+- [ ] `@cinacoin/aa-sdk`
 - [ ] Infrastructure (relay-server, rpc-proxy, keys-server)
 - [ ] Demo app
 - [ ] New package

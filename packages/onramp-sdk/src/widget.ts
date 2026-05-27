@@ -104,7 +104,7 @@ export class OnRampWidget {
 
       this.popupWindow = window.open(
         url,
-        "CinaConnect OnRamp",
+        "Cinacoin OnRamp",
         `width=${this.config.popupWidth},height=${this.config.popupHeight},left=${left},top=${top},scrollbars=yes`,
       );
 

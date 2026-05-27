@@ -1,5 +1,5 @@
 /**
- * Svelte stores wrapping @cinaconnect/core-sdk state.
+ * Svelte stores wrapping @cinacoin/core-sdk state.
  *
  * Provides reactive Svelte stores (writable, readable, derived) that
  * mirror the core-sdk state, automatically subscribing to events.
@@ -37,7 +37,7 @@ const _errorStore = writable(null);
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { isConnected } from '@cinaconnect/svelte';
+ *   import { isConnected } from '@cinacoin/svelte';
  * </script>
  *
  * {#if $isConnected}
@@ -52,7 +52,7 @@ export const isConnected = derived(_statusStore, ($status) => $status === 'conne
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { address } from '@cinaconnect/svelte';
+ *   import { address } from '@cinacoin/svelte';
  * </script>
  *
  * <p>Address: {$address ?? 'none'}</p>
@@ -149,26 +149,26 @@ function subscribeToEvents(connector) {
 }
 // ─── Public API ──────────────────────────────────────────────────────────────
 /**
- * Initialize the CinaConnect Svelte stores with a connector.
+ * Initialize the Cinacoin Svelte stores with a connector.
  *
  * Call this once during app setup (e.g., in `+layout.ts` or a root component).
  * Stores automatically subscribe to the connector's events.
  *
- * @param connector - An initialized connector from @cinaconnect/core-sdk.
+ * @param connector - An initialized connector from @cinacoin/core-sdk.
  * @param options - Optional configuration (chains, initial status).
  *
  * @example
  * ```ts
- * import { initCinaConnect } from '@cinaconnect/svelte';
+ * import { initCinacoin } from '@cinacoin/svelte';
  * import { MyConnector } from './my-connector';
  *
  * const connector = new MyConnector();
- * initCinaConnect(connector, { chains: [...] });
+ * initCinacoin(connector, { chains: [...] });
  * ```
  */
-export function initCinaConnect(connector, options) {
+export function initCinacoin(connector, options) {
     if (_sdkInitialized) {
-        console.warn('[CinaConnect] initCinaConnect called more than once; reusing existing instance.');
+        console.warn('[Cinacoin] initCinacoin called more than once; reusing existing instance.');
         return;
     }
     _sdkConnector = connector;
@@ -196,7 +196,7 @@ export function getConnector() {
  */
 export async function open(params) {
     if (!_sdkConnector) {
-        throw new Error('[CinaConnect] SDK not initialized. Call initCinaConnect() first.');
+        throw new Error('[Cinacoin] SDK not initialized. Call initCinacoin() first.');
     }
     _statusStore.set('connecting');
     try {
@@ -217,7 +217,7 @@ export async function open(params) {
  */
 export async function close() {
     if (!_sdkConnector) {
-        throw new Error('[CinaConnect] SDK not initialized. Call initCinaConnect() first.');
+        throw new Error('[Cinacoin] SDK not initialized. Call initCinacoin() first.');
     }
     try {
         await _sdkConnector.disconnect();
@@ -237,7 +237,7 @@ export async function close() {
  */
 export async function switchChain(chainId) {
     if (!_sdkConnector) {
-        throw new Error('[CinaConnect] SDK not initialized. Call initCinaConnect() first.');
+        throw new Error('[Cinacoin] SDK not initialized. Call initCinacoin() first.');
     }
     await _sdkConnector.switchChain(chainId);
 }
@@ -246,7 +246,7 @@ export async function switchChain(chainId) {
  *
  * Call during app teardown or when re-initializing.
  */
-export function resetCinaConnect() {
+export function resetCinacoin() {
     if (_eventUnsubscribe) {
         _eventUnsubscribe();
         _eventUnsubscribe = null;

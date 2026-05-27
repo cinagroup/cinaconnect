@@ -1,17 +1,17 @@
-# @cinaconnect/pay-ui
+# @cinacoin/pay-ui
 
-CinaConnect Pay UI Components — Swap & On-Ramp widgets with React + Web Components.
+Cinacoin Pay UI Components — Swap & On-Ramp widgets with React + Web Components.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/pay-ui
+npm install @cinacoin/pay-ui
 ```
 
 ## Usage
 
 ```tsx
-import { SwapWidget, OnRampWidget } from '@cinaconnect/pay-ui';
+import { SwapWidget, OnRampWidget } from '@cinacoin/pay-ui';
 
 <SwapWidget fromToken="ETH" toToken="USDC" />
 <OnRampWidget currency="USD" />

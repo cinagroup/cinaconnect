@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-near
+# @cinacoin/adapter-near
 
-CinaConnect NEAR chain adapter — NEAR Wallet, Here Wallet, Meteor Wallet support.
+Cinacoin NEAR chain adapter — NEAR Wallet, Here Wallet, Meteor Wallet support.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-near
+npm install @cinacoin/adapter-near
 ```
 
 ## Usage
 
 ```ts
-import { NearChainAdapter } from '@cinaconnect/adapter-near';
+import { NearChainAdapter } from '@cinacoin/adapter-near';
 
 const adapter = new NearChainAdapter();
 await adapter.connect({ connectorId: 'near-wallet' });

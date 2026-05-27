@@ -2,7 +2,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: relay-alerts
-  namespace: cinaconnect
+  namespace: cinacoin
   labels:
     app: prometheus
     component: alerting-rules
@@ -17,7 +17,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay P99 延迟 > 500ms"
             description: "Region {{ $labels.region }} 的 Relay 消息延迟 P99 为 {{ $value }}s"
@@ -28,7 +28,7 @@ spec:
           for: 2m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay P99 延迟 > 1s (Critical)"
             description: "Region {{ $labels.region }} 的 Relay 消息延迟 P99 为 {{ $value }}s"
@@ -38,7 +38,7 @@ spec:
           for: 2m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay 连接数激增"
             description: "Region {{ $labels.region }} 连接速率: {{ $value }}/s"
@@ -49,7 +49,7 @@ spec:
           for: 1m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay Pod 重启"
             description: "Pod {{ $labels.pod }} 在 15 分钟内重启"
@@ -60,7 +60,7 @@ spec:
           for: 1m
           labels:
             severity: critical
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "NATS 集群不可用"
             description: "NATS 连接数为 0"
@@ -71,7 +71,7 @@ spec:
           for: 5m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay 活跃连接数过高"
             description: "Region {{ $labels.region }}: {{ $value }} 活跃连接"
@@ -82,7 +82,7 @@ spec:
           for: 10m
           labels:
             severity: warning
-            team: cinaconnect
+            team: cinacoin
           annotations:
             summary: "Relay HPA 达到最大副本"
             description: "Relay 已达到最大副本数 {{ $value }}"

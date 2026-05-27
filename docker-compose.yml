@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # CinaConnect Demo App (Next.js)
+  # Cinacoin Demo App (Next.js)
   demo:
     build:
       context: .
@@ -15,13 +15,16 @@ services:
       - relay
       - redis
 
-  # WalletConnect Relay Server
+  # Cinacoin Relay Server (self-built)
   relay:
-    image: ghcr.io/walletconnect/walletconnect-relay:latest
+    build:
+      context: .
+      dockerfile: deploy/docker/relay-server/Dockerfile
     ports:
-      - "5555:5555"
+      - "5555:8080"
     environment:
-      - RELAY_API_KEY=${RELAY_API_KEY}
+      - RUST_LOG=info,relay=debug
+      - NATS_URL=nats://nats-cluster:4222
     depends_on:
       - redis
 
@@ -38,7 +41,7 @@ services:
   rpc-proxy:
     build:
       context: .
-      dockerfile: packages/rpc-proxy/Dockerfile
+      dockerfile: deploy/docker/rpc-proxy/Dockerfile
     ports:
       - "8545:8545"
     environment:
@@ -48,12 +51,12 @@ services:
   # Keys Server (for key management)
   keys-server:
     build:
-      context: .
-      dockerfile: packages/keys-server/Dockerfile
+      context: ./packages/keys-server
+      dockerfile: Dockerfile
     ports:
       - "3001:3001"
     environment:
-      - DATABASE_URL=postgresql://user:pass@db:5432/cinaconnect
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       - ENCRYPTION_KEY=${ENCRYPTION_KEY}
     depends_on:
       - db
@@ -64,9 +67,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=cinaconnect
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - pg_data:/var/lib/postgresql/data
 

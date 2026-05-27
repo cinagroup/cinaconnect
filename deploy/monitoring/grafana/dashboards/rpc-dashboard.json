@@ -2,8 +2,8 @@
   "dashboard": {
     "id": null,
     "uid": "rpc-metrics",
-    "title": "RPC Proxy Metrics — CinaConnect",
-    "tags": ["cinaconnect", "rpc-proxy"],
+    "title": "RPC Proxy Metrics — Cinacoin",
+    "tags": ["cinacoin", "rpc-proxy"],
     "timezone": "browser",
     "refresh": "10s",
     "time": {

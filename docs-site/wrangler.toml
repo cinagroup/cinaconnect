@@ -1,8 +1,8 @@
-# Cloudflare Pages configuration for CinaConnect API Documentation
-# Project name: cinaconnect-docs
+# Cloudflare Pages configuration for Cinacoin API Documentation
+# Project name: cinacoin-docs
 # Framework: VitePress (static site generator)
 
-name = "cinaconnect-docs"
+name = "cinacoin-docs"
 compatibility_date = "2024-01-01"
 
 # Build configuration
@@ -19,4 +19,4 @@ NODE_VERSION = "20"
 
 # Environment variables — set secrets via Cloudflare dashboard
 # [vars]
-# BASE_URL = "https://docs.cinaconnect.com"
+# BASE_URL = "https://docs.cinacoin.com"

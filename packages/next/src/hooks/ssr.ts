@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/next/hooks — SSR-safe React hooks.
+ * @cinacoin/next/hooks — SSR-safe React hooks.
  *
  * Hooks designed for Next.js App Router and Pages Router that handle
  * SSR/hydration correctly:
@@ -11,7 +11,7 @@
  *
  * ```tsx
  * 'use client';
- * import { useAppKitState } from '@cinaconnect/next/hooks';
+ * import { useAppKitState } from '@cinacoin/next/hooks';
  *
  * export default function Profile() {
  *   const { address, isConnected } = useAppKitState({
@@ -71,7 +71,7 @@ export interface UseAppKitStateReturn {
  * SSR-safe hook for AppKit state that avoids hydration mismatches.
  *
  * During SSR, returns the provided `initialState`. After hydration on
- * the client, returns the live values from the CinaConnect context.
+ * the client, returns the live values from the Cinacoin context.
  *
  * This prevents the classic SSR issue where the server renders
  * `address: null` but the client immediately renders
@@ -107,7 +107,7 @@ export function useAppKitState(
     if (!isHydrated) return;
 
     try {
-      // Try to read from the global EIP-5792 context (set by CinaConnectProvider)
+      // Try to read from the global EIP-5792 context (set by CinacoinProvider)
       const win = window as unknown as Record<string, unknown>;
       const getter = win.__ocx_eip5792_context as (() => unknown) | undefined;
       if (getter) {
@@ -168,7 +168,7 @@ export interface UseHydratedAppKitReturn {
  *
  * ```tsx
  * 'use client';
- * import { useHydratedAppKit } from '@cinaconnect/next/hooks';
+ * import { useHydratedAppKit } from '@cinacoin/next/hooks';
  *
  * export function WalletButton() {
  *   const { isHydrated, renderFallback } = useHydratedAppKit();
@@ -204,7 +204,7 @@ export function useHydratedAppKit(): UseHydratedAppKitReturn {
  *
  * ```tsx
  * 'use client';
- * import { useOnChainReady } from '@cinaconnect/next/hooks';
+ * import { useOnChainReady } from '@cinacoin/next/hooks';
  *
  * useOnChainReady(({ address, chainId }) => {
  *   analytics.identify({ wallet: address, chain: chainId });

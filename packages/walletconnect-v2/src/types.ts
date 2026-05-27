@@ -6,7 +6,7 @@
  * protocol specification.
  */
 
-import type { AppMetadata, TransactionRequest, RequiredNamespace } from '@cinaconnect/core-sdk';
+import type { AppMetadata, TransactionRequest, RequiredNamespace } from '@cinacoin/core-sdk';
 
 // ============================================================
 // WC v2 Error Codes (per WC v2 spec)

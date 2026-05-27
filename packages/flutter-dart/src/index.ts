@@ -1,8 +1,8 @@
 /**
- * @cinaconnect/flutter-dart
+ * @cinacoin/flutter-dart
  *
  * TypeScript barrel exports for Flutter/Dart SDK interop.
- * Provides type definitions for the Dart-based CinaConnect Flutter SDK.
+ * Provides type definitions for the Dart-based Cinacoin Flutter SDK.
  */
 
 // Deep Link types

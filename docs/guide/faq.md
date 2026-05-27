@@ -1,14 +1,14 @@
 # Frequently Asked Questions (FAQ)
 
-> Everything you need to know about CinaConnect — from getting started to production deployment.
+> Everything you need to know about Cinacoin — from getting started to production deployment.
 
 ---
 
 ## Getting Started
 
-### What is CinaConnect?
+### What is Cinacoin?
 
-CinaConnect is a **full-stack, white-label Web3 SDK** by CinaGroup that enables wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines. It is fully open-source (MIT License) and does **not** depend on any Reown/WalletConnect infrastructure.
+Cinacoin is a **full-stack, white-label Web3 SDK** by CinaGroup that enables wallet connections, multi-chain authentication, payments, smart accounts, and developer tools across web, mobile, and game engines. It is fully open-source (MIT License) and does **not** depend on any Reown/WalletConnect infrastructure.
 
 Key capabilities:
 
@@ -18,9 +18,9 @@ Key capabilities:
 - 🏦 **Smart Accounts** — ERC-4337 gasless transactions, session keys, batch calls
 - 📱 **Cross-platform** — React, Next.js, Vue, Svelte, React Native, Flutter, Android, iOS, Unity, Telegram, Farcaster
 
-### How does CinaConnect compare to Reown/WalletConnect?
+### How does Cinacoin compare to Reown/WalletConnect?
 
-| Feature | Reown/WalletConnect | CinaConnect |
+| Feature | Reown/WalletConnect | Cinacoin |
 |---------|---------------------|-------------|
 | **Infrastructure** | Third-party hosted (Reown Relay) | Self-hosted (your own Relay + RPC Proxy) |
 | **Branding** | Reown branding in UI | Fully white-label, zero third-party traces |
@@ -31,20 +31,20 @@ Key capabilities:
 | **Chains** | EVM + Solana | EVM + Solana + Bitcoin + TON + TRON |
 | **Smart Accounts** | Limited | Full ERC-4337 (Bundler + Paymaster) |
 
-### Do I need Rust experience to use CinaConnect?
+### Do I need Rust experience to use Cinacoin?
 
 **No.** For dApp developers, you only need TypeScript. The Rust components (Relay Server, RPC Proxy) are only required if you choose to self-host infrastructure. You can start with the public test relay:
 
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1', // public test relay
+  relayUrl: 'wss://relay.cinacoin.com/v1', // public test relay
 }
 ```
 
 ### What chains are supported?
 
-CinaConnect uses a **chain adapter architecture** that supports any blockchain. Currently implemented:
+Cinacoin uses a **chain adapter architecture** that supports any blockchain. Currently implemented:
 
 - ✅ **EVM chains**: Ethereum, Polygon, Arbitrum, Optimism, Base, BSC, Avalanche, and 300+ more
 - 🔜 **Solana** (SVM adapter)
@@ -52,7 +52,7 @@ CinaConnect uses a **chain adapter architecture** that supports any blockchain. 
 - 🔜 **TON** (adapter)
 - 🔜 **TRON** (adapter)
 
-See `@cinaconnect/chains` for the full registry.
+See `@cinacoin/chains` for the full registry.
 
 ---
 
@@ -62,7 +62,7 @@ See `@cinaconnect/chains` for the full registry.
 
 Common causes:
 
-1. **Invalid `projectId`** — Ensure you're using a valid project ID from your CinaConnect dashboard
+1. **Invalid `projectId`** — Ensure you're using a valid project ID from your Cinacoin dashboard
 2. **Incorrect relay URL** — Verify the WebSocket URL is reachable:
    ```bash
    wscat -c wss://relay.yourdomain.com/v1
@@ -76,7 +76,7 @@ Common causes:
 **QR code not displaying:**
 
 ```tsx
-import { useOnux } from '@cinaconnect/react'
+import { useOnux } from '@cinacoin/react'
 
 function ConnectButton() {
   const { open } = useOnux()
@@ -101,7 +101,7 @@ function ConnectButton() {
 ```tsx
 import { useState, useEffect } from 'react'
 import { QRCode } from 'react-qr-code'
-import { useOnux } from '@cinaconnect/react'
+import { useOnux } from '@cinacoin/react'
 
 function QRConnect() {
   const [uri, setUri] = useState('')
@@ -127,7 +127,7 @@ function QRConnect() {
 EIP-6963 allows automatic discovery of all installed wallet extensions without relying on a hardcoded list:
 
 ```typescript
-import { useConnectors } from '@cinaconnect/react'
+import { useConnectors } from '@cinacoin/react'
 
 function WalletList() {
   const { connectors } = useConnectors()
@@ -152,8 +152,8 @@ function WalletList() {
 ### How do I switch chains?
 
 ```tsx
-import { useOnuxNetwork } from '@cinaconnect/react'
-import { polygon, arbitrum } from '@cinaconnect/chains'
+import { useOnuxNetwork } from '@cinacoin/react'
+import { polygon, arbitrum } from '@cinacoin/chains'
 
 function ChainSwitcher() {
   const { chain, switchNetwork } = useOnuxNetwork()
@@ -171,7 +171,7 @@ function ChainSwitcher() {
 ### How do I add custom networks?
 
 ```typescript
-import { defineChain } from '@cinaconnect/chains'
+import { defineChain } from '@cinacoin/chains'
 
 const customChain = defineChain({
   id: 12345,
@@ -190,17 +190,17 @@ const customChain = defineChain({
 // Add to provider config
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet, polygon, customChain],
 }
 ```
 
 ### How does cross-chain auth work?
 
-CinaConnect implements **SIWX (Sign-In With X, CAIP-122)** for chain-agnostic multi-chain authentication:
+Cinacoin implements **SIWX (Sign-In With X, CAIP-122)** for chain-agnostic multi-chain authentication:
 
 ```typescript
-import { SIWX } from '@cinaconnect/siwx'
+import { SIWX } from '@cinacoin/siwx'
 
 const siwx = new SIWX({
   domain: 'mydapp.com',
@@ -227,8 +227,8 @@ const isValid = await siwx.verify(signatures)
 ### How do I enable swaps?
 
 ```typescript
-import { SwapSDK } from '@cinaconnect/swap-sdk'
-import { mainnet } from '@cinaconnect/chains'
+import { SwapSDK } from '@cinacoin/swap-sdk'
+import { mainnet } from '@cinacoin/chains'
 
 const swapSDK = new SwapSDK({
   chainId: mainnet.id,
@@ -252,7 +252,7 @@ const txHash = await swapSDK.execute(quote)
 ### How do I set up on-ramp?
 
 ```typescript
-import { OnRampSDK } from '@cinaconnect/onramp-sdk'
+import { OnRampSDK } from '@cinacoin/onramp-sdk'
 
 const onramp = new OnRampSDK({
   providers: ['meld', 'coinbase'],
@@ -280,7 +280,7 @@ if (available) {
 ### How do I configure self-custodial payments?
 
 ```tsx
-import { PayButton } from '@cinaconnect/pay-ui'
+import { PayButton } from '@cinacoin/pay-ui'
 
 function Checkout() {
   return (
@@ -307,7 +307,7 @@ SIWE (Sign-In With Ethereum, EIP-4361) allows users to authenticate with their E
 **Frontend:**
 
 ```tsx
-import { useSIWE } from '@cinaconnect/siwe'
+import { useSIWE } from '@cinacoin/siwe'
 
 function SignIn() {
   const { signIn, signOut, user, isAuthenticated } = useSIWE()
@@ -328,7 +328,7 @@ function SignIn() {
 **Backend verification:**
 
 ```typescript
-import { verifySIWE } from '@cinaconnect/siwe'
+import { verifySIWE } from '@cinacoin/siwe'
 import { Redis } from 'ioredis'
 
 const redis = new Redis()
@@ -360,7 +360,7 @@ app.post('/api/auth/siwe', async (req, res) => {
 ### How do I set up social login?
 
 ```typescript
-import { SocialLogin } from '@cinaconnect/social-login'
+import { SocialLogin } from '@cinacoin/social-login'
 
 const socialLogin = new SocialLogin({
   apiKey: process.env.MAGIC_API_KEY,
@@ -384,7 +384,7 @@ console.log('Email:', googleUser.email)
 ### How do I set up passkey authentication?
 
 ```typescript
-import { PasskeyAuth } from '@cinaconnect/passkey-auth'
+import { PasskeyAuth } from '@cinacoin/passkey-auth'
 
 const passkey = new PasskeyAuth({
   rpName: 'MyDapp',
@@ -419,13 +419,13 @@ Smart accounts (ERC-4337 Account Abstraction) replace traditional EOAs with prog
 ### How do I deploy a smart account?
 
 ```typescript
-import { AASDK } from '@cinaconnect/aa-sdk'
-import { mainnet } from '@cinaconnect/chains'
+import { AASDK } from '@cinacoin/aa-sdk'
+import { mainnet } from '@cinacoin/chains'
 
 const aaSDK = new AASDK({
   chainId: mainnet.id,
-  bundlerUrl: 'https://bundler.cinaconnect.com/v1',
-  paymasterUrl: 'https://paymaster.cinaconnect.com/v1',
+  bundlerUrl: 'https://bundler.cinacoin.com/v1',
+  paymasterUrl: 'https://paymaster.cinacoin.com/v1',
 })
 
 // Deploy a new smart account
@@ -451,7 +451,7 @@ console.log('UserOp hash:', result.userOpHash)
 ### How do I set up session keys?
 
 ```typescript
-import { SessionKeys } from '@cinaconnect/session-keys'
+import { SessionKeys } from '@cinacoin/session-keys'
 
 const sessionKeys = new SessionKeys({
   accountAddress: smartAccountAddress,
@@ -496,7 +496,7 @@ const tx = await sessionKeys.execute({
 
 ### Memory leaks in React
 
-Always clean up CinaConnect subscriptions in `useEffect`:
+Always clean up Cinacoin subscriptions in `useEffect`:
 
 ```tsx
 useEffect(() => {
@@ -504,10 +504,10 @@ useEffect(() => {
     setConnectedAccounts(accounts)
   }
 
-  cinaconnect.on('accountsChanged', handler)
+  cinacoin.on('accountsChanged', handler)
 
   return () => {
-    cinaconnect.off('accountsChanged', handler)
+    cinacoin.off('accountsChanged', handler)
   }
 }, [])
 ```
@@ -518,7 +518,7 @@ useEffect(() => {
 
 ### Is my data safe?
 
-Yes. CinaConnect uses:
+Yes. Cinacoin uses:
 
 - **X25519 + ChaCha20-Poly1305** end-to-end encryption for all relay messages
 - **TLS 1.3** for all transport connections
@@ -550,7 +550,7 @@ See the full [Security Best Practices](./security.md) guide for details on API k
 
 ### How do I protect against phishing attacks?
 
-1. **Register your dApp** with the CinaConnect Verify API so users see a verified badge
+1. **Register your dApp** with the Cinacoin Verify API so users see a verified badge
 2. **Use HTTPS everywhere** — never serve your dApp over plain HTTP
 3. **Configure strict CSP headers** to prevent script injection
 4. **Educate users** to bookmark your URL and check the domain in wallet prompts
@@ -615,7 +615,7 @@ See [Troubleshooting: EIP-5792 Batch Call Errors](./troubleshooting.md#eip-5792-
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   debug: true,
   logger: {
@@ -637,4 +637,4 @@ See [Troubleshooting: Debug Mode and Logging](./troubleshooting.md#debug-mode-an
 
 ---
 
-*FAQ — CinaConnect Documentation*
+*FAQ — Cinacoin Documentation*

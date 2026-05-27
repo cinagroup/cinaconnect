@@ -1,12 +1,12 @@
 /**
- * Vue component wrappers for CinaConnect Web Components.
+ * Vue component wrappers for Cinacoin Web Components.
  *
  * These are thin wrappers that forward props and events to the underlying
- * custom elements registered by @cinaconnect/core-ui.
+ * custom elements registered by @cinacoin/core-ui.
  */
 
 import { defineComponent, h, ref, watch, onMounted, onBeforeUnmount } from 'vue';
-import { useCinaConnect } from './composables.js';
+import { useCinacoin } from './composables.js';
 
 /**
  * ConnectButton — Vue wrapper for the OCX ConnectButton Web Component.
@@ -24,7 +24,7 @@ export const OcxConnectButton = defineComponent({
   emits: ['click', 'disconnect'],
   setup(props, { emit }) {
     const elRef = ref<HTMLElement | null>(null);
-    const { account, status, connect, disconnect } = useCinaConnect();
+    const { account, status, connect, disconnect } = useCinacoin();
 
     const stateMap: Record<string, string> = {
       disconnected: 'disconnected',
@@ -33,27 +33,32 @@ export const OcxConnectButton = defineComponent({
       error: 'error',
     };
 
+    // Store event handler references so addEventListener and removeEventListener
+    // use the same function object — fixes memory leak from anonymous handlers.
+    const onClickHandler = (): void => {
+      if (status.value === 'disconnected' || status.value === 'error') {
+        connect('metamask').catch(() => {});
+      }
+      emit('click');
+    };
+    const onDisconnectHandler = (): void => {
+      disconnect().catch(() => {});
+      emit('disconnect');
+    };
+
     onMounted(() => {
       const el = elRef.value;
       if (!el) return;
 
-      el.addEventListener('ocx-click', () => {
-        if (status.value === 'disconnected' || status.value === 'error') {
-          connect('metamask').catch(() => {});
-        }
-        emit('click');
-      });
-      el.addEventListener('ocx-disconnect', () => {
-        disconnect().catch(() => {});
-        emit('disconnect');
-      });
+      el.addEventListener('ocx-click', onClickHandler);
+      el.addEventListener('ocx-disconnect', onDisconnectHandler);
     });
 
     onBeforeUnmount(() => {
       const el = elRef.value;
       if (!el) return;
-      el.removeEventListener('ocx-click', () => {});
-      el.removeEventListener('ocx-disconnect', () => {});
+      el.removeEventListener('ocx-click', onClickHandler);
+      el.removeEventListener('ocx-disconnect', onDisconnectHandler);
     });
 
     return () =>
@@ -86,27 +91,33 @@ export const OcxConnectModal = defineComponent({
   emits: ['close', 'wallet-select'],
   setup(props, { emit }) {
     const elRef = ref<HTMLElement | null>(null);
-    const { connect } = useCinaConnect();
+    const { connect } = useCinacoin();
+
+    // Store event handler references to prevent listener leaks.
+    const onCloseHandler = (): void => {
+      emit('close');
+    };
+    const onWalletSelectHandler = (e: Event): void => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.id) {
+        connect(detail.id).catch(() => {});
+      }
+      emit('wallet-select', detail);
+    };
 
     onMounted(() => {
       const el = elRef.value;
       if (!el) return;
 
-      el.addEventListener('ocx-close', () => emit('close'));
-      el.addEventListener('ocx-wallet-select', (e: Event) => {
-        const detail = (e as CustomEvent).detail;
-        if (detail?.id) {
-          connect(detail.id).catch(() => {});
-        }
-        emit('wallet-select', detail);
-      });
+      el.addEventListener('ocx-close', onCloseHandler);
+      el.addEventListener('ocx-wallet-select', onWalletSelectHandler);
     });
 
     onBeforeUnmount(() => {
       const el = elRef.value;
       if (!el) return;
-      el.removeEventListener('ocx-close', () => {});
-      el.removeEventListener('ocx-wallet-select', () => {});
+      el.removeEventListener('ocx-close', onCloseHandler);
+      el.removeEventListener('ocx-wallet-select', onWalletSelectHandler);
     });
 
     return () =>
@@ -124,12 +135,12 @@ export const OcxConnectModal = defineComponent({
 export const OcxChainSwitcher = defineComponent({
   name: 'OcxChainSwitcher',
   props: {
-    onChainChange: { type: Function as () => (chainId: number) => void },
+    onChainChange: { type: Function as unknown as () => (chainId: number) => void },
   },
   emits: ['chain-change'],
   setup(props, { emit }) {
     const elRef = ref<HTMLElement | null>(null);
-    const { config, account, switchChain } = useCinaConnect();
+    const { config, account, switchChain } = useCinacoin();
 
     watch(
       [() => config.chains, () => account.value.chainId],
@@ -143,18 +154,27 @@ export const OcxChainSwitcher = defineComponent({
       { immediate: true }
     );
 
+    // Store event handler reference to prevent listener leak.
+    const onChainChangeHandler = (e: Event): void => {
+      const detail = (e as CustomEvent).detail;
+      if (detail?.chainId) {
+        switchChain(detail.chainId).catch(() => {});
+        emit('chain-change', detail.chainId);
+        props.onChainChange?.(detail.chainId);
+      }
+    };
+
     onMounted(() => {
       const el = elRef.value;
       if (!el) return;
 
-      el.addEventListener('ocx-chain-change', (e: Event) => {
-        const detail = (e as CustomEvent).detail;
-        if (detail?.chainId) {
-          switchChain(detail.chainId).catch(() => {});
-          emit('chain-change', detail.chainId);
-          props.onChainChange?.(detail.chainId);
-        }
-      });
+      el.addEventListener('ocx-chain-change', onChainChangeHandler);
+    });
+
+    onBeforeUnmount(() => {
+      const el = elRef.value;
+      if (!el) return;
+      el.removeEventListener('ocx-chain-change', onChainChangeHandler);
     });
 
     return () =>

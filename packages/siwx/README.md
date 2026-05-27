@@ -1,17 +1,17 @@
-# @cinaconnect/siwx
+# @cinacoin/siwx
 
-Sign-In with X (SIWX) — multi-chain authentication extension for CinaConnect.
+Sign-In with X (SIWX) — multi-chain authentication extension for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/siwx
+npm install @cinacoin/siwx
 ```
 
 ## Usage
 
 ```ts
-import { SiwxVerifier } from '@cinaconnect/siwx';
+import { SiwxVerifier } from '@cinacoin/siwx';
 
 const verifier = new SiwxVerifier();
 const result = await verifier.verify({ chain: 'solana', message, signature });

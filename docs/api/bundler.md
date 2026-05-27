@@ -1,10 +1,10 @@
 # Bundler API
 
-> `@cinaconnect/bundler` — ERC-4337 UserOperation Bundler, built in Rust.
+> `@cinacoin/bundler` — ERC-4337 UserOperation Bundler, built in Rust.
 
 ## Overview
 
-The CinaConnect Bundler collects UserOperations from the mempool, validates them, bundles them efficiently, and submits them to the EntryPoint contract on-chain. It is a self-hosted alternative to services like Pimlico.
+The Cinacoin Bundler collects UserOperations from the mempool, validates them, bundles them efficiently, and submits them to the EntryPoint contract on-chain. It is a self-hosted alternative to services like Pimlico.
 
 ## Architecture
 

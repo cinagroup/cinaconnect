@@ -1,6 +1,6 @@
-# 01 — SDK Core Deep Analysis: CinaConnect vs Reown AppKit
+# 01 — SDK Core Deep Analysis: Cinacoin vs Reown AppKit
 
-> **CinaConnect Core SDK** vs **Reown AppKit (core-sdk)** — architecture completeness, chain adapter depth, cryptography audit, EIP-6963 support, session management, and gap analysis.
+> **Cinacoin Core SDK** vs **Reown AppKit (core-sdk)** — architecture completeness, chain adapter depth, cryptography audit, EIP-6963 support, session management, and gap analysis.
 >
 > Date: 2026-05-25 | Scope: `core-sdk`, `walletconnect-v2`, adapters, config, cryptography
 
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-| Dimension | CinaConnect Core SDK | Reown AppKit (reference) | Assessment |
+| Dimension | Cinacoin Core SDK | Reown AppKit (reference) | Assessment |
 |---|---|---|---|
 | **core-sdk source** | 8,928 LOC across 35 files | ~30k LOC across 40+ packages | Reown is 3-4x larger in scope |
 | **walletconnect-v2** | 3,372 LOC (src 2,369 + tests 1,003) | ~5k LOC (part of core) | Comparable |
@@ -24,7 +24,7 @@
 
 ## 1. Architecture Completeness
 
-### 1.1 CinaConnect Core SDK Module Map
+### 1.1 Cinacoin Core SDK Module Map
 
 | Module | Files | LOC | Purpose |
 |---|---|---|---|
@@ -56,9 +56,9 @@
 └── adapters (wagmi, ethers, solana, bitcoin, polkadot, tron, ton)
 ```
 
-**CinaConnect Architecture:**
+**Cinacoin Architecture:**
 ```
-@cinaconnect/core-sdk
+@cinacoin/core-sdk
 ├── connector.ts — abstract base (like Reown's ConnectorCtrl)
 ├── session.ts — SessionManager (state machine, simpler)
 ├── store.ts — Zustand store (simpler than Reown's proxy pattern)
@@ -73,18 +73,18 @@
 
 **Key architectural differences:**
 
-| Aspect | Reown | CinaConnect | Gap |
+| Aspect | Reown | Cinacoin | Gap |
 |---|---|---|---|
 | State management | Custom ProxyController + useSnapshot (reactive snapshot) | Zustand (simple, proven) | No functional gap |
 | Controller pattern | 10+ specialized controllers | Single Connector abstract + SessionManager | Simpler but less modular |
-| Transport layer | Implicit (built into CoreController) | Explicit (Relay/Injected/QR classes) | **CinaConnect is more explicit** |
+| Transport layer | Implicit (built into CoreController) | Explicit (Relay/Injected/QR classes) | **Cinacoin is more explicit** |
 | Session management | Full proposal/approve/extend/update/delete | Full proposal/approve/extend/update/delete | Parity |
-| UI components | Built-in web components | Separate `@cinaconnect/core-ui` package | Same split approach |
+| UI components | Built-in web components | Separate `@cinacoin/core-ui` package | Same split approach |
 | Wallet registry | Cloud-hosted wallet explorer | Static wallet lists in adapters | **Gap** — no cloud registry |
-| Analytics/Telemetry | Built into core | Separate `@cinaconnect/analytics` | Same split approach |
-| Email/Social login | Built into core | Separate `@cinaconnect/social-login` | Same split approach |
+| Analytics/Telemetry | Built into core | Separate `@cinacoin/analytics` | Same split approach |
+| Email/Social login | Built into core | Separate `@cinacoin/social-login` | Same split approach |
 
-**Verdict:** CinaConnect's architecture is **cleaner and more explicit** in transports and adapter separation. The trade-off is fewer built-in controllers for UX (modal, router, snack, etc.), which are handled in the separate `core-ui` package. This is a valid separation of concerns, not a deficiency.
+**Verdict:** Cinacoin's architecture is **cleaner and more explicit** in transports and adapter separation. The trade-off is fewer built-in controllers for UX (modal, router, snack, etc.), which are handled in the separate `core-ui` package. This is a valid separation of concerns, not a deficiency.
 
 ---
 
@@ -231,7 +231,7 @@ connected → error → disconnected
 | Feature | Status | Notes |
 |---|---|---|
 | State transitions | ✅ | 4 states with clear transitions |
-| Session persistence | ✅ | localStorage with `cinaconnect_session` key |
+| Session persistence | ✅ | localStorage with `cinacoin_session` key |
 | Session restore | ✅ | Loads from localStorage on startup |
 | Error auto-recovery | ✅ | 5-second timeout before reset to disconnected |
 | Subscription API | ✅ | `subscribe(cb)` returns unsubscribe function |
@@ -275,7 +275,7 @@ connected → error → disconnected
 
 ## 6. Gap Analysis vs Reown
 
-### 6.1 What Reown Has That CinaConnect Lacks
+### 6.1 What Reown Has That Cinacoin Lacks
 
 | Gap | Priority | Reown LOC (est.) | Effort to Fix |
 |---|---|---|---|
@@ -293,7 +293,7 @@ connected → error → disconnected
 | **Email/social login in core** | Low | ~3k LOC | Already separate package |
 | **Smart accounts (ERC-4337) in core** | Low | ~2k LOC | Already separate `aa-sdk` |
 
-### 6.2 What CinaConnect Has That Reown Lacks
+### 6.2 What Cinacoin Has That Reown Lacks
 
 | Advantage | Value |
 |---|---|

@@ -5,10 +5,10 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
 using System.Collections;
-using CinaConnect.WalletConnect;
-using CinaConnect.Auth;
+using Cinacoin.WalletConnect;
+using Cinacoin.Auth;
 
-namespace CinaConnect.Tests.Runtime
+namespace Cinacoin.Tests.Runtime
 {
     /// <summary>
     /// Comprehensive PlayMode tests for real WalletConnect v2 functionality.
@@ -567,8 +567,8 @@ namespace CinaConnect.Tests.Runtime
         [Test]
         public void BuildCallbackUrl_ReturnsSchemeUrl()
         {
-            var url = _handler.BuildCallbackUrl("cinaconnect");
-            Assert.That(url, Does.StartWith("cinaconnect://"));
+            var url = _handler.BuildCallbackUrl("cinacoin");
+            Assert.That(url, Does.StartWith("cinacoin://"));
         }
 
         [Test]
@@ -588,17 +588,17 @@ namespace CinaConnect.Tests.Runtime
     }
 
     // ═══════════════════════════════════════════════════════════════════
-    // CinaConnectManager Tests
+    // CinacoinManager Tests
     // ═══════════════════════════════════════════════════════════════════
 
     [TestFixture]
-    public class CinaConnectIntegrationTests
+    public class CinacoinIntegrationTests
     {
         [UnityTest]
         public IEnumerator Initialize_SetsStatusToDisconnected()
         {
-            var go = new GameObject("[CinaConnect_Test]");
-            var manager = go.AddComponent<CinaConnectManager>();
+            var go = new GameObject("[Cinacoin_Test]");
+            var manager = go.AddComponent<CinacoinManager>();
 
             manager.Initialize("test_project_id",
                 new AppMetadata("Test App", "Test", "https://test.com"));
@@ -614,13 +614,13 @@ namespace CinaConnect.Tests.Runtime
         [UnityTest]
         public IEnumerator Singleton_CreatesInstance()
         {
-            var existing = Object.FindObjectOfType<CinaConnectManager>();
+            var existing = Object.FindObjectOfType<CinacoinManager>();
             if (existing != null)
                 Object.DestroyImmediate(existing.gameObject);
 
-            var instance = CinaConnectManager.Instance;
+            var instance = CinacoinManager.Instance;
             Assert.That(instance, Is.Not.Null);
-            Assert.That(instance, Is.TypeOf<CinaConnectManager>());
+            Assert.That(instance, Is.TypeOf<CinacoinManager>());
 
             Object.DestroyImmediate(instance.gameObject);
             yield return null;
@@ -629,8 +629,8 @@ namespace CinaConnect.Tests.Runtime
         [UnityTest]
         public IEnumerator EvmAdapter_AvailableAfterInit()
         {
-            var go = new GameObject("[CinaConnect_Test]");
-            var manager = go.AddComponent<CinaConnectManager>();
+            var go = new GameObject("[Cinacoin_Test]");
+            var manager = go.AddComponent<CinacoinManager>();
             manager.Initialize("test", new AppMetadata("Test", "Test", "https://test.com"));
 
             Assert.That(manager.Evm, Is.Not.Null);
@@ -642,8 +642,8 @@ namespace CinaConnect.Tests.Runtime
         [UnityTest]
         public IEnumerator DeepLinks_AvailableAfterInit()
         {
-            var go = new GameObject("[CinaConnect_Test]");
-            var manager = go.AddComponent<CinaConnectManager>();
+            var go = new GameObject("[Cinacoin_Test]");
+            var manager = go.AddComponent<CinacoinManager>();
             manager.Initialize("test", new AppMetadata("Test", "Test", "https://test.com"));
 
             Assert.That(manager.DeepLinks, Is.Not.Null);

@@ -1,19 +1,19 @@
-# @cinaconnect/ios-swift
+# @cinacoin/ios-swift
 
-iOS SDK TypeScript types for CinaConnect — Swift interop interfaces.
+iOS SDK TypeScript types for Cinacoin — Swift interop interfaces.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/ios-swift
+npm install @cinacoin/ios-swift
 ```
 
 ## Usage
 
 ```ts
-import { CinaConnectIOS } from '@cinaconnect/ios-swift';
+import { CinacoinIOS } from '@cinacoin/ios-swift';
 
-const ios = new CinaConnectIOS();
+const ios = new CinacoinIOS();
 await ios.init({ projectId: 'YOUR_PROJECT_ID' });
 ```
 
@@ -21,6 +21,6 @@ await ios.init({ projectId: 'YOUR_PROJECT_ID' });
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `CinaConnectIOS` | class | iOS SDK bridge |
+| `CinacoinIOS` | class | iOS SDK bridge |
 | `IOSWalletConfig` | type | iOS wallet configuration |
 | `IOSConnectionResult` | type | Connection result |

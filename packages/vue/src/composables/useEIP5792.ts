@@ -7,7 +7,7 @@
  * - useAtomicBatch: build and execute atomic batch transactions
  * - useCallsStatus: poll the status of async call batches
  *
- * All composables require being used within <CinaConnectProvider> and
+ * All composables require being used within <CinacoinProvider> and
  * require the provider to expose EIP-5792 support via the global context
  * getter (window.__ocx_eip5792_context).
  *
@@ -15,7 +15,7 @@
  */
 
 import { ref, onMounted, onUnmounted, computed, watch, type Ref } from 'vue';
-import { useCinaConnect } from '../composables.js';
+import { useCinacoin } from '../composables.js';
 import type {
   WalletCapabilities,
   ChainCapabilities,
@@ -26,7 +26,7 @@ import type {
   GetCallsStatusResult,
   AtomicBatchConfig,
   AtomicBatchResult,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 import {
   walletGetCapabilities,
   walletSendCalls,
@@ -38,7 +38,7 @@ import {
   getChainCapabilities,
   getSupportedChains,
   filterByCapability,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -83,7 +83,7 @@ function getEIP5792Context(): EIP5792Context {
   const getter = win.__ocx_eip5792_context as (() => EIP5792Context) | undefined;
   if (!getter) {
     throw new Error(
-      'EIP-5792 composables require <CinaConnectProvider> with EIP-5792 support. ' +
+      'EIP-5792 composables require <CinacoinProvider> with EIP-5792 support. ' +
       'Make sure you are rendering the provider.',
     );
   }
@@ -143,7 +143,7 @@ export interface UseWalletCapabilitiesReturn {
  * ```
  */
 export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
-  useCinaConnect(); // ensure provider context exists
+  useCinacoin(); // ensure provider context exists
 
   const capabilities = ref<WalletCapabilities | null>(null);
   const isLoading = ref(false);
@@ -260,7 +260,7 @@ export interface UseSendCallsReturn {
  * ```
  */
 export function useSendCalls(): UseSendCallsReturn {
-  useCinaConnect(); // ensure provider context exists
+  useCinacoin(); // ensure provider context exists
 
   const isSending = ref(false);
   const error = ref<Error | null>(null);
@@ -357,7 +357,7 @@ export interface UseAtomicBatchReturn {
  * ```
  */
 export function useAtomicBatch(): UseAtomicBatchReturn {
-  useCinaConnect(); // ensure provider context exists
+  useCinacoin(); // ensure provider context exists
 
   const isExecuting = ref(false);
   const error = ref<Error | null>(null);
@@ -478,7 +478,7 @@ export function useCallsStatus(
     callId?: string;
   } = {},
 ): UseCallsStatusReturn {
-  useCinaConnect(); // ensure provider context exists
+  useCinacoin(); // ensure provider context exists
 
   const status = ref<CallsStatus | null>(null);
   const result = ref<GetCallsStatusResult | null>(null);

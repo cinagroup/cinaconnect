@@ -1,17 +1,17 @@
-# @cinaconnect/swap-sdk
+# @cinacoin/swap-sdk
 
-CinaConnect Swap Aggregator SDK — multi-DEX token swap with best-rate routing.
+Cinacoin Swap Aggregator SDK — multi-DEX token swap with best-rate routing.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/swap-sdk
+npm install @cinacoin/swap-sdk
 ```
 
 ## Usage
 
 ```ts
-import { SwapAggregator } from '@cinaconnect/swap-sdk';
+import { SwapAggregator } from '@cinacoin/swap-sdk';
 
 const aggregator = new SwapAggregator();
 const quote = await aggregator.getBestRoute({

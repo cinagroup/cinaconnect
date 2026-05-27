@@ -1,5 +1,5 @@
 [package]
-name = "cinaconnect-rpc-proxy"
+name = "cinacoin-rpc-proxy"
 version = "0.1.0"
 edition = "2021"
-description = "RPC proxy server for CinaConnect"
+description = "RPC proxy server for Cinacoin"

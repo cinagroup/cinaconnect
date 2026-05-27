@@ -1,5 +1,5 @@
 /**
- * CinaConnect Analytics Ingestion Server
+ * Cinacoin Analytics Ingestion Server
  * Cloudflare Worker for collecting analytics events
  */
 
@@ -158,7 +158,7 @@ app.get("/v1/metrics", async (c) => {
  */
 app.get("/", (c) =>
   c.json({
-    service: "cinaconnect-analytics",
+    service: "cinacoin-analytics",
     version: "0.1.0",
     endpoints: {
       "POST /v1/events": "Batch event ingestion",

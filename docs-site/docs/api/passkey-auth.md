@@ -1,11 +1,11 @@
 # Passkey Auth
 
-> `@cinaconnect/passkey-auth` — Passkey-based authentication for CinaConnect.
+> `@cinacoin/passkey-auth` — Passkey-based authentication for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/passkey-auth
+npm install @cinacoin/passkey-auth
 ```
 
 ## Overview

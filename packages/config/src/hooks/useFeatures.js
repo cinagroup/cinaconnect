@@ -5,8 +5,8 @@ import { useState, useEffect, useRef } from "react";
  *
  * @example
  * ```ts
- * import { configManagerRef } from "@cinaconnect/config/hooks";
- * import { ConfigManager } from "@cinaconnect/config";
+ * import { configManagerRef } from "@cinacoin/config/hooks";
+ * import { ConfigManager } from "@cinacoin/config";
  *
  * configManagerRef.current = ConfigManager.create({ projectId: "proj_abc" });
  * await configManagerRef.current.init();

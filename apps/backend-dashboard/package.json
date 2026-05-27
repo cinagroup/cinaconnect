@@ -2,7 +2,7 @@
   "name": "backend-dashboard",
   "version": "0.1.0",
   "private": true,
-  "description": "CinaConnect Backend Management Dashboard",
+  "description": "Cinacoin Backend Management Dashboard",
   "scripts": {
     "dev": "next dev -p 3100",
     "build": "next build",

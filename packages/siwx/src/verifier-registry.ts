@@ -246,7 +246,7 @@ async function recoverAddressEvm(_message: string, _signature: string): Promise<
   // Stub — real implementation uses ethers.verifyMessage or viem.verifyMessage
   throw new Error(
     'recoverAddressEvm: Not implemented in verifier-registry. ' +
-    'Install @cinaconnect/siwx with full crypto dependencies.'
+    'Install @cinacoin/siwx with full crypto dependencies.'
   );
 }
 
@@ -263,7 +263,7 @@ async function verifyEd25519(
   // Stub — real implementation uses @noble/ed25519
   throw new Error(
     'verifyEd25519: Not implemented in verifier-registry. ' +
-    'Install @cinaconnect/siwx with full crypto dependencies.'
+    'Install @cinacoin/siwx with full crypto dependencies.'
   );
 }
 
@@ -278,7 +278,7 @@ async function verifyBip322(
   // Stub — real implementation uses bitcoinjs-lib
   throw new Error(
     'verifyBip322: Not implemented in verifier-registry. ' +
-    'Install @cinaconnect/siwx with full crypto dependencies.'
+    'Install @cinacoin/siwx with full crypto dependencies.'
   );
 }
 
@@ -305,7 +305,7 @@ function hexToTronAddress(hex: string): string {
  *
  * @example
  * ```ts
- * import { VerifierRegistry } from '@cinaconnect/siwx';
+ * import { VerifierRegistry } from '@cinacoin/siwx';
  *
  * const registry = new VerifierRegistry();
  *

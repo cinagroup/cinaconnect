@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/next — SSR, Edge Runtime, and server utilities.
+ * Tests for @cinacoin/next — SSR, Edge Runtime, and server utilities.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -96,14 +96,14 @@ describe('Edge Runtime — createSessionCookieHeader', () => {
   it('should create a valid Set-Cookie header', async () => {
     const { createSessionCookieHeader } = await import('../src/server/edge.js');
     const header = createSessionCookieHeader('test-token', {
-      cookieName: 'cinaconnect-session',
+      cookieName: 'cinacoin-session',
       domain: 'example.com',
       secure: true,
       httpOnly: true,
       sameSite: 'lax',
     });
 
-    expect(header).toContain('cinaconnect-session=test-token');
+    expect(header).toContain('cinacoin-session=test-token');
     expect(header).toContain('Secure');
     expect(header).toContain('HttpOnly');
     expect(header).toContain('SameSite=lax');
@@ -119,15 +119,15 @@ describe('Edge Runtime — createSessionCookieHeader', () => {
   });
 });
 
-describe('Edge Runtime — withCinaConnectAuthEdge', () => {
+describe('Edge Runtime — withCinacoinAuthEdge', () => {
   it('should return 401 when no session', async () => {
-    const { withCinaConnectAuthEdge } = await import('../src/server/edge.js');
+    const { withCinacoinAuthEdge } = await import('../src/server/edge.js');
 
     const mockReq = {
       cookies: { get: vi.fn(() => null) },
     } as any;
 
-    const handler = withCinaConnectAuthEdge(async (req, session) => {
+    const handler = withCinacoinAuthEdge(async (req, session) => {
       return new Response(JSON.stringify({ address: session.address }));
     });
 
@@ -136,7 +136,7 @@ describe('Edge Runtime — withCinaConnectAuthEdge', () => {
   });
 
   it('should call handler with session when authenticated', async () => {
-    const { withCinaConnectAuthEdge } = await import('../src/server/edge.js');
+    const { withCinacoinAuthEdge } = await import('../src/server/edge.js');
 
     const validSession = {
       address: '0xabc',
@@ -151,7 +151,7 @@ describe('Edge Runtime — withCinaConnectAuthEdge', () => {
     } as any;
 
     let receivedSession: any;
-    const handler = withCinaConnectAuthEdge(async (req, session) => {
+    const handler = withCinacoinAuthEdge(async (req, session) => {
       receivedSession = session;
       return new Response(JSON.stringify({ ok: true }));
     });
@@ -243,7 +243,10 @@ describe('EIP-5792 — getWalletCapabilitiesOnServer', () => {
     );
 
     expect(caps.capabilities['0x1'].atomicBatch.supported).toBe(true);
-    expect(caps.paymasterSupported).toBe(false);
+    // paymasterSupported combines RPC result with inferred capabilities
+    // Chain 1 is in PAYMASTER_CHAINS, so it returns true even if RPC says false
+    expect(caps.paymasterSupported).toBe(true);
+    expect(caps.atomicBatchSupported).toBe(true);
   });
 });
 

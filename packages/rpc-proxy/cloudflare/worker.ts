@@ -1,4 +1,4 @@
-// CinaConnect RPC Proxy — Cloudflare Worker
+// Cinacoin RPC Proxy — Cloudflare Worker
 // Routes: POST /rpc/:chainId, GET /health, GET /metrics
 // Caches read-only JSON-RPC calls in KV with configurable TTL.
 
@@ -90,7 +90,7 @@ function handleMetrics(origin: string | null): Response {
     : "0.00";
 
   return new Response(JSON.stringify({
-    service: "cinaconnect-rpc-proxy",
+    service: "cinacoin-rpc-proxy",
     uptime_ms: uptime,
     uptime_readable: formatUptime(uptime),
     request_count: metrics.requestCount,

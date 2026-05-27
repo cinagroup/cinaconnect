@@ -1,19 +1,19 @@
 /**
- * Vue composables for CinaConnect.
+ * Vue composables for Cinacoin.
  *
- * All composables require being used within <CinaConnectProvider>.
+ * All composables require being used within <CinacoinProvider>.
  */
-import { type CinaConnectContext } from './types.js';
+import { type CinacoinContext } from './types.js';
 /**
- * useCinaConnect — access the full CinaConnect context.
+ * useCinacoin — access the full Cinacoin context.
  *
  * ```vue
  * <script setup>
- * const { connect, disconnect, account, status } = useCinaConnect()
+ * const { connect, disconnect, account, status } = useCinacoin()
  * </script>
  * ```
  */
-export declare function useCinaConnect(): CinaConnectContext;
+export declare function useCinacoin(): CinacoinContext;
 /**
  * useAccount — access the current account state.
  *

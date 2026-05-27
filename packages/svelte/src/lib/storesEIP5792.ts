@@ -9,7 +9,7 @@
  *
  * Also exports helpers: has, getChainCaps, filterBy, allSucceeded, failedReceipts
  *
- * All stores require being used within a CinaConnectProvider that
+ * All stores require being used within a CinacoinProvider that
  * exposes EIP-5792 support via the global context getter
  * (window.__ocx_eip5792_context).
  *
@@ -34,7 +34,7 @@ import type {
   GetCallsStatusResult,
   AtomicBatchConfig,
   AtomicBatchResult,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 import {
   walletGetCapabilities,
   walletSendCalls,
@@ -46,7 +46,7 @@ import {
   getChainCapabilities,
   getSupportedChains,
   filterByCapability,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -141,7 +141,7 @@ function getEIP5792Context(): EIP5792Context {
   const getter = win.__ocx_eip5792_context as (() => EIP5792Context) | undefined;
   if (!getter) {
     throw new Error(
-      'EIP-5792 stores require <CinaConnectProvider> with EIP-5792 support. ' +
+      'EIP-5792 stores require <CinacoinProvider> with EIP-5792 support. ' +
       'Make sure you are rendering the provider.',
     );
   }
@@ -174,7 +174,7 @@ export function failedReceipts(result: GetCallsStatusResult | null) {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { walletCapabilities, has, getChainCaps, filterBy } from '@cinaconnect/svelte';
+ *   import { walletCapabilities, has, getChainCaps, filterBy } from '@cinacoin/svelte';
  *
  *   // Helper: check support on a specific chain
  *   const supportsAtomic = has('0x1', 'atomicBatch');
@@ -321,7 +321,7 @@ export function filterBy(capability: keyof ChainCapabilities): WalletCapabilitie
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { sendCalls } from '@cinaconnect/svelte';
+ *   import { sendCalls } from '@cinacoin/svelte';
  *
  *   const batch = sendCalls();
  *
@@ -393,7 +393,7 @@ export function sendCalls(): SendCallsStore {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { atomicBatch } from '@cinaconnect/svelte';
+ *   import { atomicBatch } from '@cinacoin/svelte';
  *
  *   const batch = atomicBatch();
  *
@@ -509,7 +509,7 @@ export interface CallsStatusStore {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { callsStatus } from '@cinaconnect/svelte';
+ *   import { callsStatus } from '@cinacoin/svelte';
  *
  *   const status = callsStatus();
  *

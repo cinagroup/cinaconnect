@@ -1,8 +1,8 @@
 /**
- * Vue component wrappers for CinaConnect Web Components.
+ * Vue component wrappers for Cinacoin Web Components.
  *
  * These are thin wrappers that forward props and events to the underlying
- * custom elements registered by @cinaconnect/core-ui.
+ * custom elements registered by @cinacoin/core-ui.
  */
 /**
  * ConnectButton — Vue wrapper for the OCX ConnectButton Web Component.

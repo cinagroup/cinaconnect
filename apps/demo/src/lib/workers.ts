@@ -1,5 +1,5 @@
 /**
- * CinaConnect — Worker API Client
+ * Cinacoin — Worker API Client
  *
  * Calls the 5 deployed Cloudflare Workers.
  * All endpoints are CORS-enabled on the Workers side.
@@ -7,11 +7,11 @@
 
 /* ── deployed worker URLs ── */
 export const WORKER_URLS = {
-  rpcProxy: 'https://cinaconnect-rpc-proxy.cinagroup.workers.dev',
-  keysServer: 'https://cinaconnect-keys-server.cinagroup.workers.dev',
-  relayServer: 'https://cinaconnect-relay-server.cinagroup.workers.dev',
-  notifyServer: 'https://cinaconnect-notify-server.cinagroup.workers.dev',
-  pushServer: 'https://cinaconnect-push-server.cinagroup.workers.dev',
+  rpcProxy: 'https://cinacoin-rpc-proxy.cinagroup.workers.dev',
+  keysServer: 'https://cinacoin-keys-server.cinagroup.workers.dev',
+  relayServer: 'https://cinacoin-relay-server.cinagroup.workers.dev',
+  notifyServer: 'https://cinacoin-notify-server.cinagroup.workers.dev',
+  pushServer: 'https://cinacoin-push-server.cinagroup.workers.dev',
 } as const;
 
 export type WorkerName = keyof typeof WORKER_URLS;

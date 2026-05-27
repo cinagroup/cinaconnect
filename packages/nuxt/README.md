@@ -1,11 +1,11 @@
-# @cinaconnect/nuxt
+# @cinacoin/nuxt
 
-Nuxt 3 module for CinaConnect wallet connection.
+Nuxt 3 module for Cinacoin wallet connection.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/nuxt
+npm install @cinacoin/nuxt
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/nuxt
 ```ts
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@cinaconnect/nuxt'],
+  modules: ['@cinacoin/nuxt'],
   cinaConnect: {
     projectId: 'YOUR_PROJECT_ID',
   },
@@ -24,6 +24,6 @@ export default defineNuxtConfig({
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `defineCinaConnectConfig` | function | Config helper |
-| `useCinaConnect` | composable | Nuxt composable for wallet |
-| `CinaConnectOptions` | type | Module options type |
+| `defineCinacoinConfig` | function | Config helper |
+| `useCinacoin` | composable | Nuxt composable for wallet |
+| `CinacoinOptions` | type | Module options type |

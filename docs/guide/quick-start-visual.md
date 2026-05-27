@@ -1,23 +1,23 @@
 # 快速开始 — 图文指南 / Quick Start Visual Guide
 
-> 🎯 本文档提供 CinaConnect 的快速上手指南，包含分步截图说明和常见问题排查。
+> 🎯 本文档提供 Cinacoin 的快速上手指南，包含分步截图说明和常见问题排查。
 
 ## 📸 连接流程概览
 
-### Step 1: 安装 CinaConnect
+### Step 1: 安装 Cinacoin
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/react
+npm install @cinacoin/core @cinacoin/react
 # 或
-pnpm add @cinaconnect/core @cinaconnect/react
+pnpm add @cinacoin/core @cinacoin/react
 ```
 
 ### Step 2: 配置 Provider
 
-在你的 React 应用中包裹 `CinaConnectProvider`：
+在你的 React 应用中包裹 `CinacoinProvider`：
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 
 function App() {
   const config = {
@@ -32,16 +32,16 @@ function App() {
     ],
     metadata: {
       name: 'My dApp',
-      description: 'My CinaConnect powered dApp',
+      description: 'My Cinacoin powered dApp',
       url: 'https://mydapp.com',
       icons: [],
     },
   }
 
   return (
-    <CinaConnectProvider config={config}>
+    <CinacoinProvider config={config}>
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
@@ -49,10 +49,10 @@ function App() {
 ### Step 3: 添加连接按钮
 
 ```tsx
-import { ConnectButton, useCinaConnect } from '@cinaconnect/react'
+import { ConnectButton, useCinacoin } from '@cinacoin/react'
 
 function MyComponent() {
-  const { account, status } = useCinaConnect()
+  const { account, status } = useCinacoin()
 
   return (
     <div>
@@ -117,7 +117,7 @@ onConnected 事件触发
 
 ### 2. Swap 交易 (SwapDemo)
 
-- 通过 `@cinaconnect/swap-sdk` 获取真实报价
+- 通过 `@cinacoin/swap-sdk` 获取真实报价
 - 支持 Uniswap / 1inch / 0x 多源聚合
 - 实时签名并提交链上交易
 
@@ -239,15 +239,15 @@ git push origin main
 ### Docker
 
 ```bash
-docker build -f deploy/docker/core-ui/Dockerfile -t cinaconnect:demo .
-docker run -p 3000:80 cinaconnect:demo
+docker build -f deploy/docker/core-ui/Dockerfile -t cinacoin:demo .
+docker run -p 3000:80 cinacoin:demo
 ```
 
 ---
 
 ## 📞 获取帮助
 
-- 📖 完整文档: [docs.cinaconnect.com](https://cinaconnect.github.io/cinaconnect/)
-- 💬 社区讨论: [GitHub Discussions](https://github.com/cinaconnect/cinaconnect/discussions)
-- 🐛 报告 Bug: [GitHub Issues](https://github.com/cinaconnect/cinaconnect/issues)
-- 📧 联系团队: <support@cinaconnect.com>
+- 📖 完整文档: [docs.cinacoin.com](https://cinacoin.github.io/cinacoin/)
+- 💬 社区讨论: [GitHub Discussions](https://github.com/cinacoin/cinacoin/discussions)
+- 🐛 报告 Bug: [GitHub Issues](https://github.com/cinacoin/cinacoin/issues)
+- 📧 联系团队: <support@cinacoin.com>

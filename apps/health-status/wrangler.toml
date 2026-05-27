@@ -1,7 +1,7 @@
-# wrangler.toml - Cloudflare Pages configuration for CinaConnect Health Status
+# wrangler.toml - Cloudflare Pages configuration for Cinacoin Health Status
 # https://developers.cloudflare.com/pages/configuration/
 
-name = "cinaconnect-health-status"
+name = "cinacoin-health-status"
 compatibility_date = "2025-01-01"
 
 [build]
@@ -13,7 +13,7 @@ output_directory = "apps/health-status/out"
 # ── Pages-specific settings ───────────────────────────────────
 # Deploy production on main branch pushes
 [env.production]
-# Custom domain: status.cinaconnect.com (configured in Cloudflare Pages dashboard)
+# Custom domain: status.cinacoin.com (configured in Cloudflare Pages dashboard)
 
 # Deploy previews on PRs / branch pushes
 [env.preview]

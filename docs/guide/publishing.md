@@ -1,16 +1,16 @@
 # Publishing Guide
 
-How to publish `@cinaconnect/*` packages to npm.
+How to publish `@cinacoin/*` packages to npm.
 
 ## Overview
 
-The CinaConnect monorepo contains **71 packages** under the `@cinaconnect` npm scope. All packages have `"publishConfig": { "access": "public" }` set and are ready for public publishing.
+The Cinacoin monorepo contains **71 packages** under the `@cinacoin` npm scope. All packages have `"publishConfig": { "access": "public" }` set and are ready for public publishing.
 
 Changesets are configured for version management (`@changesets/cli`), and manual publish scripts are available for direct publishing.
 
 ## Prerequisites
 
-- **npm authentication**: You must be logged in to npm with publishing access to the `@cinaconnect` scope.
+- **npm authentication**: You must be logged in to npm with publishing access to the `@cinacoin` scope.
   ```bash
   npm login
   ```
@@ -172,11 +172,11 @@ Build the package first:
 ```bash
 pnpm build
 # or for a specific package
-turbo run build --filter=@cinaconnect/core-sdk
+turbo run build --filter=@cinacoin/core-sdk
 ```
 
 ### "403 Forbidden"
-You don't have publishing access to the `@cinaconnect` scope. Contact the package owner to be added as a collaborator on npm.
+You don't have publishing access to the `@cinacoin` scope. Contact the package owner to be added as a collaborator on npm.
 
 ### "ECONNRESET / ETIMEDOUT"
 Network errors are retried automatically (2 retries with backoff). If persistent, check your internet connection or try reducing concurrency:

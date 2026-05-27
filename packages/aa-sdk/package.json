@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/aa-sdk",
+  "name": "@cinacoin/aa-sdk",
   "version": "0.2.0",
-  "description": "CinaConnect Account Abstraction SDK — Smart accounts, paymaster, and bundler client",
+  "description": "Cinacoin Account Abstraction SDK — Smart accounts, paymaster, and bundler client",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }

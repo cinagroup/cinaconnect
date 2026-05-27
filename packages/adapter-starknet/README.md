@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-starknet
+# @cinacoin/adapter-starknet
 
-CinaConnect Starknet chain adapter — Argent X, Braavos wallet support with native account abstraction.
+Cinacoin Starknet chain adapter — Argent X, Braavos wallet support with native account abstraction.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-starknet
+npm install @cinacoin/adapter-starknet
 ```
 
 ## Usage
 
 ```ts
-import { StarknetChainAdapter } from '@cinaconnect/adapter-starknet';
+import { StarknetChainAdapter } from '@cinacoin/adapter-starknet';
 
 const adapter = new StarknetChainAdapter();
 await adapter.connect({ connectorId: 'argent-x' });

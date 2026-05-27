@@ -1,12 +1,12 @@
 /**
- * CinaConnectProvider — React Native context provider with real WalletConnect v2 integration.
+ * CinacoinProvider — React Native context provider with real WalletConnect v2 integration.
  *
  * Wraps the app and provides chain state, connection methods, and theming.
- * Uses @cinaconnect/walletconnect-v2 for real WC v2 protocol communication.
+ * Uses @cinacoin/walletconnect-v2 for real WC v2 protocol communication.
  */
 import { type ReactNode } from 'react';
-import type { Session } from '@cinaconnect/walletconnect-v2';
-import type { AppMetadata } from '@cinaconnect/core-sdk';
+import type { Session } from '@cinacoin/walletconnect-v2';
+import type { AppMetadata } from '@cinacoin/core-sdk';
 /** Supported theme modes. */
 export type ThemeMode = 'dark' | 'light' | 'minimal';
 /** Chain configuration. */
@@ -51,7 +51,7 @@ export interface AccountState {
     ensName?: string;
 }
 /** Configuration passed to provider. */
-export interface CinaConnectConfig {
+export interface CinacoinConfig {
     /** Relay server URL. */
     relayUrl?: string;
     /** Project ID. */
@@ -65,8 +65,8 @@ export interface CinaConnectConfig {
     recommendedWallets?: string[];
 }
 /** Context value. */
-export interface CinaConnectContextValue {
-    config: CinaConnectConfig;
+export interface CinacoinContextValue {
+    config: CinacoinConfig;
     connectors: Connector[];
     wallets: WalletInfo[];
     account: AccountState;
@@ -106,15 +106,15 @@ export interface ThemeColors {
     warning: string;
     error: string;
 }
-/** Hook to access CinaConnect context. Throws if used outside provider. */
-export declare function useCinaConnectContext(): CinaConnectContextValue;
+/** Hook to access Cinacoin context. Throws if used outside provider. */
+export declare function useCinacoinContext(): CinacoinContextValue;
 /** Provider props. */
-export interface CinaConnectProviderProps {
-    config: CinaConnectConfig;
+export interface CinacoinProviderProps {
+    config: CinacoinConfig;
     children: ReactNode;
 }
 /**
- * CinaConnectProvider for React Native with real WC v2 support.
+ * CinacoinProvider for React Native with real WC v2 support.
  */
-export declare function CinaConnectProvider({ config, children }: CinaConnectProviderProps): JSX.Element;
+export declare function CinacoinProvider({ config, children }: CinacoinProviderProps): JSX.Element;
 //# sourceMappingURL=OnChainUXProvider.d.ts.map

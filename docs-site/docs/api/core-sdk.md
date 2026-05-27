@@ -1,15 +1,15 @@
 # Core SDK
 
-> `@cinaconnect/core-sdk` — CinaConnect 核心 SDK 参考。
+> `@cinacoin/core-sdk` — Cinacoin 核心 SDK 参考。
 
 ## Overview
 
-The Core SDK is the foundation of CinaConnect. It manages wallet connections, chain switching, sessions, and the core communication layer with the Relay Server.
+The Core SDK is the foundation of Cinacoin. It manages wallet connections, chain switching, sessions, and the core communication layer with the Relay Server.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk
+npm install @cinacoin/core-sdk
 ```
 
 ## Usage
@@ -17,9 +17,9 @@ npm install @cinaconnect/core-sdk
 ### Initialize
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core-sdk'
+import { Cinacoin } from '@cinacoin/core-sdk'
 
-const cinaconnect = new CinaConnect({
+const cinacoin = new Cinacoin({
   projectId: 'your-project-id',
   relayUrl: 'wss://relay.yourdomain.com/v1',
   chains: [mainnet, polygon],

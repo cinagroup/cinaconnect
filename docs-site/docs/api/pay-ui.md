@@ -1,11 +1,11 @@
 # Pay UI
 
-> `@cinaconnect/pay-ui` — Payment UI components for CinaConnect.
+> `@cinacoin/pay-ui` — Payment UI components for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/pay-ui @cinaconnect/core-ui
+npm install @cinacoin/pay-ui @cinacoin/core-ui
 ```
 
 ## Components

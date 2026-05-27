@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/cli build command.
+ * Tests for @cinacoin/cli build command.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock fs
@@ -104,14 +104,14 @@ describe('buildCommand', () => {
             command: vi.fn().mockReturnThis(),
             description: vi.fn().mockReturnThis(),
             option: vi.fn().mockReturnThis(),
-            action: vi.fn((cb) => cb({ scope: '@cinaconnect/core-sdk' })),
+            action: vi.fn((cb) => cb({ scope: '@cinacoin/core-sdk' })),
         };
         const mockCli = {
             command: vi.fn().mockReturnValue(mockCommand),
         };
         const { buildCommand } = await import('../src/commands/build.js');
         buildCommand(mockCli);
-        expect(execSync).toHaveBeenCalledWith('npx turbo run build --filter=@cinaconnect/core', expect.objectContaining({ stdio: 'pipe' }));
+        expect(execSync).toHaveBeenCalledWith('npx turbo run build --filter=@cinacoin/core', expect.objectContaining({ stdio: 'pipe' }));
     });
 });
 //# sourceMappingURL=build.test.js.map

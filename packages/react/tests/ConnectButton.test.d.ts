@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/react — ConnectButton, CinaConnectProvider, hooks.
+ * Tests for @cinacoin/react — ConnectButton, CinacoinProvider, hooks.
  */
 export {};
 //# sourceMappingURL=ConnectButton.test.d.ts.map

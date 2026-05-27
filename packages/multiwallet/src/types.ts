@@ -1,4 +1,4 @@
-import type { SessionState } from "@cinaconnect/core-sdk";
+import type { SessionState } from "@cinacoin/core-sdk";
 
 /** CAIP-2 namespace identifier for a wallet connection. */
 export type Namespace = "eip155" | "solana" | "bip122";

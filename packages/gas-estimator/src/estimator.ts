@@ -8,20 +8,42 @@ import type {
   GasPriceData,
   GasPricePrediction,
   FeeHistoryEntry,
+  ChainConfig,
 } from './types.js';
+import { DEFAULT_CHAINS } from './types.js';
 
 /**
  * GasEstimator — Unified gas estimation for EVM and Solana chains.
+ *
+ * Uses real JSON-RPC calls for gas price fetching:
+ *  - EVM: eth_gasPrice, eth_feeHistory
+ *  - Solana: getRecentPrioritizationFees, simulateTransaction
+ *
+ * Supports multi-chain with configurable RPC endpoints.
+ * Includes TTL-based caching to avoid excessive RPC calls.
  */
 export class GasEstimator {
   private evm: EVMEstimator;
   private solana: SolanaEstimator;
   private cache: GasPriceCache;
+  private chains: Record<number, ChainConfig>;
+  private rpcTimeoutMs: number;
 
   constructor(config: GasEstimatorConfig = {}) {
     this.cache = new GasPriceCache(config);
-    this.evm = new EVMEstimator(this.cache);
-    this.solana = new SolanaEstimator(this.cache);
+    this.chains = config.chains ?? DEFAULT_CHAINS;
+    this.rpcTimeoutMs = config.rpcTimeoutMs ?? 10_000;
+
+    this.evm = new EVMEstimator(this.cache, {
+      rpcTimeoutMs: this.rpcTimeoutMs,
+      chains: this.chains,
+      defaultRpcUrl: config.rpcUrl,
+    });
+
+    this.solana = new SolanaEstimator(this.cache, {
+      rpcTimeoutMs: this.rpcTimeoutMs,
+      defaultRpcUrl: 'https://api.mainnet-beta.solana.com',
+    });
   }
 
   /**
@@ -41,26 +63,48 @@ export class GasEstimator {
   async estimateSolana(
     computeUnits?: number,
     computeUnitPrice?: bigint,
+    rpcUrl?: string,
   ): Promise<SolanaGasEstimate> {
     return this.solana.estimate(computeUnits, computeUnitPrice);
   }
 
   /**
-   * Get current gas price for an EVM chain.
+   * Get current gas price for an EVM chain via real RPC.
+   *
+   * @param rpcUrl RPC URL (or uses default if chainId is provided)
    */
-  async getGasPrice(rpcUrl: string): Promise<GasPriceData> {
+  async getGasPrice(rpcUrl?: string): Promise<GasPriceData> {
     return this.evm.getGasPrice(rpcUrl);
   }
 
   /**
-   * Get fee history for EVM chains.
+   * Get gas price for a specific EVM chain ID.
+   */
+  async getGasPriceForChain(chainId: number): Promise<GasPriceData> {
+    return this.evm.getGasPriceForChain(chainId);
+  }
+
+  /**
+   * Get EIP-1559 gas prices (base fee + priority fee) for an EVM chain.
+   */
+  async getEip1559GasPrices(chainId: number): Promise<{
+    baseFee: bigint;
+    priorityFee: bigint;
+    gasPrice: bigint;
+  }> {
+    return this.evm.getEip1559GasPrices(chainId);
+  }
+
+  /**
+   * Get fee history for EVM chains via real RPC.
    */
   async getFeeHistory(
     blockCount: number,
     newestBlock?: string,
     rewardPercentiles?: number[],
+    rpcUrl?: string,
   ): Promise<FeeHistoryEntry[]> {
-    return this.evm.getFeeHistory(blockCount, newestBlock, rewardPercentiles);
+    return this.evm.getFeeHistory(blockCount, newestBlock, rewardPercentiles, rpcUrl);
   }
 
   /**
@@ -85,5 +129,25 @@ export class GasEstimator {
    */
   clearCache(): void {
     this.cache.clear();
+  }
+
+  /**
+   * Get registered chain configs.
+   */
+  getChains(): Record<number, ChainConfig> {
+    return this.chains;
+  }
+
+  /**
+   * Register or override a chain config.
+   */
+  registerChain(chain: ChainConfig): void {
+    this.chains[chain.chainId] = chain;
+    // Update EVM estimator with new chains
+    this.evm = new EVMEstimator(this.cache, {
+      rpcTimeoutMs: this.rpcTimeoutMs,
+      chains: this.chains,
+      defaultRpcUrl: this.chains[1]?.defaultRpcUrl,
+    });
   }
 }

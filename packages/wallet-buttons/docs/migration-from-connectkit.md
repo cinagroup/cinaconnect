@@ -1,12 +1,12 @@
-# Migration Guide: ConnectKit → @cinaconnect/wallet-buttons
+# Migration Guide: ConnectKit → @cinacoin/wallet-buttons
 
 ## Overview
 
-ConnectKit (by Family) provides a pre-built connect modal and a `<ConnectKitButton />` component. `@cinaconnect/wallet-buttons` takes a different approach: individual wallet buttons you compose directly in your UI, giving you full layout control without a modal wrapper.
+ConnectKit (by Family) provides a pre-built connect modal and a `<ConnectKitButton />` component. `@cinacoin/wallet-buttons` takes a different approach: individual wallet buttons you compose directly in your UI, giving you full layout control without a modal wrapper.
 
 ## Key Differences
 
-| Feature | ConnectKit | @cinaconnect/wallet-buttons |
+| Feature | ConnectKit | @cinacoin/wallet-buttons |
 |---|---|---|
 | UI pattern | Modal via `<ConnectKitButton />` | Inline buttons (`<WalletButton />`) |
 | Theme system | `ConnectKitProvider theme="..."` | CSS custom properties |
@@ -18,7 +18,7 @@ ConnectKit (by Family) provides a pre-built connect modal and a `<ConnectKitButt
 ### 1. Install
 
 ```bash
-npm install @cinaconnect/wallet-buttons @cinaconnect/core-sdk @cinaconnect/explorer
+npm install @cinacoin/wallet-buttons @cinacoin/core-sdk @cinacoin/explorer
 ```
 
 ### 2. Replace `<ConnectKitButton />`
@@ -42,8 +42,8 @@ function Header() {
 **After:**
 
 ```tsx
-import { WalletButton, useWalletButtons } from '@cinaconnect/wallet-buttons';
-import '@cinaconnect/wallet-buttons/dist/styles.css';
+import { WalletButton, useWalletButtons } from '@cinacoin/wallet-buttons';
+import '@cinacoin/wallet-buttons/dist/styles.css';
 
 function Header() {
   const { connect, isConnected } = useWalletButtons();
@@ -108,7 +108,7 @@ const { setOpen, setChain, chain } = useConnectKit();
 **After:**
 
 ```tsx
-import { useWalletButtons } from '@cinaconnect/wallet-buttons';
+import { useWalletButtons } from '@cinacoin/wallet-buttons';
 
 const { connect, isConnected } = useWalletButtons();
 
@@ -127,7 +127,7 @@ const handleClick = (id: string) => connect(id);
 **After — fully configurable:**
 
 ```tsx
-import { WalletButtonGroup } from '@cinaconnect/wallet-buttons';
+import { WalletButtonGroup } from '@cinacoin/wallet-buttons';
 
 <WalletButtonGroup
   walletIds={['metamask', 'coinbase', 'phantom', 'rainbow']}
@@ -167,7 +167,7 @@ Remove `ConnectKitProvider`, `ConnectKitButton`, and any `useConnectKit` calls.
 
 ## Quick Reference
 
-| ConnectKit | @cinaconnect/wallet-buttons |
+| ConnectKit | @cinacoin/wallet-buttons |
 |---|---|
 | `<ConnectKitButton />` | `<WalletButton walletId="metamask" />` |
 | `<ConnectKitProvider>` | None needed |

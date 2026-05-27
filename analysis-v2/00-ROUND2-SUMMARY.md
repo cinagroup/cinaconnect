@@ -1,4 +1,4 @@
-# CinaAuth/CinaConnect vs Reown — 第二轮深度对比报告
+# CinaAuth/Cinacoin vs Reown — 第二轮深度对比报告
 
 > **时间**: 2026-05-17 02:09 UTC  
 > **方法**: 5 个子 agent 并行对比（SDK 架构 + 缺口 + 基础设施 + 移动端 + 开发者生态）
@@ -7,7 +7,7 @@
 
 ## 📊 最终评分
 
-| 维度 | CinaConnect | Reown | 差距 |
+| 维度 | Cinacoin | Reown | 差距 |
 |------|:---------:|:-----:|:----:|
 | SDK 架构 | **8.2/10** | 8.5/10 | 🟢 极小 |
 | 基础设施 | **9.0/10** | 7.2/10 | 🟢 领先 |
@@ -15,13 +15,13 @@
 | 开发者生态 | **8.6/10** | 7.6/10 | 🟢 领先 |
 | **综合评分** | **~8.4/10** | **~7.9/10** | **🟢 反超** |
 
-> **功能覆盖率 ~96-98%**。CinaConnect 在基础设施和开发者生态上已超越 Reown，SDK 架构基本持平，移动端小幅落后。
+> **功能覆盖率 ~96-98%**。Cinacoin 在基础设施和开发者生态上已超越 Reown，SDK 架构基本持平，移动端小幅落后。
 
 ---
 
-## 🏆 CinaConnect 领先领域
+## 🏆 Cinacoin 领先领域
 
-| 领域 | CinaConnect | Reown | 说明 |
+| 领域 | Cinacoin | Reown | 说明 |
 |------|:---------:|:-----:|------|
 | **自部署基础设施** | ✅ 完整（Helm + SRE + DR） | ❌ 仅云服务 | RPC Proxy 多供应商路由无对标 |
 | **Push Server** | ✅ 生产就绪 | ⚠️ "not for production use" | APNs ES256 + FCM OAuth2 |
@@ -93,7 +93,7 @@
 | codemod | — | 0% |
 | cdn | — | 0% |
 
-**CinaConnect 独占包（19 个）**：
+**Cinacoin 独占包（19 个）**：
 - relay-server, rpc-proxy, push-server, keys-server, bundler
 - aa-sdk, session-keys, swap-sdk, onramp-sdk
 - batch-transaction, cross-chain-sync, analytics
@@ -102,7 +102,7 @@
 
 ### 2. 基础设施（9.0/10 vs 7.2/10）
 
-| 服务 | CinaConnect | Reown |
+| 服务 | Cinacoin | Reown |
 |------|:---------:|:-----:|
 | Relay Server | ✅ 生产就绪 | ⚠️ 仅云服务 |
 | Push Server | ✅ 生产就绪 | ❌ "not for production" |
@@ -114,7 +114,7 @@
 
 ### 3. 移动端 SDK（7.8/10 vs 8.5/10）
 
-| 平台 | CinaConnect | Reown | 差距 |
+| 平台 | Cinacoin | Reown | 差距 |
 |------|:---------:|:-----:|:----:|
 | iOS Swift | ✅ 8/10 | 9/10 | 🟡 Solana 适配器优秀但缺 UI 测试 |
 | Android Kotlin | ✅ 7.5/10 | 8.5/10 | 🟡 缺 Solana 实现 |
@@ -124,7 +124,7 @@
 
 ### 4. 开发者生态（8.6/10 vs 7.6/10）
 
-| 维度 | CinaConnect | Reown | 说明 |
+| 维度 | Cinacoin | Reown | 说明 |
 |------|:---------:|:-----:|------|
 | CI/CD | ✅ 9/10 | 7/10 | 7 流水线 vs 基础 |
 | 测试 | ✅ 9/10 | 7/10 | 126 文件 vs 基础 |

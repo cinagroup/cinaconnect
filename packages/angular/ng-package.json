@@ -5,7 +5,7 @@
     "entryFile": "src/index.ts"
   },
   "allowedNonPeerDependencies": [
-    "@cinaconnect/core-sdk",
+    "@cinacoin/core-sdk",
     "tslib"
   ]
 }

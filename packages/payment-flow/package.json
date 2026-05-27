@@ -1,5 +1,5 @@
 {
-  "name": "@cinaconnect/payment-flow",
+  "name": "@cinacoin/payment-flow",
   "version": "0.2.0",
   "description": "Complete payment UI components — Buy, Send, Receive flow",
   "main": "dist/index.js",
@@ -12,7 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0",
@@ -29,5 +29,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

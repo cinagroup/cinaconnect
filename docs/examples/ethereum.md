@@ -6,24 +6,24 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react viem
+npm install @cinacoin/core-sdk @cinacoin/react viem
 ```
 
 ## Quick Start: Connect in 3 Lines
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { ConnectButton, useAccount } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
+import { ConnectButton, useAccount } from '@cinacoin/react'
 
 // Wrap your app
-<CinaConnectProvider config={{ projectId: 'YOUR_PROJECT_ID' }}>
+<CinacoinProvider config={{ projectId: 'YOUR_PROJECT_ID' }}>
   <App />
-</CinaConnectProvider>
+</CinacoinProvider>
 
 // Drop a button anywhere
 <ConnectButton />
@@ -40,15 +40,15 @@ const { address, balance, chainId } = useAccount()
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         projectId: 'your-project-id',
-        relayUrl: 'wss://relay.cinaconnect.com/v1',
+        relayUrl: 'wss://relay.cinacoin.com/v1',
         chains: [
           {
             id: 1,
@@ -72,7 +72,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   </React.StrictMode>,
 )
 ```
@@ -81,10 +81,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // src/App.tsx
-import { useCinaConnect, useAccount, useDisconnect } from '@cinaconnect/react'
+import { useCinacoin, useAccount, useDisconnect } from '@cinacoin/react'
 
 function App() {
-  const { connect, status, connectors } = useCinaConnect()
+  const { connect, status, connectors } = useCinacoin()
   const account = useAccount()
   const { disconnect } = useDisconnect()
 
@@ -120,13 +120,13 @@ export default App
 
 ```ts
 // src/eth-wallet.ts
-import { Connector, InjectedProvider, EvmAdapter } from '@cinaconnect/core-sdk'
+import { Connector, InjectedProvider, EvmAdapter } from '@cinacoin/core-sdk'
 
 // --- Connect via injected provider (MetaMask) ---
 async function connectMetaMask() {
   const connector = new Connector({
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
   })
 
   const provider = new InjectedProvider()
@@ -189,7 +189,7 @@ async function sendTransaction(from: string, to: string, value: string) {
 ### 4. EIP-6963 Wallet Discovery
 
 ```ts
-import { discoverWallets, watchWallets, findWalletByRdns } from '@cinaconnect/core-sdk'
+import { discoverWallets, watchWallets, findWalletByRdns } from '@cinacoin/core-sdk'
 
 // Discover all EIP-6963 wallets in the browser
 const wallets = await discoverWallets()
@@ -209,11 +209,11 @@ const metamask = findWalletByRdns('io.metamask')
 ### 5. Session Management
 
 ```ts
-import { SessionManager, createCinaConnectStore } from '@cinaconnect/core-sdk'
+import { SessionManager, createCinacoinStore } from '@cinacoin/core-sdk'
 
 // Create a persistent state store
-const store = createCinaConnectStore({
-  persistKey: 'cinaconnect-state',
+const store = createCinacoinStore({
+  persistKey: 'cinacoin-state',
 })
 
 // Initialize with previous session

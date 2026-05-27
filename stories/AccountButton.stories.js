@@ -34,7 +34,7 @@ function AccountButton({ address, balance, chainSymbol, size = 'md', showBalance
                 }, children: address ? address.slice(2, 4) : '?' })), isLoading ? (_jsx("span", { style: { opacity: 0.5 }, children: "Loading\u2026" })) : (_jsxs("span", { children: [address ?? 'No Account', showBalance && balance && (_jsxs("span", { style: { color: '#64748b', marginLeft: '6px' }, children: [balance, " ", chainSymbol] }))] }))] }));
 }
 const meta = {
-    title: 'CinaConnect/AccountButton',
+    title: 'Cinacoin/AccountButton',
     component: AccountButton,
     argTypes: {
         address: { control: 'text' },

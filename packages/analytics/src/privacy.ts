@@ -23,7 +23,7 @@ export interface ConsentRecord {
   categories: string[];
 }
 
-const CONSENT_KEY = '@cinaconnect/consent';
+const CONSENT_KEY = '@cinacoin/consent';
 
 export class PrivacyManager {
   private config: Required<PrivacyConfig>;

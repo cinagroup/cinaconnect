@@ -19,11 +19,23 @@ export class EventDeduplicator {
    * Returns only events that haven't been seen before.
    */
   async filterDuplicates(events: AnalyticsEvent[]): Promise<AnalyticsEvent[]> {
+    if (events.length === 0) return [];
+
+    // Step 1: Remove intra-batch duplicates (take first occurrence)
+    const seenInBatch = new Set<string>();
+    const dedupedInBatch: AnalyticsEvent[] = [];
+    for (const event of events) {
+      if (!seenInBatch.has(event.eventId)) {
+        seenInBatch.add(event.eventId);
+        dedupedInBatch.push(event);
+      }
+    }
+
+    // Step 2: Check KV for cross-batch deduplication
     const unique: AnalyticsEvent[] = [];
     const writeOps: { key: string; value: string }[] = [];
 
-    // Check all eventIds in parallel
-    const checks = events.map(async (event) => {
+    const checks = dedupedInBatch.map(async (event) => {
       const key = `dedup:${event.eventId}`;
       try {
         const existing = await this.kv.get(key);

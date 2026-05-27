@@ -21,7 +21,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm -F cinaconnect-demo dev --port 3000',
+    command: 'pnpm -F cinacoin-demo dev --port 3000',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

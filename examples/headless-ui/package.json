@@ -1,17 +1,17 @@
 {
-  "name": "cinaconnect-headless-ui-example",
+  "name": "cinacoin-headless-ui-example",
   "version": "0.1.1",
   "private": true,
   "type": "module",
-  "description": "Headless UI examples for CinaConnect — build completely custom UI using the headless SDK",
+  "description": "Headless UI examples for Cinacoin — build completely custom UI using the headless SDK",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "@cinaconnect/config": "workspace:*",
-    "@cinaconnect/core-sdk": "workspace:*",
+    "@cinacoin/config": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
     "react": "^18.3.0",
     "react-dom": "^18.3.0"
   },

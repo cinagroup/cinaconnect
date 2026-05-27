@@ -1,19 +1,19 @@
-import type { CinaConnect } from '@cinaconnect/vue'
+import type { Cinacoin } from '@cinacoin/vue'
 
 declare module '#app' {
   interface NuxtApp {
     /**
-     * CinaConnect application instance, provided by `@cinaconnect/nuxt`.
+     * Cinacoin application instance, provided by `@cinacoin/nuxt`.
      * Access via `useNuxtApp().cinaConnect` or `nuxtApp.$cinaConnect`.
      */
-    cinaConnect: CinaConnect
-    $cinaConnect: CinaConnect
+    cinaConnect: Cinacoin
+    $cinaConnect: Cinacoin
   }
 }
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $cinaConnect: CinaConnect
+    $cinaConnect: Cinacoin
   }
 }
 

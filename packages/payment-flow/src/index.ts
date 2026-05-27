@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/payment-flow
+ * @cinacoin/payment-flow
  *
  * Complete payment UI components — Buy, Send, Receive flow.
  * Production-ready React components with Tailwind CSS styling.

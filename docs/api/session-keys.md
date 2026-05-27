@@ -1,6 +1,6 @@
 # Session Keys API
 
-> `@cinaconnect/session-keys` — Temporary signing keys with policies and social recovery for ERC-4337 smart accounts.
+> `@cinacoin/session-keys` — Temporary signing keys with policies and social recovery for ERC-4337 smart accounts.
 
 ## Overview
 
@@ -9,7 +9,7 @@ Session Keys allow dApps to operate on behalf of a user without requiring a wall
 ## Installation
 
 ```bash
-npm install @cinaconnect/session-keys
+npm install @cinacoin/session-keys
 ```
 
 ## Quick Start
@@ -19,7 +19,7 @@ import {
   SessionKeyManager,
   SessionKeyPolicyManager,
   SocialRecoveryManager,
-} from '@cinaconnect/session-keys'
+} from '@cinacoin/session-keys'
 
 // Create a policy
 const policyManager = new SessionKeyPolicyManager()
@@ -48,7 +48,7 @@ console.log(`Expires: ${new Date(sessionKey.expiresAt * 1000).toISOString()}`)
 Manages generation, import, revocation, and validation of session keys.
 
 ```typescript
-import { SessionKeyManager } from '@cinaconnect/session-keys'
+import { SessionKeyManager } from '@cinacoin/session-keys'
 
 const keyManager = new SessionKeyManager()
 ```
@@ -118,7 +118,7 @@ Get all registered policies.
 Creates and manages policies that scope what session keys are allowed to do.
 
 ```typescript
-import { SessionKeyPolicyManager } from '@cinaconnect/session-keys'
+import { SessionKeyPolicyManager } from '@cinacoin/session-keys'
 
 const policyManager = new SessionKeyPolicyManager()
 ```
@@ -172,7 +172,7 @@ const customPolicy = policyManager.createPolicy({
 Manages the guardian-based social recovery system for smart accounts.
 
 ```typescript
-import { SocialRecoveryManager } from '@cinaconnect/session-keys'
+import { SocialRecoveryManager } from '@cinacoin/session-keys'
 
 const recoveryManager = new SocialRecoveryManager()
 ```
@@ -223,7 +223,7 @@ Get the current recovery configuration for an account.
 Generate the `enableSessionKey` calldata for a smart account.
 
 ```typescript
-import { encodeEnableSessionKey } from '@cinaconnect/session-keys'
+import { encodeEnableSessionKey } from '@cinacoin/session-keys'
 
 const calldata = encodeEnableSessionKey(sessionKey, dexPolicy)
 // Send this calldata to the smart account to register the session key
@@ -234,7 +234,7 @@ const calldata = encodeEnableSessionKey(sessionKey, dexPolicy)
 Generate the `disableSessionKey` calldata.
 
 ```typescript
-import { encodeDisableSessionKey } from '@cinaconnect/session-keys'
+import { encodeDisableSessionKey } from '@cinacoin/session-keys'
 
 const calldata = encodeDisableSessionKey(sessionKey)
 // Send to disable a session key on-chain
@@ -245,7 +245,7 @@ const calldata = encodeDisableSessionKey(sessionKey)
 Check if a session key is authorized for a specific operation.
 
 ```typescript
-import { isKeyValidForOperation } from '@cinaconnect/session-keys'
+import { isKeyValidForOperation } from '@cinacoin/session-keys'
 
 const allowed = isKeyValidForOperation(
   sessionKey,

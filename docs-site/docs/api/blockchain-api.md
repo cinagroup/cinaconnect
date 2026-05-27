@@ -1,11 +1,11 @@
 # Blockchain API
 
-> `@cinaconnect/blockchain-api` — Unified blockchain data API for CinaConnect.
+> `@cinacoin/blockchain-api` — Unified blockchain data API for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/blockchain-api
+npm install @cinacoin/blockchain-api
 ```
 
 ## Overview

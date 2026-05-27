@@ -1,0 +1,34 @@
+{{- if .Values.relay.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: relay-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: relay-server
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: relay-server
+  minReplicas: {{ .Values.relay.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.relay.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.relay.autoscaling.targetCPUUtilization }}
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.relay.autoscaling.targetCPUUtilization }}
+    {{- end }}
+    {{- if .Values.relay.autoscaling.targetMemoryUtilization }}
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.relay.autoscaling.targetMemoryUtilization }}
+    {{- end }}
+{{- end }}

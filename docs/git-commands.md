@@ -1,6 +1,6 @@
 # Git Commands Reference
 
-Quick reference for common Git operations in the CinaConnect project.
+Quick reference for common Git operations in the Cinacoin project.
 
 ---
 
@@ -22,11 +22,11 @@ Quick reference for common Git operations in the CinaConnect project.
 
 ```bash
 # Clone the repository
-git clone https://github.com/cinaconnect/cinaconnect.git
-cd cinaconnect
+git clone https://github.com/cinacoin/cinacoin.git
+cd cinacoin
 
 # Add upstream remote (if you forked)
-git remote add upstream https://github.com/cinaconnect/cinaconnect.git
+git remote add upstream https://github.com/cinacoin/cinacoin.git
 git fetch upstream
 
 # Install dependencies

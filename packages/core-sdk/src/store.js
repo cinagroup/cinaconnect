@@ -1,9 +1,9 @@
 /**
- * Zustand-based state management for the CinaConnect SDK.
+ * Zustand-based state management for the Cinacoin SDK.
  */
 import { create } from 'zustand';
 /** Create the SDK store. */
-export const createCinaConnectStore = () => create((set) => ({
+export const createCinacoinStore = () => create((set) => ({
     // Initial state
     status: 'disconnected',
     accounts: [],
@@ -42,7 +42,7 @@ export const createCinaConnectStore = () => create((set) => ({
 }));
 /** Initialize the SDK store with configuration. */
 export function initializeStore(config) {
-    const store = createCinaConnectStore();
+    const store = createCinacoinStore();
     store.getState().setRelayUrl(config.relayUrl);
     store.getState().setProjectId(config.projectId);
     store.getState().setChains(config.chains);

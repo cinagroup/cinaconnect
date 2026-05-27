@@ -148,10 +148,10 @@ public final class DeepLinkHandler {
         ),
     ]
     
-    private var config: CinaConnectConfig?
+    private var config: CinacoinConfig?
     
     /// Configure the handler.
-    public func configure(with config: CinaConnectConfig) {
+    public func configure(with config: CinacoinConfig) {
         self.config = config
     }
     

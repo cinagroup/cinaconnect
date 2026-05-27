@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/swap-sdk",
+  "name": "@cinacoin/swap-sdk",
   "version": "0.2.0",
-  "description": "CinaConnect Swap Aggregator SDK — multi-DEX swap routing with slippage protection",
+  "description": "Cinacoin Swap Aggregator SDK — multi-DEX swap routing with slippage protection",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
@@ -26,5 +26,12 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  }
 }

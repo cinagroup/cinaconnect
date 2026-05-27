@@ -1,59 +1,59 @@
 /**
- * SvelteKit integration for CinaConnect.
+ * SvelteKit integration for Cinacoin.
  *
  * Provides SSR-safe utilities for server-side session verification,
  * load function helpers, and SSR-safe store initialization.
  *
- * Import from `@cinaconnect/svelte/kit`:
+ * Import from `@cinacoin/svelte/kit`:
  *
  * ```ts
- * import { getCinaConnectServer, ssrSafeStore } from '@cinaconnect/svelte/kit';
+ * import { getCinacoinServer, ssrSafeStore } from '@cinacoin/svelte/kit';
  * ```
  *
  * @packageDocumentation
  */
 import { writable } from 'svelte/store';
 /**
- * Default cookie name for CinaConnect sessions.
+ * Default cookie name for Cinacoin sessions.
  */
-const DEFAULT_COOKIE_NAME = 'cinaconnect_session';
+const DEFAULT_COOKIE_NAME = 'cinacoin_session';
 /**
- * Default header name for CinaConnect sessions.
+ * Default header name for Cinacoin sessions.
  */
-const DEFAULT_HEADER_NAME = 'X-CinaConnect-Session';
+const DEFAULT_HEADER_NAME = 'X-Cinacoin-Session';
 // ─── Server singleton ────────────────────────────────────────────────────────
 let _serverInstance = null;
 /**
- * Get or create the CinaConnect server API instance.
+ * Get or create the Cinacoin server API instance.
  *
  * Call this in server-side code (load functions, hooks, actions).
  *
  * @example
  * ```ts
  * // +layout.server.ts
- * import { getCinaConnectServer } from '@cinaconnect/svelte/kit';
+ * import { getCinacoinServer } from '@cinacoin/svelte/kit';
  *
  * export const load = async ({ cookies }) => {
- *   const server = getCinaConnectServer();
+ *   const server = getCinacoinServer();
  *   const session = await server.getSession(/* event *\/);
  *   return { session };
  * };
  * ```
  *
- * @returns CinaConnectServer instance.
+ * @returns CinacoinServer instance.
  */
-export function getCinaConnectServer() {
+export function getCinacoinServer() {
     if (!_serverInstance) {
-        _serverInstance = createCinaConnectServer();
+        _serverInstance = createCinacoinServer();
     }
     return _serverInstance;
 }
 /**
- * Create a new CinaConnectServer instance.
+ * Create a new CinacoinServer instance.
  *
  * @internal
  */
-function createCinaConnectServer() {
+function createCinacoinServer() {
     return {
         async getSession(event) {
             const token = getTokenFromRequest(event);
@@ -185,7 +185,7 @@ export function isBrowser() {
  *
  * @example
  * ```ts
- * import { ssrSafeStore } from '@cinaconnect/svelte/kit';
+ * import { ssrSafeStore } from '@cinacoin/svelte/kit';
  *
  * const savedChain = ssrSafeStore(
  *   () => localStorage.getItem('chainId'),
@@ -227,16 +227,16 @@ export function createSsrSafeWritable(getValue, fallback) {
  *
  * @example
  * ```ts
- * import { createCinaConnectLoad } from '@cinaconnect/svelte/kit';
+ * import { createCinacoinLoad } from '@cinacoin/svelte/kit';
  *
- * export const load = createCinaConnectLoad({
+ * export const load = createCinacoinLoad({
  *   transform: (session) => ({ userAddress: session.address }),
  * });
  * ```
  */
-export function createCinaConnectLoad(options) {
+export function createCinacoinLoad(options) {
     return async (event) => {
-        const server = getCinaConnectServer();
+        const server = getCinacoinServer();
         const session = await server.getSession(event);
         const data = {
             cinaConnect: session,

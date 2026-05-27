@@ -1,4 +1,4 @@
-import type { SearchFilter } from '@cinaconnect/explorer';
+import type { SearchFilter } from '@cinacoin/explorer';
 /**
  * Searchable wallet list with icons, chain/platform filters, and quick connect.
  *

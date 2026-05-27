@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/paymaster",
+  "name": "@cinacoin/paymaster",
   "version": "0.2.0",
-  "description": "Paymaster client for CinaConnect — gas sponsorship and paymaster data",
+  "description": "Paymaster client for Cinacoin — gas sponsorship and paymaster data",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
     "viem": "^2.9.0"
   },
   "devDependencies": {
@@ -31,5 +31,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

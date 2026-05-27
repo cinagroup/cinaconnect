@@ -1,4 +1,4 @@
-# CinaConnect React Native Example
+# Cinacoin React Native Example
 
 > React Native 移动端示例，展示钱包连接、Swap、多链等核心功能。
 
@@ -26,4 +26,4 @@ npx react-native run-android
 
 - React Native 0.76+
 - React 18+
-- CinaConnect React Native SDK
+- Cinacoin React Native SDK

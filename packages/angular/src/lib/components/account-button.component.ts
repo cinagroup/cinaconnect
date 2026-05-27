@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CinaConnectService, type Account } from '../cinaconnect.service.js';
+import { CinacoinService, type Account } from '../cinacoin.service.js';
 import { Subscription } from 'rxjs';
 
 /**
@@ -107,7 +107,7 @@ export class AccountButtonComponent implements OnInit, OnDestroy {
 
   private _subscription?: Subscription;
 
-  constructor(private _service: CinaConnectService) {}
+  constructor(private _service: CinacoinService) {}
 
   ngOnInit(): void {
     this._subscription = this._service.account$.subscribe(

@@ -4,7 +4,7 @@
  * Manages quote fetching, slippage calculation, and transaction building
  * for the SwapWidget UI.
  */
-import { calculateMinimumReceived, } from "@cinaconnect/swap-sdk";
+import { calculateMinimumReceived, } from "@cinacoin/swap-sdk";
 const DEFAULT_SLIPPAGE_BPS = 50;
 const DEFAULT_SLIPPAGE_PRESETS = [10, 25, 50, 100, 200]; // 0.1% – 2%
 const defaultSlippage = {

@@ -1,24 +1,24 @@
 /**
- * Access the CinaConnect application instance.
+ * Access the Cinacoin application instance.
  *
  * @example
  * ```ts
- * const { cinaConnect } = useCinaConnect()
+ * const { cinaConnect } = useCinacoin()
  * await cinaConnect.connect()
  * ```
  */
-export declare function useCinaConnect(): {
-    cinaConnect: CinaConnect;
+export declare function useCinacoin(): {
+    cinaConnect: Cinacoin;
 };
 /**
  * Reactive account state — address, balance, chain, connected flag.
  *
  * @example
  * ```ts
- * const { address, isConnected } = useCinaConnectAccount()
+ * const { address, isConnected } = useCinacoinAccount()
  * ```
  */
-export declare function useCinaConnectAccount(): {
+export declare function useCinacoinAccount(): {
     /** Connected address, or `undefined`. */
     readonly address: any;
     /** Balance as a formatted string, or `undefined`. */
@@ -33,11 +33,11 @@ export declare function useCinaConnectAccount(): {
  *
  * @example
  * ```ts
- * const { networks, switchNetwork } = useCinaConnectNetwork()
+ * const { networks, switchNetwork } = useCinacoinNetwork()
  * switchNetwork('arbitrum')
  * ```
  */
-export declare function useCinaConnectNetwork(): {
+export declare function useCinacoinNetwork(): {
     /** Configured networks. */
     networks: any;
     switchNetwork: (network: string) => Promise<void>;

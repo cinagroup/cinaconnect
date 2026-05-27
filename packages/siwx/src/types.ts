@@ -5,7 +5,7 @@
  */
 
 /** Supported chain types for cross-chain sign-in. */
-export type ChainType = 'evm' | 'solana' | 'bitcoin';
+export type ChainType = 'evm' | 'solana' | 'bitcoin' | 'ton' | 'tron';
 
 /**
  * Unified parameters for cross-chain sign-in.

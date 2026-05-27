@@ -12,31 +12,31 @@ import { existsSync, statSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
 const THRESHOLDS = [
     {
-        name: '@cinaconnect/core-sdk',
+        name: '@cinacoin/core-sdk',
         path: 'packages/core-sdk/dist',
         maxMain: 50000, // 50 KB
         maxTotal: 150000, // 150 KB
     },
     {
-        name: '@cinaconnect/core-ui',
+        name: '@cinacoin/core-ui',
         path: 'packages/core-ui/dist',
         maxMain: 80000,
         maxTotal: 250000,
     },
     {
-        name: '@cinaconnect/react',
+        name: '@cinacoin/react',
         path: 'packages/react/dist',
         maxMain: 40000,
         maxTotal: 120000,
     },
     {
-        name: '@cinaconnect/vue',
+        name: '@cinacoin/vue',
         path: 'packages/vue/dist',
         maxMain: 40000,
         maxTotal: 120000,
     },
     {
-        name: '@cinaconnect/swap-sdk',
+        name: '@cinacoin/swap-sdk',
         path: 'packages/swap-sdk/dist',
         maxMain: 30000,
         maxTotal: 80000,
@@ -96,7 +96,7 @@ function checkBundle(info, threshold) {
 }
 // ─── Main ───────────────────────────────────────────────────────────
 function main() {
-    console.log('📦 CinaConnect Bundle Size Check\n');
+    console.log('📦 Cinacoin Bundle Size Check\n');
     let allPassed = true;
     const results = [];
     for (const threshold of THRESHOLDS) {

@@ -1,11 +1,11 @@
 # Starknet Adapter
 
-> `@cinaconnect/adapter-starknet` — Starknet L2 adapter for CinaConnect.
+> `@cinacoin/adapter-starknet` — Starknet L2 adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-starknet
+npm install @cinacoin/adapter-starknet
 ```
 
 ## Overview

@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/siwx",
+  "name": "@cinacoin/siwx",
   "version": "0.2.0",
-  "description": "CinaConnect Sign-In with Cross-chain (SIWX) — unified authentication across EVM, Solana, and Bitcoin",
+  "description": "Cinacoin Sign-In with Cross-chain (SIWX) — unified authentication across EVM, Solana, and Bitcoin",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -20,7 +20,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/siwe": "workspace:*"
+    "@cinacoin/siwe": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -34,5 +34,6 @@
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/angular — module, service, tokens, and exports.
+ * Tests for @cinacoin/angular — module, service, tokens, and exports.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -63,48 +63,48 @@ const mockConnector = {
   getProvider: vi.fn().mockReturnValue(mockProvider),
 };
 
-vi.mock('@cinaconnect/core-sdk', () => ({
+vi.mock('@cinacoin/core-sdk', () => ({
   Connector: vi.fn().mockImplementation(() => mockConnector),
-  CinaConnectCore: vi.fn().mockImplementation(() => ({
+  CinacoinCore: vi.fn().mockImplementation(() => ({
     getConnector: () => mockConnector,
   })),
 }));
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('CinaConnectModule', () => {
+describe('CinacoinModule', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
-  it('should export CinaConnectModule', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
-    expect(CinaConnectModule).toBeDefined();
+  it('should export CinacoinModule', async () => {
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
+    expect(CinacoinModule).toBeDefined();
   });
 
   it('should have forRoot static method', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
-    expect(typeof CinaConnectModule.forRoot).toBe('function');
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
+    expect(typeof CinacoinModule.forRoot).toBe('function');
   });
 
   it('forRoot should return module with providers', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
 
     const config = {
       projectId: 'test-project-id',
       chains: [{ id: '1', name: 'Ethereum', nativeCurrency: { symbol: 'ETH' } }],
     };
 
-    const result = CinaConnectModule.forRoot(config as any);
+    const result = CinacoinModule.forRoot(config as any);
     expect(result).toBeDefined();
-    expect(result.ngModule).toBe(CinaConnectModule);
+    expect(result.ngModule).toBe(CinacoinModule);
     expect(result.providers).toBeDefined();
     expect(result.providers.length).toBeGreaterThan(0);
   });
 
   it('forRoot should provide CINA_CONNECT_OPTIONS', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
     const config = { projectId: 'abc123' };
-    const result = CinaConnectModule.forRoot(config as any);
+    const result = CinacoinModule.forRoot(config as any);
 
     const optionsProvider = result.providers.find(
       (p: any) => p.provide === 'CINA_CONNECT_OPTIONS'
@@ -114,9 +114,9 @@ describe('CinaConnectModule', () => {
   });
 
   it('forRoot factory should create connector from options', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
     const config = { projectId: 'abc123', chains: [] };
-    const result = CinaConnectModule.forRoot(config as any);
+    const result = CinacoinModule.forRoot(config as any);
 
     const instanceProvider = result.providers.find(
       (p: any) => p.provide === 'CINA_CONNECT_INSTANCE'
@@ -127,10 +127,10 @@ describe('CinaConnectModule', () => {
   });
 
   it('forRoot factory should return custom connector if provided', async () => {
-    const { CinaConnectModule } = await import('../src/lib/cinaconnect.module.js');
+    const { CinacoinModule } = await import('../src/lib/cinacoin.module.js');
     const customConnector = { custom: true };
     const config = { projectId: 'abc123', connector: customConnector };
-    const result = CinaConnectModule.forRoot(config as any);
+    const result = CinacoinModule.forRoot(config as any);
 
     const instanceProvider = result.providers.find(
       (p: any) => p.provide === 'CINA_CONNECT_INSTANCE'
@@ -140,18 +140,18 @@ describe('CinaConnectModule', () => {
   });
 });
 
-describe('CinaConnectService', () => {
+describe('CinacoinService', () => {
   beforeEach(() => vi.clearAllMocks());
   afterEach(() => vi.resetModules());
 
-  it('should export CinaConnectService', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    expect(CinaConnectService).toBeDefined();
+  it('should export CinacoinService', async () => {
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    expect(CinacoinService).toBeDefined();
   });
 
   it('should have account$, network$, isOpen$ observables', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -162,8 +162,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have open() and close() methods', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -176,8 +176,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have connect() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -188,8 +188,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have disconnect() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -200,8 +200,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have switchChain() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -211,8 +211,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have signMessage() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -221,8 +221,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have sendTransaction() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -231,8 +231,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have request() method', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -241,8 +241,8 @@ describe('CinaConnectService', () => {
   });
 
   it('should have ngOnDestroy lifecycle hook', async () => {
-    const { CinaConnectService } = await import('../src/lib/cinaconnect.service.js');
-    const service = new CinaConnectService(
+    const { CinacoinService } = await import('../src/lib/cinacoin.service.js');
+    const service = new CinacoinService(
       { projectId: 'test', chains: [] } as any,
       mockConnector as any
     );
@@ -254,7 +254,7 @@ describe('CinaConnectService', () => {
 
 describe('Tokens', () => {
   it('should export CINA_CONNECT_OPTIONS and CINA_CONNECT_INSTANCE', async () => {
-    const tokens = await import('../src/lib/cinaconnect.tokens.js');
+    const tokens = await import('../src/lib/cinacoin.tokens.js');
     expect(tokens.CINA_CONNECT_OPTIONS).toBeDefined();
     expect(tokens.CINA_CONNECT_INSTANCE).toBeDefined();
   });
@@ -263,8 +263,8 @@ describe('Tokens', () => {
 describe('Package exports', () => {
   it('should export module, service, and tokens from index', async () => {
     const index = await import('../src/index.js');
-    expect(index.CinaConnectModule).toBeDefined();
-    expect(index.CinaConnectService).toBeDefined();
+    expect(index.CinacoinModule).toBeDefined();
+    expect(index.CinacoinService).toBeDefined();
     expect(index.CINA_CONNECT_OPTIONS).toBeDefined();
     expect(index.CINA_CONNECT_INSTANCE).toBeDefined();
   });

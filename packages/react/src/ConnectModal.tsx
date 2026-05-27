@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, type CSSProperties } from 'react';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinaCoinContext } from './CinaCoinProvider.js';
 
 /** Props for the React ConnectModal wrapper. */
 export interface ConnectModalProps {
@@ -37,7 +37,7 @@ export function ConnectModal({
   style,
 }: ConnectModalProps): JSX.Element {
   const ref = useRef<HTMLElement>(null);
-  const { connect } = useCinaConnectContext();
+  const { connect } = useCinaCoinContext();
 
   useEffect(() => {
     const el = ref.current as HTMLElement & { recommendedWalletIds?: string[] } | null;

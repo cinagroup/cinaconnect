@@ -1,11 +1,11 @@
 # XRPL Adapter
 
-> `@cinaconnect/adapter-xrpl` — XRP Ledger adapter for CinaConnect.
+> `@cinacoin/adapter-xrpl` — XRP Ledger adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-xrpl
+npm install @cinacoin/adapter-xrpl
 ```
 
 ## Overview

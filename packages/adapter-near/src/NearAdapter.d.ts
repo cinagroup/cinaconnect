@@ -2,11 +2,11 @@
  * NEAR Chain Adapter — provides NEAR-specific wallet connection and transaction operations.
  *
  * Supports NEAR Wallet, Here Wallet, and Meteor Wallet.
- * Implements the ChainAdapter interface from @cinaconnect/core-sdk.
+ * Implements the ChainAdapter interface from @cinacoin/core-sdk.
  */
-import type { ChainAdapter } from '@cinaconnect/core-sdk';
-import type { Connector } from '@cinaconnect/core-sdk';
-import type { Chain } from '@cinaconnect/core-sdk';
+import type { ChainAdapter } from '@cinacoin/core-sdk';
+import type { Connector } from '@cinacoin/core-sdk';
+import type { Chain } from '@cinacoin/core-sdk';
 import type { NearWalletConnector } from './types.js';
 interface MeteorWalletProvider {
     id: string;
@@ -46,7 +46,7 @@ declare global {
     }
 }
 /**
- * NEAR chain adapter implementing ChainAdapter from @cinaconnect/core-sdk.
+ * NEAR chain adapter implementing ChainAdapter from @cinacoin/core-sdk.
  *
  * Provides a unified interface for NEAR wallet operations:
  * - Wallet connection (NEAR Wallet, Here Wallet, Meteor Wallet)

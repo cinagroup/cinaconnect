@@ -1,21 +1,21 @@
 # Codemod
 
-> `@cinaconnect/codemod` — Automated code migration tools for CinaConnect.
+> `@cinacoin/codemod` — Automated code migration tools for Cinacoin.
 
 ## Installation
 
 ```bash
-npx @cinaconnect/codemod
+npx @cinacoin/codemod
 ```
 
 ## Overview
 
-Automated code transformation scripts to help migrate from Reown/WalletConnect or upgrade between CinaConnect versions.
+Automated code transformation scripts to help migrate from Reown/WalletConnect or upgrade between Cinacoin versions.
 
 ## Available Codemods
 
-- `reown-to-cinaconnect` — Migrate from Reown/WalletConnect
-- `v1-to-v2` — Upgrade from CinaConnect v1 to v2
+- `reown-to-cinacoin` — Migrate from Reown/WalletConnect
+- `v1-to-v2` — Upgrade from Cinacoin v1 to v2
 - `connect-button` — Migrate to new ConnectButton API
 
 ## Related

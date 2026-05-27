@@ -1,8 +1,8 @@
-# CinaConnect — Delivery Checklist
+# Cinacoin — Delivery Checklist
 
 > **Version:** 1.0  
 > **Date:** 2026-05-18  
-> **Project:** CinaConnect v1.0 — Self-hosted Wallet Connection Toolkit  
+> **Project:** Cinacoin v1.0 — Self-hosted Wallet Connection Toolkit  
 
 This checklist is used to verify delivery readiness before customer handoff or production deployment. Each item must be checked and signed off.
 
@@ -47,89 +47,89 @@ This checklist is used to verify delivery readiness before customer handoff or p
 ### 2.2 Package Build Status (72 packages)
 
 #### Core (3)
-- [ ] `@cinaconnect/core-sdk` — builds, published to npm
-- [ ] `@cinaconnect/walletconnect-v2` — builds
-- [ ] `@cinaconnect/chains` — builds
+- [ ] `@cinacoin/core-sdk` — builds, published to npm
+- [ ] `@cinacoin/walletconnect-v2` — builds
+- [ ] `@cinacoin/chains` — builds
 
 #### Adapters (11)
-- [ ] `@cinaconnect/adapter-ethereum` — builds
-- [ ] `@cinaconnect/adapter-solana` — builds
-- [ ] `@cinaconnect/adapter-bitcoin` — builds
-- [ ] `@cinaconnect/adapter-ton` — builds
-- [ ] `@cinaconnect/adapter-tron` — builds
-- [ ] `@cinaconnect/adapter-cosmos` — builds
-- [ ] `@cinaconnect/adapter-sui` — builds
-- [ ] `@cinaconnect/adapter-starknet` — builds
-- [ ] `@cinaconnect/adapter-near` — builds
-- [ ] `@cinaconnect/adapter-hedera` — builds
-- [ ] `@cinaconnect/adapter-xrpl` — builds
+- [ ] `@cinacoin/adapter-ethereum` — builds
+- [ ] `@cinacoin/adapter-solana` — builds
+- [ ] `@cinacoin/adapter-bitcoin` — builds
+- [ ] `@cinacoin/adapter-ton` — builds
+- [ ] `@cinacoin/adapter-tron` — builds
+- [ ] `@cinacoin/adapter-cosmos` — builds
+- [ ] `@cinacoin/adapter-sui` — builds
+- [ ] `@cinacoin/adapter-starknet` — builds
+- [ ] `@cinacoin/adapter-near` — builds
+- [ ] `@cinacoin/adapter-hedera` — builds
+- [ ] `@cinacoin/adapter-xrpl` — builds
 
 #### Framework SDKs (12)
-- [ ] `@cinaconnect/react` — builds
-- [ ] `@cinaconnect/next` — builds
-- [ ] `@cinaconnect/vue` — builds
-- [ ] `@cinaconnect/svelte` — builds
-- [ ] `@cinaconnect/angular` — builds
-- [ ] `@cinaconnect/nuxt` — builds
-- [ ] `@cinaconnect/react-native` — builds
-- [ ] `@cinaconnect/flutter-dart` — builds
-- [ ] `@cinaconnect/android-kotlin` — builds
-- [ ] `@cinaconnect/ios-swift` — builds
-- [ ] `@cinaconnect/unity-csharp` — builds
-- [ ] `@cinaconnect/dotnet` — source complete; `dotnet build` pending
+- [ ] `@cinacoin/react` — builds
+- [ ] `@cinacoin/next` — builds
+- [ ] `@cinacoin/vue` — builds
+- [ ] `@cinacoin/svelte` — builds
+- [ ] `@cinacoin/angular` — builds
+- [ ] `@cinacoin/nuxt` — builds
+- [ ] `@cinacoin/react-native` — builds
+- [ ] `@cinacoin/flutter-dart` — builds
+- [ ] `@cinacoin/android-kotlin` — builds
+- [ ] `@cinacoin/ios-swift` — builds
+- [ ] `@cinacoin/unity-csharp` — builds
+- [ ] `@cinacoin/dotnet` — source complete; `dotnet build` pending
 
 #### Authentication (4)
-- [ ] `@cinaconnect/siwe` — builds
-- [ ] `@cinaconnect/siwx` — builds
-- [ ] `@cinaconnect/social-login` — builds
-- [ ] `@cinaconnect/passkey-auth` — builds
+- [ ] `@cinacoin/siwe` — builds
+- [ ] `@cinacoin/siwx` — builds
+- [ ] `@cinacoin/social-login` — builds
+- [ ] `@cinacoin/passkey-auth` — builds
 
 #### Smart Accounts (6)
-- [ ] `@cinaconnect/aa-sdk` — builds
-- [ ] `@cinaconnect/bundler` — builds
-- [ ] `@cinaconnect/paymaster` — builds
-- [ ] `@cinaconnect/erc6492` — builds
-- [ ] `@cinaconnect/session-keys` — builds
-- [ ] `@cinaconnect/ens-resolver` — builds
+- [ ] `@cinacoin/aa-sdk` — builds
+- [ ] `@cinacoin/bundler` — builds
+- [ ] `@cinacoin/paymaster` — builds
+- [ ] `@cinacoin/erc6492` — builds
+- [ ] `@cinacoin/session-keys` — builds
+- [ ] `@cinacoin/ens-resolver` — builds
 
 #### Payments (5)
-- [ ] `@cinaconnect/swap-sdk` — builds
-- [ ] `@cinaconnect/onramp-sdk` — builds
-- [ ] `@cinaconnect/pay-ui` — builds
-- [ ] `@cinaconnect/batch-transaction` — builds
-- [ ] `@cinaconnect/deposit` — builds
+- [ ] `@cinacoin/swap-sdk` — builds
+- [ ] `@cinacoin/onramp-sdk` — builds
+- [ ] `@cinacoin/pay-ui` — builds
+- [ ] `@cinacoin/batch-transaction` — builds
+- [ ] `@cinacoin/deposit` — builds
 
 #### Infrastructure (6)
-- [ ] `@cinaconnect/relay-server` — builds
-- [ ] `@cinaconnect/rpc-proxy` — builds
-- [ ] `@cinaconnect/keys-server` — builds
-- [ ] `@cinaconnect/notify-server` — builds
-- [ ] `@cinaconnect/push-server` — builds
-- [ ] `@cinaconnect/cdn` — builds
+- [ ] `@cinacoin/relay-server` — builds
+- [ ] `@cinacoin/rpc-proxy` — builds
+- [ ] `@cinacoin/keys-server` — builds
+- [ ] `@cinacoin/notify-server` — builds
+- [ ] `@cinacoin/push-server` — builds
+- [ ] `@cinacoin/cdn` — builds
 
 #### Developer Tools (18)
-- [ ] `@cinaconnect/cli` — builds
-- [ ] `@cinaconnect/testing` — builds
-- [ ] `@cinaconnect/codemod` — builds
-- [ ] `@cinaconnect/wallet-recommender` — builds
-- [ ] `@cinaconnect/gas-estimator` — builds
-- [ ] `@cinaconnect/token-list` — builds
-- [ ] `@cinaconnect/analytics` — builds
-- [ ] `@cinaconnect/config` — builds
-- [ ] `@cinaconnect/design-tokens` — builds
-- [ ] `@cinaconnect/explorer` — builds
-- [ ] `@cinaconnect/blockchain-api` — builds
-- [ ] `@cinaconnect/wallet-buttons` — builds
-- [ ] `@cinaconnect/custom-connectors` — builds
-- [ ] `@cinaconnect/multiwallet` — builds
-- [ ] `@cinaconnect/kyc` — builds
-- [ ] `@cinaconnect/cross-chain-sync` — builds
-- [ ] `@cinaconnect/safe-decoder` — builds
-- [ ] `@cinaconnect/travel-rule-demo` — builds
+- [ ] `@cinacoin/cli` — builds
+- [ ] `@cinacoin/testing` — builds
+- [ ] `@cinacoin/codemod` — builds
+- [ ] `@cinacoin/wallet-recommender` — builds
+- [ ] `@cinacoin/gas-estimator` — builds
+- [ ] `@cinacoin/token-list` — builds
+- [ ] `@cinacoin/analytics` — builds
+- [ ] `@cinacoin/config` — builds
+- [ ] `@cinacoin/design-tokens` — builds
+- [ ] `@cinacoin/explorer` — builds
+- [ ] `@cinacoin/blockchain-api` — builds
+- [ ] `@cinacoin/wallet-buttons` — builds
+- [ ] `@cinacoin/custom-connectors` — builds
+- [ ] `@cinacoin/multiwallet` — builds
+- [ ] `@cinacoin/kyc` — builds
+- [ ] `@cinacoin/cross-chain-sync` — builds
+- [ ] `@cinacoin/safe-decoder` — builds
+- [ ] `@cinacoin/travel-rule-demo` — builds
 
 #### Platform Integrations (2)
-- [ ] `@cinaconnect/telegram-miniapp` — builds
-- [ ] `@cinaconnect/farcaster-miniapp` — builds
+- [ ] `@cinacoin/telegram-miniapp` — builds
+- [ ] `@cinacoin/farcaster-miniapp` — builds
 
 ### 2.3 Demo App
 - [ ] `apps/demo` builds with `pnpm run build --filter=demo`
@@ -137,11 +137,11 @@ This checklist is used to verify delivery readiness before customer handoff or p
 - [ ] Demo serves correctly on `localhost:3000`
 
 ### 2.4 Rust Packages
-- [ ] `@cinaconnect/bundler` — `cargo build` succeeds
-- [ ] `@cinaconnect/erc6492` — `cargo build` succeeds
-- [ ] `@cinaconnect/relay-server` — `cargo build` succeeds
-- [ ] `@cinaconnect/push-server` — `cargo build` succeeds
-- [ ] `@cinaconnect/safe-decoder` — `cargo build` succeeds
+- [ ] `@cinacoin/bundler` — `cargo build` succeeds
+- [ ] `@cinacoin/erc6492` — `cargo build` succeeds
+- [ ] `@cinacoin/relay-server` — `cargo build` succeeds
+- [ ] `@cinacoin/push-server` — `cargo build` succeeds
+- [ ] `@cinacoin/safe-decoder` — `cargo build` succeeds
 
 ---
 
@@ -201,7 +201,7 @@ This checklist is used to verify delivery readiness before customer handoff or p
 - [ ] Quick Start guide accurate
 - [ ] Installation guide accurate
 - [ ] Configuration guide accurate
-- [ ] Migration guide (Reown → CinaConnect) accurate
+- [ ] Migration guide (Reown → Cinacoin) accurate
 - [ ] FAQ complete
 - [ ] Security best practices documented
 
@@ -243,9 +243,9 @@ This checklist is used to verify delivery readiness before customer handoff or p
 ## 6. Performance Benchmarks
 
 ### 6.1 Bundle Size
-- [ ] `@cinaconnect/core-sdk` < 50KB gzipped
-- [ ] `@cinaconnect/react` < 30KB gzipped
-- [ ] `@cinaconnect/core-ui` < 80KB gzipped
+- [ ] `@cinacoin/core-sdk` < 50KB gzipped
+- [ ] `@cinacoin/react` < 30KB gzipped
+- [ ] `@cinacoin/core-ui` < 80KB gzipped
 - [ ] Per-package bundle analysis available
 
 ### 6.2 Build Performance
@@ -305,7 +305,7 @@ pnpm run docs:build
 pnpm run typedoc
 
 # 8. Build Docker image
-docker build -t cinaconnect:latest .
+docker build -t cinacoin:latest .
 ```
 
 ---

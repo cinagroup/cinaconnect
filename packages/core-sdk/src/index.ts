@@ -1,5 +1,5 @@
 /**
- * CinaConnect Core SDK — Self-hosted wallet connection toolkit.
+ * Cinacoin Core SDK — Self-hosted wallet connection toolkit.
  *
  * A complete replacement for Reown/WalletConnect infrastructure,
  * providing self-hosted relay, RPC proxy, and client-side SDK.
@@ -30,8 +30,8 @@ export { SessionManager } from './session.js';
 export type { SessionState } from './session.js';
 
 // State management
-export { createCinaConnectStore, initializeStore } from './store.js';
-export type { CinaConnectState, ConnectionStatus, StoreConfig } from './store.js';
+export { createCinacoinStore, initializeStore } from './store.js';
+export type { CinacoinState, ConnectionStatus, StoreConfig } from './store.js';
 
 // Events
 export { EventEmitter } from './events.js';
@@ -319,7 +319,6 @@ export {
   BorshWriter,
   BorshReader,
   base58Encode,
-  base58Decode,
   sha256,
   AccessKeyPermission,
   KeyKind,
@@ -414,7 +413,7 @@ export type { X25519Keypair } from './crypto/keypair.js';
 
 export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt.js';
 
-// SIWE Authentication (optional — requires @cinaconnect/siwe)
+// SIWE Authentication (optional — requires @cinacoin/siwe)
 export { SIWEAuth } from './auth/siwe.js';
 export type { SIWEAuthConfig, SIWESignInResult } from './auth/siwe.js';
 
@@ -496,6 +495,18 @@ export async function createAdapter(
       const mod = await import('./adapters/solana.js');
       return new mod.SolanaChainAdapter();
     }
+    case 'bitcoin': {
+      const mod = await import('./adapters/bitcoin.js');
+      const adapter = new mod.BitcoinChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
+    case 'xrpl': {
+      const mod = await import('./adapters/xrpl.js');
+      const adapter = new mod.XrplChainAdapter();
+      if (config.chains) adapter.registerChains(config.chains);
+      return adapter;
+    }
     default:
       throw new Error(`Unknown adapter type: ${(config as any).type}`);
   }
@@ -505,7 +516,7 @@ export async function createAdapter(
  * Factory configuration for new chain adapters (TON, TRON, Polkadot).
  */
 export interface NewChainAdapterFactoryConfig {
-  type: 'ton' | 'tron' | 'polkadot' | 'solana' | 'cosmos' | 'sui' | 'hedera' | 'starknet' | 'near';
+  type: 'ton' | 'tron' | 'polkadot' | 'solana' | 'cosmos' | 'sui' | 'hedera' | 'starknet' | 'near' | 'bitcoin' | 'xrpl';
   client?: unknown;
   connector?: import('./connector.js').Connector;
   chains?: import('./types.js').Chain[];

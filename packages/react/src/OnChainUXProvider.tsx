@@ -55,8 +55,8 @@ export interface AccountState {
   ensName?: string;
 }
 
-/** CinaConnect configuration passed to the provider. */
-export interface CinaConnectConfig {
+/** CinaCoin configuration passed to the provider. */
+export interface CinaCoinConfig {
   /** Project ID (for analytics / relay). */
   projectId?: string;
 
@@ -94,10 +94,10 @@ export interface EIP5792ProviderContext {
   isConnected: boolean;
 }
 
-/** Context value exposed by CinaConnectProvider. */
-export interface CinaConnectContextValue {
+/** Context value exposed by CinaCoinProvider. */
+export interface CinaCoinContextValue {
   /** Current configuration. */
-  config: CinaConnectConfig;
+  config: CinaCoinConfig;
 
   /** Available connectors. */
   connectors: Connector[];
@@ -124,36 +124,36 @@ export interface CinaConnectContextValue {
   eip5792?: EIP5792ProviderContext;
 }
 
-const CinaConnectContext = createContext<CinaConnectContextValue | null>(null);
+const CinaCoinContext = createContext<CinaCoinContextValue | null>(null);
 
-/** Hook to access the CinaConnect context. Throws if used outside provider. */
-export function useCinaConnectContext(): CinaConnectContextValue {
-  const ctx = useContext(CinaConnectContext);
+/** Hook to access the CinaCoin context. Throws if used outside provider. */
+export function useCinaCoinContext(): CinaCoinContextValue {
+  const ctx = useContext(CinaCoinContext);
   if (!ctx) {
-    throw new Error('useCinaConnectContext must be used within <CinaConnectProvider>');
+    throw new Error('useCinaCoinContext must be used within <CinaCoinProvider>');
   }
   return ctx;
 }
 
 /** Provider props. */
-export interface CinaConnectProviderProps {
-  config: CinaConnectConfig;
+export interface CinaCoinProviderProps {
+  config: CinaCoinConfig;
   children: ReactNode;
 }
 
 /**
- * CinaConnectProvider — React context provider for CinaConnect.
+ * CinaCoinProvider — React context provider for CinaCoin.
  *
  * Wraps the app and provides chain state, connection methods, theming,
  * and EIP-5792 support via the core-sdk Connector/InjectedProvider.
  *
  * ```tsx
- * <CinaConnectProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
+ * <CinaCoinProvider config={{ chains: [...], theme: { mode: 'dark' } }}>
  *   <App />
- * </CinaConnectProvider>
+ * </CinaCoinProvider>
  * ```
  */
-export function CinaConnectProvider({ config, children }: CinaConnectProviderProps): JSX.Element {
+export function CinaCoinProvider({ config, children }: CinaCoinProviderProps): JSX.Element {
   const [status, setStatus] = useState<'disconnected' | 'connecting' | 'connected' | 'error'>('disconnected');
   const [account, setAccount] = useState<AccountState>({
     address: null,
@@ -199,7 +199,7 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
     try {
       // Lazy require — core-sdk is a workspace dependency
       // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { InjectedProvider } = require('@cinaconnect/core-sdk') as Record<string, unknown>;
+      const { InjectedProvider } = require('@cinacoin/core-sdk') as Record<string, unknown>;
 
       // InjectedProvider is a class: new InjectedProvider(id, name, icon, provider?)
       const Ctor = InjectedProvider as new (
@@ -351,7 +351,7 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
     };
   }, []);
 
-  const value = useMemo<CinaConnectContextValue>(
+  const value = useMemo<CinaCoinContextValue>(
     () => ({
       config,
       connectors,
@@ -378,10 +378,10 @@ export function CinaConnectProvider({ config, children }: CinaConnectProviderPro
   }, [config.theme?.variables]);
 
   return (
-    <CinaConnectContext.Provider value={value}>
+    <CinaCoinContext.Provider value={value}>
       <div className={`ocx-root ocx-theme-${config.theme?.mode ?? 'dark'}`} style={themeStyle}>
         {children}
       </div>
-    </CinaConnectContext.Provider>
+    </CinaCoinContext.Provider>
   );
 }

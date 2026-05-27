@@ -1,4 +1,4 @@
-# CinaConnect Framework Bindings & UI Completeness Analysis
+# Cinacoin Framework Bindings & UI Completeness Analysis
 
 **Date:** 2026-05-25
 **Scope:** Framework SDKs + UI components — comparison vs Reown AppKit
@@ -7,12 +7,12 @@
 
 ## 1. Per-Framework Completeness
 
-### React (`@cinaconnect/react`) — Score: 88%
+### React (`@cinacoin/react`) — Score: 88%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
-| Provider | ✅ | `CinaConnectProvider` — full React context with config, chains, theme, metadata |
-| Core Hooks | ✅ | `useCinaConnect`, `useAccount`, `useChainId`, `useConnect`, `useDisconnect` |
+| Provider | ✅ | `CinacoinProvider` — full React context with config, chains, theme, metadata |
+| Core Hooks | ✅ | `useCinacoin`, `useAccount`, `useChainId`, `useConnect`, `useDisconnect` |
 | EIP-5792 Hooks | ✅ | `useWalletCapabilities`, `useSendCalls`, `useAtomicBatch`, `useCallsStatus` — fully typed with helpers (`has`, `getChainCaps`, `filterBy`, `startPolling`, `stopPolling`, `allSucceeded`, `failedReceipts`) |
 | Components | ✅ | `ConnectButton`, `ConnectModal`, `ChainSwitcher` — wrappers over Lit Web Components |
 | SSR Support | ⚠️ | Provider has no SSR-specific guards (relies on `window.__ocx_eip5792_context`); EIP-5792 hooks assume browser environment |
@@ -20,12 +20,12 @@
 | Tests | ✅ | Vitest setup, ConnectButton test present |
 | Missing vs Reown | | No `useAppKit` own implementation (re-exports from Next), no `useBalance`, no `useWalletInfo`, no `useEnsName`, no `useEnsAvatar` |
 
-### Vue (`@cinaconnect/vue`) — Score: 80%
+### Vue (`@cinacoin/vue`) — Score: 80%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
-| Provider | ✅ | `CinaConnectProvider.vue` — Vue 3 SFC with `provide`/`ONCHAINUX_KEY` injection |
-| Composables | ✅ | `useCinaConnect`, `useAccount`, `useChainId`, `useConnect`, `useDisconnect` |
+| Provider | ✅ | `CinacoinProvider.vue` — Vue 3 SFC with `provide`/`ONCHAINUX_KEY` injection |
+| Composables | ✅ | `useCinacoin`, `useAccount`, `useChainId`, `useConnect`, `useDisconnect` |
 | EIP-5792 | ❌ | **No EIP-5792 composables** — missing entirely |
 | Components | ✅ | `OcxConnectButton`, `OcxConnectModal`, `OcxChainSwitcher` — `defineComponent` wrappers forwarding to Lit Web Components |
 | SSR Support | ⚠️ | No explicit SSR guards; `onMounted`/`onBeforeUnmount` lifecycle only |
@@ -33,14 +33,14 @@
 | Tests | ✅ | Component and composable tests present |
 | Missing vs Reown | | No EIP-5792, no balance/ENS composables, no wallet-info composable, no `useAppKit` |
 
-### Svelte (`@cinaconnect/svelte`) — Score: 75%
+### Svelte (`@cinacoin/svelte`) — Score: 75%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
-| Provider | ✅ | `createCinaConnect()` factory with Svelte context API (`setContext`/`getContext`) |
-| Stores | ✅ | 10 stores: `isConnected`, `address`, `balance`, `chainId`, `status`, `error`, `isConnecting`, `hasError`, `chains`, plus imperative `open`, `close`, `switchChain`, `resetCinaConnect` |
+| Provider | ✅ | `createCinacoin()` factory with Svelte context API (`setContext`/`getContext`) |
+| Stores | ✅ | 10 stores: `isConnected`, `address`, `balance`, `chainId`, `status`, `error`, `isConnecting`, `hasError`, `chains`, plus imperative `open`, `close`, `switchChain`, `resetCinacoin` |
 | EIP-5792 | ❌ | **No EIP-5792 support** — missing entirely |
-| Components | ✅ | `CinaConnectButton`, `CinaConnectAccountButton`, `CinaConnectNetworkButton` — native Svelte components (not just wrappers) |
+| Components | ✅ | `CinacoinButton`, `CinacoinAccountButton`, `CinacoinNetworkButton` — native Svelte components (not just wrappers) |
 | Actions | ✅ | `cinaConnectConnect`, `cinaConnectNetwork` Svelte actions |
 | SSR Support | ⚠️ | `setContext`/`getContext` require component initialization; no SSR guards |
 | SvelteKit | ✅ | `kit/index.ts` re-export — SvelteKit compatible |
@@ -49,12 +49,12 @@
 | Svelte 5 | ⚠️ | Supports runes pattern (`$effect.teardown` via `onDestroy`) but store syntax is Svelte 4; migration needed |
 | Missing vs Reown | | No EIP-5792, no dedicated SvelteKit plugin (manual integration), no `<ConnectModal>` component (only via store methods) |
 
-### Angular (`@cinaconnect/angular`) — Score: 72%
+### Angular (`@cinacoin/angular`) — Score: 72%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
-| Module | ✅ | `CinaConnectModule.forRoot()` — proper Angular module with DI tokens |
-| Service | ✅ | `CinaConnectService` — reactive `Observable<Account>`, `Observable<Network>`, `Observable<boolean>` via RxJS `ReplaySubject`/`BehaviorSubject` |
+| Module | ✅ | `CinacoinModule.forRoot()` — proper Angular module with DI tokens |
+| Service | ✅ | `CinacoinService` — reactive `Observable<Account>`, `Observable<Network>`, `Observable<boolean>` via RxJS `ReplaySubject`/`BehaviorSubject` |
 | EIP-5792 | ❌ | **No EIP-5792 support** — missing entirely |
 | Components | ✅ | `ConnectButtonComponent`, `AccountButtonComponent`, `NetworkButtonComponent` |
 | Pipes | ✅ | `AddressPipe` (truncate), `BalancePipe` (format) |
@@ -64,41 +64,41 @@
 | Tests | ✅ | Vitest test present |
 | Missing vs Reown | | No EIP-5792, no modal component (manual `open()`/`close()`), no standalone component support (NgModule only), no `useAppKit` equivalent |
 
-### Next.js (`@cinaconnect/next`) — Score: 82%
+### Next.js (`@cinacoin/next`) — Score: 82%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
 | App Router | ✅ | `AppKitProvider` — `'use client'` wrapper with hydration-safe mounting (`useState` + `useEffect` guard) |
 | Pages Router | ✅ | `AppKitPagesRouter` — separate provider for legacy Pages Router |
-| Server API | ✅ | `createServerClient`, `getCinaConnectServer` — singleton server-side client with `getSession`, `verifySiweMessage`, `withAuth` |
-| Middleware | ✅ | `withCinaConnectAuth`, `requireAuth` — cookie-based session middleware |
-| Hooks | ✅ | Re-exports from React: `useCinaConnect`, `useCinaConnectAccount`, `useCinaConnectNetwork`, `useDisconnect`, `useWalletInfo`, `useBalance`, `useAppKit` |
+| Server API | ✅ | `createServerClient`, `getCinacoinServer` — singleton server-side client with `getSession`, `verifySiweMessage`, `withAuth` |
+| Middleware | ✅ | `withCinacoinAuth`, `requireAuth` — cookie-based session middleware |
+| Hooks | ✅ | Re-exports from React: `useCinacoin`, `useCinacoinAccount`, `useCinacoinNetwork`, `useDisconnect`, `useWalletInfo`, `useBalance`, `useAppKit` |
 | Components | ✅ | `OnuxProvider`, `ConnectButton`, `AccountButton`, `NetworkButton` (re-exported from React) |
 | EIP-5792 | ⚠️ | Indirectly available via React re-exports, but no Next.js-specific EIP-5792 server utilities |
 | Typing | ✅ | Full TypeScript |
 | Tests | ✅ | Vitest test present |
 | Missing vs Reown | | No Next.js-specific EIP-5792, no `useAppKitState` with SSR-safe initial values, no Edge Runtime support, no ISR-specific hooks |
 
-### Nuxt (`@cinaconnect/nuxt`) — Score: 70%
+### Nuxt (`@cinacoin/nuxt`) — Score: 70%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
 | Module | ✅ | `defineNuxtModule` with `addPlugin`, `addImportsDir`, `addComponent` |
-| Composables | ✅ | `useCinaConnect`, `useCinaConnectAccount`, `useCinaConnectNetwork` — auto-imported |
+| Composables | ✅ | `useCinacoin`, `useCinacoinAccount`, `useCinacoinNetwork` — auto-imported |
 | Components | ✅ | `NuxtConnectButton`, `NuxtAccountButton` — auto-imported Vue SFCs |
-| Plugin | ✅ | Runtime plugin creates `CinaConnect` instance, provides via `nuxtApp.$cinaConnect` |
-| Theme CSS | ✅ | Auto-generates `cinaconnect-theme.css` with dark mode media query |
+| Plugin | ✅ | Runtime plugin creates `Cinacoin` instance, provides via `nuxtApp.$cinaConnect` |
+| Theme CSS | ✅ | Auto-generates `cinacoin-theme.css` with dark mode media query |
 | EIP-5792 | ❌ | **No EIP-5792 composables** |
 | SSR Support | ⚠️ | Plugin uses `defineNuxtPlugin` but composables use `get`-ters (non-reactive in SSR context) |
 | Typing | ✅ | TypeScript augmentation via `prepare:types` hook |
 | Tests | ✅ | Vitest test present, playground app included |
 | Missing vs Reown | | No EIP-5792, no server-side session verification, no Nitro route handlers, no auto-detection of `prefers-color-scheme` in composables (only in CSS) |
 
-### React Native (`@cinaconnect/react-native`) — Score: 85%
+### React Native (`@cinacoin/react-native`) — Score: 85%
 
 | Dimension | Status | Detail |
 |-----------|--------|--------|
-| Provider | ✅ | Full WC v2 integration via `@cinaconnect/walletconnect-v2` — `WcSessionManager` + event-driven state |
+| Provider | ✅ | Full WC v2 integration via `@cinacoin/walletconnect-v2` — `WcSessionManager` + event-driven state |
 | Components | ✅ | `ConnectButton`, `ConnectModal` (with `WalletInfo`), `QRScanner` — native RN components |
 | Deep Linking | ✅ | `DeepLinkManager` with scheme configs, parsed deep links |
 | Link Mode | ✅ | `LinkModeManager` with `WalletReturnCallback` |
@@ -111,7 +111,7 @@
 
 ---
 
-## 2. UI Component Inventory — Lit Web Components (`@cinaconnect/core-ui`)
+## 2. UI Component Inventory — Lit Web Components (`@cinacoin/core-ui`)
 
 ### Registered Custom Elements
 
@@ -136,25 +136,25 @@
 
 ### vs Reown scaffold-ui
 
-| Aspect | CinaConnect | Reown AppKit |
+| Aspect | Cinacoin | Reown AppKit |
 |--------|-------------|--------------|
 | Component count | 8 Lit elements | ~20+ Lit elements |
 | Router/Navigation | Manual view management | `<w3m-router>` with view stack |
 | Profile view | Via `AccountModal` | Dedicated `<w3m-account-button>` + profile |
-| Swap UI | In `@cinaconnect/pay-ui` (separate) | Built into scaffold-ui |
-| On-ramp | In `@cinaconnect/pay-ui` (separate) | Via partner integrations |
+| Swap UI | In `@cinacoin/pay-ui` (separate) | Built into scaffold-ui |
+| On-ramp | In `@cinacoin/pay-ui` (separate) | Via partner integrations |
 | Activity history | `AccountModal` basic | Full activity list component |
 | Settings view | Not yet a standalone component | `<w3m-settings>` component |
 | Search | Wallet list search | Global search across wallets + tokens |
 | Toast system | `TransactionToast` | Toast + snackbar system |
 
-**Verdict:** CinaConnect covers the core connect/disconnect/chain-switch flow well, but lacks the extended scaffold components (settings, activity, profile, search, router navigation) that Reown provides out of the box.
+**Verdict:** Cinacoin covers the core connect/disconnect/chain-switch flow well, but lacks the extended scaffold components (settings, activity, profile, search, router navigation) that Reown provides out of the box.
 
 ---
 
 ## 3. Theme System — White-Label Capability
 
-### `@cinaconnect/design-tokens`
+### `@cinacoin/design-tokens`
 
 | Token Layer | Coverage |
 |-------------|----------|
@@ -165,7 +165,7 @@
 | CSS output | ✅ `cssVariables`, `cssVariablesLight`, `cssVariablesMinimal` |
 | JS output | ✅ `tokens` catalog with flat maps |
 
-### `@cinaconnect/ui-theme`
+### `@cinacoin/ui-theme`
 
 | Feature | Status |
 |---------|--------|
@@ -175,7 +175,7 @@
 | Components | `Modal`, `PageTransition`, `PasswordStrengthIndicator` |
 | White-label | ✅ `themeVariables` override in config; CSS custom properties |
 
-### `@cinaconnect/cinaconnect-ui-theme`
+### `@cinacoin/cinacoin-ui-theme`
 
 | Feature | Status |
 |---------|--------|
@@ -186,24 +186,24 @@
 
 ### White-Label Comparison
 
-| Capability | CinaConnect | Reown AppKit |
+| Capability | Cinacoin | Reown AppKit |
 |------------|-------------|--------------|
 | CSS variable overrides | ✅ via `theme.variables` | ✅ via `themeVariables` |
 | Preset themes | 6 built-in | ~4 built-in |
 | Custom theme creation | ✅ Full token system | ✅ Theme builder |
-| Brand color injection | ✅ `--cinaconnect-color-accent` | ✅ `--w3m-accent` |
+| Brand color injection | ✅ `--cinacoin-color-accent` | ✅ `--w3m-accent` |
 | Dark/light auto-detect | ✅ `prefers-color-scheme` | ✅ Same |
 | Font family override | ✅ Via typography tokens | ✅ |
 | Border radius scale | ✅ Via radii tokens | ✅ |
 | Animation control | ✅ Animation presets | ✅ Motion config |
 
-**Verdict:** CinaConnect's theme system is **comparable or superior** to Reown in terms of customization depth. The 3-layer token architecture (global → semantic → component) is well-structured. The branded theme (`cinaconnect-ui-theme`) can be fully white-labeled via CSS variable overrides.
+**Verdict:** Cinacoin's theme system is **comparable or superior** to Reown in terms of customization depth. The 3-layer token architecture (global → semantic → component) is well-structured. The branded theme (`cinacoin-ui-theme`) can be fully white-labeled via CSS variable overrides.
 
 ---
 
 ## 4. i18n Coverage
 
-### Core UI i18n (`@cinaconnect/core-ui` — Lit Web Components)
+### Core UI i18n (`@cinacoin/core-ui` — Lit Web Components)
 
 | Locale | Keys | Coverage | Notes |
 |--------|------|----------|-------|
@@ -224,7 +224,7 @@
 - **Lazy loading:** ✅ `lazyLocaleFactory()` for code splitting
 - **Fallback:** ✅ `en` as default fallback
 
-### CinaConnect i18n (`@cinaconnect/cinaconnect-i18n` — React layer)
+### Cinacoin i18n (`@cinacoin/cinacoin-i18n` — React layer)
 
 | Locale | Lines | Namespaces | Notes |
 |--------|-------|------------|-------|
@@ -238,7 +238,7 @@
 
 ### vs Reown AppKit
 
-| Aspect | CinaConnect | Reown AppKit |
+| Aspect | Cinacoin | Reown AppKit |
 |--------|-------------|--------------|
 | Core UI locales | 10 | ~12 |
 | Framework-level locales | 5 | ~5 |
@@ -300,7 +300,7 @@
 | Failure tracking | ✅ `failedReceipts` helper |
 | Polling state | ✅ `isPolling` boolean |
 
-**Verdict:** All 4 hooks are **fully implemented and production-ready**. This is the strongest framework-specific feature of CinaConnect vs Reown. The hooks include extensive helper methods (`has`, `filterBy`, `allSucceeded`, `failedReceipts`) that Reown's equivalent hooks lack.
+**Verdict:** All 4 hooks are **fully implemented and production-ready**. This is the strongest framework-specific feature of Cinacoin vs Reown. The hooks include extensive helper methods (`has`, `filterBy`, `allSucceeded`, `failedReceipts`) that Reown's equivalent hooks lack.
 
 **Gap:** EIP-5792 is **React-only**. Vue, Svelte, Angular, Nuxt, and React Native have no equivalent support.
 
@@ -335,17 +335,17 @@
 
 ### Feature Gaps
 
-| Feature | CinaConnect | Reown AppKit |
+| Feature | Cinacoin | Reown AppKit |
 |---------|-------------|--------------|
 | EIP-5792 (React) | ✅ Full implementation | ⚠️ Partial |
 | EIP-5792 (other frameworks) | ❌ None | ❌ None |
 | SIWE authentication | ✅ Next.js server verification | ✅ |
-| SIWX | ✅ Separate `@cinaconnect/siwx` package | ✅ |
+| SIWX | ✅ Separate `@cinacoin/siwx` package | ✅ |
 | Email wallet | ⚠️ String support only, no implementation | ✅ Full flow |
 | Social login | ⚠️ String support only | ✅ Full flow |
 | Multi-chain adapters | ✅ 6 (Bitcoin, Cosmos, Hedera, NEAR, Starknet, Sui) + XRPL | ✅ Multiple |
-| Account abstraction | ✅ `@cinaconnect/aa-sdk` | ✅ Via partners |
-| Pay/swap | ✅ `@cinaconnect/pay-ui` (separate) | ✅ Integrated |
+| Account abstraction | ✅ `@cinacoin/aa-sdk` | ✅ Via partners |
+| Pay/swap | ✅ `@cinacoin/pay-ui` (separate) | ✅ Integrated |
 
 ---
 
@@ -353,13 +353,13 @@
 
 | Package | Score | Notes |
 |---------|-------|-------|
-| `@cinaconnect/react` | **88%** | Strong hooks incl. EIP-5792, missing SSR guards for EIP-5792 |
-| `@cinaconnect/react-native` | **85%** | Full WC v2, deep linking, link mode; no EIP-5792 |
-| `@cinaconnect/next` | **82%** | App+Pages router, server auth, hooks re-exported from React |
-| `@cinaconnect/vue` | **80%** | Solid composables/components, missing EIP-5792 entirely |
-| `@cinaconnect/svelte` | **75%** | Good store system, native components, missing SvelteKit plugin |
-| `@cinaconnect/angular` | **72%** | Full DI + RxJS, missing EIP-5792 + standalone components |
-| `@cinaconnect/nuxt` | **70%** | Module integration works, missing server-side auth + EIP-5792 |
+| `@cinacoin/react` | **88%** | Strong hooks incl. EIP-5792, missing SSR guards for EIP-5792 |
+| `@cinacoin/react-native` | **85%** | Full WC v2, deep linking, link mode; no EIP-5792 |
+| `@cinacoin/next` | **82%** | App+Pages router, server auth, hooks re-exported from React |
+| `@cinacoin/vue` | **80%** | Solid composables/components, missing EIP-5792 entirely |
+| `@cinacoin/svelte` | **75%** | Good store system, native components, missing SvelteKit plugin |
+| `@cinacoin/angular` | **72%** | Full DI + RxJS, missing EIP-5792 + standalone components |
+| `@cinacoin/nuxt` | **70%** | Module integration works, missing server-side auth + EIP-5792 |
 
 ---
 
@@ -369,13 +369,13 @@
 
 1. **Port EIP-5792 to Vue composables** — `useWalletCapabilities`, `useSendCalls` as Vue `use*` composables using the same core-sdk functions
 2. **Port EIP-5792 to Svelte stores** — Reactive `$capabilities`, `$sendCalls()` store actions
-3. **SvelteKit auto-import plugin** — Follow Nuxt module pattern to create `@cinaconnect/sveltekit`
+3. **SvelteKit auto-import plugin** — Follow Nuxt module pattern to create `@cinacoin/sveltekit`
 4. **Add EIP-5792 to Nuxt composables** — Auto-import `useSendCalls`, `useCallsStatus`
 
 ### Medium Priority
 
 5. **Angular standalone components** — Add `standalone: true` to all components for Angular 15+
-6. **Next.js Edge Runtime** — Add `withCinaConnectAuth` Edge-compatible variant
+6. **Next.js Edge Runtime** — Add `withCinacoinAuth` Edge-compatible variant
 7. **React Native EIP-5792** — Add `useSendCalls` hook using existing `request<T>()` infrastructure
 8. **Add `<ocx-settings>` component** — Settings view with theme, language, currency options
 

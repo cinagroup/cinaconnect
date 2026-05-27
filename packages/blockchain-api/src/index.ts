@@ -1,9 +1,9 @@
 /**
- * @cinaconnect/blockchain-api — public API surface.
+ * @cinacoin/blockchain-api — public API surface.
  *
  * Provides a `BlockchainApiClient` for reading on-chain data
  * (balances, transactions, ENS, tokens, NFTs) via viem and
- * the @cinaconnect/core-sdk transport layer.
+ * the @cinacoin/core-sdk transport layer.
  */
 
 export type {
@@ -13,6 +13,9 @@ export type {
   NFTItem,
   PaginatedResult,
   BlockchainApiConfig,
+  TransactionHistoryQuery,
+  TransactionCacheEntry,
 } from "./types.js";
 
 export { BlockchainApiClient, createBlockchainApi } from "./client.js";
+export { clearTxCached } from "./client.js";

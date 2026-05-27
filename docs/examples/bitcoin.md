@@ -6,24 +6,24 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react @cinaconnect/adapter-bitcoin
+npm install @cinacoin/core-sdk @cinacoin/react @cinacoin/adapter-bitcoin
 ```
 
 ## Quick Start
 
 ```tsx
-import { CinaConnectProvider } from '@cinaconnect/react'
-import { ConnectButton, useAccount } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
+import { ConnectButton, useAccount } from '@cinacoin/react'
 
-<CinaConnectProvider
+<CinacoinProvider
   config={{
     projectId: 'your-project-id',
-    relayUrl: 'wss://relay.cinaconnect.com/v1',
+    relayUrl: 'wss://relay.cinacoin.com/v1',
     chains: [
       {
         id: 'bip122:000000000019d6689c085ae165831e93',
@@ -47,7 +47,7 @@ import { ConnectButton, useAccount } from '@cinaconnect/react'
   }}
 >
   <App />
-</CinaConnectProvider>
+</CinacoinProvider>
 ```
 
 ## Complete Example
@@ -58,7 +58,7 @@ import { ConnectButton, useAccount } from '@cinaconnect/react'
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 import App from './App'
 
 const bitcoinMainnet = {
@@ -77,10 +77,10 @@ const bitcoinTestnet = {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         projectId: 'your-project-id',
-        relayUrl: 'wss://relay.cinaconnect.com/v1',
+        relayUrl: 'wss://relay.cinacoin.com/v1',
         chains: [bitcoinMainnet, bitcoinTestnet],
         metadata: {
           name: 'Bitcoin dApp',
@@ -91,7 +91,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   </React.StrictMode>,
 )
 ```
@@ -100,10 +100,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 ```tsx
 // src/App.tsx
-import { useCinaConnect, useAccount, useDisconnect } from '@cinaconnect/react'
+import { useCinacoin, useAccount, useDisconnect } from '@cinacoin/react'
 
 function BitcoinApp() {
-  const { connect, status } = useCinaConnect()
+  const { connect, status } = useCinacoin()
   const account = useAccount()
   const { disconnect } = useDisconnect()
 
@@ -142,7 +142,7 @@ export default BitcoinApp
 import {
   bitcoinConnectorFactory,
   BitcoinConnectorFactory,
-} from '@cinaconnect/adapter-bitcoin'
+} from '@cinacoin/adapter-bitcoin'
 
 // --- Discover available Bitcoin wallets ---
 const available = bitcoinConnectorFactory.detectAvailableConnectors()
@@ -195,7 +195,7 @@ async function signPsbt(connector: any, psbtBase64: string) {
 ### 4. Auto-Detect & Connect
 
 ```ts
-import { bitcoinConnectorFactory } from '@cinaconnect/adapter-bitcoin'
+import { bitcoinConnectorFactory } from '@cinacoin/adapter-bitcoin'
 
 async function autoConnect() {
   // Get recommended connectors sorted by priority

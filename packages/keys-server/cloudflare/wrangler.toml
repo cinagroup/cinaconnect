@@ -1,4 +1,4 @@
-name = "cinaconnect-keys-server"
+name = "cinacoin-keys-server"
 main = "worker.ts"
 compatibility_date = "2024-01-01"
 
@@ -17,7 +17,7 @@ MAX_KEYS_PER_USER = "100"
 # ── D1 Database ────────────────────────────────────────────────
 [[d1_databases]]
 binding = "DB"
-database_name = "cinaconnect-keys"
+database_name = "cinacoin-keys"
 database_id = "1f24922a-19d9-451f-9125-11736d54ec3c"
 
 # ── KV Namespaces ──────────────────────────────────────────────
@@ -27,12 +27,12 @@ id = "b60edcfb4052452780701cbf7a06aeb9"
 
 # ── Routes ─────────────────────────────────────────────────────
 # routes = [
-#   { pattern = "keys.cinaconnect.com/*", zone_name = "cinaconnect.com" }
+#   { pattern = "keys.cinacoin.com/*", zone_name = "cinacoin.com" }
 # ]
 
 # ── Staging environment ────────────────────────────────────────
 [env.staging]
-name = "cinaconnect-keys-server-staging"
+name = "cinacoin-keys-server-staging"
 
 [env.staging.vars]
 LOG_LEVEL = "debug"
@@ -41,7 +41,7 @@ MAX_KEYS_PER_USER = "50"
 
 # [[env.staging.d1_databases]]
 # binding = "DB"
-# database_name = "cinaconnect-keys-staging"
+# database_name = "cinacoin-keys-staging"
 # database_id = ""                    # ← staging D1 database ID
 
 # [[env.staging.kv_namespaces]]

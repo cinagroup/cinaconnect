@@ -1,25 +1,25 @@
-# Migration Guide: Family/ConnectKit → CinaConnect
+# Migration Guide: Family/ConnectKit → Cinacoin
 
-> Complete guide for migrating from Family.co ConnectKit (wagmi-based) to CinaConnect.
+> Complete guide for migrating from Family.co ConnectKit (wagmi-based) to Cinacoin.
 
 ## Overview
 
-ConnectKit by Family.co is a lightweight wallet connection UI built on wagmi. CinaConnect provides the same streamlined developer experience with full self-hosting capabilities, multi-chain support, and zero third-party dependencies.
+ConnectKit by Family.co is a lightweight wallet connection UI built on wagmi. Cinacoin provides the same streamlined developer experience with full self-hosting capabilities, multi-chain support, and zero third-party dependencies.
 
 ## Architecture Comparison
 
-| Layer | ConnectKit Stack | CinaConnect |
+| Layer | ConnectKit Stack | Cinacoin |
 |-------|-----------------|-------------|
-| UI Components | `connectkit` | `@cinaconnect/react` (ConnectButton, ConnectModal) |
-| Hooks & Logic | `wagmi` + `viem` | `@cinaconnect/react` (useCinaConnect, useAccount) |
-| Transport | WalletConnect Cloud (for WC connector) | Self-hosted CinaConnect Relay |
+| UI Components | `connectkit` | `@cinacoin/react` (ConnectButton, ConnectModal) |
+| Hooks & Logic | `wagmi` + `viem` | `@cinacoin/react` (useCinacoin, useAccount) |
+| Transport | WalletConnect Cloud (for WC connector) | Self-hosted Cinacoin Relay |
 | RPC | Configured in wagmi | Self-hosted RPC Proxy |
 | Theming | `ConnectKitProvider` theme props | Component `theme` prop + design tokens |
-| SIWE Auth | Custom integration | `@cinaconnect/siwe` built-in |
+| SIWE Auth | Custom integration | `@cinacoin/siwe` built-in |
 
 ## Why Migrate from ConnectKit?
 
-| Factor | ConnectKit | CinaConnect |
+| Factor | ConnectKit | Cinacoin |
 |--------|-----------|-------------|
 | Underlying dependency | wagmi + viem | Self-contained SDK |
 | WalletConnect relay | Reown Cloud | Self-hosted Relay Server |
@@ -36,10 +36,10 @@ ConnectKit by Family.co is a lightweight wallet connection UI built on wagmi. Ci
 npm uninstall connectkit wagmi viem @wagmi/connectors
 ```
 
-### 2. Install CinaConnect
+### 2. Install Cinacoin
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/react @cinaconnect/core-sdk
+npm install @cinacoin/core @cinacoin/react @cinacoin/core-sdk
 ```
 
 ### 3. Replace Provider Setup
@@ -90,17 +90,17 @@ function App() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
 // App.tsx
-import { CinaConnectProvider, ConnectButton } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider, ConnectButton } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 function App() {
   return (
-    <CinaConnectProvider
-      projectId="your-cinaconnect-project-id"
+    <CinacoinProvider
+      projectId="your-cinacoin-project-id"
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
         { id: 'eip155:137', name: 'Polygon', rpcUrl: 'https://rpc.yourdomain.com/polygon' },
@@ -114,7 +114,7 @@ function App() {
       }}
     >
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
@@ -131,10 +131,10 @@ function Header() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { ConnectButton } from '@cinaconnect/react'
+import { ConnectButton } from '@cinacoin/react'
 
 function Header() {
   return (
@@ -149,19 +149,19 @@ function Header() {
 
 ## API Mapping Table
 
-| ConnectKit/wagmi | CinaConnect | Notes |
+| ConnectKit/wagmi | Cinacoin | Notes |
 |------------------|-------------|-------|
-| `<ConnectKitProvider>` | `<CinaConnectProvider>` | Provider component |
+| `<ConnectKitProvider>` | `<CinacoinProvider>` | Provider component |
 | `<ConnectKitButton>` | `<ConnectButton>` | Drop-in replacement |
 | `useAccount()` (wagmi) | `useAccount()` | Same name, same purpose |
 | `useConnect()` (wagmi) | `useConnect()` | Same name, walletId-based |
 | `useDisconnect()` (wagmi) | `useDisconnect()` | Same name |
-| `useSwitchChain()` (wagmi) | `useCinaConnect().switchChain` | Via main hook |
-| `useEnsName()` (wagmi) | `useCinaConnect().ensName` | Built-in ENS |
-| `useEnsAvatar()` (wagmi) | `useCinaConnect().ensAvatar` | Built-in ENS avatar |
+| `useSwitchChain()` (wagmi) | `useCinacoin().switchChain` | Via main hook |
+| `useEnsName()` (wagmi) | `useCinacoin().ensName` | Built-in ENS |
+| `useEnsAvatar()` (wagmi) | `useCinacoin().ensAvatar` | Built-in ENS avatar |
 | `useBalance()` (wagmi) | `useAccount().balance` | In account state |
 | `connect({ connector })` | `connect(walletId)` | String-based API |
-| `createConfig()` | `CinaConnectProvider` config props | Inline config |
+| `createConfig()` | `CinacoinProvider` config props | Inline config |
 | ConnectKit theme props | `themeMode` + design tokens | More flexible theming |
 | `initialChainId` | `chains` array order | First chain is default |
 
@@ -186,10 +186,10 @@ function AccountInfo() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { useAccount } from '@cinaconnect/react'
+import { useAccount } from '@cinacoin/react'
 
 function AccountInfo() {
   const account = useAccount()
@@ -235,10 +235,10 @@ function ConnectPanel() {
 }
 ```
 
-#### After (CinaConnect)
+#### After (Cinacoin)
 
 ```tsx
-import { useAccount, useConnect, useDisconnect } from '@cinaconnect/react'
+import { useAccount, useConnect, useDisconnect } from '@cinacoin/react'
 
 function ConnectPanel() {
   const account = useAccount()
@@ -288,21 +288,21 @@ function ConnectPanel() {
 >
 ```
 
-### After (CinaConnect Theme)
+### After (Cinacoin Theme)
 
 ```tsx
-<CinaConnectProvider
+<CinacoinProvider
   themeMode="dark"
   // Additional theme customization via design tokens
-  // See @cinaconnect/design-tokens for full token list
+  // See @cinacoin/design-tokens for full token list
 >
 ```
 
 For advanced theming, use the design token system:
 
 ```tsx
-import '@cinaconnect/design-tokens/base.css'
-import '@cinaconnect/design-tokens/dark.css'
+import '@cinacoin/design-tokens/base.css'
+import '@cinacoin/design-tokens/dark.css'
 
 // Override specific tokens in your CSS
 :root {
@@ -316,26 +316,26 @@ import '@cinaconnect/design-tokens/dark.css'
 
 ### 1. No wagmi/viem Dependency
 
-ConnectKit requires wagmi. CinaConnect is self-contained. For contract interactions, use ethers.js, viem, or any library directly — CinaConnect handles the wallet transport layer.
+ConnectKit requires wagmi. Cinacoin is self-contained. For contract interactions, use ethers.js, viem, or any library directly — Cinacoin handles the wallet transport layer.
 
 ### 2. Connector API
 
-ConnectKit uses wagmi connector objects. CinaConnect uses wallet ID strings for simplicity.
+ConnectKit uses wagmi connector objects. Cinacoin uses wallet ID strings for simplicity.
 
 ### 3. No QueryClient Required
 
-ConnectKit needs `@tanstack/react-query`. CinaConnect manages its own state.
+ConnectKit needs `@tanstack/react-query`. Cinacoin manages its own state.
 
 ### 4. Chain Configuration
 
-| ConnectKit (wagmi) | CinaConnect |
+| ConnectKit (wagmi) | Cinacoin |
 |--------------------|-------------|
 | `chains: [mainnet, polygon]` from wagmi/chains | Custom `chains` array with RPC URLs |
 | Transports via `http()` | RPC URLs in chain config, routed through RPC Proxy |
 
 ### 5. Built-in Wallet Registry
 
-ConnectKit relies on wagmi connectors. CinaConnect has a built-in wallet registry with EIP-6963 auto-discovery.
+ConnectKit relies on wagmi connectors. Cinacoin has a built-in wallet registry with EIP-6963 auto-discovery.
 
 ## Migration Examples
 
@@ -374,12 +374,12 @@ export default function App() {
 #### After
 
 ```tsx
-import { CinaConnectProvider, ConnectButton } from '@cinaconnect/react'
-import { EvmAdapter } from '@cinaconnect/core-sdk'
+import { CinacoinProvider, ConnectButton } from '@cinacoin/react'
+import { EvmAdapter } from '@cinacoin/core-sdk'
 
 export default function App() {
   return (
-    <CinaConnectProvider
+    <CinacoinProvider
       projectId="your-project-id"
       chains={[
         { id: 'eip155:1', name: 'Ethereum', rpcUrl: 'https://rpc.yourdomain.com/eth' },
@@ -387,7 +387,7 @@ export default function App() {
       adapters={[new EvmAdapter()]}
     >
       <ConnectButton />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
@@ -429,16 +429,16 @@ function SignIn() {
 }
 ```
 
-#### After (CinaConnect SIWE)
+#### After (Cinacoin SIWE)
 
 ```tsx
-import { useAccount, useCinaConnect } from '@cinaconnect/react'
-import { generateMessage } from '@cinaconnect/siwe'
-import { Connector } from '@cinaconnect/core-sdk'
+import { useAccount, useCinacoin } from '@cinacoin/react'
+import { generateMessage } from '@cinacoin/siwe'
+import { Connector } from '@cinacoin/core-sdk'
 
 function SignIn() {
   const account = useAccount()
-  const { signMessage } = useCinaConnect()
+  const { signMessage } = useCinacoin()
 
   async function signIn() {
     if (!account) return
@@ -478,10 +478,10 @@ function SignIn() {
 
 If your ConnectKit project used WalletConnect for any connectors:
 
-| Component | ConnectKit | CinaConnect |
+| Component | ConnectKit | Cinacoin |
 |-----------|-----------|-------------|
 | WC Relay | Reown Cloud (via projectId) | Your Relay Server |
-| RPC | Alchemy/Infura in wagmi config | CinaConnect RPC Proxy |
+| RPC | Alchemy/Infura in wagmi config | Cinacoin RPC Proxy |
 
 Deploy self-hosted infrastructure:
 
@@ -493,35 +493,35 @@ cd packages/relay-server && cargo build --release
 cd packages/rpc-proxy && cargo build --release
 
 # Full Helm deployment
-helm install cinaconnect ./deploy/helm/cinaconnect \
-  --namespace cinaconnect --create-namespace
+helm install cinacoin ./deploy/helm/cinacoin \
+  --namespace cinacoin --create-namespace
 ```
 
 ## Automated Migration
 
 ```bash
 # Install codemod
-npm install -D @cinaconnect/codemod
+npm install -D @cinacoin/codemod
 
 # Run transform
-npx cinaconnect-codemod --src-dir ./src --transform connectkit-to-cinaconnect --dry-run --verbose
+npx cinacoin-codemod --src-dir ./src --transform connectkit-to-cinacoin --dry-run --verbose
 ```
 
 ## Migration Checklist
 
 ### Pre-Migration
 
-- [ ] Deploy CinaConnect Relay Server
-- [ ] Deploy CinaConnect RPC Proxy
+- [ ] Deploy Cinacoin Relay Server
+- [ ] Deploy Cinacoin RPC Proxy
 - [ ] Configure supported chains
 
 ### Code Migration
 
 - [ ] Remove `connectkit`, `wagmi`, `viem` dependencies
-- [ ] Install `@cinaconnect/core`, `@cinaconnect/react`, `@cinaconnect/core-sdk`
-- [ ] Replace `ConnectKitProvider` with `CinaConnectProvider`
+- [ ] Install `@cinacoin/core`, `@cinacoin/react`, `@cinacoin/core-sdk`
+- [ ] Replace `ConnectKitProvider` with `CinacoinProvider`
 - [ ] Replace `ConnectKitButton` with `ConnectButton`
-- [ ] Update wagmi hooks to CinaConnect hooks
+- [ ] Update wagmi hooks to Cinacoin hooks
 - [ ] Migrate custom theme to design tokens
 - [ ] Test all wallet connection flows
 
@@ -544,7 +544,7 @@ npx cinaconnect-codemod --src-dir ./src --transform connectkit-to-cinaconnect --
 
 ## Next Steps
 
-- See [CinaConnect Quick Start](/guide/quick-start) for a full walkthrough
+- See [Cinacoin Quick Start](/guide/quick-start) for a full walkthrough
 - See [React API Reference](/api/react) for detailed hook documentation
 - See [SIWE Auth Example](/examples/siwe-auth) for authentication setup
 - See [Migrate from Reown](/guide/migrate-from-reown) for full infrastructure details

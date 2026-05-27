@@ -1,5 +1,5 @@
 /**
- * Token types for @cinaconnect/token-list
+ * Token types for @cinacoin/token-list
  */
 export {};
 //# sourceMappingURL=types.js.map

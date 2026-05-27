@@ -1,5 +1,5 @@
 /**
- * CinaConnect Performance Benchmark Script
+ * Cinacoin Performance Benchmark Script
  *
  * Measures key performance metrics for wallet operations.
  * Run via: node scripts/benchmark.js
@@ -292,7 +292,7 @@ async function benchmarkObjectCreation() {
     // Simulate creating a connector config object
     const config = {
       chainId: 1,
-      rpcUrl: 'https://eth.rpc.cinaconnect.com',
+      rpcUrl: 'https://eth.rpc.cinacoin.com',
       connector: 'metamask',
       options: {
         theme: 'dark',
@@ -321,7 +321,7 @@ async function benchmarkObjectCreation() {
 // ─── Main ───────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('🚀 CinaConnect Performance Benchmark');
+  console.log('🚀 Cinacoin Performance Benchmark');
   console.log(`   Date: ${new Date().toISOString()}`);
   console.log(`   Iterations: ${ITERATIONS}`);
   console.log(`   CI Mode: ${CI_MODE}`);

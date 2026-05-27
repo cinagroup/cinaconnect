@@ -1,11 +1,11 @@
 # Installation
 
-> Install CinaConnect packages for your framework.
+> Install Cinacoin packages for your framework.
 
 ## Core SDK (required)
 
 ```bash
-npm install @cinaconnect/core-sdk
+npm install @cinacoin/core-sdk
 ```
 
 ## Framework Adapters
@@ -13,43 +13,43 @@ npm install @cinaconnect/core-sdk
 ### React
 
 ```bash
-npm install @cinaconnect/react
+npm install @cinacoin/react
 ```
 
 ### Vue 3
 
 ```bash
-npm install @cinaconnect/vue
+npm install @cinacoin/vue
 ```
 
 ### Svelte
 
 ```bash
-npm install @cinaconnect/svelte
+npm install @cinacoin/svelte
 ```
 
 ### Next.js
 
 ```bash
-npm install @cinaconnect/next
+npm install @cinacoin/next
 ```
 
 ### Nuxt 3
 
 ```bash
-npm install @cinaconnect/nuxt
+npm install @cinacoin/nuxt
 ```
 
 ### Angular
 
 ```bash
-npm install @cinaconnect/angular
+npm install @cinacoin/angular
 ```
 
 ### React Native
 
 ```bash
-npm install @cinaconnect/react-native
+npm install @cinacoin/react-native
 ```
 
 ## Mobile SDKs
@@ -57,20 +57,20 @@ npm install @cinaconnect/react-native
 ### iOS (Swift)
 
 ```ruby
-pod 'CinaConnect', '~> 1.0'
+pod 'Cinacoin', '~> 1.0'
 ```
 
 ### Android (Kotlin)
 
 ```groovy
-implementation 'com.cinaconnect:sdk:1.0.0'
+implementation 'com.cinacoin:sdk:1.0.0'
 ```
 
 ### Flutter
 
 ```yaml
 dependencies:
-  cinaconnect: ^1.0.0
+  cinacoin: ^1.0.0
 ```
 
 ## Infrastructure
@@ -78,13 +78,13 @@ dependencies:
 ### Relay Server (Docker)
 
 ```bash
-docker pull cinaconnect/relay-server:latest
+docker pull cinacoin/relay-server:latest
 ```
 
 ### RPC Proxy (Docker)
 
 ```bash
-docker pull cinaconnect/rpc-proxy:latest
+docker pull cinacoin/rpc-proxy:latest
 ```
 
 ## Next Steps

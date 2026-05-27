@@ -74,7 +74,7 @@ export interface MagicLinkConfig {
   issuer?: string;
 }
 
-const DEFAULT_ISSUER = 'cinaconnect-magic-link';
+const DEFAULT_ISSUER = 'cinacoin-magic-link';
 
 // ─── MagicLinkManager Class ─────────────────────────────────────────────
 

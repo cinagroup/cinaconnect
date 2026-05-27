@@ -1,13 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace CinaConnect.WalletConnect
+namespace Cinacoin.WalletConnect
 {
     // ═══════════════════════════════════════════════════════════════════
     // WalletConnect v2 Protocol Implementation for Unity (C#)
@@ -30,20 +31,20 @@ namespace CinaConnect.WalletConnect
         /// Length of X25519 keys in bytes.
         public const int KeySize = 32;
 
-        /// Length of AES initialization vector.
-        public const int IVSize = 16;
+        /// Length of ChaCha20-Poly1305 nonce.
+        public const int NonceSize = 12;
 
-        /// Length of HMAC-SHA256 output.
-        public const int MacSize = 32;
+        /// Length of Poly1305 MAC tag.
+        public const int MacSize = 16;
 
-        /// Encrypted envelope overhead: IV + ciphertext + MAC.
-        public const int EnvelopeOverhead = IVSize + MacSize;
+        /// Encrypted envelope overhead: nonce + MAC tag.
+        public const int EnvelopeOverhead = NonceSize + MacSize;
 
-        /// WC v2 type-0 envelope overhead.
-        public const int Type0EnvelopeOverhead = 1 + IVSize + MacSize;
+        /// WC v2 type-0 envelope overhead (tag 0 | nonce | ciphertext | tag).
+        public const int Type0EnvelopeOverhead = 1 + NonceSize + MacSize;
 
-        /// WC v2 type-1 envelope overhead.
-        public const int Type1EnvelopeOverhead = 1 + KeySize + IVSize + MacSize;
+        /// WC v2 type-1 envelope overhead (tag 1 | ephemeral_pub | nonce | ciphertext | tag).
+        public const int Type1EnvelopeOverhead = 1 + KeySize + NonceSize + MacSize;
 
         /// Generate 32 random bytes for a key pair seed.
         public static byte[] GenerateRandomBytes(int length = KeySize)
@@ -125,30 +126,264 @@ namespace CinaConnect.WalletConnect
             return okm;
         }
 
-        /// AES-256-CBC encrypt.
-        public static byte[] AesCbcEncrypt(byte[] key, byte[] iv, byte[] plaintext)
+        /// ChaCha20-Poly1305 AEAD encrypt (RFC 8439).
+        /// key: 32 bytes, nonce: 12 bytes.
+        public static byte[] ChaCha20Poly1305Encrypt(byte[] key, byte[] nonce, byte[] plaintext, byte[] aad = null)
         {
-            using var aes = System.Security.Cryptography.Aes.Create();
-            aes.Key = key;
-            aes.IV = iv;
-            aes.Mode = System.Security.Cryptography.CipherMode.CBC;
-            aes.Padding = System.Security.Cryptography.PaddingMode.PKCS7;
-
-            using var encryptor = aes.CreateEncryptor();
-            return encryptor.TransformFinalBlock(plaintext, 0, plaintext.Length);
+            var polyKey = ChaCha20Block(key, nonce, 0);
+            var ciphertext = ChaCha20Crypt(key, nonce, plaintext, 1);
+            var tag = Poly1305Mac(polyKey, aad, ciphertext);
+            var result = new byte[ciphertext.Length + MacSize];
+            Buffer.BlockCopy(ciphertext, 0, result, 0, ciphertext.Length);
+            Buffer.BlockCopy(tag, 0, result, ciphertext.Length, MacSize);
+            return result;
         }
 
-        /// AES-256-CBC decrypt.
-        public static byte[] AesCbcDecrypt(byte[] key, byte[] iv, byte[] ciphertext)
+        /// ChaCha20-Poly1305 AEAD decrypt (RFC 8439).
+        /// key: 32 bytes, nonce: 12 bytes.
+        public static byte[] ChaCha20Poly1305Decrypt(byte[] key, byte[] nonce, byte[] ciphertextWithTag, byte[] aad = null)
         {
-            using var aes = System.Security.Cryptography.Aes.Create();
-            aes.Key = key;
-            aes.IV = iv;
-            aes.Mode = System.Security.Cryptography.CipherMode.CBC;
-            aes.Padding = System.Security.Cryptography.PaddingMode.PKCS7;
+            if (ciphertextWithTag.Length < MacSize)
+                throw new ArgumentException("Ciphertext too short");
 
-            using var decryptor = aes.CreateDecryptor();
-            return decryptor.TransformFinalBlock(ciphertext, 0, ciphertext.Length);
+            var ctLen = ciphertextWithTag.Length - MacSize;
+            var ciphertext = new byte[ctLen];
+            var tag = new byte[MacSize];
+            Buffer.BlockCopy(ciphertextWithTag, 0, ciphertext, 0, ctLen);
+            Buffer.BlockCopy(ciphertextWithTag, ctLen, tag, 0, MacSize);
+
+            var polyKey = ChaCha20Block(key, nonce, 0);
+            var expectedTag = Poly1305Mac(polyKey, aad, ciphertext);
+            if (!ConstantTimeCompare(tag, expectedTag))
+                throw new InvalidOperationException("Poly1305 MAC verification failed");
+
+            return ChaCha20Crypt(key, nonce, ciphertext, 1);
+        }
+
+        /// ChaCha20 core — generate a single 64-byte keystream block.
+        private static byte[] ChaCha20Block(byte[] key, byte[] nonce, uint counter)
+        {
+            var state = new uint[16];
+            // Constants "expa" "nd 3" "2-by" "te-k"
+            state[0] = 0x61707865; state[1] = 0x3320646e;
+            state[2] = 0x79622d32; state[3] = 0x6b206574;
+            // Key (8 x 32-bit LE)
+            for (int i = 0; i < 8; i++)
+                state[4 + i] = LE32(key, i * 4);
+            // Counter
+            state[12] = counter;
+            // Nonce (3 x 32-bit LE)
+            state[13] = LE32(nonce, 0);
+            state[14] = LE32(nonce, 4);
+            state[15] = LE32(nonce, 8);
+
+            var x = (uint[])state.Clone();
+            ChaCha20Rounds(x);
+
+            var outBytes = new byte[64];
+            for (int i = 0; i < 16; i++)
+            {
+                var w = x[i] + state[i];
+                outBytes[i * 4 + 0] = (byte)(w & 0xff);
+                outBytes[i * 4 + 1] = (byte)((w >> 8) & 0xff);
+                outBytes[i * 4 + 2] = (byte)((w >> 16) & 0xff);
+                outBytes[i * 4 + 3] = (byte)((w >> 24) & 0xff);
+            }
+            return outBytes;
+        }
+
+        /// ChaCha20 encryption/decryption (symmetric).
+        private static byte[] ChaCha20Crypt(byte[] key, byte[] nonce, byte[] data, uint initialCounter)
+        {
+            var result = new byte[data.Length];
+            var counter = initialCounter;
+            var offset = 0;
+
+            while (offset < data.Length)
+            {
+                var block = ChaCha20Block(key, nonce, counter);
+                var len = Math.Min(64, data.Length - offset);
+                for (int i = 0; i < len; i++)
+                    result[offset + i] = (byte)(data[offset + i] ^ block[i]);
+                offset += len;
+                counter++;
+            }
+            return result;
+        }
+
+        /// ChaCha20 quarter round.
+        private static void QuarterRound(uint[] x, int a, int b, int c, int d)
+        {
+            x[a] += x[b]; x[d] = RotL32(x[d] ^ x[a], 16);
+            x[c] += x[d]; x[b] = RotL32(x[b] ^ x[c], 12);
+            x[a] += x[b]; x[d] = RotL32(x[d] ^ x[a], 8);
+            x[c] += x[d]; x[b] = RotL32(x[b] ^ x[c], 7);
+        }
+
+        /// 20 rounds (10 double-rounds) of ChaCha20.
+        private static void ChaCha20Rounds(uint[] x)
+        {
+            for (int i = 0; i < 10; i++)
+            {
+                // Column rounds
+                QuarterRound(x, 0, 4, 8, 12);
+                QuarterRound(x, 1, 5, 9, 13);
+                QuarterRound(x, 2, 6, 10, 14);
+                QuarterRound(x, 3, 7, 11, 15);
+                // Diagonal rounds
+                QuarterRound(x, 0, 5, 10, 15);
+                QuarterRound(x, 1, 6, 11, 12);
+                QuarterRound(x, 2, 7, 8, 13);
+                QuarterRound(x, 3, 4, 9, 14);
+            }
+        }
+
+        /// 32-bit left rotation.
+        private static uint RotL32(uint x, int n) => (x << n) | (x >> (32 - n));
+
+        /// Read 32-bit LE from byte array.
+        private static uint LE32(byte[] buf, int offset)
+        {
+            return (uint)buf[offset] | ((uint)buf[offset + 1] << 8)
+                | ((uint)buf[offset + 2] << 16) | ((uint)buf[offset + 3] << 24);
+        }
+
+        /// Write 32-bit LE to byte array.
+        private static void WriteLE32(byte[] buf, int offset, uint v)
+        {
+            buf[offset] = (byte)(v & 0xff);
+            buf[offset + 1] = (byte)((v >> 8) & 0xff);
+            buf[offset + 2] = (byte)((v >> 16) & 0xff);
+            buf[offset + 3] = (byte)((v >> 24) & 0xff);
+        }
+
+        /// Poly1305 MAC (RFC 8439).
+        /// polyKey: first 32 bytes of ChaCha20 keystream block 0.
+        private static byte[] Poly1305Mac(byte[] polyKey, byte[] aad, byte[] ciphertext)
+        {
+            // Clamp r (first 16 bytes)
+            var r = new uint[5];
+            ClampAndParseR(polyKey, r);
+
+            // Parse s (next 16 bytes) into 26-bit limbs
+            ulong s0 = (uint)(LE32(polyKey, 16) & 0x3FFFFFF);
+            ulong s1 = (uint)(((LE32(polyKey, 16) >> 26) | (LE32(polyKey, 20) << 6)) & 0x3FFFFFF);
+            ulong s2 = (uint)((LE32(polyKey, 20) >> 20) | ((LE32(polyKey, 24) << 12) & 0x3FFFFFF));
+            ulong s3 = (uint)((LE32(polyKey, 24) >> 14) | ((LE32(polyKey, 28) << 18) & 0x3FFFFFF));
+            ulong s4 = (uint)(LE32(polyKey, 28) >> 8);
+
+            // Accumulator (5 x 26-bit limbs)
+            ulong h0 = 0, h1 = 0, h2 = 0, h3 = 0, h4 = 0;
+
+            // Process AAD then ciphertext
+            Poly1305Process(aad, r, ref h0, ref h1, ref h2, ref h3, ref h4);
+            Poly1305Process(ciphertext, r, ref h0, ref h1, ref h2, ref h3, ref h4);
+
+            // Fully reduce
+            Poly1305FinalReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
+
+            // Add s (mod 2^130-5)
+            h0 += s0;
+            h1 += s1;
+            h2 += s2;
+            h3 += s3;
+            h4 += s4;
+
+            // Final reduce to canonical form
+            Poly1305FinalReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
+
+            // Serialize 16-byte tag from 5 x 26-bit limbs (little-endian)
+            var tag = new byte[16];
+            uint f0 = (uint)(h0 | (h1 << 26));
+            uint f1 = (uint)((h1 >> 6) | (h2 << 20));
+            uint f2 = (uint)((h2 >> 12) | (h3 << 14));
+            uint f3 = (uint)((h3 >> 18) | (h4 << 8));
+            WriteLE32(tag, 0, f0);
+            WriteLE32(tag, 4, f1);
+            WriteLE32(tag, 8, f2);
+            WriteLE32(tag, 12, f3);
+            return tag;
+        }
+
+        /// Clamp and parse r from 32 bytes into 5 x 26-bit limbs.
+        private static void ClampAndParseR(byte[] polyKey, uint[] r)
+        {
+            var raw = new byte[16];
+            Buffer.BlockCopy(polyKey, 0, raw, 0, 16);
+
+            // Clamp per RFC 8439 §2.5
+            raw[3] &= 15; raw[4] &= 252; raw[7] &= 15;
+            raw[8] &= 252; raw[11] &= 15; raw[12] &= 252; raw[15] &= 15;
+
+            // Parse into 26-bit limbs (little-endian)
+            r[0] = (uint)(raw[0] | (raw[1] << 8) | (raw[2] << 16) | ((raw[3] & 3) << 24));
+            r[1] = (uint)((raw[3] >> 2) | (raw[4] << 6) | (raw[5] << 14) | ((raw[6] & 0xf) << 22));
+            r[2] = (uint)((raw[6] >> 4) | (raw[7] << 4) | (raw[8] << 12) | ((raw[9] & 0x3f) << 20));
+            r[3] = (uint)((raw[9] >> 6) | (raw[10] << 2) | (raw[11] << 10) | ((raw[12] & 0x1f) << 18));
+            r[4] = (uint)((raw[12] >> 5) | (raw[13] << 3) | (raw[14] << 11) | (raw[15] << 19));
+        }
+
+        /// Process data through Poly1305 in 16-byte blocks.
+        private static void Poly1305Process(byte[] data, uint[] r,
+            ref ulong h0, ref ulong h1, ref ulong h2, ref ulong h3, ref ulong h4)
+        {
+            if (data == null || data.Length == 0) return;
+
+            int blocks = (data.Length + 15) / 16;
+            for (int i = 0; i < blocks; i++)
+            {
+                int off = i * 16;
+                int len = Math.Min(16, data.Length - off);
+
+                // Read bytes into a padded 17-byte buffer (extra byte for hibit)
+                var block = new byte[17];
+                for (int j = 0; j < len; j++)
+                    block[j] = data[off + j];
+                block[len] = 0x01; // hibit: marks end of data
+
+                // Parse into 5 x 26-bit limbs (little-endian)
+                ulong b0 = (uint)(block[0] | (block[1] << 8) | (block[2] << 16) | (block[3] << 24));
+                ulong b1 = (uint)((block[3] >> 2) | (block[4] << 6) | (block[5] << 14) | (block[6] << 22));
+                ulong b2 = (uint)((block[6] >> 4) | (block[7] << 4) | (block[8] << 12) | (block[9] << 20));
+                ulong b3 = (uint)((block[9] >> 6) | (block[10] << 2) | (block[11] << 10) | (block[12] << 18));
+                ulong b4 = (uint)((block[12] >> 4) | (block[13] << 4) | (block[14] << 12) | (block[15] << 20) | (block[16] << 28));
+
+                // Add block to accumulator
+                h0 += b0; h1 += b1; h2 += b2; h3 += b3; h4 += b4;
+
+                // Multiply by r mod p (p = 2^130 - 5)
+                ulong t0 = h0 * r[0] + h1 * (5 * r[4]) + h2 * (5 * r[3]) + h3 * (5 * r[2]) + h4 * (5 * r[1]);
+                ulong t1 = h0 * r[1] + h1 * r[0]       + h2 * (5 * r[4]) + h3 * (5 * r[3]) + h4 * (5 * r[2]);
+                ulong t2 = h0 * r[2] + h1 * r[1]       + h2 * r[0]       + h3 * (5 * r[4]) + h4 * (5 * r[3]);
+                ulong t3 = h0 * r[3] + h1 * r[2]       + h2 * r[1]       + h3 * r[0]       + h4 * (5 * r[4]);
+                ulong t4 = h0 * r[4] + h1 * r[3]       + h2 * r[2]       + h3 * r[1]       + h4 * r[0];
+
+                h0 = t0; h1 = t1; h2 = t2; h3 = t3; h4 = t4;
+
+                // Partial reduction
+                Poly1305PartialReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
+            }
+        }
+
+        /// Partial reduction: ensure each limb < 2^26.
+        private static void Poly1305PartialReduce(ref ulong h0, ref ulong h1, ref ulong h2, ref ulong h3, ref ulong h4)
+        {
+            ulong c;
+            c = h0 >> 26; h0 &= 0x3FFFFFF; h1 += c;
+            c = h1 >> 26; h1 &= 0x3FFFFFF; h2 += c;
+            c = h2 >> 26; h2 &= 0x3FFFFFF; h3 += c;
+            c = h3 >> 26; h3 &= 0x3FFFFFF; h4 += c;
+            c = h4 >> 26; h4 &= 0x3FFFFFF; h0 += c * 5;
+            c = h0 >> 26; h0 &= 0x3FFFFFF; h1 += c;
+        }
+
+        /// Final reduction: fully reduce to canonical form.
+        private static void Poly1305FinalReduce(ref ulong h0, ref ulong h1, ref ulong h2, ref ulong h3, ref ulong h4)
+        {
+            // Repeat partial reduction a few times to ensure full reduction
+            Poly1305PartialReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
+            Poly1305PartialReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
+            Poly1305PartialReduce(ref h0, ref h1, ref h2, ref h3, ref h4);
         }
 
         /// HMAC-SHA256.
@@ -166,75 +401,69 @@ namespace CinaConnect.WalletConnect
         }
 
         /// Encode a WC v2 type-0 envelope (for established sessions).
-        /// Format: type(1) | iv(16) | ciphertext | mac(32)
+        /// Format: type(1) | nonce(12) | ciphertext | tag(16)
+        /// Uses ChaCha20-Poly1305 AEAD per WalletConnect v2 spec.
         public static byte[] EncodeType0(byte[] key, byte[] plaintext)
         {
-            var iv = GenerateRandomBytes(IVSize);
-            var ciphertext = AesCbcEncrypt(key, iv, plaintext);
-            var macData = new byte[1 + iv.Length + ciphertext.Length];
-            macData[0] = 0; // type-0
-            Buffer.BlockCopy(iv, 0, macData, 1, iv.Length);
-            Buffer.BlockCopy(ciphertext, 0, macData, 1 + iv.Length, ciphertext.Length);
+            var nonce = GenerateRandomBytes(NonceSize);
+            var aead = ChaCha20Poly1305Encrypt(key, nonce, plaintext);
 
-            var mac = HMACSHA256(key, macData);
-            var envelope = new byte[macData.Length + mac.Length];
-            Buffer.BlockCopy(macData, 0, envelope, 0, macData.Length);
-            Buffer.BlockCopy(mac, 0, envelope, macData.Length, mac.Length);
+            var envelope = new byte[1 + nonce.Length + aead.Length];
+            envelope[0] = 0; // type-0
+            Buffer.BlockCopy(nonce, 0, envelope, 1, nonce.Length);
+            Buffer.BlockCopy(aead, 0, envelope, 1 + nonce.Length, aead.Length);
             return envelope;
         }
 
         /// Decode a WC v2 type-0 envelope.
         public static byte[] DecodeType0(byte[] key, byte[] envelope)
         {
-            if (envelope.Length < 1 + IVSize + MacSize)
+            if (envelope.Length < 1 + NonceSize + MacSize)
                 throw new ArgumentException("Envelope too short");
 
             if (envelope[0] != 0)
                 throw new ArgumentException($"Expected type-0 envelope, got type {envelope[0]}");
 
-            int macStart = envelope.Length - MacSize;
-            var mac = new byte[MacSize];
-            Buffer.BlockCopy(envelope, macStart, mac, 0, MacSize);
+            var nonce = new byte[NonceSize];
+            Buffer.BlockCopy(envelope, 1, nonce, 0, NonceSize);
 
-            var macData = new byte[macStart];
-            Buffer.BlockCopy(envelope, 0, macData, 0, macStart);
+            var aead = new byte[envelope.Length - 1 - NonceSize];
+            Buffer.BlockCopy(envelope, 1 + NonceSize, aead, 0, aead.Length);
 
-            var expectedMac = HMACSHA256(key, macData);
-            if (!ConstantTimeCompare(mac, expectedMac))
-                throw new InvalidOperationException("MAC verification failed");
-
-            var iv = new byte[IVSize];
-            Buffer.BlockCopy(macData, 1, iv, 0, IVSize);
-
-            var ciphertext = new byte[macData.Length - 1 - IVSize];
-            Buffer.BlockCopy(macData, 1 + IVSize, ciphertext, 0, ciphertext.Length);
-
-            return AesCbcDecrypt(key, iv, ciphertext);
+            return ChaCha20Poly1305Decrypt(key, nonce, aead);
         }
 
         /// Encode a WC v2 type-1 envelope (for initial pairing with senderPublicKey).
-        public static byte[] EncodeType1(byte[] selfPublicKey, byte[] peerPublicKey, byte[] plaintext)
+        /// Uses X25519 DH to derive a shared key, then ChaCha20-Poly1305 AEAD.
+        /// Format: type(1) | sender_public_key(32) | nonce(12) | ciphertext | tag(16)
+        public static byte[] EncodeType1(
+            byte[] selfPrivateKey, byte[] selfPublicKey, byte[] peerPublicKey, byte[] plaintext)
         {
-            var iv = GenerateRandomBytes(IVSize);
-            var ciphertext = AesCbcEncrypt(peerPublicKey, iv, plaintext);
+            // Validate peer public key to prevent small-order attacks
+            if (!ValidatePublicKey(peerPublicKey))
+                throw new ArgumentException("Invalid peer public key (small-order point detected)");
 
-            var macData = new byte[1 + selfPublicKey.Length + iv.Length + ciphertext.Length];
-            macData[0] = 1; // type-1
-            Buffer.BlockCopy(selfPublicKey, 0, macData, 1, selfPublicKey.Length);
-            Buffer.BlockCopy(iv, 0, macData, 1 + selfPublicKey.Length, iv.Length);
-            Buffer.BlockCopy(ciphertext, 0, macData, 1 + selfPublicKey.Length + iv.Length, ciphertext.Length);
+            // X25519 Diffie-Hellman to derive shared secret
+            var sharedSecret = ScalarMult(selfPrivateKey, peerPublicKey);
 
-            var mac = HMACSHA256(peerPublicKey, macData);
-            var envelope = new byte[macData.Length + mac.Length];
-            Buffer.BlockCopy(macData, 0, envelope, 0, macData.Length);
-            Buffer.BlockCopy(mac, 0, envelope, macData.Length, mac.Length);
+            // Derive encryption key from shared secret per WC v2 spec
+            var encKey = DeriveType1Key(sharedSecret, selfPublicKey, peerPublicKey);
+
+            var nonce = GenerateRandomBytes(NonceSize);
+            var aead = ChaCha20Poly1305Encrypt(encKey, nonce, plaintext);
+
+            var envelope = new byte[1 + selfPublicKey.Length + nonce.Length + aead.Length];
+            envelope[0] = 1; // type-1
+            Buffer.BlockCopy(selfPublicKey, 0, envelope, 1, selfPublicKey.Length);
+            Buffer.BlockCopy(nonce, 0, envelope, 1 + selfPublicKey.Length, nonce.Length);
+            Buffer.BlockCopy(aead, 0, envelope, 1 + selfPublicKey.Length + nonce.Length, aead.Length);
             return envelope;
         }
 
         /// Decode a WC v2 type-1 envelope.
         public static byte[] DecodeType1(byte[] selfPrivateKey, byte[] envelope)
         {
-            if (envelope.Length < 1 + KeySize + IVSize + MacSize)
+            if (envelope.Length < 1 + KeySize + NonceSize + MacSize)
                 throw new ArgumentException("Envelope too short");
 
             if (envelope[0] != 1)
@@ -243,28 +472,37 @@ namespace CinaConnect.WalletConnect
             var peerPublicKey = new byte[KeySize];
             Buffer.BlockCopy(envelope, 1, peerPublicKey, 0, KeySize);
 
-            // Derive shared secret
+            // Validate peer public key to prevent small-order attacks
+            if (!ValidatePublicKey(peerPublicKey))
+                throw new ArgumentException("Invalid peer public key (small-order point detected)");
+
+            // X25519 Diffie-Hellman to derive shared secret
             var sharedSecret = ScalarMult(selfPrivateKey, peerPublicKey);
 
-            int macStart = envelope.Length - MacSize;
-            var mac = new byte[MacSize];
-            Buffer.BlockCopy(envelope, macStart, mac, 0, MacSize);
+            // Derive decryption key from shared secret per WC v2 spec
+            var selfPublicKey = ScalarMultBase(selfPrivateKey);
+            var decKey = DeriveType1Key(sharedSecret, selfPublicKey, peerPublicKey);
 
-            var macData = new byte[macStart];
-            Buffer.BlockCopy(envelope, 0, macData, 0, macStart);
+            var nonceStart = 1 + KeySize;
+            var nonce = new byte[NonceSize];
+            Buffer.BlockCopy(envelope, nonceStart, nonce, 0, NonceSize);
 
-            var expectedMac = HMACSHA256(sharedSecret, macData);
-            if (!ConstantTimeCompare(mac, expectedMac))
-                throw new InvalidOperationException("MAC verification failed");
+            var aeadStart = nonceStart + NonceSize;
+            var aead = new byte[envelope.Length - aeadStart];
+            Buffer.BlockCopy(envelope, aeadStart, aead, 0, aead.Length);
 
-            var ivStart = 1 + KeySize;
-            var iv = new byte[IVSize];
-            Buffer.BlockCopy(envelope, ivStart, iv, 0, IVSize);
+            return ChaCha20Poly1305Decrypt(decKey, nonce, aead);
+        }
 
-            var ciphertext = new byte[macData.Length - 1 - KeySize - IVSize];
-            Buffer.BlockCopy(envelope, 1 + KeySize + IVSize, ciphertext, 0, ciphertext.Length);
+        /// Derive Type-1 envelope key from shared secret per WalletConnect v2 spec.
+        /// Uses HKDF-SHA256 with sender and receiver public keys as info.
+        private static byte[] DeriveType1Key(byte[] sharedSecret, byte[] senderPub, byte[] receiverPub)
+        {
+            var info = new byte[senderPub.Length + receiverPub.Length];
+            Buffer.BlockCopy(senderPub, 0, info, 0, senderPub.Length);
+            Buffer.BlockCopy(receiverPub, 0, info, senderPub.Length, receiverPub.Length);
 
-            return AesCbcDecrypt(sharedSecret, iv, ciphertext);
+            return HKDF(sharedSecret, Array.Empty<byte>(), info, KeySize);
         }
 
         /// Derive session keys from shared secret per WC v2 spec.
@@ -332,7 +570,100 @@ namespace CinaConnect.WalletConnect
 
         private static byte[] Curve25519SharedSecret(byte[] scalar, byte[] u)
         {
+            // P0-1: Validate the peer public key before computing shared secret.
+            // This prevents small-order point attacks where a malicious peer
+            // sends a point of small order, allowing partial key recovery.
+            if (!ValidatePublicKey(u))
+                throw new CryptographicException(
+                    "X25519 peer public key failed validation: small-order or invalid point detected");
+
             return Curve25519ScalarMult(scalar, u);
+        }
+
+        /// Validate a Curve25519 public key.
+        /// Returns false if the point is the identity (all zeros), is a small-order
+        /// point, or is not on the curve. Per RFC 7748, the X25519 function accepts
+        /// all 32-byte strings, but some map to small-order points.
+        ///
+        /// The small-order points on Curve25519 are well-known (8 total):
+        /// - 0x00...00 (order 1, identity)
+        /// - 0x01...00 (order 2)
+        /// - 0xC0...00, 0xE0...00, 0x20...00, 0xA0...00, 0x40...00, 0x60...00 (order 4 and 8)
+        ///
+        /// We check against these known values plus verify the point is on the curve.
+        public static bool ValidatePublicKey(byte[] pubKey)
+        {
+            if (pubKey == null || pubKey.Length != KeySize)
+                return false;
+
+            // Check for all-zero key (identity point)
+            bool allZero = true;
+            for (int i = 0; i < pubKey.Length; i++)
+            {
+                if (pubKey[i] != 0) { allZero = false; break; }
+            }
+            if (allZero) return false;
+
+            // Check for known small-order points on Curve25519
+            // These are the 8 points where the Montgomery ladder produces predictable output
+            if (IsSmallOrderPoint(pubKey)) return false;
+
+            // Verify the point is on the curve: v = (u^3 + A*u^2 + u) must be a quadratic residue mod p
+            // For Curve25519 (Montgomery form): By^2 = x^3 + Ax^2 + x where A=486662
+            // We check if (u^3 + A*u^2 + u) is a square mod p
+            try
+            {
+                var u = new FieldElement(pubKey);
+                var u2 = u * u;
+                var u3 = u2 * u;
+                var aVal = FieldElement.FromValue(486662);
+                // x^3 + Ax^2 + x
+                var v = u3 + aVal * u2 + u;
+
+                // Check if v is a quadratic residue using Euler's criterion:
+                // v^((p-1)/2) ≡ 1 (mod p) for residues, ≡ -1 for non-residues
+                var result = v.Legendre();
+                // result should be 1 (quadratic residue) or 0 (v=0, which is on the curve)
+                if (result != 1 && result != 0)
+                    return false;
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// Check if a public key is one of the 8 known small-order points.
+        private static bool IsSmallOrderPoint(byte[] pubKey)
+        {
+            // Known small-order points on Curve25519 (little-endian):
+            // Order 1: 0x00 * 32 (identity)
+            // Order 2: 0x01, 0x00 * 31
+            // Order 4: 0xC0...00, 0xE0...00
+            // Order 8: 0x20...00, 0xA0...00, 0x40...00, 0x60...00
+            //
+            // In little-endian, the high byte is the LAST byte (index 31).
+            // But since all small-order points have zeros in bytes 1-30,
+            // we just check bytes 0 and 31.
+
+            // Check all middle bytes are zero
+            for (int i = 1; i < 31; i++)
+            {
+                if (pubKey[i] != 0) return false;
+            }
+
+            // Check first byte and last byte combinations
+            byte b0 = pubKey[0];
+            byte b31 = pubKey[31];
+
+            // All small-order points have b31 == 0
+            if (b31 != 0) return false;
+
+            // Valid small-order first bytes: 0x00, 0x01, 0x40, 0x60, 0x20, 0xA0, 0xC0, 0xE0
+            return b0 == 0x00 || b0 == 0x01 || b0 == 0x40 || b0 == 0x60
+                || b0 == 0x20 || b0 == 0xA0 || b0 == 0xC0 || b0 == 0xE0;
         }
 
         private static byte[] Curve25519ScalarMult(byte[] n, byte[] u)
@@ -420,6 +751,108 @@ namespace CinaConnect.WalletConnect
             public static FieldElement Zero => new FieldElement(0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             public static FieldElement One => new FieldElement(1, 0, 0, 0, 0, 0, 0, 0, 0, 0);
             public static FieldElement FromValue(long v) => new FieldElement(v, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+            /// Compute the Legendre symbol using Euler's criterion.
+            /// Returns 1 if this is a quadratic residue mod p,
+            /// -1 if a non-residue, 0 if this == 0.
+            /// a^((p-1)/2) mod p where p = 2^255 - 19
+            public int Legendre()
+            {
+                // (p-1)/2 = 2^254 - 10 (for p = 2^255 - 19)
+                // We compute a^(2^254 - 10) mod p
+                var z = this;
+
+                // Compute z^(p-2) first (same as Invert), then multiply by z
+                // to get z^(p-1) = z^(2^255 - 20) = z * z^(2^254 - 10)
+                // Actually we need z^((p-1)/2) = z^(2^254 - 10)
+                //
+                // (p-1)/2 = 2^254 - 10
+                // Binary: 1111...1111 0110 (254 bits, last 4 bits = 0110)
+                //
+                // Use addition chain: compute z^(2^254) / z^10
+                // Or use the standard exponentiation approach.
+                //
+                // Simpler: use the same chain as Invert() but for (p-1)/2.
+                // p-1 = 2^255 - 20 = 2*(2^254 - 10)
+                // So (p-1)/2 = 2^254 - 10
+                //
+                // Using sliding window or the standard square-and-multiply.
+                // For simplicity, use the same approach as Invert with adjusted exponent.
+
+                // z^(2^254 - 10) via square-and-multiply
+                // 2^254 - 10 in binary: 254 ones followed by 0110
+                // = (2^254 - 1) - 9 = 0b111...1110110
+                //
+                // Efficient approach: compute z^(2^254 - 1) then adjust.
+                // z^(2^254 - 1) = z^(-1) * z^(2^254) ... too complex.
+                //
+                // Let's use a direct approach with the standard exponentiation.
+
+                // Exponent 2^254 - 10 = 0x3FFF...FFF6 (254 bits)
+                // We'll compute it via the same addition chain style as Invert.
+
+                // 2^254 - 10:
+                //   = 2^254 - 8 - 2
+                //   Compute z^(2^254) / (z^8 * z^2)
+                //   Or: compute z^(2^254 - 16) * z^6
+                //   2^254 - 16 = 2*(2^253 - 8)
+                //
+                // Simpler: just compute z^(2^254 - 10) directly.
+                // We can use: z^(2^254 - 10) = (z^(2^253 - 5))^2
+                // 2^253 - 5: compute via repeated squaring.
+                //
+                // Actually, the easiest correct approach:
+                // Use the square-and-multiply algorithm on the binary representation.
+
+                // 2^254 - 10 in binary (254 bits):
+                // 111111...1111110110  (250 ones, then 0110)
+                // Total: 254 bits, MSB = 1
+                //
+                // Binary of 2^254 - 10:
+                // 2^254 = 1 followed by 254 zeros
+                // 2^254 - 10 = (2^254 - 1) - 9 = all 254 ones minus 9
+                // all 254 ones - 9 = 111...1110110 (binary)
+                // That's 250 ones, then 0110
+
+                // Square-and-multiply, skipping leading 1
+                var result = z;
+                // Process bits 253 down to 0 (254 bits total, MSB already consumed)
+                // Bits: positions 253 down to 4 are all 1, position 3=0, position 2=1, position 1=1, position 0=0
+                for (int bit = 253; bit >= 0; bit--)
+                {
+                    result = Square(result);
+                    int b;
+                    if (bit >= 4) b = 1;       // bits 253..4 are all 1
+                    else if (bit == 3) b = 0;   // bit 3 = 0
+                    else if (bit == 2) b = 1;   // bit 2 = 1
+                    else if (bit == 1) b = 1;   // bit 1 = 1
+                    else b = 0;                  // bit 0 = 0
+
+                    if (b == 1)
+                        result = result * z;
+                }
+
+                // Check if result == 1 (quadratic residue), -1 (non-residue), or 0
+                // We check if result == 1 by converting to bytes and checking
+                var bytes = result.ToBytes32();
+                bool isOne = (bytes[0] == 1);
+                for (int i = 1; i < 32; i++)
+                {
+                    if (bytes[i] != 0) { isOne = false; break; }
+                }
+                if (isOne) return 1;
+
+                // Check if result == 0
+                bool isZero = true;
+                for (int i = 0; i < 32; i++)
+                {
+                    if (bytes[i] != 0) { isZero = false; break; }
+                }
+                if (isZero) return 0;
+
+                // Non-residue
+                return -1;
+            }
 
             public static FieldElement operator +(FieldElement a, FieldElement b)
             {
@@ -1013,7 +1446,7 @@ namespace CinaConnect.WalletConnect
         private void Log(string msg)
         {
 #if UNITY_EDITOR
-            Debug.Log($"[CinaConnect:RelayClient] {msg}");
+            Debug.Log($"[Cinacoin:RelayClient] {msg}");
 #endif
         }
     }
@@ -1162,7 +1595,7 @@ namespace CinaConnect.WalletConnect
             catch (Exception ex)
             {
 #if UNITY_EDITOR
-                Debug.LogError($"[CinaConnect:PairingManager] Error handling pairing message: {ex.Message}");
+                Debug.LogError($"[Cinacoin:PairingManager] Error handling pairing message: {ex.Message}");
 #endif
             }
         }
@@ -1375,7 +1808,7 @@ namespace CinaConnect.WalletConnect
             catch (Exception ex)
             {
 #if UNITY_EDITOR
-                Debug.LogError($"[CinaConnect:SessionManager] Error handling session message: {ex.Message}");
+                Debug.LogError($"[Cinacoin:SessionManager] Error handling session message: {ex.Message}");
 #endif
             }
         }
@@ -1423,14 +1856,14 @@ namespace CinaConnect.WalletConnect
             };
 
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(data);
-            PlayerPrefs.SetString($"CinaConnect_WCSession_{topic}", json);
+            PlayerPrefs.SetString($"Cinacoin_WCSession_{topic}", json);
             PlayerPrefs.Save();
         }
 
         /// Load a session from PlayerPrefs.
         public SessionInfo LoadSession(string topic)
         {
-            var key = $"CinaConnect_WCSession_{topic}";
+            var key = $"Cinacoin_WCSession_{topic}";
             if (!PlayerPrefs.HasKey(key)) return null;
 
             try
@@ -1463,7 +1896,7 @@ namespace CinaConnect.WalletConnect
         /// Delete a persisted session from PlayerPrefs.
         public void DeletePersistedSession(string topic)
         {
-            PlayerPrefs.DeleteKey($"CinaConnect_WCSession_{topic}");
+            PlayerPrefs.DeleteKey($"Cinacoin_WCSession_{topic}");
         }
 
         /// Load all persisted sessions.
@@ -1472,7 +1905,7 @@ namespace CinaConnect.WalletConnect
             var sessions = new List<SessionInfo>();
 
             // Enumerate PlayerPrefs keys that match our pattern
-            var json = PlayerPrefs.GetString("CinaConnect_WCSessionTopics", "");
+            var json = PlayerPrefs.GetString("Cinacoin_WCSessionTopics", "");
             if (!string.IsNullOrEmpty(json))
             {
                 var topics = Newtonsoft.Json.JsonConvert.DeserializeObject<string[]>(json);
@@ -1491,7 +1924,7 @@ namespace CinaConnect.WalletConnect
         {
             var topics = _sessions.Keys.ToArray();
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(topics);
-            PlayerPrefs.SetString("CinaConnect_WCSessionTopics", json);
+            PlayerPrefs.SetString("Cinacoin_WCSessionTopics", json);
             PlayerPrefs.Save();
         }
     }

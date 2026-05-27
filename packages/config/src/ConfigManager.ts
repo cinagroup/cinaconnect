@@ -1,4 +1,4 @@
-import { createClient, type Client } from "@cinaconnect/core-sdk";
+import { createClient, type Client } from "@cinacoin/core-sdk";
 
 /**
  * Remote configuration options for initializing the feature flag system.
@@ -61,7 +61,7 @@ function resolveConfigUrl(projectId: string): string {
   const baseUrl =
     typeof process !== "undefined" && process.env?.CINA_CONNECT_CONFIG_BASE_URL
       ? process.env.CINA_CONNECT_CONFIG_BASE_URL
-      : "https://config.cinaconnect.io";
+      : "https://config.cinacoin.io";
   return `${baseUrl}/v1/projects/${projectId}/features`;
 }
 

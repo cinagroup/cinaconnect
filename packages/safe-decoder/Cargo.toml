@@ -1,5 +1,5 @@
 [package]
-name = "cinaconnect-safe-decoder"
+name = "cinacoin-safe-decoder"
 version = "0.1.0"
 edition = "2021"
-description = "Safe transaction decoder for CinaConnect"
+description = "Safe transaction decoder for Cinacoin"

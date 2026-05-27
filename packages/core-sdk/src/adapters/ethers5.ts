@@ -2,11 +2,11 @@
  * ethers v5 Adapter — supports legacy dApps on ethers.js v5.
  *
  * Wraps ethers v5's BrowserProvider / Web3Provider and Signer-based
- * connection model for CinaConnect integration.
+ * connection model for Cinacoin integration.
  *
  * @example
  * ```ts
- * import { Ethers5Adapter } from '@cinaconnect/core-sdk';
+ * import { Ethers5Adapter } from '@cinacoin/core-sdk';
  * import { Web3Provider } from '@ethersproject/providers';
  *
  * const adapter = new Ethers5Adapter(provider);
@@ -123,7 +123,7 @@ export interface Ethers5Log {
 // ---------------------------------------------------------------------------
 
 /**
- * ethers v5 adapter implementing the CinaConnect Connector interface.
+ * ethers v5 adapter implementing the Cinacoin Connector interface.
  *
  * Wraps an ethers v5 provider and signer for seamless integration
  * with legacy dApps still on ethers v5.

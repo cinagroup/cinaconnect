@@ -1,5 +1,5 @@
 /**
- * Virtual Scroll for CinaConnect Wallet Lists
+ * Virtual Scroll for Cinacoin Wallet Lists
  *
  * Renders only visible items in large wallet lists to maintain
  * 60fps scrolling performance even with hundreds of items.

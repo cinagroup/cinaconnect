@@ -1,17 +1,17 @@
-# @cinaconnect/wallet-buttons
+# @cinacoin/wallet-buttons
 
-CinaConnect Wallet Buttons — standalone connect buttons for any framework.
+Cinacoin Wallet Buttons — standalone connect buttons for any framework.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/wallet-buttons
+npm install @cinacoin/wallet-buttons
 ```
 
 ## Usage
 
 ```ts
-import { createConnectButton } from '@cinaconnect/wallet-buttons';
+import { createConnectButton } from '@cinacoin/wallet-buttons';
 
 const button = createConnectButton({
   projectId: 'YOUR_PROJECT_ID',

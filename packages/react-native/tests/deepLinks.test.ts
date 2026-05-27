@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // ============================================================
-// Tests for @cinaconnect/react-native deep linking utilities
+// Tests for @cinacoin/react-native deep linking utilities
 // ============================================================
 
 // Mock react-native Linking API
@@ -20,7 +20,7 @@ vi.mock('react-native', () => ({
 }));
 
 // Mock walletconnect-v2 wallet registry
-vi.mock('@cinaconnect/walletconnect-v2', () => ({
+vi.mock('@cinacoin/walletconnect-v2', () => ({
   WALLET_REGISTRY: [
     {
       id: 'metamask',
@@ -110,7 +110,7 @@ describe('Deep Links', () => {
 
   describe('buildWalletDeepLink', () => {
     it('should build a valid deep link for MetaMask', () => {
-      const { buildWalletDeepLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletDeepLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:abc123@2?relay-protocol=irn&symKey=test';
       const link = buildWalletDeepLink('metamask', uri);
 
@@ -121,7 +121,7 @@ describe('Deep Links', () => {
     });
 
     it('should build a valid deep link for Rainbow', () => {
-      const { buildWalletDeepLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletDeepLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:abc123@2?relay-protocol=irn&symKey=test';
       const link = buildWalletDeepLink('rainbow', uri);
 
@@ -130,7 +130,7 @@ describe('Deep Links', () => {
     });
 
     it('should return undefined for unknown wallet', () => {
-      const { buildWalletDeepLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletDeepLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:abc123@2?relay-protocol=irn&symKey=test';
       const link = buildWalletDeepLink('unknown', uri);
 
@@ -140,7 +140,7 @@ describe('Deep Links', () => {
 
   describe('buildWalletUniversalLink', () => {
     it('should build a universal link for MetaMask', () => {
-      const { buildWalletUniversalLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletUniversalLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:abc123@2?relay-protocol=irn&symKey=test';
       const link = buildWalletUniversalLink('metamask', uri);
 
@@ -149,7 +149,7 @@ describe('Deep Links', () => {
     });
 
     it('should return undefined for wallet without universal link', () => {
-      const { buildWalletUniversalLink } = require('@cinaconnect/walletconnect-v2');
+      const { buildWalletUniversalLink } = require('@cinacoin/walletconnect-v2');
       const uri = 'wc:abc123@2?relay-protocol=irn&symKey=test';
       const link = buildWalletUniversalLink('unknown', uri);
 
@@ -159,7 +159,7 @@ describe('Deep Links', () => {
 
   describe('getWalletById', () => {
     it('should find MetaMask by ID', () => {
-      const { getWalletById } = require('@cinaconnect/walletconnect-v2');
+      const { getWalletById } = require('@cinacoin/walletconnect-v2');
       const wallet = getWalletById('metamask');
 
       expect(wallet).toBeDefined();
@@ -169,7 +169,7 @@ describe('Deep Links', () => {
     });
 
     it('should return undefined for unknown ID', () => {
-      const { getWalletById } = require('@cinaconnect/walletconnect-v2');
+      const { getWalletById } = require('@cinacoin/walletconnect-v2');
       const wallet = getWalletById('nonexistent');
 
       expect(wallet).toBeUndefined();

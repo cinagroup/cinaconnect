@@ -1,7 +1,7 @@
 import XCTest
-@testable import CinaConnect
+@testable import Cinacoin
 
-final class CinaConnectTests: XCTestCase {
+final class CinacoinTests: XCTestCase {
 
     // MARK: - Configuration
 
@@ -52,33 +52,33 @@ final class CinaConnectTests: XCTestCase {
         XCTAssertEqual(truncateAddress(short), short)
     }
 
-    func testCinaConnectSingleton() {
-        XCTAssertTrue(CinaConnect.shared === CinaConnect.shared)
+    func testCinacoinSingleton() {
+        XCTAssertTrue(Cinacoin.shared === Cinacoin.shared)
     }
 
     func testConfigure() {
-        let config = CinaConnectConfig(
+        let config = CinacoinConfig(
             chains: [.ethereum, .polygon],
             themeMode: .light,
             recommendedWallets: ["metamask"]
         )
-        CinaConnect.shared.configure(with: config)
-        XCTAssertEqual(CinaConnect.shared.themeMode, .light)
-        XCTAssertEqual(CinaConnect.shared.activeChainId, 1)
-        XCTAssertEqual(CinaConnect.shared.themeColors.accent500, "#2563EB")
+        Cinacoin.shared.configure(with: config)
+        XCTAssertEqual(Cinacoin.shared.themeMode, .light)
+        XCTAssertEqual(Cinacoin.shared.activeChainId, 1)
+        XCTAssertEqual(Cinacoin.shared.themeColors.accent500, "#2563EB")
     }
 
     func testSwitchChain() async throws {
-        let config = CinaConnectConfig(chains: [.ethereum, .polygon])
-        CinaConnect.shared.configure(with: config)
+        let config = CinacoinConfig(chains: [.ethereum, .polygon])
+        Cinacoin.shared.configure(with: config)
 
-        try await CinaConnect.shared.switchChain(chainId: 137)
-        XCTAssertEqual(CinaConnect.shared.activeChainId, 137)
+        try await Cinacoin.shared.switchChain(chainId: 137)
+        XCTAssertEqual(Cinacoin.shared.activeChainId, 137)
 
         do {
-            try await CinaConnect.shared.switchChain(chainId: 999)
+            try await Cinacoin.shared.switchChain(chainId: 999)
             XCTFail("Should have thrown chainNotSupported")
-        } catch let CinaConnectError.chainNotSupported(id) {
+        } catch let CinacoinError.chainNotSupported(id) {
             XCTAssertEqual(id, 999)
         } catch {
             XCTFail("Unexpected error: \(error)")
@@ -95,7 +95,7 @@ final class CinaConnectTests: XCTestCase {
 
     func testWalletManagerGetConnectors() {
         let manager = WalletManager()
-        let config = CinaConnectConfig(chains: [.ethereum])
+        let config = CinacoinConfig(chains: [.ethereum])
         manager.configure(with: config)
         let connectors = manager.getConnectors()
         XCTAssertFalse(connectors.isEmpty)
@@ -103,7 +103,7 @@ final class CinaConnectTests: XCTestCase {
 
     func testWalletManagerDisconnect() async {
         let manager = WalletManager()
-        manager.configure(with: CinaConnectConfig(chains: [.ethereum]))
+        manager.configure(with: CinacoinConfig(chains: [.ethereum]))
         _ = try? await manager.connect(connectorId: "metamask")
         XCTAssertNotNil(manager.connectedAccount)
 

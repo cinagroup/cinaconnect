@@ -1,6 +1,6 @@
 # Performance Optimization Guide
 
-> Keep CinaConnect fast. Users should never wait more than a few hundred milliseconds to connect their wallet.
+> Keep Cinacoin fast. Users should never wait more than a few hundred milliseconds to connect their wallet.
 
 ---
 
@@ -21,7 +21,7 @@
 
 ### Tree Shaking
 
-CinaConnect packages are published with `"sideEffects": false` in package.json, enabling full tree shaking. Make sure your bundler supports it.
+Cinacoin packages are published with `"sideEffects": false` in package.json, enabling full tree shaking. Make sure your bundler supports it.
 
 **Webpack:**
 ```js
@@ -41,11 +41,11 @@ module.exports = {
 
 ```ts
 // ❌ Bad — pulls in everything
-import { CinaConnect } from '@cinaconnect/core-sdk';
+import { Cinacoin } from '@cinacoin/core-sdk';
 
 // ✅ Good — import only the wallet connector you need
-import { ConnectorMetaMask } from '@cinaconnect/core-sdk';
-import { createCinaConnect } from '@cinaconnect/core-sdk';
+import { ConnectorMetaMask } from '@cinacoin/core-sdk';
+import { createCinacoin } from '@cinacoin/core-sdk';
 ```
 
 ### Analyze Your Bundle
@@ -66,7 +66,7 @@ Split wallet connection logic from the rest of your app:
 // WalletConnector.tsx — lazy-loaded component
 import { lazy, Suspense } from 'react';
 
-const WalletModal = lazy(() => import('@cinaconnect/react'));
+const WalletModal = lazy(() => import('@cinacoin/react'));
 
 function App() {
   return (
@@ -81,9 +81,9 @@ function App() {
 
 | Package | Max (gzipped) | Notes |
 |---------|--------------|-------|
-| `@cinaconnect/core-sdk` | < 15 KB | Core protocol logic |
-| `@cinaconnect/react` | < 12 KB | React hooks only |
-| `@cinaconnect/core-ui` | < 25 KB | UI components (optional) |
+| `@cinacoin/core-sdk` | < 15 KB | Core protocol logic |
+| `@cinacoin/react` | < 12 KB | React hooks only |
+| `@cinacoin/core-ui` | < 25 KB | UI components (optional) |
 | Full toolkit | < 50 KB | All-in-one import |
 
 ---
@@ -95,16 +95,16 @@ function App() {
 Don't initialize all wallet connectors at once. Load them on demand:
 
 ```ts
-import { createCinaConnect, lazyConnector } from '@cinaconnect/core-sdk';
+import { createCinacoin, lazyConnector } from '@cinacoin/core-sdk';
 
-const cina = createCinaConnect({
+const cina = createCinacoin({
   connectors: [
     lazyConnector(async () => {
-      const { ConnectorMetaMask } = await import('@cinaconnect/core-sdk');
+      const { ConnectorMetaMask } = await import('@cinacoin/core-sdk');
       return new ConnectorMetaMask();
     }),
     lazyConnector(async () => {
-      const { ConnectorWalletConnect } = await import('@cinaconnect/core-sdk');
+      const { ConnectorWalletConnect } = await import('@cinacoin/core-sdk');
       return new ConnectorWalletConnect();
     }),
   ],
@@ -126,7 +126,7 @@ async function loadChainConfig(chainId: number) {
 
 ```tsx
 // Only load heavy UI when the modal opens
-const ConnectModal = lazy(() => import('@cinaconnect/core-ui'));
+const ConnectModal = lazy(() => import('@cinacoin/core-ui'));
 
 function App() {
   const [showModal, setShowModal] = useState(false);
@@ -162,9 +162,9 @@ function App() {
 Persist wallet sessions to avoid re-connection on page reload:
 
 ```ts
-import { createCinaConnect } from '@cinaconnect/core-sdk';
+import { createCinacoin } from '@cinacoin/core-sdk';
 
-const cina = createCinaConnect({
+const cina = createCinacoin({
   storage: {
     // Use localStorage for persistence across sessions
     getItem: (key) => localStorage.getItem(key),
@@ -280,17 +280,17 @@ class RPCCache {
 ### Use Selectors, Not Full State
 
 ```tsx
-import { useCinaConnect } from '@cinaconnect/react';
+import { useCinacoin } from '@cinacoin/react';
 
 // ❌ Bad — re-renders on any state change
 function WalletButton() {
-  const state = useCinaConnect();
+  const state = useCinacoin();
   return <button>{state.account?.address}</button>;
 }
 
 // ✅ Good — only re-renders when address changes
 function WalletButton() {
-  const address = useCinaConnect((s) => s.account?.address);
+  const address = useCinacoin((s) => s.account?.address);
   return <button>{address}</button>;
 }
 ```
@@ -375,7 +375,7 @@ function TokenSearch() {
 EIP-5792 `wallet_sendCalls` lets you bundle multiple actions into a single user approval:
 
 ```ts
-import { useSendCalls } from '@cinaconnect/react';
+import { useSendCalls } from '@cinacoin/react';
 
 // ❌ Bad — separate approvals for each action
 async function doActions() {
@@ -424,7 +424,7 @@ async function pollAllStatuses(callIds: string[]) {
 Check wallet capabilities before using features to avoid failed calls:
 
 ```ts
-import { useWalletCapabilities } from '@cinaconnect/react';
+import { useWalletCapabilities } from '@cinacoin/react';
 
 function BatchAction() {
   const capabilities = useWalletCapabilities();
@@ -577,8 +577,8 @@ function TokenRow({ token, onSelect }: { token: Token; onSelect: (t: Token) => v
 ```ts
 // config.ts — module-level constant, never changes
 export const DEFAULT_CHAINS = [
-  { id: 1, name: 'Ethereum', rpc: 'https://eth.rpc.cinaconnect.com' },
-  { id: 137, name: 'Polygon', rpc: 'https://polygon.rpc.cinaconnect.com' },
+  { id: 1, name: 'Ethereum', rpc: 'https://eth.rpc.cinacoin.com' },
+  { id: 137, name: 'Polygon', rpc: 'https://polygon.rpc.cinacoin.com' },
 ] as const;
 
 // Component — no need for useMemo

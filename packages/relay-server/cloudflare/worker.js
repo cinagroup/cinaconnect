@@ -1,5 +1,5 @@
 /**
- * CinaConnect Relay Server — Cloudflare Worker + Durable Objects
+ * Cinacoin Relay Server — Cloudflare Worker + Durable Objects
  *
  * Handles WalletConnect relay signaling via Durable Objects
  * for WebSocket session management.

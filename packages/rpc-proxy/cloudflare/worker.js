@@ -1,4 +1,4 @@
-// CinaConnect RPC Proxy — Cloudflare Worker
+// Cinacoin RPC Proxy — Cloudflare Worker
 // Routes: POST /rpc/:chainId, GET /health
 // Caches read-only JSON-RPC calls in KV with configurable TTL.
 const CHAIN_RPC_URLS = {

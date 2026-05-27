@@ -93,7 +93,7 @@ class PushHandler {
       'Send $amount on $chainName to ${_truncateAddress(to)}',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'cinaconnect_transactions',
+          'cinacoin_transactions',
           'Transactions',
           channelDescription: 'Wallet transaction notifications',
           importance: Importance.high,
@@ -121,7 +121,7 @@ class PushHandler {
       '$dappName is requesting a signature',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'cinaconnect_signatures',
+          'cinacoin_signatures',
           'Signatures',
           channelDescription: 'Signature request notifications',
           importance: Importance.high,
@@ -149,7 +149,7 @@ class PushHandler {
       'Switched from $fromChain to $toChain',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'cinaconnect_chain',
+          'cinacoin_chain',
           'Chain Changes',
           channelDescription: 'Chain change notifications',
           importance: Importance.defaultImportance,
@@ -177,7 +177,7 @@ class PushHandler {
       connected ? 'Connected to $walletName' : 'Disconnected from $walletName',
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'cinaconnect_connection',
+          'cinacoin_connection',
           'Connection',
           channelDescription: 'Wallet connection notifications',
           importance: Importance.defaultImportance,

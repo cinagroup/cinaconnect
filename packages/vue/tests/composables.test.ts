@@ -1,6 +1,6 @@
 /**
- * Tests for @cinaconnect/vue composables.
- * Tests useCinaConnect, useAccount, useChainId, useConnect, useDisconnect.
+ * Tests for @cinacoin/vue composables.
+ * Tests useCinacoin, useAccount, useChainId, useConnect, useDisconnect.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -48,14 +48,14 @@ vi.mock('vue', () => ({
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('useCinaConnect', () => {
+describe('useCinacoin', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  it('should return the injected CinaConnect context', async () => {
-    const { useCinaConnect } = await import('../src/composables.js');
-    const ctx = useCinaConnect();
+  it('should return the injected Cinacoin context', async () => {
+    const { useCinacoin } = await import('../src/composables.js');
+    const ctx = useCinacoin();
 
     expect(ctx.config.chains).toHaveLength(2);
     expect(ctx.config.chains![0].id).toBe(1);
@@ -63,16 +63,16 @@ describe('useCinaConnect', () => {
   });
 
   it('should expose connect and disconnect functions', async () => {
-    const { useCinaConnect } = await import('../src/composables.js');
-    const ctx = useCinaConnect();
+    const { useCinacoin } = await import('../src/composables.js');
+    const ctx = useCinacoin();
 
     expect(typeof ctx.connect).toBe('function');
     expect(typeof ctx.disconnect).toBe('function');
   });
 
   it('should expose switchChain function', async () => {
-    const { useCinaConnect } = await import('../src/composables.js');
-    const ctx = useCinaConnect();
+    const { useCinacoin } = await import('../src/composables.js');
+    const ctx = useCinacoin();
 
     expect(typeof ctx.switchChain).toBe('function');
   });
@@ -81,10 +81,10 @@ describe('useCinaConnect', () => {
     const vueModule = await import('vue');
     (vueModule.inject as ReturnType<typeof vi.fn>).mockReturnValueOnce(null);
 
-    const { useCinaConnect } = await import('../src/composables.js');
+    const { useCinacoin } = await import('../src/composables.js');
 
-    expect(() => useCinaConnect()).toThrow(
-      'useCinaConnect must be used within <CinaConnectProvider>'
+    expect(() => useCinacoin()).toThrow(
+      'useCinacoin must be used within <CinacoinProvider>'
     );
   });
 });
@@ -117,7 +117,7 @@ describe('useAccount', () => {
     const { useAccount } = await import('../src/composables.js');
 
     expect(() => useAccount()).toThrow(
-      'useCinaConnect must be used within <CinaConnectProvider>'
+      'useCinacoin must be used within <CinacoinProvider>'
     );
   });
 });
@@ -141,7 +141,7 @@ describe('useChainId', () => {
     const { useChainId } = await import('../src/composables.js');
 
     expect(() => useChainId()).toThrow(
-      'useCinaConnect must be used within <CinaConnectProvider>'
+      'useCinacoin must be used within <CinacoinProvider>'
     );
   });
 });

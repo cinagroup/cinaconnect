@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/react-native/hooks
+ * @cinacoin/react-native/hooks
  *
  * React Native-specific hooks including EIP-5792, ENS, and more.
  */

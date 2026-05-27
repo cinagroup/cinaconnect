@@ -1,8 +1,8 @@
 /**
- * @cinaconnect/siwx — Sign-In with Cross-chain (SIWX)
+ * @cinacoin/siwx — Sign-In with Cross-chain (SIWX)
  *
  * Unified authentication across EVM (EIP-4361), Solana (ed25519),
- * Bitcoin (BIP-322), TON, Tron, and custom chains.
+ * Bitcoin (BIP-322), TON (SIWT), and TRON (SIWTR).
  *
  * @packageDocumentation
  */
@@ -28,6 +28,20 @@ export {
   verifyBitcoinSignature,
   parseBitcoinMessage,
 } from './chains/bitcoin.js';
+
+export {
+  createTonSignInMessage,
+  verifyTonSignature,
+  parseTonMessage,
+  isValidTonAddress,
+} from './chains/ton.js';
+
+export {
+  createTronSignInMessage,
+  verifyTronSignature,
+  parseTronMessage,
+  isValidTronAddress,
+} from './chains/tron.js';
 
 // Verifier Registry
 export {

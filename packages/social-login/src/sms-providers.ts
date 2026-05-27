@@ -135,7 +135,7 @@ export interface VonageConfig {
  * const vonage = new VonageProvider({
  *   apiKey: process.env.VONAGE_API_KEY!,
  *   apiSecret: process.env.VONAGE_API_SECRET!,
- *   from: 'CinaConnect',
+ *   from: 'Cinacoin',
  * });
  *
  * await vonage.send('+1234567890', 'Your code is: 123456');

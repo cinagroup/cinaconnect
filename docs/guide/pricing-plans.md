@@ -1,6 +1,6 @@
 # Pricing Plans
 
-CinaConnect offers flexible pricing tiers designed for every stage of your project — from solo developers building their first dApp to enterprises running mission-critical infrastructure at global scale.
+Cinacoin offers flexible pricing tiers designed for every stage of your project — from solo developers building their first dApp to enterprises running mission-critical infrastructure at global scale.
 
 ---
 
@@ -33,7 +33,7 @@ The Free Tier gives you everything you need to build, test, and launch. No credi
 - **Unlimited Monthly Active Users** — Scale your user base without worrying about per-user pricing.
 - **Self-Hosted Relay** — Run your own relay node using our open-source infrastructure. Full configuration control.
 - **Community Support** — Access our Discord, GitHub Discussions, and community forums.
-- **Open-Source License (MIT)** — Use CinaConnect in any project, commercial or personal.
+- **Open-Source License (MIT)** — Use Cinacoin in any project, commercial or personal.
 - **3 Supported Chains** — Connect users on EVM (e.g., Ethereum, Polygon), Solana, and Bitcoin.
 - **Core SIWX Authentication** — Sign-In with Cross-chain across all supported chains.
 
@@ -47,7 +47,7 @@ The Free Tier gives you everything you need to build, test, and launch. No credi
 ### Getting Started
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/siwx
+npm install @cinacoin/core @cinacoin/siwx
 ```
 
 No signup, no API keys, no limits. Just install and go.
@@ -85,7 +85,7 @@ The Pro Tier adds managed infrastructure, observability, and premium support for
 ### Adding a New Chain
 
 ```typescript
-import { OnuxApp } from '@cinaconnect/core';
+import { OnuxApp } from '@cinacoin/core';
 
 const app = new OnuxApp({
   projectId: 'your-project-id',
@@ -113,7 +113,7 @@ The Enterprise Tier is for organizations that need dedicated infrastructure, cus
 - **Everything in Pro**, plus:
 - **Dedicated Relay** — Your own relay instance, isolated from other tenants. Deployed in your choice of region.
 - **99.99% SLA** — Guaranteed uptime with financial credits if we miss it.
-- **On-Premise Deployment** — Run CinaConnect entirely within your own infrastructure — air-gapped networks included.
+- **On-Premise Deployment** — Run Cinacoin entirely within your own infrastructure — air-gapped networks included.
 - **Custom Integrations** — We'll build adapters for your proprietary chains, wallets, or identity systems.
 - **Unlimited Chains** — No cap on the number of chains you can support.
 - **Custom Dashboards** — Analytics tailored to your KPIs, with custom alerts and reporting.
@@ -130,7 +130,7 @@ The Enterprise Tier is for organizations that need dedicated infrastructure, cus
 
 ### Getting Started
 
-Contact us at [enterprise@cinaconnect.com](mailto:enterprise@cinaconnect.com) or fill out our [Enterprise Inquiry Form](#).
+Contact us at [enterprise@cinacoin.com](mailto:enterprise@cinacoin.com) or fill out our [Enterprise Inquiry Form](#).
 
 ---
 
@@ -155,7 +155,7 @@ Need more than your plan includes? Add-ons let you scale incrementally.
 
 **Free → Pro**
 
-1. Create a CinaConnect Dashboard account at [dashboard.cinaconnect.com](#).
+1. Create a Cinacoin Dashboard account at [dashboard.cinacoin.com](#).
 2. Navigate to **Settings → Billing**.
 3. Select the **Pro** plan and enter your payment details.
 4. Your managed relay is provisioned automatically within 5 minutes.
@@ -175,7 +175,7 @@ const app = new OnuxApp({
 
 **Pro → Enterprise**
 
-1. Contact your account manager or email enterprise@cinaconnect.com.
+1. Contact your account manager or email enterprise@cinacoin.com.
 2. We'll schedule a technical requirements call.
 3. A custom proposal is delivered within 3 business days.
 4. Migration is handled by our infrastructure team with zero downtime.

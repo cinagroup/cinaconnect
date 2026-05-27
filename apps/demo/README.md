@@ -1,6 +1,6 @@
-# CinaConnect Demo App
+# Cinacoin Demo App
 
-A Next.js 15 demo application showcasing the CinaConnect SDK's multi-chain wallet connection, swap, and UI components.
+A Next.js 15 demo application showcasing the Cinacoin SDK's multi-chain wallet connection, swap, and UI components.
 
 ## Getting Started
 
@@ -9,7 +9,7 @@ A Next.js 15 demo application showcasing the CinaConnect SDK's multi-chain walle
 pnpm install
 
 # Run the dev server
-pnpm -F cinaconnect-demo dev
+pnpm -F cinacoin-demo dev
 ```
 
 The app will be available at `http://localhost:3000`.
@@ -39,13 +39,13 @@ apps/demo/
 
 - **Next.js 15** — App Router
 - **React 19** — UI framework
-- **@cinaconnect/core-sdk** — Core SDK (workspace)
-- **@cinaconnect/core-ui** — Web components (workspace)
-- **@cinaconnect/react** — React bindings (workspace)
+- **@cinacoin/core-sdk** — Core SDK (workspace)
+- **@cinacoin/core-ui** — Web components (workspace)
+- **@cinacoin/react** — React bindings (workspace)
 
 ## Tech Stack
 
 - TypeScript
 - Tailwind CSS (via Next.js)
-- CinaConnect Web Components (`<ocx-connect-button>`, `<ocx-chain-switcher>`, etc.)
+- Cinacoin Web Components (`<ocx-connect-button>`, `<ocx-chain-switcher>`, etc.)
 - i18n support (10+ languages)

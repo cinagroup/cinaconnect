@@ -1,18 +1,18 @@
 import { defineNuxtModule, addPlugin, addImportsDir, addComponent, addTemplate, createResolver } from '@nuxt/kit'
 
-import type { MetaOptions } from '@cinaconnect/core-sdk'
+import type { MetaOptions } from '@cinacoin/core-sdk'
 
 /**
- * Network identifiers supported by CinaConnect.
+ * Network identifiers supported by Cinacoin.
  */
-export type CinaConnectNetwork = 'mainnet' | 'testnet' | 'arbitrum' | 'arbitrum-sepolia' | 'base' | 'base-sepolia' | 'optimism' | 'optimism-sepolia' | 'polygon' | 'polygon-mumbai' | string
+export type CinacoinNetwork = 'mainnet' | 'testnet' | 'arbitrum' | 'arbitrum-sepolia' | 'base' | 'base-sepolia' | 'optimism' | 'optimism-sepolia' | 'polygon' | 'polygon-mumbai' | string
 
 /**
- * Module options for the Nuxt 3 CinaConnect module.
+ * Module options for the Nuxt 3 Cinacoin module.
  */
-export interface CinaConnectModuleOptions {
+export interface CinacoinModuleOptions {
   /**
-   * CinaConnect project ID (from https://cloud.cinaconnect.com).
+   * Cinacoin project ID (from https://cloud.cinacoin.com).
    */
   projectId: string
 
@@ -20,7 +20,7 @@ export interface CinaConnectModuleOptions {
    * Network keys to enable (e.g. ['mainnet', 'arbitrum', 'base']).
    * Defaults to ['mainnet'].
    */
-  networks?: CinaConnectNetwork[]
+  networks?: CinacoinNetwork[]
 
   /**
    * WalletConnect metadata for the connection.
@@ -40,15 +40,15 @@ export interface CinaConnectModuleOptions {
 }
 
 /**
- * CinaConnect Nuxt module — provides wallet connection for Nuxt 3 apps.
+ * Cinacoin Nuxt module — provides wallet connection for Nuxt 3 apps.
  *
- * Automatically adds the @cinaconnect/vue plugin, runtime config,
+ * Automatically adds the @cinacoin/vue plugin, runtime config,
  * composables, and a connect-button component.
  */
-export default defineNuxtModule<CinaConnectModuleOptions>({
+export default defineNuxtModule<CinacoinModuleOptions>({
   meta: {
-    name: '@cinaconnect/nuxt',
-    configKey: 'cinaconnect',
+    name: '@cinacoin/nuxt',
+    configKey: 'cinacoin',
     compatibility: {
       nuxt: '^3.0.0',
     },
@@ -64,7 +64,7 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // ── Runtime config ─────────────────────────────────────────────
-    nuxt.options.runtimeConfig.public.cinaconnect = {
+    nuxt.options.runtimeConfig.public.cinacoin = {
       projectId: options.projectId,
       networks: options.networks,
       metadata: options.metadata,
@@ -72,7 +72,7 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
       themeVariables: options.themeVariables,
     }
 
-    // ── Vue plugin (auto-installs @cinaconnect/vue) ───────────────
+    // ── Vue plugin (auto-installs @cinacoin/vue) ───────────────
     addPlugin({
       src: resolve('./runtime/plugin'),
     })
@@ -93,27 +93,27 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
 
     // ── CSS theme variables ────────────────────────────────────────
     addTemplate({
-      filename: 'cinaconnect-theme.css',
+      filename: 'cinacoin-theme.css',
       getContents: () => {
         const palette: Record<string, string> = {
-          '--cinaconnect-color-accent': '#4F46E5',
-          '--cinaconnect-color-accent-hover': '#4338CA',
-          '--cinaconnect-color-bg': '#ffffff',
-          '--cinaconnect-color-bg-secondary': '#f9fafb',
-          '--cinaconnect-color-text': '#111827',
-          '--cinaconnect-color-text-secondary': '#6b7280',
-          '--cinaconnect-color-border': '#e5e7eb',
-          '--cinaconnect-color-success': '#10b981',
-          '--cinaconnect-color-error': '#ef4444',
-          '--cinaconnect-radius': '12px',
+          '--cinacoin-color-accent': '#4F46E5',
+          '--cinacoin-color-accent-hover': '#4338CA',
+          '--cinacoin-color-bg': '#ffffff',
+          '--cinacoin-color-bg-secondary': '#f9fafb',
+          '--cinacoin-color-text': '#111827',
+          '--cinacoin-color-text-secondary': '#6b7280',
+          '--cinacoin-color-border': '#e5e7eb',
+          '--cinacoin-color-success': '#10b981',
+          '--cinacoin-color-error': '#ef4444',
+          '--cinacoin-radius': '12px',
         }
 
         const darkPalette: Record<string, string> = {
-          '--cinaconnect-color-bg': '#111827',
-          '--cinaconnect-color-bg-secondary': '#1f2937',
-          '--cinaconnect-color-text': '#f9fafb',
-          '--cinaconnect-color-text-secondary': '#9ca3af',
-          '--cinaconnect-color-border': '#374151',
+          '--cinacoin-color-bg': '#111827',
+          '--cinacoin-color-bg-secondary': '#1f2937',
+          '--cinacoin-color-text': '#f9fafb',
+          '--cinacoin-color-text-secondary': '#9ca3af',
+          '--cinacoin-color-border': '#374151',
         }
 
         const resolve = (vars: Record<string, string>) =>
@@ -140,7 +140,7 @@ export default defineNuxtModule<CinaConnectModuleOptions>({
 
     // Inject generated CSS into the app
     nuxt.hook('app:resolve', (app) => {
-      app.css.push('#build/cinaconnect-theme.css')
+      app.css.push('#build/cinacoin-theme.css')
     })
 
     // ── TypeScript augmentation ────────────────────────────────────

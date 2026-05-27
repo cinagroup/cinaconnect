@@ -36,7 +36,7 @@ function MockMultiwalletProvider({
 /* ── Storybook meta ───────────────────────────────────────────────── */
 
 const meta: Meta<typeof MultiwalletSwitcher> = {
-  title: 'CinaConnect/MultiwalletSwitcher',
+  title: 'CinaCoin/MultiwalletSwitcher',
   component: MultiwalletSwitcher,
   argTypes: {
     className: { control: 'text' },

@@ -1,7 +1,7 @@
 # E2E Test Report — 2026-05-18
 
 ## Summary
-- **Project:** CinaConnect Demo (`apps/demo/`)
+- **Project:** Cinacoin Demo (`apps/demo/`)
 - **Tests:** 51 E2E tests across 4 spec files
 - **Installation:** Playwright Chromium binary ✅ installed
 - **Execution:** ❌ ALL 51 FAILED (system library dependency)
@@ -9,7 +9,7 @@
 ## What Was Done
 1. **Playwright Chromium installed** — `npx playwright install chromium` succeeded (binary downloaded to `/home/cina/.cache/ms-playwright/chromium-1223`)
 2. **`--with-deps` failed** — `npx playwright install chromium --with-deps` failed because it requires `sudo` to install system packages, and no password is available
-3. **E2E tests executed** — `CI=true pnpm -F cinaconnect-demo test:e2e` ran all 51 tests
+3. **E2E tests executed** — `CI=true pnpm -F cinacoin-demo test:e2e` ran all 51 tests
 
 ## Root Cause of Failure
 Chromium fails to launch due to **missing system libraries**:
@@ -53,7 +53,7 @@ sudo apt-get install -y \
 Then re-run:
 ```bash
 cd /home/cina/.openclaw/workspace/onux/apps/demo
-pnpm -F cinaconnect-demo test:e2e
+pnpm -F cinacoin-demo test:e2e
 ```
 
 ## Other Notes

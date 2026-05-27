@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# CinaConnect Cloudflare Pages Deployment Script (with project creation)
+# CinaCoin Cloudflare Pages Deployment Script (with project creation)
 # Uses API token for authentication (no browser required)
 
 CLOUDFLARE_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"  # Set via environment or .env
@@ -39,7 +39,7 @@ deploy_page() {
 }
 
 # Main
-info "CinaConnect Cloudflare Pages Deployment"
+info "CinaCoin Cloudflare Pages Deployment"
 info "Account: CinaGroup ($CLOUDFLARE_ACCOUNT_ID)"
 echo ""
 
@@ -47,13 +47,13 @@ echo ""
 deploy_page "Backend Dashboard" "backend-dashboard" "apps/backend-dashboard" "out"
 
 # Deploy Health Status Page
-deploy_page "Health Status Page" "cinaconnect-health-status" "apps/health-status" "out"
+deploy_page "Health Status Page" "cinacoin-health-status" "apps/health-status" "out"
 
 # Deploy API Documentation Site
 info "Deploying API Documentation Site..."
 cd "$PROJECT_ROOT/docs-site"
 npm run build
-CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy docs/.vitepress/dist --project-name="cinaconnect-docs" --commit-dirty=true
+CLOUDFLARE_API_TOKEN="$CLOUDFLARE_API_TOKEN" wrangler pages deploy docs/.vitepress/dist --project-name="cinacoin-docs" --commit-dirty=true
 log "API Documentation Site deployed!"
 cd "$PROJECT_ROOT"
 
@@ -62,10 +62,10 @@ log "🎉 All Cloudflare Pages deployed successfully!"
 echo ""
 echo "Deployed Pages (.pages.dev):"
 echo "  • backend-dashboard"
-echo "  • cinaconnect-health-status"
-echo "  • cinaconnect-docs"
+echo "  • cinacoin-health-status"
+echo "  • cinacoin-docs"
 echo ""
 echo "Access URLs:"
 echo "  • https://backend-dashboard.pages.dev"
-echo "  • https://cinaconnect-health-status.pages.dev"
-echo "  • https://cinaconnect-docs.pages.dev"
+echo "  • https://cinacoin-health-status.pages.dev"
+echo "  • https://cinacoin-docs.pages.dev"

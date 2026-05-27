@@ -1,10 +1,10 @@
-# CLAUDE.md — Claude Code Configuration for CinaConnect
+# CLAUDE.md — Claude Code Configuration for Cinacoin
 
-This file provides context and instructions for Claude Code working on the CinaConnect repository.
+This file provides context and instructions for Claude Code working on the Cinacoin repository.
 
 ## Project Overview
 
-CinaConnect is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It's a monorepo with:
+Cinacoin is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It's a monorepo with:
 
 - **packages/core-sdk/** — TypeScript SDK (EVM, Solana, Bitcoin adapters)
 - **packages/relay-server/** — Rust WebSocket relay server

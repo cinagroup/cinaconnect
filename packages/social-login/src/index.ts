@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/social-login — Social Login for Web3
+ * @cinacoin/social-login — Social Login for Web3
  *
  * OAuth2 and email/phone-based authentication with deterministic
  * HD wallet derivation for Google, Apple, X, GitHub, Discord,
@@ -21,6 +21,7 @@ export {
   type MagicLinkConfig,
 } from './email-otp.js';
 export { buildGoogleAuthUrl, exchangeCodeForTokens, fetchGoogleUserProfile, loginWithGoogle } from './providers/google.js';
+export { buildGitHubAuthUrl, exchangeCodeForTokens as exchangeGitHubCode, fetchGitHubUserProfile, fetchGitHubUserEmails, loginWithGitHub } from './providers/github.js';
 export { buildAppleAuthUrl, exchangeAppleCode, decodeAppleIdToken, loginWithApple, verifyAppleToken, generateAppleClientSecret } from './providers/apple.js';
 export { buildTwitterAuthUrl, exchangeTwitterCode, fetchTwitterUserProfile, loginWithTwitter, generatePKCE } from './providers/twitter.js';
 
@@ -90,6 +91,7 @@ export type {
   GoogleLoginParams,
   AppleLoginParams,
   TwitterLoginParams,
+  GitHubLoginParams,
   EmailLoginParams,
   SocialLoginResult,
   OAuth2TokenResponse,

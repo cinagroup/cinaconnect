@@ -1,17 +1,17 @@
-# @cinaconnect/paymaster
+# @cinacoin/paymaster
 
-Paymaster client for CinaConnect — gas sponsorship and paymaster data.
+Paymaster client for Cinacoin — gas sponsorship and paymaster data.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/paymaster
+npm install @cinacoin/paymaster
 ```
 
 ## Usage
 
 ```ts
-import { PaymasterClient } from '@cinaconnect/paymaster';
+import { PaymasterClient } from '@cinacoin/paymaster';
 
 const client = new PaymasterClient({ url: 'https://api.example.com' });
 const paymasterData = await client.getPaymasterData({ userOp });

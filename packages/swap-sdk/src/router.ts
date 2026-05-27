@@ -27,6 +27,22 @@ import { calculateMinimumReceived } from "./slippage.js";
 import { ensureAllowance } from "./approve.js";
 
 // ============================================================
+// Optional GasEstimator Integration
+// ============================================================
+
+/**
+ * Minimal interface compatible with @cinacoin/gas-estimator's GasEstimator.
+ * Allows the swap SDK to fetch real EIP-1559 gas prices without a hard dependency.
+ */
+export interface GasEstimatorLike {
+  getEip1559GasPrices(chainId: number): Promise<{
+    baseFee: bigint;
+    priorityFee: bigint;
+    gasPrice: bigint;
+  }>;
+}
+
+// ============================================================
 // Executor Interface
 // ============================================================
 
@@ -84,11 +100,20 @@ export class SwapRouter {
   private quoter: SwapQuoter;
   private executors: SwapExecutor[];
   private executionEnabled: boolean;
+  private gasEstimator: GasEstimatorLike | null;
 
-  constructor(quoter: SwapQuoter, executors?: SwapExecutor[]) {
+  constructor(quoter: SwapQuoter, executors?: SwapExecutor[], options?: { gasEstimator?: GasEstimatorLike }) {
     this.quoter = quoter;
     this.executors = executors ?? [];
     this.executionEnabled = false;
+    this.gasEstimator = options?.gasEstimator ?? null;
+  }
+
+  /**
+   * Set a gas estimator for real gas price fetching during execution.
+   */
+  setGasEstimator(estimator: GasEstimatorLike | null): void {
+    this.gasEstimator = estimator;
   }
 
   /**
@@ -212,9 +237,16 @@ export class SwapRouter {
         executeParams.privateRpc.apiKey,
       );
     } else {
-      // Gas price check (requires publicClient for gas price lookup)
-      if (executeParams.maxGasPrice && executeParams.publicClient) {
-        const currentGasPrice = await executeParams.publicClient.getGasPrice();
+      // Gas price check: use gas estimator if available, fall back to publicClient
+      let currentGasPrice: bigint | undefined;
+      if (this.gasEstimator) {
+        const prices = await this.gasEstimator.getEip1559GasPrices(best.quote.chainId);
+        currentGasPrice = prices.gasPrice;
+      } else if (executeParams.publicClient) {
+        currentGasPrice = await executeParams.publicClient.getGasPrice();
+      }
+
+      if (executeParams.maxGasPrice && currentGasPrice !== undefined) {
         if (currentGasPrice > executeParams.maxGasPrice) {
           throw new Error(
             `Current gas price (${currentGasPrice}) exceeds max (${executeParams.maxGasPrice})`,

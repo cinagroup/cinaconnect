@@ -1,4 +1,4 @@
-name = "cinaconnect-keys-server"
+name = "cinacoin-keys-server"
 main = "cloudflare/worker.ts"
 compatibility_date = "2024-01-01"
 
@@ -8,11 +8,11 @@ DEFAULT_TTL = "86400"
 
 [[kv_namespaces]]
 binding = "KEYS_CACHE"
-id = "e4c457a74fdf465dada283af98a4a992"
+id = "7949502829c74f39b0cbc24d2f6668c6"
 
 [[d1_databases]]
 binding = "KEYS_DB"
-database_name = "cinaconnect-keys"
+database_name = "cinacoin-keys"
 database_id = "1f24922a-19d9-451f-9125-11736d54ec3c"
 
 routes = [

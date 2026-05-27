@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/react — ConnectButton, CinaConnectProvider, hooks.
+ * Tests for @cinacoin/react — ConnectButton, CinaCoinProvider, hooks.
  */
 
 import { describe, it, expect, beforeEach } from 'vitest';
@@ -7,12 +7,12 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 
 // Mock implementations since we can't import the actual components without React setup
-import { CinaConnectProvider, useCinaConnectContext, type CinaConnectConfig, type CinaConnectContextValue, type AccountState, type Connector, type ChainConfig } from '../src/CinaConnectProvider.tsx';
+import { CinaCoinProvider, useCinaCoinContext, type CinaCoinConfig, type CinaCoinContextValue, type AccountState, type Connector, type ChainConfig } from '../src/CinaCoinProvider.tsx';
 import { ConnectButton } from '../src/ConnectButton.tsx';
-import { useCinaConnect, useAccount, useChainId, useConnect, useDisconnect } from '../src/hooks.ts';
+import { useCinaCoin, useAccount, useChainId, useConnect, useDisconnect } from '../src/hooks.ts';
 
 // Mock config
-const mockConfig: CinaConnectConfig = {
+const mockConfig: CinaCoinConfig = {
   projectId: 'test-project',
   chains: [
     {
@@ -36,12 +36,12 @@ const mockConfig: CinaConnectConfig = {
   },
 };
 
-describe('CinaConnectProvider', () => {
+describe('CinaCoinProvider', () => {
   it('should render children', () => {
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <div data-testid="child">Hello</div>
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('child')).toBeInTheDocument();
     expect(screen.getByText('Hello')).toBeInTheDocument();
@@ -49,9 +49,9 @@ describe('CinaConnectProvider', () => {
 
   it('should apply theme class', () => {
     render(
-      <CinaConnectProvider config={{ ...mockConfig, theme: { mode: 'dark' } }}>
+      <CinaCoinProvider config={{ ...mockConfig, theme: { mode: 'dark' } }}>
         <div data-testid="child" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     const root = screen.getByTestId('child').parentElement;
     expect(root).toHaveClass('ocx-theme-dark');
@@ -59,9 +59,9 @@ describe('CinaConnectProvider', () => {
 
   it('should default to dark theme', () => {
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <div data-testid="child" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     const root = screen.getByTestId('child').parentElement;
     expect(root).toHaveClass('ocx-theme-dark');
@@ -69,35 +69,35 @@ describe('CinaConnectProvider', () => {
 
   it('should use first chain as default', () => {
     const TestComponent = () => {
-      const { account } = useCinaConnectContext();
+      const { account } = useCinaCoinContext();
       return <div data-testid="chain">{account.chainId}</div>;
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('chain')).toHaveTextContent('1');
   });
 
   it('should expose correct initial status', () => {
     const TestComponent = () => {
-      const { status } = useCinaConnectContext();
+      const { status } = useCinaCoinContext();
       return <div data-testid="status">{status}</div>;
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('status')).toHaveTextContent('disconnected');
   });
 
-  it('should throw when useCinaConnectContext is used outside provider', () => {
+  it('should throw when useCinaCoinContext is used outside provider', () => {
     const TestComponent = () => {
-      useCinaConnectContext();
+      useCinaCoinContext();
       return null;
     };
 
@@ -105,36 +105,36 @@ describe('CinaConnectProvider', () => {
     const spy = vi.spyOn(console, 'error');
     spy.mockImplementation(() => {});
 
-    expect(() => render(<TestComponent />)).toThrow('useCinaConnectContext must be used within');
+    expect(() => render(<TestComponent />)).toThrow('useCinaCoinContext must be used within');
     spy.mockRestore();
   });
 
   it('should provide default connectors', () => {
     const TestComponent = () => {
-      const { connectors } = useCinaConnectContext();
+      const { connectors } = useCinaCoinContext();
       return <div data-testid="count">{connectors.length}</div>;
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('count')).toHaveTextContent('5');
   });
 });
 
 describe('React Hooks', () => {
-  it('useCinaConnect returns context', () => {
+  it('useCinaCoin returns context', () => {
     const TestComponent = () => {
-      const ctx = useCinaConnect();
+      const ctx = useCinaCoin();
       return <div data-testid="has-config">{ctx.config ? 'yes' : 'no'}</div>;
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('has-config')).toHaveTextContent('yes');
   });
@@ -151,9 +151,9 @@ describe('React Hooks', () => {
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('address')).toHaveTextContent('null');
     expect(screen.getByTestId('balance')).toHaveTextContent('0.00');
@@ -166,9 +166,9 @@ describe('React Hooks', () => {
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('chain-id')).toHaveTextContent('1');
   });
@@ -185,9 +185,9 @@ describe('React Hooks', () => {
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('connect-btn')).toBeInTheDocument();
     expect(screen.getByTestId('status')).toHaveTextContent('disconnected');
@@ -200,9 +200,9 @@ describe('React Hooks', () => {
     };
 
     render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <TestComponent />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(screen.getByTestId('disconnect-btn')).toBeInTheDocument();
   });
@@ -211,9 +211,9 @@ describe('React Hooks', () => {
 describe('ConnectButton', () => {
   it('should render with default label when disconnected', () => {
     const { container } = render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <ConnectButton />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(container.querySelector('ocx-connect-button')).toBeInTheDocument();
     expect(container.querySelector('ocx-connect-button')).toHaveAttribute('label', 'Connect Wallet');
@@ -221,9 +221,9 @@ describe('ConnectButton', () => {
 
   it('should render with custom label', () => {
     const { container } = render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <ConnectButton label="Link Wallet" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     const el = container.querySelector('ocx-connect-button');
     expect(el).toBeInTheDocument();
@@ -236,13 +236,13 @@ describe('ConnectButton', () => {
       const [connected, setConnected] = React.useState(false);
 
       return (
-        <CinaConnectProvider config={mockConfig}>
+        <CinaCoinProvider config={mockConfig}>
           {connected ? (
             <div>Connected</div>
           ) : (
             <ConnectButton onClick={() => setConnected(true)} />
           )}
-        </CinaConnectProvider>
+        </CinaCoinProvider>
       );
     };
 
@@ -252,17 +252,17 @@ describe('ConnectButton', () => {
 
   it('should support different variants', () => {
     const { container, rerender } = render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <ConnectButton variant="primary" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
 
     expect(container.querySelector('ocx-connect-button')).toHaveAttribute('variant', 'primary');
 
     rerender(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <ConnectButton variant="ghost" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
 
     expect(container.querySelector('ocx-connect-button')).toHaveAttribute('variant', 'ghost');
@@ -270,9 +270,9 @@ describe('ConnectButton', () => {
 
   it('should support different sizes', () => {
     const { container } = render(
-      <CinaConnectProvider config={mockConfig}>
+      <CinaCoinProvider config={mockConfig}>
         <ConnectButton size="sm" />
-      </CinaConnectProvider>
+      </CinaCoinProvider>
     );
     expect(container.querySelector('ocx-connect-button')).toHaveAttribute('size', 'sm');
   });

@@ -1,8 +1,8 @@
-# CinaConnect — Disaster Recovery Plan
+# Cinacoin — Disaster Recovery Plan
 
 ## Executive Summary
 
-This document outlines the disaster recovery (DR) strategy for CinaConnect, a white-label on-chain UX toolkit. The plan covers recovery objectives, procedures, and communication protocols for various disaster scenarios.
+This document outlines the disaster recovery (DR) strategy for Cinacoin, a white-label on-chain UX toolkit. The plan covers recovery objectives, procedures, and communication protocols for various disaster scenarios.
 
 ## Recovery Objectives
 
@@ -161,7 +161,7 @@ In a disaster scenario, deploy only critical services:
 
 ```bash
 # Minimal production deployment
-helm upgrade --install cinaconnect ./deploy/helm/cinaconnect \
+helm upgrade --install cinacoin ./deploy/helm/cinacoin \
   --namespace production \
   --set global.environment=production \
   --set blockchainNodes.ethereum.enabled=false \
@@ -195,7 +195,7 @@ helm upgrade --install cinaconnect ./deploy/helm/cinaconnect \
 
 ### Notification Channels
 
-- **Internal:** Slack #cinaconnect-incidents, PagerDuty
+- **Internal:** Slack #cinacoin-incidents, PagerDuty
 - **External:** Status page, Twitter (if extended outage)
 - **Enterprise:** Direct email/SMS to affected customers
 
@@ -228,7 +228,7 @@ helm upgrade --install cinaconnect ./deploy/helm/cinaconnect \
 kubectl get nodes; kubectl get pods -A --field-selector=status.phase!=Running
 
 # Check backup status
-kubectl get jobs -n cinaconnect -l component=backup
+kubectl get jobs -n cinacoin -l component=backup
 
 # Emergency scale-down
 kubectl scale deployment <name> --replicas=0 -n production

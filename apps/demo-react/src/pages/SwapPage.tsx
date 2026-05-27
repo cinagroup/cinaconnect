@@ -72,7 +72,7 @@ export default function SwapPage() {
       {/* Nav */}
       <nav className="border-b border-gray-800/50 bg-gray-950/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaConnect</a>
+          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaCoin</a>
           <div className="flex items-center gap-1">
             <a href="/" className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Home</a>
             <a href="/swap" className="px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-gray-800">Swap</a>
@@ -157,7 +157,7 @@ export default function SwapPage() {
 
         {/* Powered by */}
         <p className="text-center text-xs text-gray-600 mt-4">
-          Powered by <span className="text-gray-400">CinaConnect Swap SDK</span>
+          Powered by <span className="text-gray-400">CinaCoin Swap SDK</span>
           {' · '}<span className="text-amber-500/60">Demo mode — prices are illustrative</span>
         </p>
 

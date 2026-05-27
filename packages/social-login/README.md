@@ -1,17 +1,17 @@
-# @cinaconnect/social-login
+# @cinacoin/social-login
 
-Social login for CinaConnect — Google, Apple, GitHub OAuth wallet creation.
+Social login for Cinacoin — Google, Apple, GitHub OAuth wallet creation.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/social-login
+npm install @cinacoin/social-login
 ```
 
 ## Usage
 
 ```ts
-import { SocialLogin } from '@cinaconnect/social-login';
+import { SocialLogin } from '@cinacoin/social-login';
 
 const login = new SocialLogin({ clientId: 'YOUR_CLIENT_ID' });
 const wallet = await login.connect('google');

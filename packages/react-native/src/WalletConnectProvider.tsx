@@ -1,14 +1,14 @@
 /**
  * WalletConnectProvider — Real WalletConnect v2 session management for React Native.
  *
- * Wraps @walletconnect/react-native-dapp (or the cinaconnect core wrapper) to provide:
+ * Wraps @walletconnect/react-native-dapp (or the cinacoin core wrapper) to provide:
  * - Real pairing URI creation and QR display
  * - Deep-link wallet connection flow (MetaMask, Rainbow, Trust, Coinbase)
  * - Session lifecycle management (connect / disconnect / events)
  * - Balance fetching via on-chain RPC
  * - Transaction signing via WC v2 personal_sign / eth_sendTransaction
  *
- * This provider bridges the low-level WC v2 SDK with CinaConnect React Native components.
+ * This provider bridges the low-level WC v2 SDK with CinaCoin React Native components.
  */
 
 import React, {
@@ -23,8 +23,8 @@ import React, {
 } from 'react';
 import { Linking, Platform } from 'react-native';
 
-// Core WC v2 types (from the cinaconnect walletconnect-v2 package)
-import type { Session, WcClientEvent } from '@cinaconnect/walletconnect-v2';
+// Core WC v2 types (from the cinacoin walletconnect-v2 package)
+import type { Session, WcClientEvent } from '@cinacoin/walletconnect-v2';
 import {
   WcSessionManager,
   createPairing,
@@ -37,8 +37,8 @@ import {
   buildWalletDeepLink,
   buildWalletUniversalLink,
   WC_METHODS,
-} from '@cinaconnect/walletconnect-v2';
-import type { AppMetadata } from '@cinaconnect/core-sdk';
+} from '@cinacoin/walletconnect-v2';
+import type { AppMetadata } from '@cinacoin/core-sdk';
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 
@@ -87,7 +87,7 @@ export interface WalletConnectContextValue extends WalletConnectState {
   /** Create a new pairing and return the WC URI. */
   createPairingUri: () => Promise<string>;
   /** Connect using a pre-existing WC URI (from QR scan). */
-  connectWithUri: (uri: string) => Promise<Session>;
+  connectWithUri: (uri: string) => Promise<void>;
   /** Open a wallet app via deep link with the current pairing URI. */
   openWalletDeepLink: (walletId: string) => Promise<void>;
   /** Disconnect and clean up the session. */
@@ -218,8 +218,6 @@ export function WalletConnectProvider({ config, children }: WalletConnectProvide
       relayUrl: cfg.relayUrl ?? `wss://relay.walletconnect.com?projectId=${cfg.projectId}`,
       metadata: cfg.metadata,
       requiredChains: chains,
-      optionalChains: cfg.optionalChains,
-      methods: cfg.methods ?? WC_METHODS,
     });
 
     // Subscribe to WC events
@@ -270,7 +268,7 @@ export function WalletConnectProvider({ config, children }: WalletConnectProvide
     return uri;
   }, []);
 
-  const connectWithUri = useCallback(async (uri: string): Promise<Session> => {
+  const connectWithUri = useCallback(async (uri: string): Promise<void> => {
     if (!sessionManagerRef.current) {
       throw new Error('WalletConnectProvider not initialized');
     }
@@ -278,7 +276,6 @@ export function WalletConnectProvider({ config, children }: WalletConnectProvide
     try {
       const session = await sessionManagerRef.current.connectWithUri(uri);
       setState(prev => ({ ...prev, session, pairingUri: null, connecting: false, error: null }));
-      return session;
     } catch (err) {
       setState(prev => ({
         ...prev,

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine.Networking;
 using Newtonsoft.Json;
 
-namespace CinaConnect.Chain
+namespace Cinacoin.Chain
 {
     /// <summary>
     /// Solana chain adapter with real JSON-RPC integration.

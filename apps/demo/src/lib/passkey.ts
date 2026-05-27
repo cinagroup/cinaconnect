@@ -101,7 +101,7 @@ export function base64ToBase64Url(base64: string): string {
 
 /* ── Credential Storage ── */
 
-const STORAGE_KEY = 'cinaconnect_passkey_credentials';
+const STORAGE_KEY = 'cinacoin_passkey_credentials';
 
 /**
  * Get all stored passkey credentials.
@@ -195,7 +195,7 @@ export async function registerPasskey(
       {
         challenge: crypto.getRandomValues(new Uint8Array(32)),
         rp: {
-          name: 'CinaConnect Demo',
+          name: 'Cinacoin Demo',
           id: rpId,
         },
         user: {

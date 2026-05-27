@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { useWallet, shortenAddress } from '@/lib/useWallet';
 import DemoLayout from '@/components/DemoLayout';
 import { useToast } from '@/lib/toast';
-import { parseMessage } from '@cinaconnect/siwe';
+import { parseMessage } from '@cinacoin/siwe';
 import {
   createSiweMessage,
   signSiweMessage,
@@ -292,7 +292,7 @@ export default function AuthPage() {
           <p className="mt-5 text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
             Authenticate with your wallet or biometrics. No passwords, no accounts.
             <br />
-            <span className="text-gray-500">Powered by @cinaconnect/siwe + WebAuthn Passkeys.</span>
+            <span className="text-gray-500">Powered by @cinacoin/siwe + WebAuthn Passkeys.</span>
           </p>
         </section>
 

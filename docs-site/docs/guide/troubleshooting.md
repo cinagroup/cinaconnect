@@ -1,6 +1,6 @@
 # Troubleshooting
 
-> Common issues and solutions for CinaConnect.
+> Common issues and solutions for Cinacoin.
 
 ## Connection Issues
 

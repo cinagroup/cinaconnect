@@ -6,7 +6,7 @@
 
 ---
 
-## @cinaconnect/core-sdk
+## @cinacoin/core-sdk
 
 **Tests:** 1064 passed (66 test files)  
 **Status:** ✅ All passing
@@ -59,7 +59,7 @@
 
 ---
 
-## @cinaconnect/siwe
+## @cinacoin/siwe
 
 **Tests:** 123 passed (3 test files — `.js` variants)  
 **Status:** ⚠️ Partial (3 test suites failing due to pre-existing issues)
@@ -83,14 +83,14 @@ The `.js` test variants run and cover validator + siwe modules well. Coverage fo
 
 ---
 
-## @cinaconnect/react
+## @cinacoin/react
 
 **Tests:** 0 (test suites failing)  
 **Status:** 🔴 Not running — pre-existing import resolution issues
 
 ### Known Issues
 
-- `tests/ConnectButton.test.tsx` / `.js` — Failed to resolve imports like `../../src/CinaConnectProvider.js`
+- `tests/ConnectButton.test.tsx` / `.js` — Failed to resolve imports like `../../src/CinacoinProvider.js`
 - The `vitest.config.ts` includes a `.js → .tsx/.ts` resolver plugin, but the test files import from `.js` extensions that Vite cannot resolve
 
 ### Report Locations
@@ -133,9 +133,9 @@ Added `@vitest/coverage-v8` provider + `.js → .ts` resolver plugin.
 
 ### 6. Package.json Scripts
 
-- `@cinaconnect/react`: Added `test` and `test:coverage` scripts
-- `@cinaconnect/siwe`: Added `test:coverage` script
-- `@cinaconnect/core-sdk`: Already had `test:coverage`
+- `@cinacoin/react`: Added `test` and `test:coverage` scripts
+- `@cinacoin/siwe`: Added `test:coverage` script
+- `@cinacoin/core-sdk`: Already had `test:coverage`
 
 ### 7. Dependencies Installed
 

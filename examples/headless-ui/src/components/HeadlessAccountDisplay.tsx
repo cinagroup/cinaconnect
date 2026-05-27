@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { HeadlessClient } from '@cinaconnect/config'
+import type { HeadlessClient } from '@cinacoin/config'
 
 interface AccountDisplayProps {
   client: HeadlessClient

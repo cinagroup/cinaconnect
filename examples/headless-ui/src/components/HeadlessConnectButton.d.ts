@@ -1,4 +1,4 @@
-import { type HeadlessClient } from '@cinaconnect/config';
+import { type HeadlessClient } from '@cinacoin/config';
 interface ConnectButtonProps {
     client: HeadlessClient;
     onConnected?: (account: string) => void;
@@ -6,7 +6,7 @@ interface ConnectButtonProps {
 /**
  * HeadlessConnectButton — a completely custom connect button.
  *
- * Uses only the headless client API (`@cinaconnect/config`) with zero
+ * Uses only the headless client API (`@cinacoin/config`) with zero
  * built-in UI. You control every pixel of the experience.
  *
  * @example

@@ -1,4 +1,4 @@
-import type { SessionState } from "@cinaconnect/core-sdk";
+import type { SessionState } from "@cinacoin/core-sdk";
 import type { ConnectionRecord, MultiwalletState, Namespace } from "./types.js";
 /**
  * Central store for managing multiple wallet connections simultaneously.

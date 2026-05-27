@@ -6,7 +6,7 @@
  * establishing an encrypted session channel on top of pairing.
  */
 
-import { EventEmitter } from '@cinaconnect/core-sdk';
+import { EventEmitter } from '@cinacoin/core-sdk';
 import { generateKeypair, sharedSecret, bytesToHex, hexToBytes, encrypt, decrypt } from './crypto.js';
 import { sha256 } from '@noble/hashes/sha2.js';
 import type {

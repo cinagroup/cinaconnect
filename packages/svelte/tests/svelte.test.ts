@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/svelte — stores, hooks, createCinaConnect, and actions.
+ * Tests for @cinacoin/svelte — stores, hooks, createCinacoin, and actions.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -66,13 +66,13 @@ const mockConnector = {
   getProvider: vi.fn().mockReturnValue(null),
 };
 
-vi.mock('@cinaconnect/core-sdk', () => ({
+vi.mock('@cinacoin/core-sdk', () => ({
   Connector: vi.fn().mockImplementation(() => mockConnector),
 }));
 
 // ─── Tests ───────────────────────────────────────────────────────────────────
 
-describe('createCinaConnect', () => {
+describe('createCinacoin', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     createdStores.length = 0;
@@ -83,13 +83,13 @@ describe('createCinaConnect', () => {
   });
 
   it('should require connector or createConnector option', async () => {
-    const { createCinaConnect } = await import('../src/lib/createCinaConnect.js');
-    expect(() => createCinaConnect({})).toThrow(/requires either.*connector.*or.*createConnector/);
+    const { createCinacoin } = await import('../src/lib/createCinacoin.js');
+    expect(() => createCinacoin({})).toThrow(/requires either.*connector.*or.*createConnector/);
   });
 
   it('should accept a connector option', async () => {
-    const { createCinaConnect } = await import('../src/lib/createCinaConnect.js');
-    const ctx = createCinaConnect({ connector: mockConnector as any });
+    const { createCinacoin } = await import('../src/lib/createCinacoin.js');
+    const ctx = createCinacoin({ connector: mockConnector as any });
 
     expect(ctx).toBeDefined();
     expect(ctx.getConnector()).toBeTruthy();
@@ -100,8 +100,8 @@ describe('createCinaConnect', () => {
   });
 
   it('should accept a createConnector function', async () => {
-    const { createCinaConnect } = await import('../src/lib/createCinaConnect.js');
-    const ctx = createCinaConnect({ createConnector: () => mockConnector as any });
+    const { createCinacoin } = await import('../src/lib/createCinacoin.js');
+    const ctx = createCinacoin({ createConnector: () => mockConnector as any });
     expect(ctx.getConnector()).toBeTruthy();
   });
 });
@@ -129,9 +129,9 @@ describe('stores', () => {
     expect(stores.chains).toBeDefined();
   });
 
-  it('should export initCinaConnect', async () => {
-    const { initCinaConnect } = await import('../src/lib/stores.js');
-    expect(typeof initCinaConnect).toBe('function');
+  it('should export initCinacoin', async () => {
+    const { initCinacoin } = await import('../src/lib/stores.js');
+    expect(typeof initCinacoin).toBe('function');
   });
 
   it('should export getConnector and return null before init', async () => {
@@ -140,12 +140,12 @@ describe('stores', () => {
     expect(getConnector()).toBeNull();
   });
 
-  it('should export open, close, switchChain, resetCinaConnect', async () => {
-    const { open, close, switchChain, resetCinaConnect } = await import('../src/lib/stores.js');
+  it('should export open, close, switchChain, resetCinacoin', async () => {
+    const { open, close, switchChain, resetCinacoin } = await import('../src/lib/stores.js');
     expect(typeof open).toBe('function');
     expect(typeof close).toBe('function');
     expect(typeof switchChain).toBe('function');
-    expect(typeof resetCinaConnect).toBe('function');
+    expect(typeof resetCinacoin).toBe('function');
   });
 
   it('should throw if open() called before init', async () => {
@@ -163,15 +163,15 @@ describe('stores', () => {
     await expect(switchChain(1)).rejects.toThrow(/SDK not initialized/);
   });
 
-  it('should initCinaConnect and getConnector returns connector after init', async () => {
-    const { initCinaConnect, getConnector, resetCinaConnect } = await import('../src/lib/stores.js');
-    resetCinaConnect();
-    initCinaConnect(mockConnector as any, { chains: [{ id: '1', name: 'Ethereum' }] as any });
+  it('should initCinacoin and getConnector returns connector after init', async () => {
+    const { initCinacoin, getConnector, resetCinacoin } = await import('../src/lib/stores.js');
+    resetCinacoin();
+    initCinacoin(mockConnector as any, { chains: [{ id: '1', name: 'Ethereum' }] as any });
     expect(getConnector()).toBeTruthy();
   });
 });
 
-describe('useCinaConnect hooks', () => {
+describe('useCinacoin hooks', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     createdStores.length = 0;
@@ -181,16 +181,16 @@ describe('useCinaConnect hooks', () => {
     vi.resetModules();
   });
 
-  it('should export getCinaConnect, getCinaConnectAccount, getCinaConnectNetwork', async () => {
-    const hooks = await import('../src/lib/useCinaConnect.js');
-    expect(hooks.getCinaConnect).toBeDefined();
-    expect(hooks.getCinaConnectAccount).toBeDefined();
-    expect(hooks.getCinaConnectNetwork).toBeDefined();
+  it('should export getCinacoin, getCinacoinAccount, getCinacoinNetwork', async () => {
+    const hooks = await import('../src/lib/useCinacoin.js');
+    expect(hooks.getCinacoin).toBeDefined();
+    expect(hooks.getCinacoinAccount).toBeDefined();
+    expect(hooks.getCinacoinNetwork).toBeDefined();
   });
 
-  it('getCinaConnect returns open, close, isOpen', async () => {
-    const { getCinaConnect } = await import('../src/lib/useCinaConnect.js');
-    const result = getCinaConnect();
+  it('getCinacoin returns open, close, isOpen', async () => {
+    const { getCinacoin } = await import('../src/lib/useCinacoin.js');
+    const result = getCinacoin();
     expect(result).toHaveProperty('open');
     expect(result).toHaveProperty('close');
     expect(result).toHaveProperty('isOpen');
@@ -198,18 +198,18 @@ describe('useCinaConnect hooks', () => {
     expect(typeof result.close).toBe('function');
   });
 
-  it('getCinaConnectAccount returns address, isConnected, status, balance', async () => {
-    const { getCinaConnectAccount } = await import('../src/lib/useCinaConnect.js');
-    const result = getCinaConnectAccount();
+  it('getCinacoinAccount returns address, isConnected, status, balance', async () => {
+    const { getCinacoinAccount } = await import('../src/lib/useCinacoin.js');
+    const result = getCinacoinAccount();
     expect(result).toHaveProperty('address');
     expect(result).toHaveProperty('isConnected');
     expect(result).toHaveProperty('status');
     expect(result).toHaveProperty('balance');
   });
 
-  it('getCinaConnectNetwork returns chain, chainId, switchNetwork, chains', async () => {
-    const { getCinaConnectNetwork } = await import('../src/lib/useCinaConnect.js');
-    const result = getCinaConnectNetwork();
+  it('getCinacoinNetwork returns chain, chainId, switchNetwork, chains', async () => {
+    const { getCinacoinNetwork } = await import('../src/lib/useCinacoin.js');
+    const result = getCinacoinNetwork();
     expect(result).toHaveProperty('chain');
     expect(result).toHaveProperty('chainId');
     expect(result).toHaveProperty('switchNetwork');
@@ -227,13 +227,13 @@ describe('actions', () => {
 });
 
 describe('package exports', () => {
-  it('should export createCinaConnect, stores, and hooks from index', async () => {
+  it('should export createCinacoin, stores, and hooks from index', async () => {
     const index = await import('../src/index.js');
-    expect(index.createCinaConnect).toBeDefined();
+    expect(index.createCinacoin).toBeDefined();
     expect(index.isConnected).toBeDefined();
     expect(index.address).toBeDefined();
-    expect(index.getCinaConnect).toBeDefined();
-    expect(index.getCinaConnectAccount).toBeDefined();
-    expect(index.getCinaConnectNetwork).toBeDefined();
+    expect(index.getCinacoin).toBeDefined();
+    expect(index.getCinacoinAccount).toBeDefined();
+    expect(index.getCinacoinNetwork).toBeDefined();
   });
 });

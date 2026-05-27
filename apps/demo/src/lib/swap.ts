@@ -381,7 +381,7 @@ export interface SwapHistoryEntry {
   txHash?: string;
 }
 
-const STORAGE_KEY = 'cinaconnect_swap_history';
+const STORAGE_KEY = 'cinacoin_swap_history';
 
 export function getSwapHistory(): SwapHistoryEntry[] {
   if (typeof window === 'undefined') return [];

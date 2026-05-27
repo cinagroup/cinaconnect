@@ -1,11 +1,11 @@
 /**
- * @fileoverview Type definitions for @cinaconnect/i18n package.
+ * @fileoverview Type definitions for @cinacoin/i18n package.
  */
 
 /**
  * Supported locale codes.
  */
-export type LocaleCode = 'en-US' | 'zh-CN' | 'es' | 'ja' | 'ko';
+export type LocaleCode = 'en-US' | 'zh-CN' | 'es' | 'ja' | 'ko' | 'fr' | 'de' | 'ru' | 'pt-BR' | 'ar';
 
 /**
  * Dot-delimited namespace + key path, e.g. 'wallet.connect'.

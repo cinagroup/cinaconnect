@@ -34,8 +34,8 @@ export default defineConfig({
   resolve: {
     alias: {
       // Fix workspace deps that declare .mjs but only ship .js
-      '@cinaconnect/core-sdk': path.resolve(__dirname, '../core-sdk/dist/index.js'),
-      '@cinaconnect/core-ui': path.resolve(__dirname, '../core-ui/dist/index.js'),
+      '@cinacoin/core-sdk': path.resolve(__dirname, '../core-sdk/dist/index.js'),
+      '@cinacoin/core-ui': path.resolve(__dirname, '../core-ui/dist/index.js'),
     },
   },
   test: {

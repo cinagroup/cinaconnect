@@ -1,9 +1,9 @@
-# Twitter / X Thread — CinaConnect v0.2.0
+# Twitter / X Thread — Cinacoin v0.2.0
 
 ## Thread 1: The Big Announcement (5 tweets)
 
 **Tweet 1/5** 🧵
-CinaConnect v0.2.0 is LIVE. 🎉
+Cinacoin v0.2.0 is LIVE. 🎉
 
 72 packages published to npm.
 11 chain adapters.
@@ -38,7 +38,7 @@ Mobile: React Native, Flutter, Android, iOS
 Games: Unity (C#), .NET (C#)
 Social: Telegram Mini Apps, Farcaster
 
-Your users are everywhere. CinaConnect meets them there.
+Your users are everywhere. Cinacoin meets them there.
 
 **Tweet 4/5** 🧵
 ✨ What's new in v0.2.0:
@@ -53,10 +53,10 @@ Your users are everywhere. CinaConnect meets them there.
 **Tweet 5/5** 🧵
 🚀 Try it:
 
-npm install @cinaconnect/react @cinaconnect/adapter-ethereum
+npm install @cinacoin/react @cinacoin/adapter-ethereum
 
-Docs: docs.cinaconnect.io
-GitHub: github.com/cinaconnect/cinaconnect
+Docs: docs.cinacoin.io
+GitHub: github.com/cinacoin/cinacoin
 
 #Web3 #Ethereum #Blockchain #DevTools
 
@@ -67,16 +67,16 @@ GitHub: github.com/cinaconnect/cinaconnect
 **Tweet A:**
 72 packages. 1 SDK.
 
-CinaConnect v0.2.0 covers React → Unity, EVM → XRPL, and everything in between.
+Cinacoin v0.2.0 covers React → Unity, EVM → XRPL, and everything in between.
 
 The most complete multi-chain Web3 SDK just hit npm.
 
-🔢 #CinaConnect
+🔢 #Cinacoin
 
 **Tweet B:**
 EIP-5792 is the future of wallet UX.
 
-CinaConnect's React hooks make it simple:
+Cinacoin's React hooks make it simple:
 
 useAtomicBatch() → one approval, many calls.
 
@@ -87,7 +87,7 @@ Migrating from Reown / AppKit?
 
 We built a codemod for that.
 
-npx @cinaconnect/codemod migrate-from-reown ./src
+npx @cinacoin/codemod migrate-from-reown ./src
 
 Run it. Done. 🔢
 
@@ -96,7 +96,7 @@ Your users are on Telegram. On Farcaster. On mobile.
 
 Why are you only building for web?
 
-CinaConnect SDKs for Telegram Mini Apps, Farcaster, Android, iOS, Unity, .NET — all in one monorepo.
+Cinacoin SDKs for Telegram Mini Apps, Farcaster, Android, iOS, Unity, .NET — all in one monorepo.
 
 🔢
 
@@ -112,7 +112,7 @@ v0.2.0 by the numbers:
 
 The most complete Web3 SDK, open source.
 
-🔢 #CinaConnect
+🔢 #Cinacoin
 
 ---
 
@@ -125,5 +125,5 @@ EVM, Solana, Bitcoin, TON, TRON, Cosmos, Sui, Starknet, NEAR, Hedera, and XRPL. 
 Yes — full React SDK with EIP-5792 hooks: useAtomicBatch, useSendCalls, useWalletCapabilities, useCallsStatus. 🔢
 
 **"How do I migrate?"**
-Run our codemod: npx @cinaconnect/codemod migrate-from-reown ./src
-Or follow the full guide: docs.cinaconnect.io 🔢
+Run our codemod: npx @cinacoin/codemod migrate-from-reown ./src
+Or follow the full guide: docs.cinacoin.io 🔢

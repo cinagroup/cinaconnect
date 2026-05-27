@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/embedded-wallet
+ * @cinacoin/embedded-wallet
  *
  * Embedded wallet system with deterministic key derivation, social auth,
  * encrypted backup, and React integration.

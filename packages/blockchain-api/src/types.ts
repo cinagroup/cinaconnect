@@ -42,6 +42,72 @@ export interface Transaction {
   gasUsed?: bigint;
   /** Decoded function name (if available). */
   method?: string;
+  /** Chain ID where the transaction occurred. */
+  chainId?: number;
+  /** Transaction type ("native" | "erc20" | "nft"). */
+  type?: "native" | "erc20" | "nft";
+  /** Token address for ERC-20 transfers. */
+  tokenAddress?: string;
+  /** Token amount for ERC-20/NFT transfers (in smallest unit). */
+  tokenValue?: bigint;
+  /** Formatted token amount. */
+  formattedValue?: string;
+  /** Gas price in wei. */
+  gasPrice?: bigint;
+  /** Transaction fee in wei. */
+  fee?: bigint;
+  /** Block hash. */
+  blockHash?: string;
+  /** Transaction index in the block. */
+  transactionIndex?: number;
+  /** Nonce of the sender. */
+  nonce?: number;
+  /** Input data (raw). */
+  input?: string;
+}
+
+// ---------------------------------------------------------------------------
+// Transaction history query parameters
+// ---------------------------------------------------------------------------
+
+/** Parameters for querying transaction history. */
+export interface TransactionHistoryQuery {
+  /** Wallet address to query transactions for. */
+  address: string;
+  /** List of chain IDs to query (default: [1, 137, 56] = ETH, Polygon, BSC). */
+  chainIds?: number[];
+  /** Maximum number of transactions per chain (default: 20). */
+  limit?: number;
+  /** Pagination cursor (block number or hash from previous response). */
+  cursor?: string;
+  /** Filter by transaction type. */
+  type?: "native" | "erc20" | "nft";
+  /** Only include transactions involving this token address. */
+  tokenAddress?: string;
+  /** Unix timestamp — only include transactions after this time. */
+  timeFrom?: number;
+  /** Unix timestamp — only include transactions before this time. */
+  timeTo?: number;
+  /** Filter by status. */
+  status?: "success" | "failed" | "pending";
+  /** Sort order ("desc" = newest first, "asc" = oldest first). */
+  sortOrder?: "asc" | "desc";
+}
+
+// ---------------------------------------------------------------------------
+// Transaction history cache
+// ---------------------------------------------------------------------------
+
+/** Cache entry for transaction history. */
+export interface TransactionCacheEntry {
+  /** Cached transactions. */
+  transactions: Transaction[];
+  /** Timestamp when the entry was cached. */
+  cachedAt: number;
+  /** Cursor for next page. */
+  nextCursor?: string;
+  /** Whether there are more transactions. */
+  hasMore: boolean;
 }
 
 // ---------------------------------------------------------------------------
@@ -101,4 +167,8 @@ export interface BlockchainApiConfig {
   metadataBaseUrl?: string;
   /** Default chain id for calls that omit `chainId`. */
   defaultChainId?: number;
+  /** Optional Alchemy API key for transaction history indexing. */
+  alchemyApiKey?: string;
+  /** Optional Covalent (GoldRush) API key for transaction history. */
+  covalentApiKey?: string;
 }

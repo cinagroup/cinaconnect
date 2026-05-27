@@ -565,7 +565,7 @@ export class CosmosChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }
@@ -1076,7 +1076,7 @@ export class CosmosChainAdapter {
    */
   static toSmallestUnit(value: string, decimals: number): string {
     const parts = value.split('.');
-    const intPart = BigInt(parts[0]);
+    const intPart = BigInt(parts[0] || '0');
     let fracPart = 0n;
     if (parts.length > 1) {
       const frac = parts[1].padEnd(decimals, '0').slice(0, decimals);

@@ -1,7 +1,7 @@
 /**
  * Dynamic module loader for CDN bundle.
  *
- * Handles lazy loading of CinaConnect modules and tracks load state.
+ * Handles lazy loading of Cinacoin modules and tracks load state.
  */
 /**
  * Registry of loaded modules.

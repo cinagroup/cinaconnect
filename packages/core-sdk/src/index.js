@@ -1,5 +1,5 @@
 /**
- * CinaConnect Core SDK — Self-hosted wallet connection toolkit.
+ * Cinacoin Core SDK — Self-hosted wallet connection toolkit.
  *
  * A complete replacement for Reown/WalletConnect infrastructure,
  * providing self-hosted relay, RPC proxy, and client-side SDK.
@@ -11,7 +11,7 @@ export { Connector } from './connector.js';
 // Session
 export { SessionManager } from './session.js';
 // State management
-export { createCinaConnectStore, initializeStore } from './store.js';
+export { createCinacoinStore, initializeStore } from './store.js';
 // Events
 export { EventEmitter } from './events.js';
 // EIP-6963
@@ -55,7 +55,7 @@ export { TRONChainAdapter, TRON_CHAINS, TRON_WALLETS, isValidTRONAddress, base58
 // Crypto
 export { generateKeypair, sharedSecret, serializeKeypair, deserializeKeypair, bytesToHex, hexToBytes, } from './crypto/keypair.js';
 export { encrypt, decrypt, deriveSymmetricKey, deriveTopic, generateNonce } from './crypto/encrypt.js';
-// SIWE Authentication (optional — requires @cinaconnect/siwe)
+// SIWE Authentication (optional — requires @cinacoin/siwe)
 export { SIWEAuth } from './auth/siwe.js';
 /**
  * Create a ChainAdapter from factory config.

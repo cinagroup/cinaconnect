@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/adapter-sui",
+  "name": "@cinacoin/adapter-sui",
   "version": "1.0.0",
-  "description": "Sui chain adapter for CinaConnect — Sui Wallet, Ethos, Suiet, Martian connectors",
+  "description": "Sui chain adapter for Cinacoin — Sui Wallet, Ethos, Suiet, Martian connectors",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -14,7 +14,7 @@
     "dev": "tsup src/index.ts --format esm,cjs --dts --watch"
   },
   "peerDependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {},
   "devDependencies": {
@@ -24,5 +24,12 @@
   "license": "MIT",
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

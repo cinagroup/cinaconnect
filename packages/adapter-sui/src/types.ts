@@ -1,5 +1,5 @@
 /**
- * Sui-specific types for the CinaConnect Sui adapter.
+ * Sui-specific types for the Cinacoin Sui adapter.
  *
  * Mirrors the shape of Sui RPC responses and wallet provider interfaces
  * without requiring `@mysten/sui.js` as a direct dependency.

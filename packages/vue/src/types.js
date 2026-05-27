@@ -1,6 +1,6 @@
 /**
- * Type definitions for @cinaconnect/vue
+ * Type definitions for @cinacoin/vue
  */
-/** Injection key for CinaConnect context. */
-export const ONCHAINUX_KEY = Symbol('cinaconnect');
+/** Injection key for Cinacoin context. */
+export const ONCHAINUX_KEY = Symbol('cinacoin');
 //# sourceMappingURL=types.js.map

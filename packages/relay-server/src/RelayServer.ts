@@ -117,6 +117,13 @@ export class RelayServer {
   }
 
   private handleHttp(req: IncomingMessage, res: any): void {
+    // Security headers on all HTTP responses
+    res.setHeader('Content-Security-Policy', "default-src 'none'");
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+
     if (req.url === '/health') {
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ status: 'ok', ...this.getStats() }));

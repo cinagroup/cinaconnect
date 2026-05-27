@@ -16,7 +16,7 @@
     "jsx": "react-jsx",
     "lib": ["ES2020", "DOM"],
     "paths": {
-      "@cinaconnect/core-sdk": ["../core-sdk/src/index.ts"]
+      "@cinacoin/core-sdk": ["../core-sdk/src/index.ts"]
     }
   },
   "include": ["src"],

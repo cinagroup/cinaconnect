@@ -1,14 +1,14 @@
-# Migration Guide: Privy → @cinaconnect/wallet-buttons
+# Migration Guide: Privy → @cinacoin/wallet-buttons
 
 ## Overview
 
-Privy is a full-stack authentication + wallet infrastructure that provides a pre-built login modal with email, social, and wallet options. `@cinaconnect/wallet-buttons` focuses specifically on direct wallet connection UI — individual wallet buttons you control completely.
+Privy is a full-stack authentication + wallet infrastructure that provides a pre-built login modal with email, social, and wallet options. `@cinacoin/wallet-buttons` focuses specifically on direct wallet connection UI — individual wallet buttons you control completely.
 
-> **Note:** If you rely on Privy's email/social login, embedded wallets, or backend user management, those features are outside the scope of `@cinaconnect/wallet-buttons`. This guide covers the **wallet connection UI** portion only.
+> **Note:** If you rely on Privy's email/social login, embedded wallets, or backend user management, those features are outside the scope of `@cinacoin/wallet-buttons`. This guide covers the **wallet connection UI** portion only.
 
 ## Key Differences
 
-| Feature | Privy | @cinaconnect/wallet-buttons |
+| Feature | Privy | @cinacoin/wallet-buttons |
 |---|---|---|
 | Scope | Full auth (email, social, wallet) | Wallet buttons only |
 | UI pattern | `<LoginButton />` modal | Inline `<WalletButton />` |
@@ -21,7 +21,7 @@ Privy is a full-stack authentication + wallet infrastructure that provides a pre
 ### 1. Install
 
 ```bash
-npm install @cinaconnect/wallet-buttons @cinaconnect/core-sdk @cinaconnect/explorer
+npm install @cinacoin/wallet-buttons @cinacoin/core-sdk @cinacoin/explorer
 ```
 
 Keep `@privy-io/react-auth` installed during migration.
@@ -41,8 +41,8 @@ function Header() {
 **After:**
 
 ```tsx
-import { WalletButtonGroup } from '@cinaconnect/wallet-buttons';
-import '@cinaconnect/wallet-buttons/dist/styles.css';
+import { WalletButtonGroup } from '@cinacoin/wallet-buttons';
+import '@cinacoin/wallet-buttons/dist/styles.css';
 
 function Header() {
   return (
@@ -72,7 +72,7 @@ if (!authenticated) {
 **After:**
 
 ```tsx
-import { useWalletButtons } from '@cinaconnect/wallet-buttons';
+import { useWalletButtons } from '@cinacoin/wallet-buttons';
 
 const { connect, isConnected } = useWalletButtons();
 
@@ -97,7 +97,7 @@ return (
 **After — full control:**
 
 ```tsx
-import { useWalletButtons, WalletButton } from '@cinaconnect/wallet-buttons';
+import { useWalletButtons, WalletButton } from '@cinacoin/wallet-buttons';
 
 const { buttons, connect } = useWalletButtons();
 
@@ -118,15 +118,15 @@ return (
 
 ### 5. Embedded wallet migration
 
-Privy's embedded (smart contract / MPC) wallets are **not** a feature of `@cinaconnect/wallet-buttons`. If you use embedded wallets:
+Privy's embedded (smart contract / MPC) wallets are **not** a feature of `@cinacoin/wallet-buttons`. If you use embedded wallets:
 
 - Continue using `@privy-io/react-auth` for embedded wallet functionality
-- Use `@cinaconnect/wallet-buttons` for the **external wallet button UI**
+- Use `@cinacoin/wallet-buttons` for the **external wallet button UI**
 - Both packages can coexist in the same app
 
 ```tsx
 import { LoginButton, usePrivy } from '@privy-io/react-auth';
-import { WalletButton, WalletButtonGroup } from '@cinaconnect/wallet-buttons';
+import { WalletButton, WalletButtonGroup } from '@cinacoin/wallet-buttons';
 
 function HybridAuth() {
   const { login: privyLogin } = usePrivy();
@@ -136,7 +136,7 @@ function HybridAuth() {
       {/* Privy handles email, social, embedded */}
       <LoginButton text="Email / Social Login" />
 
-      {/* CinaConnect handles external wallet buttons */}
+      {/* Cinacoin handles external wallet buttons */}
       <h3>Or connect a wallet</h3>
       <WalletButtonGroup variant="minimal" />
     </div>
@@ -168,7 +168,7 @@ Privy theme config → CSS custom properties:
 
 ## Quick Reference
 
-| Privy | @cinaconnect/wallet-buttons |
+| Privy | @cinacoin/wallet-buttons |
 |---|---|
 | `<LoginButton />` | `<WalletButton walletId="metamask" />` |
 | `<PrivyProvider>` | None needed |

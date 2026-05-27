@@ -1,8 +1,8 @@
 using System.Threading.Tasks;
 using NUnit.Framework;
-using CinaConnect;
+using Cinacoin;
 
-namespace CinaConnect.Tests.Runtime
+namespace Cinacoin.Tests.Runtime
 {
     /// <summary>
     /// Tests for DeepLinkHandler: URI parsing, wallet routing.

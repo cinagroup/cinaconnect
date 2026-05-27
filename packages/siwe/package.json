@@ -1,9 +1,9 @@
 {
-  "name": "@cinaconnect/siwe",
+  "name": "@cinacoin/siwe",
   "version": "0.2.0",
-  "description": "CinaConnect Sign-In with Ethereum (SIWE) implementation per EIP-4361",
+  "description": "Cinacoin Sign-In with Ethereum (SIWE) implementation per EIP-4361",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
@@ -36,5 +36,6 @@
   "sideEffects": false,
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

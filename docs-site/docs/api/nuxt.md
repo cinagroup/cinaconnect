@@ -1,11 +1,11 @@
 # Nuxt
 
-> `@cinaconnect/nuxt` — Nuxt 3 module for CinaConnect.
+> `@cinacoin/nuxt` — Nuxt 3 module for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/nuxt @cinaconnect/core-sdk
+npm install @cinacoin/nuxt @cinacoin/core-sdk
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/nuxt @cinaconnect/core-sdk
 ```typescript
 // nuxt.config.ts
 export default defineNuxtConfig({
-  modules: ['@cinaconnect/nuxt'],
+  modules: ['@cinacoin/nuxt'],
 })
 ```
 

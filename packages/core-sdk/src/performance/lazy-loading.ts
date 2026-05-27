@@ -1,5 +1,5 @@
 /**
- * Lazy Loading Utilities for @cinaconnect/core-sdk
+ * Lazy Loading Utilities for @cinacoin/core-sdk
  *
  * Provides lazy adapter loading and on-demand module initialization
  * to reduce initial bundle size and improve startup performance.

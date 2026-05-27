@@ -1,17 +1,17 @@
 import React, { type ReactNode } from 'react';
 import {
-  CinaConnectProvider,
-  type CinaConnectConfig,
+  CinaCoinProvider,
+  type CinaCoinConfig,
   type ChainConfig,
   type ThemeMode,
-} from '@cinaconnect/react';
+} from '@cinacoin/react';
 
 /**
  * Props for the AppKitPagesRouter component.
  */
 export interface AppKitPagesRouterProps {
   /**
-   * CinaConnect project ID (from https://cloud.cinaconnect.com).
+   * CinaCoin project ID (from https://cloud.cinacoin.com).
    */
   projectId: string;
 
@@ -72,13 +72,13 @@ const defaultChain: ChainConfig = {
  * AppKitPagesRouter — SSR-safe provider for Next.js Pages Router (legacy `_app.tsx`).
  *
  * Unlike the App Router provider, this component renders during SSR as well,
- * but initializes the CinaConnect context in a hydration-safe way.
+ * but initializes the CinaCoin context in a hydration-safe way.
  *
  * Usage:
  * ```tsx
  * // pages/_app.tsx
  * import type { AppProps } from 'next/app';
- * import { AppKitPagesRouter } from '@cinaconnect/next';
+ * import { AppKitPagesRouter } from '@cinacoin/next';
  *
  * export default function App({ Component, pageProps }: AppProps) {
  *   return (
@@ -106,7 +106,7 @@ export function AppKitPagesRouter({
 
   const chains = networks && networks.length > 0 ? networks : [defaultChain];
 
-  const config: CinaConnectConfig = {
+  const config: CinaCoinConfig = {
     projectId,
     chains,
     theme: {
@@ -119,14 +119,14 @@ export function AppKitPagesRouter({
 
   // For Pages Router, we always render the provider, but the inner state
   // (address, balance, etc.) won't hydrate until client-side activation.
-  // This is safe because CinaConnectProvider initializes with null/default values.
+  // This is safe because CinaCoinProvider initializes with null/default values.
   if (!mounted) {
-    return <CinaConnectProvider config={{ ...config }}>{children}</CinaConnectProvider>;
+    return <CinaCoinProvider config={{ ...config }}>{children}</CinaCoinProvider>;
   }
 
   return (
-    <CinaConnectProvider config={config}>
+    <CinaCoinProvider config={config}>
       {children}
-    </CinaConnectProvider>
+    </CinaCoinProvider>
   );
 }

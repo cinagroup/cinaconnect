@@ -1,5 +1,5 @@
 /**
- * viem Adapter — wraps viem's Client and Transport for CinaConnect.
+ * viem Adapter — wraps viem's Client and Transport for Cinacoin.
  *
  * Provides a ChainAdapter-compatible interface using viem's native
  * methods: getAccount, getBalance, sendTransaction, signMessage,
@@ -7,7 +7,7 @@
  *
  * @example
  * ```ts
- * import { createViemAdapter } from '@cinaconnect/core-sdk';
+ * import { createViemAdapter } from '@cinacoin/core-sdk';
  *
  * const adapter = createViemAdapter({
  *   chain: mainnet,
@@ -70,7 +70,7 @@ export interface ViemTransport {
 // ---------------------------------------------------------------------------
 
 /**
- * viem-backed chain adapter implementing the CinaConnect ChainAdapter interface.
+ * viem-backed chain adapter implementing the Cinacoin ChainAdapter interface.
  */
 export class ViemChainAdapter implements ChainAdapter {
   readonly id = 'viem';
@@ -248,7 +248,7 @@ export class ViemChainAdapter implements ChainAdapter {
  * Create a ViemChainAdapter from a viem client.
  *
  * @param client - viem Client instance.
- * @param connector - Optional CinaConnect Connector.
+ * @param connector - Optional Cinacoin Connector.
  * @returns ViemChainAdapter instance.
  */
 export function createViemAdapter(

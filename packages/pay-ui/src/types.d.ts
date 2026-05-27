@@ -4,8 +4,8 @@
  * Shared types for SwapWidget and OnRampWidget components.
  */
 import type { Address } from "viem";
-import type { SwapQuote, SwapQuoteParams, SwapTransaction, SwapReceipt, TokenInfo } from "@cinaconnect/swap-sdk";
-import type { OnRampQuote, OnRampQuoteParams, OnRampProviderId, OnRampWidgetParams, OnRampResult } from "@cinaconnect/onramp-sdk";
+import type { SwapQuote, SwapQuoteParams, SwapTransaction, SwapReceipt, TokenInfo } from "@cinacoin/swap-sdk";
+import type { OnRampQuote, OnRampQuoteParams, OnRampProviderId, OnRampWidgetParams, OnRampResult } from "@cinacoin/onramp-sdk";
 /**
  * Slippage configuration for a swap.
  */

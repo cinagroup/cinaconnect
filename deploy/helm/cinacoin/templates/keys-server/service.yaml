@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: keys-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: keys-server
+    component: keys
+    {{- include "cinacoin.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.keysServer.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.keysServer.service.port }}
+      targetPort: http
+      protocol: TCP
+    - name: metrics
+      port: {{ .Values.keysServer.ports.metrics }}
+      targetPort: metrics
+      protocol: TCP
+  selector:
+    app: keys-server

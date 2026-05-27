@@ -95,7 +95,7 @@ describe('Session Benchmarks', () => {
     const duration = await measure(async () => {
       await sm.initiate(connector);
       // Persistence happens synchronously inside confirm()
-      const stored = localStorage.getItem('cinaconnect_session');
+      const stored = localStorage.getItem('cinacoin_session');
       expect(stored).toBeTruthy();
     });
     expect(duration).toBeLessThan(5);

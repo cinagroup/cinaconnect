@@ -1,6 +1,6 @@
 <template>
   <div class="playground">
-    <h1>CinaConnect Nuxt Playground</h1>
+    <h1>CinaCoin Nuxt Playground</h1>
 
     <section class="buttons">
       <NuxtConnectButton />
@@ -17,8 +17,8 @@
 </template>
 
 <script setup lang="ts">
-const { isConnected } = useCinaConnectAccount()
-const { address, balance, chain } = useCinaConnectAccount()
+const { isConnected } = useCinaCoinAccount()
+const { address, balance, chain } = useCinaCoinAccount()
 </script>
 
 <style scoped>
@@ -27,7 +27,7 @@ const { address, balance, chain } = useCinaConnectAccount()
   margin: 4rem auto;
   padding: 2rem;
   font-family: system-ui, -apple-system, sans-serif;
-  color: var(--cinaconnect-color-text, #111827);
+  color: var(--cinacoin-color-text, #111827);
 }
 
 .buttons {
@@ -39,9 +39,9 @@ const { address, balance, chain } = useCinaConnectAccount()
 .info {
   margin-top: 2rem;
   padding: 1.5rem;
-  border-radius: var(--cinaconnect-radius, 12px);
-  background-color: var(--cinaconnect-color-bg-secondary, #f9fafb);
-  border: 1px solid var(--cinaconnect-color-border, #e5e7eb);
+  border-radius: var(--cinacoin-radius, 12px);
+  background-color: var(--cinacoin-color-bg-secondary, #f9fafb);
+  border: 1px solid var(--cinacoin-color-border, #e5e7eb);
 }
 
 .info p {

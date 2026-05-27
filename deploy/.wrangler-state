@@ -1,1 +1,1 @@
-{"environment":"production","timestamp":"","status":"initialized","services":["rpc-proxy","keys-server"],"lastDeploy":null}
+{"service":"cinaconnect-rpc-proxy","environment":"production","timestamp":"2026-05-26T13:17:50Z","status":"failed","exit_code":1,"commit":"f717bb11160306e923b4ae5732789ace3a06a51a"}

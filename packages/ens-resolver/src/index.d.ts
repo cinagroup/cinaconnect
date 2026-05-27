@@ -1,10 +1,10 @@
 /**
- * @cinaconnect/ens-resolver
+ * @cinacoin/ens-resolver
  *
  * ENS name resolution, reverse lookup, avatar retrieval, and record fetching.
  *
  * ```ts
- * import { ENSResolver, createENSResolver } from '@cinaconnect/ens-resolver';
+ * import { ENSResolver, createENSResolver } from '@cinacoin/ens-resolver';
  *
  * const resolver = createENSResolver({ rpcUrl: 'https://eth.llamarpc.com' });
  * const address = await resolver.resolveName('vitalik.eth');

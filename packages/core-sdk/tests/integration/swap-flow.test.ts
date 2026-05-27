@@ -17,7 +17,7 @@
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
-// ── Inline Swap SDK types (mirroring @cinaconnect/swap-sdk) ─────────
+// ── Inline Swap SDK types (mirroring @cinacoin/swap-sdk) ─────────
 
 interface SwapQuoteParams {
   fromToken: string;

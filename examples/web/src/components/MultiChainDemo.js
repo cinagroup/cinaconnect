@@ -1,6 +1,6 @@
 import { jsx as _jsx, jsxs as _jsxs, Fragment as _Fragment } from "react/jsx-runtime";
 import { useState, useEffect, useCallback } from 'react';
-import { useCinaConnect, ChainSwitcher } from '@cinaconnect/react';
+import { useCinacoin, ChainSwitcher } from '@cinacoin/react';
 import { ethers } from 'ethers';
 const CHAINS = [
     {
@@ -32,7 +32,7 @@ const CHAINS = [
     },
 ];
 export function MultiChainDemo() {
-    const { account, chainId, switchChain } = useCinaConnect();
+    const { account, chainId, switchChain } = useCinacoin();
     const [selectedChain, setSelectedChain] = useState(1);
     const [balances, setBalances] = useState([]);
     const [loading, setLoading] = useState(false);

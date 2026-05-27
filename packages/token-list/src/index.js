@@ -1,4 +1,4 @@
-// @cinaconnect/token-list
+// @cinacoin/token-list
 // Token discovery, metadata, and validation
 export { TokenList } from './tokenList.js';
 export { LRUTokenCache, defaultCache } from './cache.js';

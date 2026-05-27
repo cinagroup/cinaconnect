@@ -1,5 +1,5 @@
 /**
- * Password management for @cinaconnect/passkey-auth.
+ * Password management for @cinacoin/passkey-auth.
  *
  * Uses PBKDF2-HMAC-SHA256 for secure password hashing with
  * in-memory storage. In production, replace the store with a

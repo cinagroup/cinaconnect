@@ -5,7 +5,7 @@
  * generating reports. Works in both Node.js and browser environments.
  *
  * Usage:
- *   import { analyzeBundle, generateSizeReport } from '@cinaconnect/performance-utils/bundle-analyzer';
+ *   import { analyzeBundle, generateSizeReport } from '@cinacoin/performance-utils/bundle-analyzer';
  */
 
 export interface FileInfo {

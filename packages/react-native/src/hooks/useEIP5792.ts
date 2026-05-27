@@ -2,13 +2,13 @@
  * EIP-5792 React Native hooks — Wallet Call API.
  *
  * React Native hooks for the EIP-5792 Wallet Call API using the
- * existing `request<T>()` infrastructure from CinaConnectProvider.
+ * existing `request<T>()` infrastructure from CinacoinProvider.
  *
  * - useSendCalls — send batch calls via wallet_sendCalls
  * - useAtomicBatch — build and execute atomic batch transactions
  * - useWalletCapabilities — discover wallet capabilities per chain
  *
- * All hooks require being used within <CinaConnectProvider>.
+ * All hooks require being used within <CinacoinProvider>.
  *
  * @see https://eips.ethereum.org/EIPS/eip-5792
  */
@@ -24,7 +24,7 @@ import type {
   GetCallsStatusResult,
   AtomicBatchConfig,
   AtomicBatchResult,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 import {
   walletGetCapabilities,
   walletSendCalls,
@@ -38,8 +38,8 @@ import {
   filterByCapability,
   allCallsSucceeded as checkAllCallsSucceeded,
   getFailedReceipts as getFailedReceiptsHelper,
-} from '@cinaconnect/core-sdk';
-import { useCinaConnectContext } from '../OnChainUXProvider.js';
+} from '@cinacoin/core-sdk';
+import { useCinacoinContext } from '../OnChainUXProvider.js';
 
 // ---------------------------------------------------------------------------
 // Internal: build a WalletClient wrapper from the context's request function
@@ -92,7 +92,7 @@ export interface UseWalletCapabilitiesReturn {
  * ```
  */
 export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
-  const { account, status, request: ctxRequest } = useCinaConnectContext();
+  const { account, status, request: ctxRequest } = useCinacoinContext();
   const [capabilities, setCapabilities] = useState<WalletCapabilities | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -211,7 +211,7 @@ export interface UseSendCallsReturn {
  * ```
  */
 export function useSendCalls(): UseSendCallsReturn {
-  const { account, status, request: ctxRequest } = useCinaConnectContext();
+  const { account, status, request: ctxRequest } = useCinacoinContext();
   const [isSending, setIsSending] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [lastCallId, setLastCallId] = useState<string | null>(null);
@@ -305,7 +305,7 @@ export interface UseAtomicBatchReturn {
  * ```
  */
 export function useAtomicBatch(): UseAtomicBatchReturn {
-  const { account, status, request: ctxRequest } = useCinaConnectContext();
+  const { account, status, request: ctxRequest } = useCinacoinContext();
   const [isExecuting, setIsExecuting] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [lastCallId, setLastCallId] = useState<string | null>(null);
@@ -425,7 +425,7 @@ export function useCallsStatus(
     callId?: string;
   } = {},
 ): UseCallsStatusReturn {
-  const { request: ctxRequest, account } = useCinaConnectContext();
+  const { request: ctxRequest, account } = useCinacoinContext();
   const [status, setStatus] = useState<CallsStatus | null>(null);
   const [result, setResult] = useState<GetCallsStatusResult | null>(null);
   const [isPolling, setIsPolling] = useState(false);

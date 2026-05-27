@@ -1,17 +1,17 @@
-# @cinaconnect/wallet-recommender
+# @cinacoin/wallet-recommender
 
-CinaConnect Wallet Recommender — suggests optimal wallets based on user context.
+Cinacoin Wallet Recommender — suggests optimal wallets based on user context.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/wallet-recommender
+npm install @cinacoin/wallet-recommender
 ```
 
 ## Usage
 
 ```ts
-import { WalletRecommender } from '@cinaconnect/wallet-recommender';
+import { WalletRecommender } from '@cinacoin/wallet-recommender';
 
 const recommender = new WalletRecommender();
 const wallets = recommender.recommend({

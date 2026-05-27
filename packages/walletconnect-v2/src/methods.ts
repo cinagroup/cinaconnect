@@ -6,7 +6,7 @@
  * and Solana namespaces.
  */
 
-import type { TransactionRequest } from '@cinaconnect/core-sdk';
+import type { TransactionRequest } from '@cinacoin/core-sdk';
 import type { RequiredNamespace } from './types.js';
 
 // ============================================================

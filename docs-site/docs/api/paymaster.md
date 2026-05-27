@@ -1,6 +1,6 @@
 # Paymaster
 
-> `@cinaconnect/paymaster` — Self-hosted ERC-4337 Paymaster contract.
+> `@cinacoin/paymaster` — Self-hosted ERC-4337 Paymaster contract.
 
 ## Installation
 

@@ -1,11 +1,11 @@
 # Hedera Adapter
 
-> `@cinaconnect/adapter-hedera` — Hedera Hashgraph adapter for CinaConnect.
+> `@cinacoin/adapter-hedera` — Hedera Hashgraph adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-hedera
+npm install @cinacoin/adapter-hedera
 ```
 
 ## Overview

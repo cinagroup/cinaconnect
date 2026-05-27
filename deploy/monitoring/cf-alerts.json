@@ -1,14 +1,14 @@
 {
-  "_comment": "CinaConnect Cloudflare Workers — Alert Policy Definitions",
+  "_comment": "Cinacoin Cloudflare Workers — Alert Policy Definitions",
   "_description": "Apply these via Cloudflare API or Dashboard → Workers → Alerting",
   "version": "1.0.0",
   "updated": "2026-05-18",
   "services": [
-    "cinaconnect-rpc-proxy",
-    "cinaconnect-keys-server",
-    "cinaconnect-relay-server",
-    "cinaconnect-notify-server",
-    "cinaconnect-push-server"
+    "cinacoin-rpc-proxy",
+    "cinacoin-keys-server",
+    "cinacoin-relay-server",
+    "cinacoin-notify-server",
+    "cinacoin-push-server"
   ],
   "notification_endpoints": [
     {
@@ -141,7 +141,7 @@
           "threshold": 10
         }
       },
-      "applies_to": ["cinaconnect-rpc-proxy", "cinaconnect-keys-server"]
+      "applies_to": ["cinacoin-rpc-proxy", "cinacoin-keys-server"]
     },
     {
       "name": "RPC Proxy — Subrequest Failure",
@@ -152,12 +152,12 @@
       "condition": {
         "metric": "sum(subrequests)",
         "filter": {
-          "scriptName": "cinaconnect-rpc-proxy",
+          "scriptName": "cinacoin-rpc-proxy",
           "timeSpan": "5m",
           "threshold": 50
         }
       },
-      "applies_to": ["cinaconnect-rpc-proxy"]
+      "applies_to": ["cinacoin-rpc-proxy"]
     },
     {
       "name": "Relay Server — Connection Drops",
@@ -168,12 +168,12 @@
       "condition": {
         "metric": "sum(errors)",
         "filter": {
-          "scriptName": "cinaconnect-relay-server",
+          "scriptName": "cinacoin-relay-server",
           "timeSpan": "5m",
           "threshold": 10
         }
       },
-      "applies_to": ["cinaconnect-relay-server"]
+      "applies_to": ["cinacoin-relay-server"]
     },
     {
       "name": "Push Server — Delivery Failure",
@@ -184,12 +184,12 @@
       "condition": {
         "metric": "sum(errors)",
         "filter": {
-          "scriptName": "cinaconnect-push-server",
+          "scriptName": "cinacoin-push-server",
           "timeSpan": "5m",
           "threshold": 20
         }
       },
-      "applies_to": ["cinaconnect-push-server"]
+      "applies_to": ["cinacoin-push-server"]
     },
     {
       "name": "Notify Server — Webhook Failure",
@@ -200,12 +200,12 @@
       "condition": {
         "metric": "sum(errors)",
         "filter": {
-          "scriptName": "cinaconnect-notify-server",
+          "scriptName": "cinacoin-notify-server",
           "timeSpan": "5m",
           "threshold": 20
         }
       },
-      "applies_to": ["cinaconnect-notify-server"]
+      "applies_to": ["cinacoin-notify-server"]
     }
   ]
 }

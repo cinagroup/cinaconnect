@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/next/server — EIP-5792 server-side utilities.
+ * @cinacoin/next/server — EIP-5792 server-side utilities.
  *
  * Server-side helpers for the EIP-5792 Wallet Call API:
  * - `getWalletCapabilitiesOnServer` — check wallet capabilities server-side
@@ -9,7 +9,7 @@
  * and are safe to run in server components, API routes, and middleware.
  *
  * ```ts
- * import { getWalletCapabilitiesOnServer } from '@cinaconnect/next/server';
+ * import { getWalletCapabilitiesOnServer } from '@cinacoin/next/server';
  *
  * const caps = await getWalletCapabilitiesOnServer('0x...', 1, {
  *   rpcUrl: process.env.ETH_RPC_URL,
@@ -24,7 +24,7 @@ import type {
   CallsStatus,
   GetCallsStatusResult,
   CallReceipt,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 // ---------------------------------------------------------------------------
 // Types
@@ -119,9 +119,13 @@ export async function getWalletCapabilitiesOnServer(
       }),
     });
 
-    const data = await response.json();
-    if (data.result && typeof data.result === 'object') {
-      capabilities = data.result as WalletCapabilities;
+    if (!response.ok) {
+      capabilities = inferCapabilities(walletAddress, chainId, hexChainId);
+    } else {
+      const data = await response.json();
+      if (data.result && typeof data.result === 'object') {
+        capabilities = data.result as WalletCapabilities;
+      }
     }
   } catch {
     // RPC doesn't support wallet_getCapabilities — use inferred capabilities
@@ -190,21 +194,29 @@ export async function verifyBatchCallOnServer(
       }),
     });
 
-    const data = await response.json();
+    if (!response.ok) {
+      // RPC returned error — fall through
+    } else {
+      const data = await response.json();
 
-    if (data.result) {
-      const rawResult = data.result as GetCallsStatusResult;
-      const receipts = rawResult.receipts ?? [];
-      const allSucceeded = receipts.every((r) => r.receipt.status === '0x1');
-      const failedReceipts = receipts.filter((r) => r.receipt.status === '0x0');
+      if (data.result) {
+        const rawResult = data.result as GetCallsStatusResult;
+        // Validate it's a proper GetCallsStatusResult (has status enum value and receipts array)
+        const validStatus = ['CONFIRMED', 'PENDING', 'CONFIRMED'].includes(rawResult.status as string);
+        if (validStatus && Array.isArray(rawResult.receipts)) {
+          const receipts = rawResult.receipts;
+          const allSucceeded = receipts.every((r) => r.receipt.status === '0x1');
+          const failedReceipts = receipts.filter((r) => r.receipt.status === '0x0');
 
-      return {
-        status: rawResult.status,
-        allSucceeded,
-        receipts,
-        failedReceipts,
-        rawResult,
-      };
+          return {
+            status: rawResult.status,
+            allSucceeded,
+            receipts,
+            failedReceipts,
+            rawResult,
+          };
+        }
+      }
     }
   } catch {
     // RPC doesn't support wallet_getCallsStatus
@@ -244,11 +256,21 @@ async function verifyTransactionOnServer(
       }),
     });
 
+    if (!response.ok) {
+      return {
+        status: 'NOT_FOUND' as any,
+        allSucceeded: false,
+        receipts: [],
+        failedReceipts: [],
+        rawResult: null,
+      };
+    }
+
     const data = await response.json();
 
     if (data.result) {
       const receipt = data.result;
-      const status = receipt.status === '0x1' ? 'CONFIRMED' : 'CONFIRMED' as CallsStatus;
+      const status: CallsStatus = receipt.status === '0x1' ? 'CONFIRMED' : ('FAILED' as CallsStatus);
 
       const callReceipt: CallReceipt = {
         receipt: {

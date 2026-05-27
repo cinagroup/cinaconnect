@@ -29,7 +29,7 @@ public final class WalletManager: ObservableObject {
     @Published public private(set) var connectors: [ConnectorInfo] = []
     
     public private(set) var sessionId: String?
-    private var config: CinaConnectConfig?
+    private var config: CinacoinConfig?
     
     // Real WC v2 client reference
     private let wcClient = WCClient.shared
@@ -39,7 +39,7 @@ public final class WalletManager: ObservableObject {
     
     // MARK: - Lifecycle
     
-    public func configure(with config: CinaConnectConfig) {
+    public func configure(with config: CinacoinConfig) {
         self.config = config
         
         // Initialize the WC SDK with real project ID
@@ -50,7 +50,7 @@ public final class WalletManager: ObservableObject {
                 chains: config.chains.map { "eip155:\($0.chainId)" }
             )
             wcClient.initializeSDK(
-                metadata: config.metadata ?? .init(name: "CinaConnect dApp", description: "", url: "https://cinaconnect.io", icons: []),
+                metadata: config.metadata ?? .init(name: "Cinacoin dApp", description: "", url: "https://cinacoin.io", icons: []),
                 projectId: projectId
             )
         }
@@ -127,7 +127,7 @@ public final class WalletManager: ObservableObject {
         try await Task.sleep(nanoseconds: 1_000_000_000)
         
         guard let config = config else {
-            throw CinaConnectError.notConfigured
+            throw CinacoinError.notConfigured
         }
         
         let chainId = config.chains.first?.chainId ?? 1
@@ -150,7 +150,7 @@ public final class WalletManager: ObservableObject {
     /// Connect using WalletConnect v2 with real SDK.
     private func connectWithWalletConnect(connectorId: String) async throws -> ConnectResult {
         guard let config = config else {
-            throw CinaConnectError.notConfigured
+            throw CinacoinError.notConfigured
         }
         
         // Step 1: Create pairing URI
@@ -195,7 +195,7 @@ public final class WalletManager: ObservableObject {
                 case .error(let error):
                     self.wcClient.unsubscribe(eventId)
                     self.connectionStatus = .error(error.localizedDescription)
-                    continuation.resume(throwing: CinaConnectError.connectionFailed(error.localizedDescription))
+                    continuation.resume(throwing: CinacoinError.connectionFailed(error.localizedDescription))
                 default:
                     break
                 }
@@ -206,7 +206,7 @@ public final class WalletManager: ObservableObject {
                 try? await Task.sleep(nanoseconds: 300_000_000_000)
                 if self.connectionStatus == .connecting {
                     self.wcClient.unsubscribe(eventId)
-                    continuation.resume(throwing: CinaConnectError.connectionFailed("Session establishment timed out"))
+                    continuation.resume(throwing: CinacoinError.connectionFailed("Session establishment timed out"))
                 }
             }
         }
@@ -225,7 +225,7 @@ public final class WalletManager: ObservableObject {
             domain: domain,
             address: account.address,
             statement: statement,
-            uri: config?.metadata?.url ?? "https://cinaconnect.io",
+            uri: config?.metadata?.url ?? "https://cinacoin.io",
             chainId: account.chainId,
             nonce: nonce,
             issuedAt: issuedAt
@@ -265,9 +265,9 @@ public final class WalletManager: ObservableObject {
     }
     
     public func switchChain(chainId: Int) async throws {
-        guard let config = config else { throw CinaConnectError.notConfigured }
+        guard let config = config else { throw CinacoinError.notConfigured }
         guard config.chains.contains(where: { $0.chainId == chainId }) else {
-            throw CinaConnectError.chainNotSupported(chainId)
+            throw CinacoinError.chainNotSupported(chainId)
         }
         
         if wcClient.sessionTopic != nil {
@@ -280,7 +280,7 @@ public final class WalletManager: ObservableObject {
         }
     }
     
-    private func buildDefaultConnectors(config: CinaConnectConfig) -> [ConnectorInfo] {
+    private func buildDefaultConnectors(config: CinacoinConfig) -> [ConnectorInfo] {
         [
             ConnectorInfo(id: "metamask", name: "MetaMask", type: .walletconnect),
             ConnectorInfo(id: "walletconnect", name: "WalletConnect", type: .walletconnect),

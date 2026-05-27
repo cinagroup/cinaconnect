@@ -1,21 +1,21 @@
-# @cinaconnect/vue
+# @cinacoin/vue
 
-Vue 3 support for CinaConnect wallet connection.
+Vue 3 support for Cinacoin wallet connection.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/vue
+npm install @cinacoin/vue
 ```
 
 ## Usage
 
 ```vue
 <script setup>
-import { createCinaConnect, useCinaConnect } from '@cinaconnect/vue';
+import { createCinacoin, useCinacoin } from '@cinacoin/vue';
 
-const cinaConnect = createCinaConnect({ projectId: 'YOUR_PROJECT_ID' });
-const { address, isConnected } = useCinaConnect();
+const cinaConnect = createCinacoin({ projectId: 'YOUR_PROJECT_ID' });
+const { address, isConnected } = useCinacoin();
 </script>
 
 <template>
@@ -28,9 +28,9 @@ const { address, isConnected } = useCinaConnect();
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `createCinaConnect` | function | Create CinaConnect instance |
-| `useCinaConnect` | composable | Main wallet composable |
+| `createCinacoin` | function | Create Cinacoin instance |
+| `useCinacoin` | composable | Main wallet composable |
 | `ConnectButton` | component | Connect wallet button |
 | `AccountButton` | component | Account display button |
 | `NetworkButton` | component | Network switcher button |
-| `CinaConnectOptions` | type | Options type |
+| `CinacoinOptions` | type | Options type |

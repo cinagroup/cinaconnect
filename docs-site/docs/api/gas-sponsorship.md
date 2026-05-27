@@ -1,11 +1,11 @@
 # Gas Sponsorship
 
-> `@cinaconnect/gas-sponsorship` — Gas sponsorship management for CinaConnect.
+> `@cinacoin/gas-sponsorship` — Gas sponsorship management for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/gas-sponsorship
+npm install @cinacoin/gas-sponsorship
 ```
 
 ## Overview

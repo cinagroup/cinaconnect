@@ -1,5 +1,5 @@
 /**
- * Svelte actions (directives) for CinaConnect.
+ * Svelte actions (directives) for Cinacoin.
  *
  * Use with `use:` directive to add auto-connect and auto-network-switching
  * behavior to any element.
@@ -7,7 +7,7 @@
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect, cinaConnectNetwork } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect>Connect Wallet</button>
@@ -30,7 +30,7 @@ import { open, switchChain } from './stores.js';
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectConnect } from '@cinaconnect/svelte';
+ *   import { cinaConnectConnect } from '@cinacoin/svelte';
  * </script>
  *
  * <button use:cinaConnectConnect={{ enabled: true }}>
@@ -44,7 +44,7 @@ export const cinaConnectConnect = (node, params = {}) => {
         if (!enabled)
             return;
         open(connectorId ? { connectorId } : undefined).catch((err) => {
-            console.error('[CinaConnect] Connection failed:', err);
+            console.error('[Cinacoin] Connection failed:', err);
         });
     }
     // Set accessibility attributes
@@ -84,8 +84,8 @@ export const cinaConnectConnect = (node, params = {}) => {
  * @example
  * ```svelte
  * <script lang="ts">
- *   import { cinaConnectNetwork } from '@cinaconnect/svelte';
- *   import { chainId } from '@cinaconnect/svelte';
+ *   import { cinaConnectNetwork } from '@cinacoin/svelte';
+ *   import { chainId } from '@cinacoin/svelte';
  *   let currentChainId;
  *   chainId.subscribe(v => currentChainId = v);
  * </script>
@@ -97,14 +97,14 @@ export const cinaConnectConnect = (node, params = {}) => {
  */
 export const cinaConnectNetwork = (node, params) => {
     if (!params || params.chainId == null) {
-        throw new Error('[CinaConnect] cinaConnectNetwork requires a chainId parameter.');
+        throw new Error('[Cinacoin] cinaConnectNetwork requires a chainId parameter.');
     }
     let { chainId: targetChainId, enabled = true, ariaLabel } = params;
     function handleClick(_e) {
         if (!enabled)
             return;
         switchChain(targetChainId).catch((err) => {
-            console.error(`[CinaConnect] Failed to switch to chain ${targetChainId}:`, err);
+            console.error(`[Cinacoin] Failed to switch to chain ${targetChainId}:`, err);
         });
     }
     if (ariaLabel) {

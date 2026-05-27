@@ -2,7 +2,7 @@
  * ConnectButton — Native React Native button with real WC v2 connection state.
  *
  * Uses native RN components and reads real connection state from
- * both CinaConnectProvider and WalletConnectProvider for accurate
+ * both CinacoinProvider and WalletConnectProvider for accurate
  * account display, balance fetching, and disconnect handling.
  */
 import { type ViewStyle, type TextStyle } from 'react-native';
@@ -33,7 +33,7 @@ export interface ConnectButtonProps {
  * Native ConnectButton for React Native with real WC v2 state.
  *
  * Reads connection state from WalletConnectProvider (if available) and
- * CinaConnectProvider. Supports balance fetching, network badge, avatar,
+ * CinacoinProvider. Supports balance fetching, network badge, avatar,
  * and real disconnect via WC session cleanup.
  */
 export declare function ConnectButton({ label, variant, size, showBalance, showAvatar, showNetwork, style, textStyle, onPress, onDisconnect, }: ConnectButtonProps): JSX.Element;

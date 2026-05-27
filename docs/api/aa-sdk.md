@@ -1,11 +1,11 @@
 # Account Abstraction SDK API
 
-> `@cinaconnect/aa-sdk` — ERC-4337 smart accounts, bundler client, and paymaster integration.
+> `@cinacoin/aa-sdk` — ERC-4337 smart accounts, bundler client, and paymaster integration.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/aa-sdk viem
+npm install @cinacoin/aa-sdk viem
 ```
 
 ## Overview
@@ -25,7 +25,7 @@ import {
   SmartAccountFactory,
   BundlerClient,
   PaymasterClient,
-} from '@cinaconnect/aa-sdk'
+} from '@cinacoin/aa-sdk'
 
 // 1. Create a smart account
 const factory = new SmartAccountFactory({
@@ -74,7 +74,7 @@ console.log('UserOp hash:', result.userOpHash)
 Represents an ERC-4337 compatible smart account with support for single and batched transactions.
 
 ```typescript
-import { SmartAccount } from '@cinaconnect/aa-sdk'
+import { SmartAccount } from '@cinacoin/aa-sdk'
 
 const account = await SmartAccount.create({
   owner: '0x1234...',
@@ -224,7 +224,7 @@ interface UserOperationResult {
 Creates smart accounts with deterministic addresses.
 
 ```typescript
-import { SmartAccountFactory } from '@cinaconnect/aa-sdk'
+import { SmartAccountFactory } from '@cinacoin/aa-sdk'
 
 const factory = new SmartAccountFactory({
   address: '0xFactoryAddress',
@@ -274,7 +274,7 @@ Get the factory's configured EntryPoint address.
 Client for submitting UserOperations to ERC-4337 bundlers.
 
 ```typescript
-import { BundlerClient } from '@cinaconnect/aa-sdk'
+import { BundlerClient } from '@cinacoin/aa-sdk'
 
 const bundler = new BundlerClient({
   url: 'https://bundler.example.com/v1',
@@ -364,7 +364,7 @@ interface BundlerSendResult {
 Client for gas sponsorship through paymaster services.
 
 ```typescript
-import { PaymasterClient } from '@cinaconnect/aa-sdk'
+import { PaymasterClient } from '@cinacoin/aa-sdk'
 
 const paymaster = new PaymasterClient({
   url: 'https://paymaster.example.com/v1',

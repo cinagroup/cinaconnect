@@ -1,10 +1,10 @@
 # Migration Guide
 
-> Migrate from Reown/WalletConnect to CinaConnect.
+> Migrate from Reown/WalletConnect to Cinacoin.
 
 ## Why Migrate?
 
-| Reown/WalletConnect | CinaConnect |
+| Reown/WalletConnect | Cinacoin |
 |---|---|
 | $500-5,000/month license | Free, open source (MIT) |
 | MAU limits | Unlimited |
@@ -14,21 +14,21 @@
 
 ## Quick Migration
 
-### 1. Install CinaConnect
+### 1. Install Cinacoin
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react
+npm install @cinacoin/core-sdk @cinacoin/react
 ```
 
 ### 2. Use Codemod
 
 ```bash
-npx @cinaconnect/codemod reown-to-cinaconnect
+npx @cinacoin/codemod reown-to-cinacoin
 ```
 
 ### 3. Update Configuration
 
-Replace your `@reown/appkit` or `@walletconnect` configuration with CinaConnect's `CinaConnectProvider`.
+Replace your `@reown/appkit` or `@walletconnect` configuration with Cinacoin's `CinacoinProvider`.
 
 ### 4. Test
 

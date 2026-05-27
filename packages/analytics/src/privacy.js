@@ -3,7 +3,7 @@
  *
  * Manages user consent, data minimization, and retention policies.
  */
-const CONSENT_KEY = '@cinaconnect/consent';
+const CONSENT_KEY = '@cinacoin/consent';
 export class PrivacyManager {
     constructor(config = {}) {
         this.consent = null;

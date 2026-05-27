@@ -1,5 +1,5 @@
 /**
- * Type definitions for @cinaconnect/wallet-buttons
+ * Type definitions for @cinacoin/wallet-buttons
  */
 /**
  * Visual style variant for a wallet button.

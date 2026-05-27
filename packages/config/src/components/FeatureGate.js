@@ -7,7 +7,7 @@ import { useFeatureFlag } from "../hooks/useFeatures.js";
  *
  * @example
  * ```tsx
- * import { FeatureGate } from "@cinaconnect/config/components";
+ * import { FeatureGate } from "@cinacoin/config/components";
  *
  * <FeatureGate feature="swap_enabled">
  *   <SwapPanel />

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# monitoring-alert.sh — Send alerts to webhook/Slack when CinaConnect
+# monitoring-alert.sh — Send alerts to webhook/Slack when CinaCoin
 # Cloudflare Workers services are unhealthy.
 #
 # Usage:
@@ -75,7 +75,7 @@ build_slack_payload() {
       "type": "header",
       "text": {
         "type": "plain_text",
-        "text": "$ALERT_EMOJI CinaConnect Monitoring Alert — $ALERT_LABEL",
+        "text": "$ALERT_EMOJI CinaCoin Monitoring Alert — $ALERT_LABEL",
         "emoji": true
       }
     },
@@ -133,7 +133,7 @@ build_slack_payload() {
             "text": "Run Health Check",
             "emoji": true
           },
-          "url": "https://github.com/cinaconnect/cinaconnect/actions/workflows/monitoring.yml"
+          "url": "https://github.com/cinacoin/cinacoin/actions/workflows/monitoring.yml"
         }
       ]
     }
@@ -156,8 +156,8 @@ build_generic_webhook_payload() {
   "service": "${SERVICE_NAME:-all}",
   "title": "$title",
   "details": "$details",
-  "source": "cinaconnect-monitoring",
-  "runbook_url": "https://github.com/cinaconnect/cinaconnect/blob/main/deploy/monitoring.md"
+  "source": "cinacoin-monitoring",
+  "runbook_url": "https://github.com/cinacoin/cinacoin/blob/main/deploy/monitoring.md"
 }
 EOF
 }
@@ -181,7 +181,7 @@ if [[ -n "$REPORT_FILE" && -f "$REPORT_FILE" ]]; then
       SERVICE_NAME=$(echo "$UNHEALTHY_NAMES" | tr '\n' ', ' | sed 's/,$//')
     fi
 
-    TITLE="$UNHEALTHY_COUNT of $TOTAL CinaConnect services are unhealthy"
+    TITLE="$UNHEALTHY_COUNT of $TOTAL CinaCoin services are unhealthy"
 
     DETAILS="The following services are down or unhealthy:\n"
     while IFS= read -r svc; do
@@ -203,7 +203,7 @@ elif [[ -n "$MESSAGE" ]]; then
   TITLE="$MESSAGE"
   DETAILS="Alert triggered by monitoring system."
 else
-  TITLE="CinaConnect service alert"
+  TITLE="CinaCoin service alert"
   DETAILS="No specific details provided."
 fi
 

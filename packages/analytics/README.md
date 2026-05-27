@@ -1,17 +1,17 @@
-# @cinaconnect/analytics
+# @cinacoin/analytics
 
-CinaConnect Analytics SDK — GDPR-compliant event tracking and metrics.
+Cinacoin Analytics SDK — GDPR-compliant event tracking and metrics.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/analytics
+npm install @cinacoin/analytics
 ```
 
 ## Usage
 
 ```ts
-import { EventTracker, ConsentManager } from '@cinaconnect/analytics';
+import { EventTracker, ConsentManager } from '@cinacoin/analytics';
 
 const tracker = new EventTracker();
 await tracker.trackConnection('metamask', 'eip155:1');

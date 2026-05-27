@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/keys-server",
+  "name": "@cinacoin/keys-server",
   "version": "0.2.0",
-  "description": "Key management server for CinaConnect — key storage, encryption, session management",
+  "description": "Key management server for Cinacoin — key storage, encryption, session management",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
     "@noble/ciphers": "^2.2.0",
     "@noble/hashes": "^2.2.0"
   },
@@ -33,5 +33,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

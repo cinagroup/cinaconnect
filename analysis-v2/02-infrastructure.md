@@ -1,13 +1,13 @@
 # Infrastructure & Backend Services Comparison
 
-> CinaAuth/CinaConnect vs Reown — Infrastructure Deep Dive
+> CinaAuth/Cinacoin vs Reown — Infrastructure Deep Dive
 > Generated: 2026-05-17
 
 ---
 
 ## 1. Service-by-Service Mapping
 
-| CinaAuth/CinaConnect | Reown Equivalent | Language | Status |
+| CinaAuth/Cinacoin | Reown Equivalent | Language | Status |
 |---|---|---|---|
 | **relay-server** | WalletConnect Relay (TypeScript) + reown-rust (relay_client) | Rust vs TS/Rust | ⚡ Different architecture |
 | **push-server** | push-server-2 (Rust, archived/preview) + a2 (Rust, APNs2 client) | Rust | ✅ Equivalent |
@@ -241,7 +241,7 @@ Reown has nothing equivalent at the infrastructure level.
 
 CinaAuth provides a **complete production-grade deployment infrastructure**:
 
-#### Core Helm Chart (`deploy/helm/cinaconnect/`)
+#### Core Helm Chart (`deploy/helm/cinacoin/`)
 - All 5 services: relay, rpc-proxy, push-server, keys-server, bundler
 - Resource requests/limits, HPA, topology spread, pod anti-affinity
 - Ingress with cert-manager TLS, WebSocket timeout tuning
@@ -427,7 +427,7 @@ CinaAuth provides a **complete production-grade deployment infrastructure**:
 
 ## 12. Verdict
 
-**CinaAuth/CinaConnect is fundamentally an infrastructure platform; Reown is fundamentally a cloud service.**
+**CinaAuth/Cinacoin is fundamentally an infrastructure platform; Reown is fundamentally a cloud service.**
 
 | Criteria | CinaAuth | Reown |
 |---|---|---|

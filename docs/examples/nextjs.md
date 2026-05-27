@@ -1,18 +1,18 @@
 # Next.js App Router Integration
 
-> Integrate CinaConnect into Next.js App Router with Server Components, client-side wallet connection, and server-side SIWE auth.
+> Integrate Cinacoin into Next.js App Router with Server Components, client-side wallet connection, and server-side SIWE auth.
 
 ## Prerequisites
 
 - Node.js ≥ 18
 - Next.js 14+ (App Router)
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/next @cinaconnect/core-sdk @cinaconnect/react @cinaconnect/siwe
+npm install @cinacoin/next @cinacoin/core-sdk @cinacoin/react @cinacoin/siwe
 ```
 
 ## Complete Example
@@ -23,7 +23,7 @@ npm install @cinaconnect/next @cinaconnect/core-sdk @cinaconnect/react @cinaconn
 // app/providers.tsx
 'use client'
 
-import { AppKitProvider } from '@cinaconnect/next'
+import { AppKitProvider } from '@cinacoin/next'
 import type { ReactNode } from 'react'
 
 interface Props {
@@ -33,7 +33,7 @@ interface Props {
 export function Providers({ children }: Props) {
   return (
     <AppKitProvider
-      projectId={process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!}
+      projectId={process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!}
       networks={[
         {
           id: 1,
@@ -90,7 +90,7 @@ import './globals.css'
 
 export const metadata = {
   title: 'My Next.js dApp',
-  description: 'Built with CinaConnect',
+  description: 'Built with Cinacoin',
 }
 
 export default function RootLayout({
@@ -115,16 +115,16 @@ export default function RootLayout({
 'use client'
 
 import {
-  useCinaConnectAccount,
-  useCinaConnectNetwork,
+  useCinacoinAccount,
+  useCinacoinNetwork,
   useDisconnect,
   useBalance,
-} from '@cinaconnect/next'
-import { ConnectButton, AccountButton, NetworkButton } from '@cinaconnect/next'
+} from '@cinacoin/next'
+import { ConnectButton, AccountButton, NetworkButton } from '@cinacoin/next'
 
 export default function HomePage() {
-  const account = useCinaConnectAccount()
-  const network = useCinaConnectNetwork()
+  const account = useCinacoinAccount()
+  const network = useCinacoinNetwork()
   const balance = useBalance()
   const { disconnect } = useDisconnect()
 
@@ -164,7 +164,7 @@ export default function HomePage() {
 
 ```tsx
 // app/dashboard/page.tsx
-import { getSession, createServerClient } from '@cinaconnect/next/server'
+import { getSession, createServerClient } from '@cinacoin/next/server'
 import { redirect } from 'next/navigation'
 
 export default async function DashboardPage() {
@@ -177,7 +177,7 @@ export default async function DashboardPage() {
 
   // Use server client for backend operations
   const serverClient = createServerClient({
-    projectId: process.env.CINACONNECT_PROJECT_ID!,
+    projectId: process.env.CINACOIN_PROJECT_ID!,
   })
 
   // Fetch server-side data
@@ -199,8 +199,8 @@ export default async function DashboardPage() {
 ```ts
 // app/api/auth/siwe/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { verifySiweMessage, parseMessage } from '@cinaconnect/next/server'
-import { generateNonce } from '@cinaconnect/siwe'
+import { verifySiweMessage, parseMessage } from '@cinacoin/next/server'
+import { generateNonce } from '@cinacoin/siwe'
 import { cookies } from 'next/headers'
 
 // GET: Return a nonce for SIWE
@@ -288,7 +288,7 @@ export async function POST(request: NextRequest) {
 ```ts
 // app/api/protected/route.ts
 import { NextRequest, NextResponse } from 'next/server'
-import { requireAuth } from '@cinaconnect/next/server'
+import { requireAuth } from '@cinacoin/next/server'
 
 export async function GET(request: NextRequest) {
   // requireAuth checks for a valid session
@@ -315,13 +315,13 @@ export async function GET(request: NextRequest) {
 'use client'
 
 import { useState } from 'react'
-import { useCinaConnect, useConnect } from '@cinaconnect/next'
-import { generateMessage } from '@cinaconnect/siwe'
-import { Connector } from '@cinaconnect/core-sdk'
+import { useCinacoin, useConnect } from '@cinacoin/next'
+import { generateMessage } from '@cinacoin/siwe'
+import { Connector } from '@cinacoin/core-sdk'
 import { useRouter } from 'next/navigation'
 
 export default function LoginPage() {
-  const { account, connect } = useCinaConnect()
+  const { account, connect } = useCinacoin()
   const { status } = useConnect()
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -347,7 +347,7 @@ export default function LoginPage() {
 
       // 3. Sign with wallet
       const connector = new Connector({
-        projectId: process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!,
+        projectId: process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!,
       })
 
       const signature = await connector.request({
@@ -403,13 +403,13 @@ export default function LoginPage() {
 
 ```tsx
 // For Pages Router projects, use AppKitPagesRouter:
-import { AppKitPagesRouter } from '@cinaconnect/next'
+import { AppKitPagesRouter } from '@cinacoin/next'
 
 // pages/_app.tsx
 function MyApp({ Component, pageProps }) {
   return (
     <AppKitPagesRouter
-      projectId={process.env.NEXT_PUBLIC_CINACONNECT_PROJECT_ID!}
+      projectId={process.env.NEXT_PUBLIC_CINACOIN_PROJECT_ID!}
       networks={[
         { id: 1, name: 'Ethereum', rpcUrl: 'https://eth.drpc.org' },
       ]}
@@ -426,8 +426,8 @@ export default MyApp
 
 ```env
 # .env.local
-NEXT_PUBLIC_CINACONNECT_PROJECT_ID=your-project-id
-CINACONNECT_PROJECT_ID=your-project-id
+NEXT_PUBLIC_CINACOIN_PROJECT_ID=your-project-id
+CINACOIN_PROJECT_ID=your-project-id
 ```
 
 ## Project Structure

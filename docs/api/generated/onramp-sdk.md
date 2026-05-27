@@ -1,6 +1,6 @@
 # On-Ramp SDK API Documentation
 
-> Generated API reference for `@cinaconnect/onramp-sdk`.
+> Generated API reference for `@cinacoin/onramp-sdk`.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The On-Ramp SDK provides a unified interface for fiat-to-crypto on-ramp provider
 ## Installation
 
 ```bash
-npm install @cinaconnect/onramp-sdk
+npm install @cinacoin/onramp-sdk
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install @cinaconnect/onramp-sdk
 Main entry point for on-ramp operations.
 
 ```typescript
-import { OnRampAggregator } from '@cinaconnect/onramp-sdk'
+import { OnRampAggregator } from '@cinacoin/onramp-sdk'
 
 const aggregator = new OnRampAggregator({
   defaultChainId: 1,
@@ -174,7 +174,7 @@ interface TokenInfo {
 ### Basic On-Ramp
 
 ```typescript
-import { OnRampAggregator } from '@cinaconnect/onramp-sdk'
+import { OnRampAggregator } from '@cinacoin/onramp-sdk'
 
 const aggregator = new OnRampAggregator({
   defaultChainId: 1,

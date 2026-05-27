@@ -1,6 +1,6 @@
 # 安全最佳实践
 
-> CinaConnect 安全指南 — 保护用户资产和数据。
+> Cinacoin 安全指南 — 保护用户资产和数据。
 
 ## 端到端加密
 
@@ -24,13 +24,13 @@ dApp ──[加密消息]──► Relay ──[加密消息]──► 钱包
 
 ```typescript
 // 生成 X25519 密钥对
-import { generateKeyPair } from '@cinaconnect/core/crypto'
+import { generateKeyPair } from '@cinacoin/core/crypto'
 
 const keyPair = generateKeyPair()
 // { publicKey: '0x...', privateKey: '0x...' }
 
 // 生成共享密钥 (ECDH)
-import { deriveSharedSecret } from '@cinaconnect/core/crypto'
+import { deriveSharedSecret } from '@cinacoin/core/crypto'
 
 const sharedSecret = deriveSharedSecret(
   myPrivateKey,      // 我方私钥
@@ -38,7 +38,7 @@ const sharedSecret = deriveSharedSecret(
 )
 
 // 加密消息
-import { encrypt, decrypt } from '@cinaconnect/core/crypto'
+import { encrypt, decrypt } from '@cinacoin/core/crypto'
 
 const encrypted = encrypt(sharedSecret, plaintext)
 const decrypted = decrypt(sharedSecret, encrypted)
@@ -60,7 +60,7 @@ const signature = await signMessage(message)
 // 推荐：使用 EIP-712 提供清晰的签名意图
 const typedData = {
   domain: {
-    name: 'CinaConnect',
+    name: 'Cinacoin',
     version: '1',
     chainId: 1,
   },
@@ -228,5 +228,5 @@ rate_limit:
 
 ### 紧急联系人
 
-- 安全团队: `security@cinaconnect.com`
-- 紧急通道: `#cinaconnect-security` (内部)
+- 安全团队: `security@cinacoin.com`
+- 紧急通道: `#cinacoin-security` (内部)

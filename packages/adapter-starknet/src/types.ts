@@ -1,8 +1,8 @@
 /**
- * Starknet-specific types for the @cinaconnect/adapter-starknet package.
+ * Starknet-specific types for the @cinacoin/adapter-starknet package.
  */
 
-import type { Chain } from '@cinaconnect/core-sdk';
+import type { Chain } from '@cinacoin/core-sdk';
 
 /* ------------------------------------------------------------------ */
 /*  Starknet chain presets                                             */

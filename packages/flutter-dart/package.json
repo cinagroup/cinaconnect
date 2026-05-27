@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/flutter-dart",
+  "name": "@cinacoin/flutter-dart",
   "version": "0.2.0",
-  "description": "Flutter/Dart SDK TypeScript types for CinaConnect — Dart interop interfaces",
+  "description": "Flutter/Dart SDK TypeScript types for Cinacoin — Dart interop interfaces",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -22,7 +22,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -30,5 +30,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

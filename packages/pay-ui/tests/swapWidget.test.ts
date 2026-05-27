@@ -4,7 +4,7 @@
 
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { SwapWidgetCore } from "../src/SwapWidgetCore.js.js";
-import type { TokenInfo, SwapQuote, SwapReceipt } from "@cinaconnect/swap-sdk";
+import type { TokenInfo, SwapQuote, SwapReceipt } from "@cinacoin/swap-sdk";
 
 // ── Test Fixtures ──────────────────────────────────────────
 

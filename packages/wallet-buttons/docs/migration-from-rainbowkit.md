@@ -1,12 +1,12 @@
-# Migration Guide: RainbowKit → @cinaconnect/wallet-buttons
+# Migration Guide: RainbowKit → @cinacoin/wallet-buttons
 
 ## Overview
 
-RainbowKit wraps wallet connection in a modal. `@cinaconnect/wallet-buttons` removes the modal entirely — you render individual wallet buttons directly in your UI. This gives you full control over layout, styling, and user flow.
+RainbowKit wraps wallet connection in a modal. `@cinacoin/wallet-buttons` removes the modal entirely — you render individual wallet buttons directly in your UI. This gives you full control over layout, styling, and user flow.
 
 ## Key Differences
 
-| Feature | RainbowKit | @cinaconnect/wallet-buttons |
+| Feature | RainbowKit | @cinacoin/wallet-buttons |
 |---|---|---|
 | UI pattern | Modal (`ConnectButton`) | Inline buttons (`WalletButton`) |
 | Wallet selection | Inside modal | Your own layout |
@@ -18,9 +18,9 @@ RainbowKit wraps wallet connection in a modal. `@cinaconnect/wallet-buttons` rem
 ### 1. Install the new package
 
 ```bash
-npm install @cinaconnect/wallet-buttons @cinaconnect/core-sdk @cinaconnect/explorer
+npm install @cinacoin/wallet-buttons @cinacoin/core-sdk @cinacoin/explorer
 # or
-yarn add @cinaconnect/wallet-buttons @cinaconnect/core-sdk @cinaconnect/explorer
+yarn add @cinacoin/wallet-buttons @cinacoin/core-sdk @cinacoin/explorer
 ```
 
 You can keep `@rainbow-me/rainbowkit` installed during migration and remove it later.
@@ -40,8 +40,8 @@ function Header() {
 **After:**
 
 ```tsx
-import { WalletButtonGroup } from '@cinaconnect/wallet-buttons';
-import '@cinaconnect/wallet-buttons/dist/styles.css';
+import { WalletButtonGroup } from '@cinacoin/wallet-buttons';
+import '@cinacoin/wallet-buttons/dist/styles.css';
 
 function Header() {
   return <WalletButtonGroup variant="brand" size="sm" />;
@@ -60,7 +60,7 @@ function Header() {
 **After:**
 
 ```tsx
-import { useWalletButtons } from '@cinaconnect/wallet-buttons';
+import { useWalletButtons } from '@cinacoin/wallet-buttons';
 
 function MyComponent() {
   const { connect } = useWalletButtons();
@@ -87,7 +87,7 @@ const { openConnectModal } = useConnectModal();
 **After:**
 
 ```tsx
-import { useWalletButtons } from '@cinaconnect/wallet-buttons';
+import { useWalletButtons } from '@cinacoin/wallet-buttons';
 
 const { connect, buttons } = useWalletButtons();
 
@@ -120,7 +120,7 @@ function App({ children }) {
 
 ```tsx
 import { WagmiProvider } from 'wagmi';
-import { Connector } from '@cinaconnect/core-sdk';
+import { Connector } from '@cinacoin/core-sdk';
 
 // Create your own connector instance (optional — useWalletButtons works without it)
 const connector = new Connector({ projectId: 'your-project-id' });
@@ -166,7 +166,7 @@ Remove imports and providers. You're done.
 
 ## Quick Reference
 
-| RainbowKit | @cinaconnect/wallet-buttons |
+| RainbowKit | @cinacoin/wallet-buttons |
 |---|---|
 | `<ConnectButton />` | `<WalletButton walletId="metamask" />` |
 | `openConnectModal()` | `connect(walletId)` |

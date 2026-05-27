@@ -27,7 +27,7 @@ export default function MultiChainPage() {
     <div className="min-h-screen bg-gray-950 text-white">
       <nav className="border-b border-gray-800/50 bg-gray-950/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-5xl mx-auto px-4 h-14 flex items-center justify-between">
-          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaConnect</a>
+          <a href="/" className="text-lg font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">CinaCoin</a>
           <div className="flex items-center gap-1">
             <a href="/" className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Home</a>
             <a href="/swap" className="px-3 py-1.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Swap</a>
@@ -82,7 +82,7 @@ export default function MultiChainPage() {
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <div className="bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl px-6 py-4 text-center"><span className="text-2xl">Ξ</span><p className="text-sm font-semibold">Ethereum</p></div>
             <span className="text-2xl text-gray-500">→</span>
-            <div className="bg-gray-800 rounded-xl px-6 py-4 text-center"><span className="text-2xl">🌉</span><p className="text-sm font-semibold">Relay</p><p className="text-xs text-gray-500">CinaConnect</p></div>
+            <div className="bg-gray-800 rounded-xl px-6 py-4 text-center"><span className="text-2xl">🌉</span><p className="text-sm font-semibold">Relay</p><p className="text-xs text-gray-500">CinaCoin</p></div>
             <span className="text-2xl text-gray-500">→</span>
             <div className="bg-gradient-to-br from-emerald-400 to-teal-500 rounded-xl px-6 py-4 text-center"><span className="text-2xl">◎</span><p className="text-sm font-semibold">Solana</p></div>
             <span className="text-2xl text-gray-500">→</span>
@@ -94,9 +94,9 @@ export default function MultiChainPage() {
         <div className="mt-8 bg-gray-900/80 backdrop-blur rounded-2xl border border-gray-800 p-6">
           <h2 className="text-xl font-semibold mb-4">Unified API</h2>
           <pre className="bg-gray-950 rounded-xl p-4 font-mono text-sm text-gray-300 overflow-x-auto">
-{`import { CinaConnect } from '@cinaconnect/core-sdk';
+{`import { CinaCoin } from '@cinacoin/core-sdk';
 
-const cc = new CinaConnect({ projectId: 'YOUR_ID' });
+const cc = new CinaCoin({ projectId: 'YOUR_ID' });
 
 // Connect to any chain with the same API
 const eth = await cc.connect('ethereum', 'metamask');

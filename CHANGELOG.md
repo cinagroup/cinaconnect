@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to CinaConnect will be documented in this file.
+All notable changes to Cinacoin will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -15,7 +15,7 @@ _Nothing unreleased yet — current versions are documented below._
 
 ## [2.0.0] — 2026-05-18
 
-### @cinaconnect/i18n
+### @cinacoin/i18n
 
 **Changed**
 
@@ -31,7 +31,7 @@ _Nothing unreleased yet — current versions are documented below._
 
 These packages reached stable v1.0.0, signifying production-ready APIs.
 
-### @cinaconnect/adapter-bitcoin
+### @cinacoin/adapter-bitcoin
 
 **Added**
 
@@ -39,7 +39,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - Full Ordinals and BRC-20 support via connector adapters
 - Cross-namespace wallet discovery for Bitcoin ecosystem
 
-### @cinaconnect/adapter-cosmos
+### @cinacoin/adapter-cosmos
 
 **Added**
 
@@ -47,7 +47,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - IBC (Inter-Blockchain Communication) transaction signing
 - Multi-chain Cosmos wallet connection
 
-### @cinaconnect/adapter-hedera
+### @cinacoin/adapter-hedera
 
 **Added**
 
@@ -55,7 +55,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - HBAR transaction signing and token operations
 - HIP-compliant wallet connectors
 
-### @cinaconnect/adapter-near
+### @cinacoin/adapter-near
 
 **Added**
 
@@ -63,7 +63,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - NEP-413 message signing
 - FT/NFT interaction via NEAR wallet connectors
 
-### @cinaconnect/adapter-starknet
+### @cinacoin/adapter-starknet
 
 **Added**
 
@@ -71,7 +71,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - Native account abstraction integration (Starknet uses AA by default)
 - Cairo contract interaction support
 
-### @cinaconnect/adapter-sui
+### @cinacoin/adapter-sui
 
 **Added**
 
@@ -79,7 +79,7 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - Sui transaction block building and signing
 - Move contract interaction support
 
-### @cinaconnect/adapter-xrpl
+### @cinacoin/adapter-xrpl
 
 **Added**
 
@@ -87,15 +87,15 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 - XRP transaction signing and XRPL token operations
 - Multisig wallet support
 
-### @cinaconnect/nuxt
+### @cinacoin/nuxt
 
 **Added**
 
-- Nuxt 3 module for CinaConnect wallet connection
+- Nuxt 3 module for Cinacoin wallet connection
 - Auto-imported composables for ConnectButton and ConnectModal
 - SSR-compatible wallet state management
 
-### cinaconnect-demo-react
+### cinacoin-demo-react
 
 **Added**
 
@@ -108,118 +108,118 @@ These packages reached stable v1.0.0, signifying production-ready APIs.
 
 ## [0.2.0] — 2026-05-18
 
-The **v0.2.0 release** is the main feature release covering 64 packages. This release transforms CinaConnect from a basic EVM wallet connector into a comprehensive, multi-chain, multi-platform wallet connection toolkit with enterprise features.
+The **v0.2.0 release** is the main feature release covering 64 packages. This release transforms Cinacoin from a basic EVM wallet connector into a comprehensive, multi-chain, multi-platform wallet connection toolkit with enterprise features.
 
 ### Notable Changes
 
 #### 🌐 EIP-5792 (Wallet Call API) Support
 
-- `@cinaconnect/aa-sdk` — Full EIP-5792 implementation: `wallet_getCallsStatus`, `wallet_sendCalls`, `wallet_showCallsStatus`
-- `@cinaconnect/bundler` — ERC-4337 Bundler client for sending and managing UserOperations
-- `@cinaconnect/paymaster` — Paymaster client for gas sponsorship and paymaster data
-- `@cinaconnect/session-keys` — Temporary signing keys with policies and social recovery for ERC-4337 smart accounts
-- `@cinaconnect/erc6492` — ERC-6492 signature validation for contract signature verification
+- `@cinacoin/aa-sdk` — Full EIP-5792 implementation: `wallet_getCallsStatus`, `wallet_sendCalls`, `wallet_showCallsStatus`
+- `@cinacoin/bundler` — ERC-4337 Bundler client for sending and managing UserOperations
+- `@cinacoin/paymaster` — Paymaster client for gas sponsorship and paymaster data
+- `@cinacoin/session-keys` — Temporary signing keys with policies and social recovery for ERC-4337 smart accounts
+- `@cinacoin/erc6492` — ERC-6492 signature validation for contract signature verification
 
 #### 📱 Mobile & Cross-Platform SDKs
 
-- `@cinaconnect/android-kotlin` — Android SDK TypeScript types with Kotlin interop interfaces
-- `@cinaconnect/ios-swift` — iOS SDK TypeScript types with Swift interop interfaces
-- `@cinaconnect/flutter-dart` — Flutter/Dart SDK TypeScript types with Dart interop interfaces
-- `@cinaconnect/dotnet` — .NET SDK TypeScript types matching CinaConnect .NET client API surface
-- `@cinaconnect/unity-types` — TypeScript types for CinaConnect Unity C# API surface
+- `@cinacoin/android-kotlin` — Android SDK TypeScript types with Kotlin interop interfaces
+- `@cinacoin/ios-swift` — iOS SDK TypeScript types with Swift interop interfaces
+- `@cinacoin/flutter-dart` — Flutter/Dart SDK TypeScript types with Dart interop interfaces
+- `@cinacoin/dotnet` — .NET SDK TypeScript types matching Cinacoin .NET client API surface
+- `@cinacoin/unity-types` — TypeScript types for Cinacoin Unity C# API surface
 
 #### 🔐 Authentication & Embedded Wallet
 
-- `@cinaconnect/social-login` — OAuth2 and email-based wallet authentication with deterministic HD wallet derivation (Google, Apple, X, GitHub, Discord, Facebook, Email, Passkey)
-- `@cinaconnect/passkey-auth` — WebAuthn-based authentication for blockchain apps
-- `@cinaconnect/embedded-wallet` — Embedded wallet system with email, social, and phone authentication
-- `@cinaconnect/siwe` — Sign-In with Ethereum per EIP-4361
-- `@cinaconnect/siwx` — Sign-In with Cross-chain — unified auth across EVM, Solana, and Bitcoin
-- `@cinaconnect/wallet-recovery` — Shamir's Secret Sharing with multi-provider wallet recovery
+- `@cinacoin/social-login` — OAuth2 and email-based wallet authentication with deterministic HD wallet derivation (Google, Apple, X, GitHub, Discord, Facebook, Email, Passkey)
+- `@cinacoin/passkey-auth` — WebAuthn-based authentication for blockchain apps
+- `@cinacoin/embedded-wallet` — Embedded wallet system with email, social, and phone authentication
+- `@cinacoin/siwe` — Sign-In with Ethereum per EIP-4361
+- `@cinacoin/siwx` — Sign-In with Cross-chain — unified auth across EVM, Solana, and Bitcoin
+- `@cinacoin/wallet-recovery` — Shamir's Secret Sharing with multi-provider wallet recovery
 
 #### 💰 DeFi & Payments
 
-- `@cinaconnect/swap-sdk` — Swap Aggregator SDK with multi-DEX routing and slippage protection
-- `@cinaconnect/onramp-sdk` — On-Ramp Aggregator SDK — multi-provider fiat-to-crypto gateway
-- `@cinaconnect/payment-flow` — Complete Buy/Send/Receive UI components
-- `@cinaconnect/pay-ui` — Swap & On-Ramp widget components (React + Web Components)
-- `@cinaconnect/deposit` — Deposit with Exchange feature
-- `@cinaconnect/gas-estimator` — EIP-1559 and Solana compute budget gas estimation
-- `@cinaconnect/gas-sponsorship` — Enterprise gas sponsorship via paymaster integration
+- `@cinacoin/swap-sdk` — Swap Aggregator SDK with multi-DEX routing and slippage protection
+- `@cinacoin/onramp-sdk` — On-Ramp Aggregator SDK — multi-provider fiat-to-crypto gateway
+- `@cinacoin/payment-flow` — Complete Buy/Send/Receive UI components
+- `@cinacoin/pay-ui` — Swap & On-Ramp widget components (React + Web Components)
+- `@cinacoin/deposit` — Deposit with Exchange feature
+- `@cinacoin/gas-estimator` — EIP-1559 and Solana compute budget gas estimation
+- `@cinacoin/gas-sponsorship` — Enterprise gas sponsorship via paymaster integration
 
 #### 🏢 Enterprise Features
 
-- `@cinaconnect/kyc` — KYC/AML compliance screening for transactions and payments
-- `@cinaconnect/travel-rule-demo` — Travel Rule compliance demo for VASP integration
-- `@cinaconnect/analytics` — GDPR-compliant event tracking and metrics
-- `@cinaconnect/explorer` — Explorer API for wallet/dApp discovery, logo fetching, registry
-- `@cinaconnect/blockchain-api` — Managed Blockchain API (ENS, balance history, tx lookup)
+- `@cinacoin/kyc` — KYC/AML compliance screening for transactions and payments
+- `@cinacoin/travel-rule-demo` — Travel Rule compliance demo for VASP integration
+- `@cinacoin/analytics` — GDPR-compliant event tracking and metrics
+- `@cinacoin/explorer` — Explorer API for wallet/dApp discovery, logo fetching, registry
+- `@cinacoin/blockchain-api` — Managed Blockchain API (ENS, balance history, tx lookup)
 
 #### 🌍 Mini Apps & Social
 
-- `@cinaconnect/farcaster-miniapp` — Farcaster Mini App integration for wallet connectivity and SIWF
-- `@cinaconnect/telegram-miniapp` — Telegram Mini App integration for wallet connectivity
-- `@cinaconnect/notify-server` — Notification service (push, email, webhook delivery)
-- `@cinaconnect/push-server` — Push notification server (APNs and FCM delivery)
+- `@cinacoin/farcaster-miniapp` — Farcaster Mini App integration for wallet connectivity and SIWF
+- `@cinacoin/telegram-miniapp` — Telegram Mini App integration for wallet connectivity
+- `@cinacoin/notify-server` — Notification service (push, email, webhook delivery)
+- `@cinacoin/push-server` — Push notification server (APNs and FCM delivery)
 
 #### 🔄 Cross-Chain & Multi-Wallet
 
-- `@cinaconnect/cross-chain-sync` — Cross-Chain Account Sync — unified state and identity across EVM/Solana/BTC/TON/TRON/Polkadot
-- `@cinaconnect/multiwallet` — Multi-wallet linking: manage multiple wallet connections simultaneously across namespaces
-- `@cinaconnect/custom-connectors` — Custom wallet connector interface and built-in connectors
+- `@cinacoin/cross-chain-sync` — Cross-Chain Account Sync — unified state and identity across EVM/Solana/BTC/TON/TRON/Polkadot
+- `@cinacoin/multiwallet` — Multi-wallet linking: manage multiple wallet connections simultaneously across namespaces
+- `@cinacoin/custom-connectors` — Custom wallet connector interface and built-in connectors
 
 #### 🎨 UI & Theming
 
-- `@cinaconnect/ui-theme` — UI theme tokens, animations, and base components
-- `@cinaconnect/cinaconnect-ui-theme` — Theming, animations, and UI components with framer-motion and Tailwind CSS
-- `@cinaconnect/design-tokens` — Design tokens for white-label UI toolkit
-- `@cinaconnect/wallet-buttons` — Direct wallet connection buttons (no modal)
-- `@cinaconnect/wallet-recommender` — Intelligent wallet suggestions based on chain, platform, and behavior
-- `@cinaconnect/core-ui` — Web Components core built with Lit
-- `@cinaconnect/cdn` — CDN package for script-tag usage of ConnectButton, ConnectModal
+- `@cinacoin/ui-theme` — UI theme tokens, animations, and base components
+- `@cinacoin/cinacoin-ui-theme` — Theming, animations, and UI components with framer-motion and Tailwind CSS
+- `@cinacoin/design-tokens` — Design tokens for white-label UI toolkit
+- `@cinacoin/wallet-buttons` — Direct wallet connection buttons (no modal)
+- `@cinacoin/wallet-recommender` — Intelligent wallet suggestions based on chain, platform, and behavior
+- `@cinacoin/core-ui` — Web Components core built with Lit
+- `@cinacoin/cdn` — CDN package for script-tag usage of ConnectButton, ConnectModal
 
 #### 🛠 Infrastructure
 
-- `@cinaconnect/relay-server` — WalletConnect relay server (HTTP/WebSocket relay interface)
-- `@cinaconnect/rpc-proxy` — RPC proxy server with chain routing, caching, rate limiting
-- `@cinaconnect/keys-server` — Key management server for key storage, encryption, session management
-- `@cinaconnect/walletconnect-v2` — WalletConnect v2 protocol implementation (pairing, session, crypto, relay, RPC methods)
+- `@cinacoin/relay-server` — WalletConnect relay server (HTTP/WebSocket relay interface)
+- `@cinacoin/rpc-proxy` — RPC proxy server with chain routing, caching, rate limiting
+- `@cinacoin/keys-server` — Key management server for key storage, encryption, session management
+- `@cinacoin/walletconnect-v2` — WalletConnect v2 protocol implementation (pairing, session, crypto, relay, RPC methods)
 
 #### 🔧 Developer Experience
 
-- `@cinaconnect/cli` — CLI tool for init, add, build, test
-- `@cinaconnect/codemod` — Codemods for migrating from Web3Modal/AppKit and WalletConnect v1
-- `@cinaconnect/testing` — Testing utilities with mock providers, wallets, chains, and transactions
-- `@cinaconnect/config` — Remote feature flags, headless mode, and virtual testnets
-- `@cinaconnect/safe-decoder` — Safe (Gnosis Safe) transaction decoder
+- `@cinacoin/cli` — CLI tool for init, add, build, test
+- `@cinacoin/codemod` — Codemods for migrating from Web3Modal/AppKit and WalletConnect v1
+- `@cinacoin/testing` — Testing utilities with mock providers, wallets, chains, and transactions
+- `@cinacoin/config` — Remote feature flags, headless mode, and virtual testnets
+- `@cinacoin/safe-decoder` — Safe (Gnosis Safe) transaction decoder
 
 #### 📦 i18n
 
-- `@cinaconnect/i18n` (v2.0.0) — Internationalization package (major version)
-- `@cinaconnect/i18n-react` — React-specific localization provider
+- `@cinacoin/i18n` (v2.0.0) — Internationalization package (major version)
+- `@cinacoin/i18n-react` — React-specific localization provider
 
 #### 🧪 Framework Adapters
 
-- `@cinaconnect/react` — React adapter for white-label UI toolkit
-- `@cinaconnect/vue` — Vue adapter for white-label UI toolkit
-- `@cinaconnect/angular` — Angular 17+ adapter for Core SDK
-- `@cinaconnect/svelte` — Svelte/SvelteKit adapter
-- `@cinaconnect/next` — Next.js SSR-optimized support (App Router & Pages Router)
-- `@cinaconnect/nuxt` (v1.0.0) — Nuxt 3 module
-- `@cinaconnect/react-native` — React Native adapter
+- `@cinacoin/react` — React adapter for white-label UI toolkit
+- `@cinacoin/vue` — Vue adapter for white-label UI toolkit
+- `@cinacoin/angular` — Angular 17+ adapter for Core SDK
+- `@cinacoin/svelte` — Svelte/SvelteKit adapter
+- `@cinacoin/next` — Next.js SSR-optimized support (App Router & Pages Router)
+- `@cinacoin/nuxt` (v1.0.0) — Nuxt 3 module
+- `@cinacoin/react-native` — React Native adapter
 
 #### 📚 Chain Adapters
 
 In addition to the v1.0.0 adapters listed above:
 
-- `@cinaconnect/core-sdk` — Core SDK with X25519 key exchange and ChaCha20-Poly1305 encryption
+- `@cinacoin/core-sdk` — Core SDK with X25519 key exchange and ChaCha20-Poly1305 encryption
 
 ### Package-Specific Changes (v0.2.0)
 
 <details>
 <summary><strong>Core SDK & Foundation</strong></summary>
 
-#### @cinaconnect/core-sdk (0.2.0)
+#### @cinacoin/core-sdk (0.2.0)
 - **Added**: Real X25519 key exchange using `@noble/curves` (replacing placeholder XOR implementation)
 - **Added**: Real ChaCha20-Poly1305 AEAD encryption using `@noble/ciphers` (replacing AES-GCM fallback)
 - **Added**: `generateNonce()` utility for generating 12-byte random nonces
@@ -228,32 +228,32 @@ In addition to the v1.0.0 adapters listed above:
 - **Fixed**: `sharedSecret()` performs real X25519 Diffie-Hellman instead of XOR simulation
 - **Fixed**: Encryption uses real ChaCha20-Poly1305 instead of AES-GCM fallback
 
-#### @cinaconnect/config (0.2.0)
+#### @cinacoin/config (0.2.0)
 - **Added**: Remote feature flags support
 - **Added**: Headless mode configuration
 - **Added**: Virtual testnet support
 
-#### @cinaconnect/relay-server (0.2.0)
+#### @cinacoin/relay-server (0.2.0)
 - **Added**: HTTP/WebSocket relay interface
 - **Security**: Relay server crypto verified — using real `x25519-dalek` and `chacha20poly1305` crates
 
-#### @cinaconnect/rpc-proxy (0.2.0)
+#### @cinacoin/rpc-proxy (0.2.0)
 - **Added**: Chain routing with automatic failover
 - **Added**: Response caching layer
 - **Added**: Rate limiting for RPC requests
 - **Fixed**: Updated RPC endpoints to more reliable providers
 
-#### @cinaconnect/testing (0.2.0)
+#### @cinacoin/testing (0.2.0)
 - **Added**: Mock providers, wallets, chains, and transactions
 - **Added**: Test harness for connector testing
 
-#### @cinaconnect/cli (0.2.0)
+#### @cinacoin/cli (0.2.0)
 - **Added**: `init` — project scaffolding
 - **Added**: `add` — package installation
 - **Added**: `build` — build orchestration
 - **Added**: `test` — test runner
 
-#### @cinaconnect/codemod (0.2.0)
+#### @cinacoin/codemod (0.2.0)
 - **Added**: Migration codemods from Web3Modal/AppKit
 - **Added**: Migration codemods from WalletConnect v1
 
@@ -262,35 +262,35 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>UI Components & Theming</strong></summary>
 
-#### @cinaconnect/ui-theme (0.2.0)
+#### @cinacoin/ui-theme (0.2.0)
 - **Added**: UI theme tokens and animations
 - **Added**: Base component styles
 
-#### @cinaconnect/cinaconnect-ui-theme (0.2.0)
+#### @cinacoin/cinacoin-ui-theme (0.2.0)
 - **Added**: Theming with framer-motion animations
 - **Added**: Tailwind CSS integration
 
-#### @cinaconnect/design-tokens (0.2.0)
+#### @cinacoin/design-tokens (0.2.0)
 - **Added**: Design tokens for white-label UI toolkit
 
-#### @cinaconnect/pay-ui (0.2.0)
+#### @cinacoin/pay-ui (0.2.0)
 - **Added**: Swap widget components
 - **Added**: On-Ramp widget components
 - **Added**: React + Web Components implementation
 
-#### @cinaconnect/wallet-buttons (0.2.0)
+#### @cinacoin/wallet-buttons (0.2.0)
 - **Added**: Direct wallet connection buttons (no modal, no bloat)
 - **Added**: Individual wallet connection with customizable buttons
 
-#### @cinaconnect/wallet-recommender (0.2.0)
+#### @cinacoin/wallet-recommender (0.2.0)
 - **Added**: Intelligent wallet recommendation engine
 - **Added**: Chain-based, platform-based, and behavior-based suggestions
 
-#### @cinaconnect/core-ui (0.2.0)
+#### @cinacoin/core-ui (0.2.0)
 - **Added**: Web Components core built with Lit
 - **Added**: Cross-framework component support
 
-#### @cinaconnect/cdn (0.2.0)
+#### @cinacoin/cdn (0.2.0)
 - **Added**: Script-tag distribution for ConnectButton and ConnectModal
 
 </details>
@@ -298,43 +298,43 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Authentication & Security</strong></summary>
 
-#### @cinaconnect/siwe (0.2.0)
+#### @cinacoin/siwe (0.2.0)
 - **Added**: Sign-In with Ethereum per EIP-4361
 - **Added**: Domain binding and nonce validation
 
-#### @cinaconnect/siwx (0.2.0)
+#### @cinacoin/siwx (0.2.0)
 - **Added**: Sign-In with Cross-chain authentication
 - **Added**: Unified auth across EVM, Solana, and Bitcoin
 - **Added**: Cross-chain identity verification
 
-#### @cinaconnect/social-login (0.2.0)
+#### @cinacoin/social-login (0.2.0)
 - **Added**: OAuth2 wallet authentication
 - **Added**: Google, Apple, X, GitHub, Discord, Facebook, Email providers
 - **Added**: Passkey-based authentication
 - **Added**: Deterministic HD wallet derivation from social accounts
 
-#### @cinaconnect/passkey-auth (0.2.0)
+#### @cinacoin/passkey-auth (0.2.0)
 - **Added**: WebAuthn-based authentication
 - **Added**: Platform authenticator support
 - **Added**: Cross-device passkey sync
 
-#### @cinaconnect/embedded-wallet (0.2.0)
+#### @cinacoin/embedded-wallet (0.2.0)
 - **Added**: Embedded wallet system
 - **Added**: Email-based wallet creation
 - **Added**: Social login wallet creation
 - **Added**: Phone OTP authentication
 
-#### @cinaconnect/wallet-recovery (0.2.0)
+#### @cinacoin/wallet-recovery (0.2.0)
 - **Added**: Shamir's Secret Sharing implementation
 - **Added**: Multi-provider wallet recovery
 - **Added**: Social recovery mechanism
 
-#### @cinaconnect/erc6492 (0.2.0)
+#### @cinacoin/erc6492 (0.2.0)
 - **Added**: ERC-6492 signature validation
 - **Added**: Contract signature verification
 - **Added**: Predeploy contract signature support
 
-#### @cinaconnect/session-keys (0.2.0)
+#### @cinacoin/session-keys (0.2.0)
 - **Added**: Temporary signing keys for ERC-4337 smart accounts
 - **Added**: Policy-based key management
 - **Added**: Social recovery for session keys
@@ -344,28 +344,28 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Account Abstraction</strong></summary>
 
-#### @cinaconnect/aa-sdk (0.2.0)
+#### @cinacoin/aa-sdk (0.2.0)
 - **Added**: Account Abstraction SDK
 - **Added**: Smart account creation and management
 - **Added**: Paymaster integration
 - **Added**: Bundler client integration
 - **Added**: EIP-5792 Wallet Call API support
 
-#### @cinaconnect/bundler (0.2.0)
+#### @cinacoin/bundler (0.2.0)
 - **Added**: ERC-4337 Bundler client
 - **Added**: UserOperation sending and management
 - **Added**: Gas estimation for UserOperations
 
-#### @cinaconnect/paymaster (0.2.0)
+#### @cinacoin/paymaster (0.2.0)
 - **Added**: Paymaster client for gas sponsorship
 - **Added**: Paymaster data generation
 - **Added**: Sponsorship policy configuration
 
-#### @cinaconnect/gas-sponsorship (0.2.0)
+#### @cinacoin/gas-sponsorship (0.2.0)
 - **Added**: Enterprise gas sponsorship via paymaster integration
 - **Added**: Configurable sponsorship rules
 
-#### @cinaconnect/gas-estimator (0.2.0)
+#### @cinacoin/gas-estimator (0.2.0)
 - **Added**: EIP-1559 gas estimation for EVM chains
 - **Added**: Solana compute budget estimation
 - **Added**: Multi-chain gas price aggregation
@@ -375,24 +375,24 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>DeFi & Payments</strong></summary>
 
-#### @cinaconnect/swap-sdk (0.2.0)
+#### @cinacoin/swap-sdk (0.2.0)
 - **Added**: Swap Aggregator SDK
 - **Added**: Multi-DEX swap routing
 - **Added**: Slippage protection
 - **Added**: Best price aggregation across DEXs
 
-#### @cinaconnect/onramp-sdk (0.2.0)
+#### @cinacoin/onramp-sdk (0.2.0)
 - **Added**: On-Ramp Aggregator SDK
 - **Added**: Multi-provider fiat-to-crypto gateway
 - **Added**: Provider comparison and routing
 
-#### @cinaconnect/payment-flow (0.2.0)
+#### @cinacoin/payment-flow (0.2.0)
 - **Added**: Complete payment UI components
 - **Added**: Buy flow components
 - **Added**: Send flow components
 - **Added**: Receive flow components
 
-#### @cinaconnect/deposit (0.2.0)
+#### @cinacoin/deposit (0.2.0)
 - **Added**: Deposit with Exchange feature
 - **Added**: Exchange integration support
 
@@ -401,25 +401,25 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Enterprise & Compliance</strong></summary>
 
-#### @cinaconnect/kyc (0.2.0)
+#### @cinacoin/kyc (0.2.0)
 - **Added**: KYC/AML compliance screening
 - **Added**: Transaction screening
 - **Added**: Payment screening
 
-#### @cinaconnect/travel-rule-demo (0.2.0)
+#### @cinacoin/travel-rule-demo (0.2.0)
 - **Added**: Travel Rule compliance demo
 - **Added**: VASP integration demo
 
-#### @cinaconnect/analytics (0.2.0)
+#### @cinacoin/analytics (0.2.0)
 - **Added**: GDPR-compliant event tracking
 - **Added**: Metrics collection and reporting
 
-#### @cinaconnect/explorer (0.2.0)
+#### @cinacoin/explorer (0.2.0)
 - **Added**: Wallet/dApp discovery API
 - **Added**: Logo fetching
 - **Added**: Wallet registry
 
-#### @cinaconnect/blockchain-api (0.2.0)
+#### @cinacoin/blockchain-api (0.2.0)
 - **Added**: ENS resolution API
 - **Added**: Balance history API
 - **Added**: Transaction lookup API
@@ -429,17 +429,17 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Cross-Chain & Multi-Wallet</strong></summary>
 
-#### @cinaconnect/cross-chain-sync (0.2.0)
+#### @cinacoin/cross-chain-sync (0.2.0)
 - **Added**: Cross-Chain Account Sync
 - **Added**: Unified state across EVM/Solana/BTC/TON/TRON/Polkadot
 - **Added**: Cross-chain identity management
 
-#### @cinaconnect/multiwallet (0.2.0)
+#### @cinacoin/multiwallet (0.2.0)
 - **Added**: Multi-wallet linking
 - **Added**: Simultaneous management of multiple wallet connections
 - **Added**: Cross-namespace wallet coordination
 
-#### @cinaconnect/custom-connectors (0.2.0)
+#### @cinacoin/custom-connectors (0.2.0)
 - **Added**: Custom wallet connector interface
 - **Added**: Built-in connector implementations
 
@@ -448,22 +448,22 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Mini Apps & Social</strong></summary>
 
-#### @cinaconnect/farcaster-miniapp (0.2.0)
+#### @cinacoin/farcaster-miniapp (0.2.0)
 - **Added**: Farcaster Mini App integration
 - **Added**: Wallet connectivity within Farcaster
 - **Added**: SIWF (Sign-In With Farcaster) support
 
-#### @cinaconnect/telegram-miniapp (0.2.0)
+#### @cinacoin/telegram-miniapp (0.2.0)
 - **Added**: Telegram Mini App integration
 - **Added**: Wallet connectivity within Telegram
 
-#### @cinaconnect/notify-server (0.2.0)
+#### @cinacoin/notify-server (0.2.0)
 - **Added**: Notification service
 - **Added**: Push notification delivery
 - **Added**: Email notification delivery
 - **Added**: Webhook notification delivery
 
-#### @cinaconnect/push-server (0.2.0)
+#### @cinacoin/push-server (0.2.0)
 - **Added**: Push notification server
 - **Added**: APNs (Apple Push Notification service) delivery
 - **Added**: FCM (Firebase Cloud Messaging) delivery
@@ -473,24 +473,24 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Infrastructure</strong></summary>
 
-#### @cinaconnect/relay-server (0.2.0)
+#### @cinacoin/relay-server (0.2.0)
 - **Added**: WalletConnect relay server
 - **Added**: HTTP relay interface
 - **Added**: WebSocket relay interface
 
-#### @cinaconnect/rpc-proxy (0.2.0)
+#### @cinacoin/rpc-proxy (0.2.0)
 - **Added**: RPC proxy server
 - **Added**: Chain routing
 - **Added**: Response caching
 - **Added**: Rate limiting
 
-#### @cinaconnect/keys-server (0.2.0)
+#### @cinacoin/keys-server (0.2.0)
 - **Added**: Key management server
 - **Added**: Secure key storage
 - **Added**: Encryption operations
 - **Added**: Session management
 
-#### @cinaconnect/walletconnect-v2 (0.2.0)
+#### @cinacoin/walletconnect-v2 (0.2.0)
 - **Added**: WalletConnect v2 protocol implementation
 - **Added**: Pairing management
 - **Added**: Session management
@@ -498,7 +498,7 @@ In addition to the v1.0.0 adapters listed above:
 - **Added**: Relay client
 - **Added**: RPC method handlers
 
-#### @cinaconnect/safe-decoder (0.2.0)
+#### @cinacoin/safe-decoder (0.2.0)
 - **Added**: Safe (Gnosis Safe) transaction decoder
 - **Added**: Multi-signature transaction parsing
 
@@ -507,16 +507,16 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Developer Experience</strong></summary>
 
-#### @cinaconnect/performance-utils (0.1.0)
+#### @cinacoin/performance-utils (0.1.0)
 - **Added**: Performance monitoring utilities
 - **Added**: Optimization utilities
 
-#### @cinaconnect/token-list (0.2.0)
+#### @cinacoin/token-list (0.2.0)
 - **Added**: Token discovery
 - **Added**: Token metadata management
 - **Added**: Token validation
 
-#### @cinaconnect/ens-resolver (0.2.0)
+#### @cinacoin/ens-resolver (0.2.0)
 - **Added**: ENS name resolution
 - **Added**: Reverse lookup
 - **Added**: Avatar retrieval
@@ -527,29 +527,29 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Framework Adapters</strong></summary>
 
-#### @cinaconnect/react (0.2.0)
+#### @cinacoin/react (0.2.0)
 - **Added**: React adapter for white-label UI toolkit
 - **Added**: React hooks and components
 
-#### @cinaconnect/vue (0.2.0)
+#### @cinacoin/vue (0.2.0)
 - **Added**: Vue adapter for white-label UI toolkit
 - **Added**: Vue composables and components
 
-#### @cinaconnect/angular (0.2.0)
+#### @cinacoin/angular (0.2.0)
 - **Added**: Angular 17+ adapter for Core SDK
 - **Added**: Angular services and components
 - **Added**: 100% coverage implementation
 
-#### @cinaconnect/svelte (0.2.0)
+#### @cinacoin/svelte (0.2.0)
 - **Added**: Svelte/SvelteKit adapter
 - **Added**: Svelte stores and components
 
-#### @cinaconnect/next (0.2.0)
+#### @cinacoin/next (0.2.0)
 - **Added**: Next.js SSR-optimized support
 - **Added**: App Router integration
 - **Added**: Pages Router integration
 
-#### @cinaconnect/react-native (0.2.0)
+#### @cinacoin/react-native (0.2.0)
 - **Added**: React Native adapter
 - **Added**: Native UI components
 
@@ -558,23 +558,23 @@ In addition to the v1.0.0 adapters listed above:
 <details>
 <summary><strong>Mobile & Cross-Platform SDKs</strong></summary>
 
-#### @cinaconnect/android-kotlin (0.2.0)
+#### @cinacoin/android-kotlin (0.2.0)
 - **Added**: Android SDK TypeScript types
 - **Added**: Kotlin interop interfaces
 
-#### @cinaconnect/ios-swift (0.2.0)
+#### @cinacoin/ios-swift (0.2.0)
 - **Added**: iOS SDK TypeScript types
 - **Added**: Swift interop interfaces
 
-#### @cinaconnect/flutter-dart (0.2.0)
+#### @cinacoin/flutter-dart (0.2.0)
 - **Added**: Flutter/Dart SDK TypeScript types
 - **Added**: Dart interop interfaces
 
-#### @cinaconnect/dotnet (0.2.0)
+#### @cinacoin/dotnet (0.2.0)
 - **Added**: .NET SDK TypeScript types
 - **Added**: Matching .NET client API surface
 
-#### @cinaconnect/unity-types (0.2.0)
+#### @cinacoin/unity-types (0.2.0)
 - **Added**: TypeScript types for Unity C# API surface
 
 </details>
@@ -584,7 +584,7 @@ In addition to the v1.0.0 adapters listed above:
 ## [0.1.0] — 2026-05-16
 
 ### Added
-- Initial release as OnChainUX (later rebranded to CinaConnect)
+- Initial release as OnChainUX (later rebranded to Cinacoin)
 - Core SDK with WebSocket relay
 - EIP-6963 wallet discovery
 - Session management
@@ -598,8 +598,8 @@ In addition to the v1.0.0 adapters listed above:
 
 ## Rebranding — 2026-05-17
 
-- **Rebranded**: `@onchainux` → `@cinaconnect` (CinaConnect)
-- All documentation updated with CinaConnect branding
+- **Rebranded**: `@onchainux` → `@cinacoin` (Cinacoin)
+- All documentation updated with Cinacoin branding
 - README rewritten in English
 
 ---
@@ -608,12 +608,12 @@ In addition to the v1.0.0 adapters listed above:
 
 ### Upgrading to v2.0.0
 
-#### @cinaconnect/i18n (v1.x → v2.0.0)
+#### @cinacoin/i18n (v1.x → v2.0.0)
 
 The i18n package has a major version bump. Review locale file format changes in the documentation.
 
 ```bash
-pnpm upgrade @cinaconnect/i18n
+pnpm upgrade @cinacoin/i18n
 ```
 
 #### Upgrading to v0.2.0
@@ -622,16 +622,16 @@ Most packages are new at v0.2.0. Install the packages you need:
 
 ```bash
 # Core + React
-pnpm add @cinaconnect/core-sdk @cinaconnect/react
+pnpm add @cinacoin/core-sdk @cinacoin/react
 
 # With Account Abstraction
-pnpm add @cinaconnect/aa-sdk @cinaconnect/bundler @cinaconnect/paymaster
+pnpm add @cinacoin/aa-sdk @cinacoin/bundler @cinacoin/paymaster
 
 # With Social Login
-pnpm add @cinaconnect/social-login @cinaconnect/embedded-wallet
+pnpm add @cinacoin/social-login @cinacoin/embedded-wallet
 
 # With Mobile SDKs
-pnpm add @cinaconnect/android-kotlin @cinaconnect/ios-swift
+pnpm add @cinacoin/android-kotlin @cinacoin/ios-swift
 ```
 
 #### Core SDK Breaking Change (v0.1.0 → v0.2.0)
@@ -651,7 +651,7 @@ pnpm add @cinaconnect/android-kotlin @cinaconnect/ios-swift
 Use the codemod package to migrate:
 
 ```bash
-npx @cinaconnect/codemod
+npx @cinacoin/codemod
 ```
 
 ---
@@ -663,7 +663,7 @@ npx @cinaconnect/codemod
 | Core SDK & Foundation | core-sdk, config, relay-server, rpc-proxy, testing, cli, codemod | 0.2.0 |
 | UI Frameworks | react, vue, angular, svelte, next, react-native, core-ui | 0.2.0 |
 | Nuxt | nuxt | **1.0.0** |
-| UI Components & Themes | ui-theme, cinaconnect-ui-theme, design-tokens, pay-ui, wallet-buttons, wallet-recommender, cdn | 0.2.0 |
+| UI Components & Themes | ui-theme, cinacoin-ui-theme, design-tokens, pay-ui, wallet-buttons, wallet-recommender, cdn | 0.2.0 |
 | i18n | i18n | **2.0.0** |
 | i18n (React) | i18n-react | 0.2.0 |
 | Authentication | social-login, passkey-auth, embedded-wallet, siwe, siwx, wallet-recovery, erc6492, session-keys | 0.2.0 |
@@ -677,7 +677,7 @@ npx @cinaconnect/codemod
 | Chain Adapters | adapter-bitcoin, adapter-cosmos, adapter-hedera, adapter-near, adapter-starknet, adapter-sui, adapter-xrpl | **1.0.0** |
 | Mobile SDKs | android-kotlin, ios-swift, flutter-dart, dotnet, unity-types | 0.2.0 |
 | Developer Tools | performance-utils, token-list, ens-resolver | 0.1.0 / 0.2.0 |
-| Demo Apps | cinaconnect-demo, cinaconnect-demo-react | 0.1.1 / **1.0.0** |
+| Demo Apps | cinacoin-demo, cinacoin-demo-react | 0.1.1 / **1.0.0** |
 
 ---
 
@@ -699,6 +699,6 @@ npx @cinaconnect/codemod
 - **Test coverage**: 125+ server-side unit test cases, 55+ E2E tests
 - **Commits**: 57 across 3 days of intensive development (May 16–18, 2026)
 
-[Unreleased]: https://github.com/cinaconnect/cinaconnect/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/cinaconnect/cinaconnect/compare/v0.1.0...v0.2.0
-[0.1.0]: https://github.com/cinaconnect/cinaconnect/releases/tag/v0.1.0
+[Unreleased]: https://github.com/cinacoin/cinacoin/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/cinacoin/cinacoin/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/cinacoin/cinacoin/releases/tag/v0.1.0

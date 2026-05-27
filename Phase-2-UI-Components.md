@@ -2,7 +2,7 @@
 
 > **目标**: 构建完全自有品牌的钱包连接与链上交互 UI 组件库  
 > **时间**: M2-M4  
-> **产出物**: `@cinaconnect/ui` 组件库 + 多框架适配器 + 示例应用
+> **产出物**: `@cinacoin/ui` 组件库 + 多框架适配器 + 示例应用
 
 ---
 
@@ -31,7 +31,7 @@
 ## 2. 组件架构
 
 ```
-@cinaconnect/ui
+@cinacoin/ui
 ├── packages/
 │   ├── design-tokens/     # 设计令牌 (CSS Variables)
 │   │   ├── colors.json
@@ -488,11 +488,11 @@ interface ThemeConfig {
 
 ```tsx
 // React 组件封装
-import { CinaConnectProvider, ConnectButton, ConnectModal } from '@cinaconnect/react';
+import { CinacoinProvider, ConnectButton, ConnectModal } from '@cinacoin/react';
 
 function App() {
   return (
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         projectId: 'your-project-id',
         chains: [mainnet, polygon, arbitrum],
@@ -507,13 +507,13 @@ function App() {
     >
       <ConnectButton />
       <ConnectModal />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   );
 }
 
 // Hook
-function useCinaConnect() {
-  const { connectors, connect, disconnect, account, chainId, status } = useContext(CinaConnectContext);
+function useCinacoin() {
+  const { connectors, connect, disconnect, account, chainId, status } = useContext(CinacoinContext);
   return { connectors, connect, disconnect, account, chainId, status };
 }
 ```
@@ -522,7 +522,7 @@ function useCinaConnect() {
 
 ```vue
 <script setup>
-import { CinaConnectProvider } from '@cinaconnect/vue'
+import { CinacoinProvider } from '@cinacoin/vue'
 
 const config = {
   projectId: 'your-project-id',
@@ -532,10 +532,10 @@ const config = {
 </script>
 
 <template>
-  <CinaConnectProvider :config="config">
+  <CinacoinProvider :config="config">
     <ocx-connect-button />
     <ocx-connect-modal />
-  </CinaConnectProvider>
+  </CinacoinProvider>
 </template>
 ```
 
@@ -543,11 +543,11 @@ const config = {
 
 ```tsx
 // 原生 RN 组件 (非 Web 包装)
-import { CinaConnectProvider, ConnectButton, ConnectModal } from '@cinaconnect/react-native';
+import { CinacoinProvider, ConnectButton, ConnectModal } from '@cinacoin/react-native';
 
 function App() {
   return (
-    <CinaConnectProvider config={config}>
+    <CinacoinProvider config={config}>
       <View style={styles.container}>
         <ConnectButton
           onPress={() => setShowModal(true)}
@@ -562,7 +562,7 @@ function App() {
           onWalletSelect={handleWalletSelect}
         />
       </View>
-    </CinaConnectProvider>
+    </CinacoinProvider>
   );
 }
 
@@ -698,7 +698,7 @@ Arrow Keys       →  在列表项间导航
 /apps/demo
 ├── src/
 │   ├── App.tsx           # 主应用
-│   ├── components/       # 使用 CinaConnect 组件
+│   ├── components/       # 使用 Cinacoin 组件
 │   └── pages/
 │       ├── Home.tsx      # 连接演示
 │       ├── Swap.tsx      # Swap 演示

@@ -1,7 +1,7 @@
 /**
  * Relay WebSocket transport — communicates with the self-hosted relay server.
  *
- * Implements the CinaConnect relay protocol (compatible with WalletConnect v2).
+ * Implements the Cinacoin relay protocol (compatible with WalletConnect v2).
  */
 import { EventEmitter } from '../events.js';
 /**
@@ -70,7 +70,7 @@ export class RelayTransport extends EventEmitter {
                         this.handleMessage(data);
                     }
                     catch {
-                        console.warn('[CinaConnect] Failed to parse relay message:', event.data);
+                        console.warn('[Cinacoin] Failed to parse relay message:', event.data);
                     }
                 };
                 this.ws.onclose = (event) => {
@@ -154,7 +154,7 @@ export class RelayTransport extends EventEmitter {
                 this.emit('ack', msg.topic);
                 break;
             case 'error':
-                console.error('[CinaConnect] Relay error:', msg.message);
+                console.error('[Cinacoin] Relay error:', msg.message);
                 this.emit('error', new Error(msg.message));
                 break;
         }
@@ -177,7 +177,7 @@ export class RelayTransport extends EventEmitter {
     reconnect() {
         this.reconnectAttempts++;
         const delay = Math.min(1000 * 2 ** this.reconnectAttempts, 30000);
-        console.log(`[CinaConnect] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.config.maxReconnectAttempts})`);
+        console.log(`[Cinacoin] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.config.maxReconnectAttempts})`);
         setTimeout(() => {
             this.connect().catch(() => {
                 // connect() already handles errors and triggers reconnect

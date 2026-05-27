@@ -1,6 +1,6 @@
-# @cinaconnect/telegram-miniapp
+# @cinacoin/telegram-miniapp
 
-Telegram Mini Apps integration for CinaConnect SDK.
+Telegram Mini Apps integration for Cinacoin SDK.
 
 ## Features
 
@@ -11,13 +11,13 @@ Telegram Mini Apps integration for CinaConnect SDK.
 ## Install
 
 ```bash
-npm install @cinaconnect/telegram-miniapp
+npm install @cinacoin/telegram-miniapp
 ```
 
 ## Usage
 
 ```ts
-import { TelegramProvider, TelegramModal, TelegramAuth } from '@cinaconnect/telegram-miniapp';
+import { TelegramProvider, TelegramModal, TelegramAuth } from '@cinacoin/telegram-miniapp';
 
 // Initialize provider
 const provider = new TelegramProvider({

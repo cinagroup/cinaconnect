@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/social-login — Social Login for Web3
+ * @cinacoin/social-login — Social Login for Web3
  *
  * OAuth2 and email-based authentication with deterministic
  * HD wallet derivation for Google, Apple, Twitter/X, and email.

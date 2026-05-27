@@ -1,7 +1,7 @@
 /**
  * Benchmark — i18n Translation Lookup Performance
  *
- * Measures translation lookup performance for the CinaConnect i18n system.
+ * Measures translation lookup performance for the Cinacoin i18n system.
  *
  * 3 scenarios:
  * - Single translation lookup

@@ -1,15 +1,15 @@
 # SIWE API
 
-> `@cinaconnect/siwe` — Sign-In with Ethereum (EIP-4361) 实现参考。
+> `@cinacoin/siwe` — Sign-In with Ethereum (EIP-4361) 实现参考。
 
 ## 概述
 
-SIWE 允许用户使用以太坊钱包签名消息来验证身份，替代传统用户名密码登录。CinaConnect 实现了完整的 SIWE 流程。
+SIWE 允许用户使用以太坊钱包签名消息来验证身份，替代传统用户名密码登录。Cinacoin 实现了完整的 SIWE 流程。
 
 ## 创建 SIWE 消息
 
 ```typescript
-import { generateMessage, verifyMessage } from '@cinaconnect/siwe'
+import { generateMessage, verifyMessage } from '@cinacoin/siwe'
 
 const siweMessage = generateMessage({
   domain: 'mydapp.com',
@@ -44,11 +44,11 @@ console.log(siweMessage)
 ## 签名消息
 
 ```typescript
-import { useCinaConnect } from '@cinaconnect/react'
-import { generateMessage } from '@cinaconnect/siwe'
+import { useCinacoin } from '@cinacoin/react'
+import { generateMessage } from '@cinacoin/siwe'
 
 function SignInButton() {
-  const { signMessage, account } = useCinaConnect()
+  const { signMessage, account } = useCinacoin()
 
   const handleSignIn = async () => {
     const message = generateMessage({
@@ -86,7 +86,7 @@ function SignInButton() {
 
 ```typescript
 // 服务端验证 SIWE 签名
-import { verifyMessage } from '@cinaconnect/siwe'
+import { verifyMessage } from '@cinacoin/siwe'
 
 app.post('/api/auth/siwe', async (req, res) => {
   const { message, signature } = req.body
@@ -181,7 +181,7 @@ interface SiweResult {
 生成加密安全的随机 nonce。
 
 ```typescript
-import { generateNonce } from '@cinaconnect/siwe'
+import { generateNonce } from '@cinacoin/siwe'
 
 const nonce = generateNonce()
 // "dGH5nB7kL2pQxR8m"
@@ -192,7 +192,7 @@ const nonce = generateNonce()
 解析 SIWE 消息字符串为结构化对象。
 
 ```typescript
-import { parseMessage } from '@cinaconnect/siwe'
+import { parseMessage } from '@cinacoin/siwe'
 
 const parsed = parseMessage(siweMessage)
 console.log(parsed.domain)  // "mydapp.com"
@@ -213,7 +213,7 @@ console.log(parsed.chainId) // 1
 // pages/api/auth/[...nextauth].ts
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import { verifyMessage } from '@cinaconnect/siwe'
+import { verifyMessage } from '@cinacoin/siwe'
 
 export default NextAuth({
   providers: [

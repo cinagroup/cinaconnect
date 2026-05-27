@@ -12,7 +12,7 @@ export default function Header() {
   return (
     <header className="bg-dashboard-surface/80 backdrop-blur border-b border-dashboard-border px-6 py-4 flex items-center justify-between">
       <div>
-        <h2 className="text-xl font-semibold text-white">CinaConnect Backend</h2>
+        <h2 className="text-xl font-semibold text-white">CinaCoin Backend</h2>
         <p className="text-sm text-dashboard-muted">Cloudflare Workers Management</p>
       </div>
       <div className="flex items-center gap-3">

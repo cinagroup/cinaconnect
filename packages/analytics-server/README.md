@@ -1,6 +1,6 @@
-# @cinaconnect/analytics-server
+# @cinacoin/analytics-server
 
-Cloudflare Worker for ingesting analytics events from the CinaConnect analytics SDK.
+Cloudflare Worker for ingesting analytics events from the Cinacoin analytics SDK.
 
 ## Architecture
 
@@ -107,10 +107,10 @@ CREATE TABLE events (
 ## Integrating with the Analytics SDK
 
 ```typescript
-import { RemoteProvider, EventTracker } from '@cinaconnect/analytics';
+import { RemoteProvider, EventTracker } from '@cinacoin/analytics';
 
 const provider = new RemoteProvider({
-  endpoint: 'https://cinaconnect-analytics.<account>.workers.dev/v1/events',
+  endpoint: 'https://cinacoin-analytics.<account>.workers.dev/v1/events',
   apiKey: 'your-api-key',
   batchSize: 10,
   flushInterval: 5000,

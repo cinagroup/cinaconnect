@@ -1,4 +1,4 @@
-# CinaConnect RPC Proxy Configuration
+# Cinacoin RPC Proxy Configuration
 #
 # Main proxy config. Provider definitions are embedded below.
 # Override with environment variables:

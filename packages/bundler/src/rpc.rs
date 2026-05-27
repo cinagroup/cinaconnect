@@ -114,8 +114,8 @@ pub async fn handle_rpc_request(state: &AppState, request: RpcRequest) -> RpcRes
         "eth_getUserOperationByHash" => rpc_get_user_op_by_hash(state, request.params).await,
         "eth_getUserOperationReceipt" => rpc_get_receipt(state, request.params).await,
         "eth_supportedEntryPoints" => rpc_supported_entry_points(state),
-        "cinaconnect_getBundlerConfig" => rpc_get_config(state),
-        "cinaconnect_getReputationStats" => rpc_reputation_stats(state).await,
+        "cinacoin_getBundlerConfig" => rpc_get_config(state),
+        "cinacoin_getReputationStats" => rpc_reputation_stats(state).await,
         "web3_clientVersion" => rpc_client_version(),
         _ => {
             state.metrics.record_rpc(&method, "error", start.elapsed().as_secs_f64());
@@ -200,8 +200,8 @@ async fn handle_rpc(
         "eth_getUserOperationByHash" => rpc_get_user_op_by_hash(&state, request.params).await,
         "eth_getUserOperationReceipt" => rpc_get_receipt(&state, request.params).await,
         "eth_supportedEntryPoints" => rpc_supported_entry_points(&state),
-        "cinaconnect_getBundlerConfig" => rpc_get_config(&state),
-        "cinaconnect_getReputationStats" => rpc_reputation_stats(&state),
+        "cinacoin_getBundlerConfig" => rpc_get_config(&state),
+        "cinacoin_getReputationStats" => rpc_reputation_stats(&state),
         "web3_clientVersion" => rpc_client_version(),
         _ => {
             state.metrics.record_rpc(&method, "error", start.elapsed().as_secs_f64());
@@ -355,5 +355,5 @@ async fn rpc_reputation_stats(
 }
 
 fn rpc_client_version() -> Result<Value, Box<dyn std::error::Error + Send + Sync>> {
-    Ok(serde_json::to_value("cinaconnect-bundler/0.2.0")?)
+    Ok(serde_json::to_value("cinacoin-bundler/0.2.0")?)
 }

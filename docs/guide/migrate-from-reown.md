@@ -1,20 +1,20 @@
-# Migration Guide: Reown/WalletConnect → CinaConnect
+# Migration Guide: Reown/WalletConnect → Cinacoin
 
-> Complete guide for migrating from Reown (WalletConnect) ecosystem to CinaConnect.
+> Complete guide for migrating from Reown (WalletConnect) ecosystem to Cinacoin.
 
 ## Overview
 
-CinaConnect is a fully self-hosted alternative to the Reown/WalletConnect stack. This guide covers:
+Cinacoin is a fully self-hosted alternative to the Reown/WalletConnect stack. This guide covers:
 
-- **WalletConnect v2** → **CinaConnect Relay**
-- **Web3Modal** → **CinaConnect UI Components**
-- **AppKit SDK** → **CinaConnect SDK**
+- **WalletConnect v2** → **Cinacoin Relay**
+- **Web3Modal** → **Cinacoin UI Components**
+- **AppKit SDK** → **Cinacoin SDK**
 - Infrastructure migration
 - Automated CLI migration tool
 
 ## Why Migrate?
 
-| Factor | Reown/WalletConnect | CinaConnect |
+| Factor | Reown/WalletConnect | Cinacoin |
 |--------|-------------------|-----------|
 | Monthly cost | $500–$5,000+ | $0 (self-hosted infrastructure costs only) |
 | MAU limit | 500 (free), unlimited (paid) | Unlimited |
@@ -25,7 +25,7 @@ CinaConnect is a fully self-hosted alternative to the Reown/WalletConnect stack.
 
 ---
 
-## 1. WalletConnect v2 → CinaConnect Relay
+## 1. WalletConnect v2 → Cinacoin Relay
 
 ### Before (WalletConnect v2)
 
@@ -43,21 +43,21 @@ const provider = await WalletConnectProvider.init({
 await provider.enable()
 ```
 
-### After (CinaConnect)
+### After (Cinacoin)
 
 ```typescript
-import { CinaConnect } from '@cinaconnect/core'
-import { RelayTransport } from '@cinaconnect/transport-relay'
+import { Cinacoin } from '@cinacoin/core'
+import { RelayTransport } from '@cinacoin/transport-relay'
 
-const cinaconnect = new CinaConnect({
-  projectId: 'your-cinaconnect-project-id',
+const cinacoin = new Cinacoin({
+  projectId: 'your-cinacoin-project-id',
   relayUrl: 'wss://relay.yourdomain.com/v1',
   chains: [mainnet, polygon],
 })
 
 // Connect via injected wallet
-const connectors = cinaconnect.getConnectors()
-const result = await cinaconnect.connect(connectors[0])
+const connectors = cinacoin.getConnectors()
+const result = await cinacoin.connect(connectors[0])
 
 // Or via QR code (equivalent to WalletConnect)
 const qrTransport = new QRCodeTransport({
@@ -69,17 +69,17 @@ const uri = await qrTransport.getUri()
 
 ### Key Differences
 
-| Feature | WalletConnect | CinaConnect |
+| Feature | WalletConnect | Cinacoin |
 |---------|--------------|-----------|
 | Project ID | Reown Dashboard | Your own config |
 | Relay | Reown-hosted | Your Relay Server |
 | QR Modal | Built-in `showQrModal` | Use `ConnectModal` component |
-| Provider init | `WalletConnectProvider.init()` | `new CinaConnect(config)` |
-| Connection | `provider.enable()` | `cinaconnect.connect(connector)` |
+| Provider init | `WalletConnectProvider.init()` | `new Cinacoin(config)` |
+| Connection | `provider.enable()` | `cinacoin.connect(connector)` |
 
 ---
 
-## 2. Web3Modal → CinaConnect UI Components
+## 2. Web3Modal → Cinacoin UI Components
 
 ### Before (Web3Modal / AppKit)
 
@@ -111,10 +111,10 @@ import { w3m-button } from '@web3modal/wagmi'
 <w3m-button />
 ```
 
-### After (CinaConnect React)
+### After (Cinacoin React)
 
 ```typescript
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 
 const config = {
   projectId: 'your-project-id',
@@ -125,16 +125,16 @@ const config = {
 
 function App() {
   return (
-    <CinaConnectProvider config={config}>
+    <CinacoinProvider config={config}>
       <YourApp />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   )
 }
 ```
 
 ```tsx
 // In your component
-import { ConnectButton, ConnectModal } from '@cinaconnect/react'
+import { ConnectButton, ConnectModal } from '@cinacoin/react'
 
 // Option 1: Simple connect button (equivalent to w3m-button)
 <ConnectButton
@@ -158,7 +158,7 @@ import { ConnectButton, ConnectModal } from '@cinaconnect/react'
 
 ### Component Mapping
 
-| Web3Modal Component | CinaConnect Equivalent |
+| Web3Modal Component | Cinacoin Equivalent |
 |--------------------|---------------------|
 | `<w3m-button />` | `<ConnectButton />` |
 | `<w3m-network-button />` | `<ChainSwitcher />` |
@@ -170,7 +170,7 @@ import { ConnectButton, ConnectModal } from '@cinaconnect/react'
 
 ---
 
-## 3. AppKit SDK → CinaConnect SDK
+## 3. AppKit SDK → Cinacoin SDK
 
 ### Before (AppKit)
 
@@ -190,10 +190,10 @@ function Component() {
 }
 ```
 
-### After (CinaConnect React)
+### After (Cinacoin React)
 
 ```typescript
-import { useCinaConnect, ConnectButton } from '@cinaconnect/react'
+import { useCinacoin, ConnectButton } from '@cinacoin/react'
 
 function Component() {
   const {
@@ -208,7 +208,7 @@ function Component() {
     balance,
     ensName,
     ensAvatar,
-  } = useCinaConnect()
+  } = useCinacoin()
 
   const isConnected = status === 'connected'
 
@@ -222,15 +222,15 @@ function Component() {
 
 ### Hook Mapping
 
-| AppKit Hook | CinaConnect Hook |
+| AppKit Hook | Cinacoin Hook |
 |------------|----------------|
 | `useAppKit()` | Use `ConnectButton` or `ConnectModal` directly |
-| `useAppKitAccount()` | `useCinaConnect()` → `account`, `status`, `balance` |
-| `useAppKitProvider('eip155')` | `useCinaConnect()` → `connectors`, `connect()` |
-| `useAppKitState()` | `useCinaConnect()` → `status`, `chainId` |
-| `useDisconnect()` | `useCinaConnect()` → `disconnect()` |
-| `useSwitchChain()` | `useCinaConnect()` → `switchChain()` |
-| `useWalletInfo()` | `useCinaConnect()` → `connectors` |
+| `useAppKitAccount()` | `useCinacoin()` → `account`, `status`, `balance` |
+| `useAppKitProvider('eip155')` | `useCinacoin()` → `connectors`, `connect()` |
+| `useAppKitState()` | `useCinacoin()` → `status`, `chainId` |
+| `useDisconnect()` | `useCinacoin()` → `disconnect()` |
+| `useSwitchChain()` | `useCinacoin()` → `switchChain()` |
+| `useWalletInfo()` | `useCinacoin()` → `connectors` |
 
 ---
 
@@ -238,7 +238,7 @@ function Component() {
 
 ### Relay Server
 
-| Component | WalletConnect | CinaConnect |
+| Component | WalletConnect | Cinacoin |
 |-----------|--------------|-----------|
 | Relay | Reown Cloud | Your Rust Relay Server |
 | Protocol | WAMP over WebSocket | Custom protocol over WebSocket |
@@ -254,7 +254,7 @@ cargo build --release
 
 ### RPC Proxy
 
-| Component | WalletConnect | CinaConnect |
+| Component | WalletConnect | Cinacoin |
 |-----------|--------------|-----------|
 | RPC | Reown RPC | Your Go/Rust RPC Proxy |
 | Multi-Provider | No | Yes (intelligent routing) |
@@ -271,11 +271,11 @@ cargo build --release
 ### Helm Deployment
 
 ```bash
-# Deploy full CinaConnect infrastructure
-helm install cinaconnect ./deploy/helm/cinaconnect \
-  --namespace cinaconnect \
+# Deploy full Cinacoin infrastructure
+helm install cinacoin ./deploy/helm/cinacoin \
+  --namespace cinacoin \
   --create-namespace \
-  --values ./deploy/helm/cinaconnect/values.yaml
+  --values ./deploy/helm/cinacoin/values.yaml
 ```
 
 ---
@@ -284,12 +284,12 @@ helm install cinaconnect ./deploy/helm/cinaconnect \
 
 ### API Changes
 
-| WalletConnect/AppKit | CinaConnect | Notes |
+| WalletConnect/AppKit | Cinacoin | Notes |
 |---------------------|-----------|-------|
 | `projectId` from Reown Dashboard | Self-configured | Your own project ID |
-| `WalletConnectProvider.init()` | `new CinaConnect(config)` | Constructor pattern |
+| `WalletConnectProvider.init()` | `new Cinacoin(config)` | Constructor pattern |
 | `web3Modal.open()` | `ConnectModal` component / `connect()` | Component-based |
-| `provider.request({ method: '...' })` | `cinaconnect.signMessage()`, `signTransaction()` | Typed methods |
+| `provider.request({ method: '...' })` | `cinacoin.signMessage()`, `signTransaction()` | Typed methods |
 | `eth_chainId` events | `chainChanged` event | Event naming |
 | `accountsChanged` callback | `accountChanged` event | Event naming |
 | `pairing` concept | Direct connection | No pairing layer |
@@ -297,7 +297,7 @@ helm install cinaconnect ./deploy/helm/cinaconnect \
 
 ### Behavioral Changes
 
-1. **No pairing layer** — CinaConnect connects directly without the WalletConnect pairing concept
+1. **No pairing layer** — Cinacoin connects directly without the WalletConnect pairing concept
 2. **Self-hosted relay** — You control the relay infrastructure
 3. **No cloud dependency** — Everything runs on your servers
 4. **Custom event system** — Different event names but equivalent functionality
@@ -307,24 +307,24 @@ helm install cinaconnect ./deploy/helm/cinaconnect \
 
 ## 6. Automated Migration CLI
 
-CinaConnect provides a CLI tool to automate parts of the migration.
+Cinacoin provides a CLI tool to automate parts of the migration.
 
 ### Install
 
 ```bash
-npm install -g @cinaconnect/cli
+npm install -g @cinacoin/cli
 # or
-npx @cinaconnect/cli
+npx @cinacoin/cli
 ```
 
 ### Migrate
 
 ```bash
 # Scan and migrate a project directory
-cinaconnect migrate ./my-dapp-project
+cinacoin migrate ./my-dapp-project
 
 # Options:
-cinaconnect migrate ./my-dapp-project \
+cinacoin migrate ./my-dapp-project \
   --framework react \
   --relay-url wss://relay.yourdomain.com/v1 \
   --output-dir ./migrated \
@@ -334,7 +334,7 @@ cinaconnect migrate ./my-dapp-project \
 ### What the CLI does:
 
 1. **Scan** — Finds `@walletconnect`, `@web3modal`, `@reown/appkit` imports
-2. **Transform** — Replaces imports with CinaConnect equivalents
+2. **Transform** — Replaces imports with Cinacoin equivalents
 3. **Generate** — Creates new component wrappers
 4. **Report** — Shows a diff of all changes
 
@@ -349,9 +349,9 @@ Files modified: 12
 Files unchanged: 35
 
 Changes:
-  ✅ @walletconnect/ethereum-provider → @cinaconnect/core (3 files)
-  ✅ @web3modal/wagmi → @cinaconnect/react (5 files)
-  ✅ @reown/appkit/react → @cinaconnect/react (4 files)
+  ✅ @walletconnect/ethereum-provider → @cinacoin/core (3 files)
+  ✅ @web3modal/wagmi → @cinacoin/react (5 files)
+  ✅ @reown/appkit/react → @cinacoin/react (4 files)
   ⚠️  Manual review needed: custom provider logic (2 files)
   ⚠️  Manual review needed: session event handlers (1 file)
 
@@ -368,16 +368,16 @@ Next steps:
 
 ### Pre-Migration
 
-- [ ] Set up CinaConnect Relay Server
-- [ ] Set up CinaConnect RPC Proxy
+- [ ] Set up Cinacoin Relay Server
+- [ ] Set up Cinacoin RPC Proxy
 - [ ] Deploy to staging environment
 - [ ] Configure chains and wallet registry
 - [ ] Set up monitoring and alerting
 
 ### Code Migration
 
-- [ ] Replace `@walletconnect` imports with `@cinaconnect/core`
-- [ ] Replace `@web3modal` / `@reown/appkit` with `@cinaconnect/react`
+- [ ] Replace `@walletconnect` imports with `@cinacoin/core`
+- [ ] Replace `@web3modal` / `@reown/appkit` with `@cinacoin/react`
 - [ ] Update connection flow logic
 - [ ] Update event handlers
 - [ ] Update theme/styling configuration
@@ -409,17 +409,17 @@ Next steps:
 
 If issues arise during migration:
 
-1. **Keep WalletConnect dependencies** — Install CinaConnect alongside (not replacing)
+1. **Keep WalletConnect dependencies** — Install Cinacoin alongside (not replacing)
 2. **Feature flag** — Use a feature flag to switch between providers
 3. **Gradual rollout** — Migrate a percentage of users first
 
 ```typescript
 // Feature flag approach
-const useCinaConnect = process.env.USE_ONCHAINUX === 'true'
+const useCinacoin = process.env.USE_ONCHAINUX === 'true'
 
 function ConnectButton() {
-  if (useCinaConnect) {
-    return <CinaConnectConnectButton />
+  if (useCinacoin) {
+    return <CinacoinConnectButton />
   }
   return <Web3ModalButton />
 }

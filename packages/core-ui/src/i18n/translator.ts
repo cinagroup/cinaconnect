@@ -95,12 +95,12 @@ export function getAvailableLocales(): string[] {
  * Translate a key with optional parameter interpolation.
  *
  * @param key - Translation key (snake_case, e.g. "connect_wallet").
- * @param params - Optional params for interpolation, e.g. { brand: "CinaConnect" }.
+ * @param params - Optional params for interpolation, e.g. { brand: "Cinacoin" }.
  * @returns Translated string, or the key itself if not found.
  *
  * Usage:
  *   t('connect_wallet')                         → "Connect Wallet"
- *   t('powered_by', { brand: "CinaConnect" })     → "Powered by CinaConnect"
+ *   t('powered_by', { brand: "Cinacoin" })     → "Powered by Cinacoin"
  *   t('days_ago', { count: 3 })                 → "3 days ago"
  */
 export function t(key: string, params?: Record<string, unknown>): string {

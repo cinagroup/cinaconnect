@@ -1,5 +1,5 @@
 /**
- * Batch Transaction SDK for CinaConnect.
+ * Batch Transaction SDK for Cinacoin.
  *
  * Atomic batch operations with gas estimation and validation.
  */

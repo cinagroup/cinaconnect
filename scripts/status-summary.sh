@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# status-summary.sh — Quick status summary for CinaConnect monorepo
+# status-summary.sh — Quick status summary for CinaCoin monorepo
 # Usage: ./scripts/status-summary.sh [--json]
 
 set -euo pipefail
@@ -15,19 +15,19 @@ fi
 # ─── Package counts ───
 TOTAL_PACKAGES=$(find packages -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l)
 BUILT_PACKAGES=$(find packages -maxdepth 2 -name "dist" -type d -not -path "*/node_modules/*" 2>/dev/null | wc -l)
-PUBLISHED_PACKAGES=1  # @cinaconnect/core-sdk
+PUBLISHED_PACKAGES=1  # @cinacoin/core-sdk
 
 # Categories
 ADAPTER_COUNT=$(find packages -maxdepth 1 -name "adapter-*" -type d 2>/dev/null | wc -l)
 FRAMEWORK_COUNT=$(for f in react next vue svelte angular nuxt testing; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 MOBILE_COUNT=$(for f in android-kotlin ios-swift flutter-dart unity-csharp dotnet; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
-UI_COUNT=$(for f in core-ui ui-theme design-tokens cinaconnect-ui-theme pay-ui wallet-buttons; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
+UI_COUNT=$(for f in core-ui ui-theme design-tokens cinacoin-ui-theme pay-ui wallet-buttons; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 AUTH_COUNT=$(for f in siwe siwx passkey-auth social-login embedded-wallet session-keys; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 PAYMENT_COUNT=$(for f in swap-sdk onramp-sdk payment-flow deposit gas-estimator gas-sponsorship batch-transaction; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 PLATFORM_COUNT=$(for f in telegram-miniapp farcaster-miniapp ens-resolver kyc; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 ADVANCED_COUNT=$(for f in aa-sdk bundler paymaster cross-chain-sync multiwallet wallet-recovery wallet-recommender safe-decoder; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 TOOL_COUNT=$(for f in codemod analytics config token-list explorer cdn custom-connectors i18n; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
-SPECIAL_COUNT=$(for f in performance-utils cinaconnect-i18n push-server notify-server travel-rule-demo relay-server rpc-proxy keys-server blockchain-api cli; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
+SPECIAL_COUNT=$(for f in performance-utils cinacoin-i18n push-server notify-server travel-rule-demo relay-server rpc-proxy keys-server blockchain-api cli; do [ -d "packages/$f" ] && echo 1; done 2>/dev/null | wc -l)
 
 # ─── Test counts ───
 TEST_FILES=$(find packages -name "*.test.ts" -o -name "*.test.tsx" -o -name "*.spec.ts" -o -name "*.spec.tsx" 2>/dev/null | wc -l)
@@ -42,7 +42,7 @@ REACT_VERSION=$(node -e "console.log(require('./packages/react/package.json').ve
 NPM_VERSION=$(node -e "
   const { execSync } = require('child_process');
   try {
-    const v = execSync('npm view @cinaconnect/core-sdk version 2>/dev/null', {encoding:'utf8'}).trim();
+    const v = execSync('npm view @cinacoin/core-sdk version 2>/dev/null', {encoding:'utf8'}).trim();
     console.log(v);
   } catch { console.log('not published'); }
 " 2>/dev/null || echo "unknown")
@@ -92,7 +92,7 @@ if [ "$JSON_MODE" = true ]; then
 EOF
 else
   echo "╔══════════════════════════════════════════════════════╗"
-  echo "║   CinaConnect — Status Summary                      ║"
+  echo "║   CinaCoin — Status Summary                      ║"
   echo "║   $(date -u '+%Y-%m-%d %H:%M:%S UTC')                          ║"
   echo "╚══════════════════════════════════════════════════════╝"
   echo ""

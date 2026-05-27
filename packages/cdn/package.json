@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/cdn",
+  "name": "@cinacoin/cdn",
   "version": "0.2.0",
-  "description": "CinaConnect CDN package — script-tag usage for ConnectButton, ConnectModal",
+  "description": "Cinacoin CDN package — script-tag usage for ConnectButton, ConnectModal",
   "type": "module",
   "main": "dist/cdn.js",
   "module": "dist/cdn.mjs",
@@ -35,5 +35,12 @@
   "publishConfig": {
     "access": "public"
   },
-  "types": "dist/cdn.d.ts"
+  "types": "dist/cdn.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/cdn.mjs",
+      "require": "./dist/cdn.js",
+      "types": "./dist/cdn.d.ts"
+    }
+  }
 }

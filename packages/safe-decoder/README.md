@@ -1,6 +1,6 @@
-# @cinaconnect/safe-decoder
+# @cinacoin/safe-decoder
 
-Safe{Core} transaction decoder for CinaConnect.
+Safe{Core} transaction decoder for Cinacoin.
 
 ## Installation
 

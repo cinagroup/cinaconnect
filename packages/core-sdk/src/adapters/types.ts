@@ -1,8 +1,8 @@
 /**
- * ChainAdapter interface for CinaConnect adapters.
+ * ChainAdapter interface for Cinacoin adapters.
  *
  * Defines the contract that all chain adapters (viem, wagmi, ethers, etc.)
- * must implement to work with the CinaConnect SDK.
+ * must implement to work with the Cinacoin SDK.
  */
 
 import type { Connector } from '../connector.js';
@@ -85,13 +85,13 @@ export interface ChainAdapterMethods {
  * Adapter factory configuration.
  */
 export interface AdapterFactoryConfig {
-  /** Adapter type ('viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos'). */
-  type: 'viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos' | 'sui' | 'starknet' | 'xrpl' | 'near';
+  /** Adapter type ('viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos' | 'sui' | 'starknet' | 'xrpl' | 'near' | 'bitcoin'). */
+  type: 'viem' | 'wagmi' | 'ethers5' | 'ethers6' | 'solana' | 'cosmos' | 'sui' | 'starknet' | 'xrpl' | 'near' | 'bitcoin';
 
   /** Underlying client/provider. */
   client?: unknown;
 
-  /** CinaConnect connector. */
+  /** Cinacoin connector. */
   connector?: Connector;
 
   /** Supported chains. */

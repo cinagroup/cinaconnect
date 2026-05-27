@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# run-tests.sh — Run all CinaConnect package tests from workspace root.
+# run-tests.sh — Run all CinaCoin package tests from workspace root.
 # Usage: bash run-tests.sh   (from onux/ directory)
 #
 # Auto-detects all packages with a tests/ directory.
@@ -15,7 +15,7 @@ TOTAL_FAIL=0
 TOTAL_FILES=0
 
 echo "========================================"
-echo "  CinaConnect Package Test Runner"
+echo "  CinaCoin Package Test Runner"
 echo "========================================"
 echo ""
 

@@ -1,6 +1,6 @@
 import type { Preview } from '@storybook/react';
 
-/* ── CinaConnect theme variables (injected globally) ───────────── */
+/* ── Cinacoin theme variables (injected globally) ───────────── */
 
 const cinaConnectDecorator = (Story: any) => {
   return (

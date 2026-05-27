@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-sui
+# @cinacoin/adapter-sui
 
-Sui chain adapter for CinaConnect — Sui Wallet, Ethos, Suiet, Martian connectors.
+Sui chain adapter for Cinacoin — Sui Wallet, Ethos, Suiet, Martian connectors.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-sui
+npm install @cinacoin/adapter-sui
 ```
 
 ## Usage
 
 ```ts
-import { SuiChainAdapter, SUI_CHAINS } from '@cinaconnect/adapter-sui';
+import { SuiChainAdapter, SUI_CHAINS } from '@cinacoin/adapter-sui';
 
 const adapter = new SuiChainAdapter();
 await adapter.connect({ connectorId: 'suiet' });

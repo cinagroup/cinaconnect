@@ -1,6 +1,6 @@
 import { jsx as _jsx } from "react/jsx-runtime";
 import { useRef, useEffect } from 'react';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinacoinContext } from './CinacoinProvider.js';
 /**
  * ConnectModal — React wrapper for the OCX ConnectModal Web Component.
  *
@@ -10,7 +10,7 @@ import { useCinaConnectContext } from './CinaConnectProvider.js';
  */
 export function ConnectModal({ isOpen, onClose, defaultView = 'wallets', recommendedWalletIds, className, style, }) {
     const ref = useRef(null);
-    const { connect } = useCinaConnectContext();
+    const { connect } = useCinacoinContext();
     useEffect(() => {
         const el = ref.current;
         if (!el)

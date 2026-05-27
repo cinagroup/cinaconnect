@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/wallet-recovery — Shamir's Secret Sharing Wallet Recovery
+ * @cinacoin/wallet-recovery — Shamir's Secret Sharing Wallet Recovery
  *
  * Threshold-based wallet recovery across multiple providers
  * (email, phone, social OAuth) with password-based fallback.

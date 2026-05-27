@@ -84,7 +84,7 @@ function MockWalletButton({ walletId, variant = 'default', size = 'md', isLoadin
 }
 /* ── Meta ─────────────────────────────────────────────────────────── */
 const meta = {
-    title: 'CinaConnect/WalletButton',
+    title: 'Cinacoin/WalletButton',
     component: MockWalletButton,
     argTypes: {
         walletId: {

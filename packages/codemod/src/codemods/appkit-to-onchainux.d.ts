@@ -1,16 +1,16 @@
 /**
- * appkit-to-cinaconnect codemod
+ * appkit-to-cinacoin codemod
  *
  * Transforms:
- *   - @reown/appkit*     → @cinaconnect/*
- *   - @web3modal/*       → @cinaconnect/*
- *   - Web3Modal           → CinaConnect
- *   - createWeb3Modal     → createCinaConnect
- *   - AppKit              → CinaConnect
- *   - useWeb3Modal        → useCinaConnect
- *   - W3mButton           → CinaConnectButton
- *   - W3mNetworkSelect    → CinaConnectNetworkSelect
- *   - Config object keys  → CinaConnectConfig keys
+ *   - @reown/appkit*     → @cinacoin/*
+ *   - @web3modal/*       → @cinacoin/*
+ *   - Web3Modal           → Cinacoin
+ *   - createWeb3Modal     → createCinacoin
+ *   - AppKit              → Cinacoin
+ *   - useWeb3Modal        → useCinacoin
+ *   - W3mButton           → CinacoinButton
+ *   - W3mNetworkSelect    → CinacoinNetworkSelect
+ *   - Config object keys  → CinacoinConfig keys
  */
 export interface CodemodResult {
     transformed: boolean;
@@ -19,7 +19,7 @@ export interface CodemodResult {
     changes: string[];
 }
 /**
- * Apply the AppKit/Web3Modal → CinaConnect transformation to source text.
+ * Apply the AppKit/Web3Modal → Cinacoin transformation to source text.
  */
-export declare function transformAppKitToCinaConnect(source: string): CodemodResult;
+export declare function transformAppKitToCinacoin(source: string): CodemodResult;
 //# sourceMappingURL=appkit-to-onchainux.d.ts.map

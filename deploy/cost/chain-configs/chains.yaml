@@ -1,4 +1,4 @@
-# CinaConnect Chain Registry
+# Cinacoin Chain Registry
 # Priority matrix and configuration for all supported chains
 
 chains:
@@ -7,8 +7,8 @@ chains:
     name: Ethereum
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/eth"
-    ws_url: "wss://rpc.cinaconnect.com/eth/ws"
+    rpc_url: "https://rpc.cinacoin.com/eth"
+    ws_url: "wss://rpc.cinacoin.com/eth/ws"
     explorer: "https://etherscan.io"
     explorer_tx: "https://etherscan.io/tx/{hash}"
     native_currency:
@@ -28,8 +28,8 @@ chains:
     name: Polygon
     symbol: POL
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/polygon"
-    ws_url: "wss://rpc.cinaconnect.com/polygon/ws"
+    rpc_url: "https://rpc.cinacoin.com/polygon"
+    ws_url: "wss://rpc.cinacoin.com/polygon/ws"
     explorer: "https://polygonscan.com"
     explorer_tx: "https://polygonscan.com/tx/{hash}"
     native_currency:
@@ -48,8 +48,8 @@ chains:
     name: Arbitrum One
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/arbitrum"
-    ws_url: "wss://rpc.cinaconnect.com/arbitrum/ws"
+    rpc_url: "https://rpc.cinacoin.com/arbitrum"
+    ws_url: "wss://rpc.cinacoin.com/arbitrum/ws"
     explorer: "https://arbiscan.io"
     explorer_tx: "https://arbiscan.io/tx/{hash}"
     native_currency:
@@ -69,8 +69,8 @@ chains:
     name: BNB Smart Chain
     symbol: BNB
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/bsc"
-    ws_url: "wss://rpc.cinaconnect.com/bsc/ws"
+    rpc_url: "https://rpc.cinacoin.com/bsc"
+    ws_url: "wss://rpc.cinacoin.com/bsc/ws"
     explorer: "https://bscscan.com"
     explorer_tx: "https://bscscan.com/tx/{hash}"
     native_currency:
@@ -89,8 +89,8 @@ chains:
     name: Base
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/base"
-    ws_url: "wss://rpc.cinaconnect.com/base/ws"
+    rpc_url: "https://rpc.cinacoin.com/base"
+    ws_url: "wss://rpc.cinacoin.com/base/ws"
     explorer: "https://basescan.org"
     explorer_tx: "https://basescan.org/tx/{hash}"
     native_currency:
@@ -110,8 +110,8 @@ chains:
     name: Optimism
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/optimism"
-    ws_url: "wss://rpc.cinaconnect.com/optimism/ws"
+    rpc_url: "https://rpc.cinacoin.com/optimism"
+    ws_url: "wss://rpc.cinacoin.com/optimism/ws"
     explorer: "https://optimistic.etherscan.io"
     explorer_tx: "https://optimistic.etherscan.io/tx/{hash}"
     native_currency:
@@ -131,8 +131,8 @@ chains:
     name: Solana
     symbol: SOL
     type: solana
-    rpc_url: "https://rpc.cinaconnect.com/solana"
-    ws_url: "wss://rpc.cinaconnect.com/solana/ws"
+    rpc_url: "https://rpc.cinacoin.com/solana"
+    ws_url: "wss://rpc.cinacoin.com/solana/ws"
     explorer: "https://solscan.io"
     explorer_tx: "https://solscan.io/tx/{hash}"
     native_currency:
@@ -152,8 +152,8 @@ chains:
     name: Avalanche C-Chain
     symbol: AVAX
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/avalanche"
-    ws_url: "wss://rpc.cinaconnect.com/avalanche/ws"
+    rpc_url: "https://rpc.cinacoin.com/avalanche"
+    ws_url: "wss://rpc.cinacoin.com/avalanche/ws"
     explorer: "https://snowtrace.io"
     explorer_tx: "https://snowtrace.io/tx/{hash}"
     native_currency:
@@ -172,8 +172,8 @@ chains:
     name: zkSync Era
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/zksync"
-    ws_url: "wss://rpc.cinaconnect.com/zksync/ws"
+    rpc_url: "https://rpc.cinacoin.com/zksync"
+    ws_url: "wss://rpc.cinacoin.com/zksync/ws"
     explorer: "https://explorer.zksync.io"
     explorer_tx: "https://explorer.zksync.io/tx/{hash}"
     native_currency:
@@ -193,8 +193,8 @@ chains:
     name: Linea
     symbol: ETH
     type: evm
-    rpc_url: "https://rpc.cinaconnect.com/linea"
-    ws_url: "wss://rpc.cinaconnect.com/linea/ws"
+    rpc_url: "https://rpc.cinacoin.com/linea"
+    ws_url: "wss://rpc.cinacoin.com/linea/ws"
     explorer: "https://lineascan.build"
     explorer_tx: "https://lineascan.build/tx/{hash}"
     native_currency:

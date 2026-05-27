@@ -18,11 +18,11 @@ import {
 } from '@/lib/batch';
 
 /* ────────────────────────────────────────────────────────
-   Inline EIP-5792 hooks (copied from @cinaconnect/react)
+   Inline EIP-5792 hooks (copied from @cinacoin/react)
    ────────────────────────────────────────────────────────
    We inline these to avoid monorepo module-resolution issues
-   where webpack can't resolve @cinaconnect/core-sdk from the
-   pre-compiled dist/ of @cinaconnect/react.
+   where webpack can't resolve @cinacoin/core-sdk from the
+   pre-compiled dist/ of @cinacoin/react.
    ──────────────────────────────────────────────────────── */
 
 interface EIP5792Context {

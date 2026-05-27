@@ -1,19 +1,19 @@
 # Android Kotlin
 
-> `@cinaconnect/android-kotlin` — Android native SDK for CinaConnect.
+> `@cinacoin/android-kotlin` — Android native SDK for Cinacoin.
 
 ## Installation
 
 ```groovy
 // build.gradle
-implementation 'com.cinaconnect:sdk:1.0.0'
+implementation 'com.cinacoin:sdk:1.0.0'
 ```
 
 ## Usage
 
 ```kotlin
-val config = CinaConnectConfig(projectId = "your-project-id")
-val cinaConnect = CinaConnect(context, config)
+val config = CinacoinConfig(projectId = "your-project-id")
+val cinaConnect = Cinacoin(context, config)
 ```
 
 ## Related

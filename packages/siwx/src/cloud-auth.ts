@@ -1,8 +1,8 @@
 /**
- * CloudAuth — Reown Dashboard-compatible cloud authentication for CinaConnect SIWX.
+ * CloudAuth — Reown Dashboard-compatible cloud authentication for Cinacoin SIWX.
  *
  * Provides session management, JWT token handling, and multi-device session sync
- * via the CinaConnect Dashboard API. Designed to integrate with the SIWX plugin system.
+ * via the Cinacoin Dashboard API. Designed to integrate with the SIWX plugin system.
  *
  * @packageDocumentation
  */
@@ -17,7 +17,7 @@ import type { SIWXParams, SIWXResult } from './types.js';
 export interface CloudSession {
   /** Unique session identifier. */
   id: string;
-  /** SIWX project ID from CinaConnect Dashboard. */
+  /** SIWX project ID from Cinacoin Dashboard. */
   projectId: string;
   /** Wallet address that authenticated. */
   address: string;
@@ -49,9 +49,9 @@ export interface VerifyResult {
 
 /** Configuration for CloudAuth initialization. */
 export interface CloudAuthConfig {
-  /** CinaConnect Dashboard project ID. */
+  /** Cinacoin Dashboard project ID. */
   projectId: string;
-  /** Dashboard API base URL (default: `https://api.cinaconnect.com/v1`). */
+  /** Dashboard API base URL (default: `https://api.cinacoin.com/v1`). */
   apiUrl?: string;
   /** Auto-refresh tokens before expiry (default: true). */
   autoRefresh?: boolean;
@@ -77,7 +77,7 @@ export type CloudAuthEventHandler = (event: CloudAuthEvent) => void;
 // ---------------------------------------------------------------------------
 
 /**
- * CloudAuth manages authenticated sessions via the CinaConnect Dashboard API.
+ * CloudAuth manages authenticated sessions via the Cinacoin Dashboard API.
  *
  * It handles JWT token lifecycle (issue, refresh, revoke), multi-device session
  * synchronization, and integrates with the SIWX plugin system for cross-chain
@@ -85,7 +85,7 @@ export type CloudAuthEventHandler = (event: CloudAuthEvent) => void;
  *
  * @example
  * ```ts
- * import { CloudAuth } from '@cinaconnect/siwx';
+ * import { CloudAuth } from '@cinacoin/siwx';
  *
  * const auth = new CloudAuth({ projectId: 'your-project-id' });
  * await auth.init();
@@ -102,7 +102,7 @@ export type CloudAuthEventHandler = (event: CloudAuthEvent) => void;
  * ```
  */
 export class CloudAuth {
-  /** Project ID for the CinaConnect Dashboard. */
+  /** Project ID for the Cinacoin Dashboard. */
   readonly projectId: string;
 
   /** Dashboard API base URL. */
@@ -131,7 +131,7 @@ export class CloudAuth {
 
   constructor(config: CloudAuthConfig) {
     this.projectId = config.projectId;
-    this.apiUrl = config.apiUrl ?? 'https://api.cinaconnect.com/v1';
+    this.apiUrl = config.apiUrl ?? 'https://api.cinacoin.com/v1';
     this.autoRefresh = config.autoRefresh ?? true;
     this.refreshThresholdSec = config.refreshThresholdSec ?? 300;
     this._fetch = config.fetch ?? globalThis.fetch?.bind(globalThis) ?? this._nativeFetch;
@@ -179,7 +179,7 @@ export class CloudAuth {
   /**
    * Create a new cloud session after successful SIWX authentication.
    *
-   * Sends the SIWX signature and message to the CinaConnect Dashboard API
+   * Sends the SIWX signature and message to the Cinacoin Dashboard API
    * for server-side verification and JWT issuance.
    *
    * @param params - Session creation parameters.
@@ -540,7 +540,7 @@ export class CloudAuth {
       const storage = this._getStorage();
       if (storage) {
         storage.setItem(
-          `cinaconnect:session:${this.projectId}`,
+          `cinacoin:session:${this.projectId}`,
           JSON.stringify(session)
         );
       }
@@ -553,7 +553,7 @@ export class CloudAuth {
     try {
       const storage = this._getStorage();
       if (!storage) return null;
-      const raw = storage.getItem(`cinaconnect:session:${this.projectId}`);
+      const raw = storage.getItem(`cinacoin:session:${this.projectId}`);
       if (!raw) return null;
       return JSON.parse(raw) as CloudSession;
     } catch {
@@ -565,7 +565,7 @@ export class CloudAuth {
     try {
       const storage = this._getStorage();
       if (storage) {
-        storage.removeItem(`cinaconnect:session:${this.projectId}`);
+        storage.removeItem(`cinacoin:session:${this.projectId}`);
       }
     } catch {
       // Ignore
@@ -655,7 +655,7 @@ export class CloudAuth {
  *
  * @example
  * ```tsx
- * import { useCloudAuth } from '@cinaconnect/siwx';
+ * import { useCloudAuth } from '@cinacoin/siwx';
  *
  * function AuthButton() {
  *   const { session, isLoading, error, createSession, revokeSession } = useCloudAuth({
@@ -701,6 +701,6 @@ export function useCloudAuth(config: CloudAuthConfig): {
   // and for import resolution in bundlers.
   throw new Error(
     'useCloudAuth requires React. Import from cloud-hooks.ts for the full implementation:\n' +
-    "  import { useCloudAuth } from '@cinaconnect/siwx/cloud-hooks';"
+    "  import { useCloudAuth } from '@cinacoin/siwx/cloud-hooks';"
   );
 }

@@ -1,6 +1,6 @@
 # Backend Integration Tests
 
-End-to-end integration test suite for CinaConnect's 5 Cloudflare Workers services.
+End-to-end integration test suite for Cinacoin's 5 Cloudflare Workers services.
 
 ## Quick Start
 
@@ -102,15 +102,15 @@ The tests are configured in two places:
 
 ### Resolve Aliases
 
-The `@cinaconnect/*` packages are resolved to their source directories via Vite aliases:
+The `@cinacoin/*` packages are resolved to their source directories via Vite aliases:
 
 ```ts
 alias: {
-  '@cinaconnect/rpc-proxy': 'packages/rpc-proxy/src',
-  '@cinaconnect/keys-server': 'packages/keys-server/src',
-  '@cinaconnect/relay-server': 'packages/relay-server/src',
-  '@cinaconnect/notify-server': 'packages/notify-server/src',
-  '@cinaconnect/push-server': 'packages/push-server/src',
+  '@cinacoin/rpc-proxy': 'packages/rpc-proxy/src',
+  '@cinacoin/keys-server': 'packages/keys-server/src',
+  '@cinacoin/relay-server': 'packages/relay-server/src',
+  '@cinacoin/notify-server': 'packages/notify-server/src',
+  '@cinacoin/push-server': 'packages/push-server/src',
 }
 ```
 
@@ -137,7 +137,7 @@ All tests run locally without requiring actual Cloudflare Workers deployment or 
 ## Adding New Tests
 
 1. Create a new `.test.ts` file in `tests/backend-integration/`
-2. Import services using `@cinaconnect/*` aliases
+2. Import services using `@cinacoin/*` aliases
 3. Run `pnpm vitest run --project backend-integration` to verify
 
 ## Scripts

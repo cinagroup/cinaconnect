@@ -34,7 +34,7 @@ export interface AuthSession {
   expiresAt: string | null;
 }
 
-const STORAGE_KEY = 'cinaconnect_auth_session';
+const STORAGE_KEY = 'cinacoin_auth_session';
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 /**

@@ -1,5 +1,5 @@
 /**
- * Fixtures — Common test fixtures for CinaConnect testing.
+ * Fixtures — Common test fixtures for Cinacoin testing.
  *
  * Pre-built addresses, signatures, ABIs, events, and configuration objects
  * that cover the most common testing scenarios.

@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/ui-theme
+ * @cinacoin/ui-theme
  *
  * Theme tokens, framer-motion animations, and base components.
  */

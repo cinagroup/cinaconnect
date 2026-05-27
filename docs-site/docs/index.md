@@ -1,7 +1,7 @@
 ---
 layout: home
 hero:
-  name: CinaConnect
+  name: Cinacoin
   text: 自有品牌链上 UX 工具包
   tagline: Self-hosted Wallet Connection Toolkit — Fully independent from Reown/WalletConnect
   actions:
@@ -13,7 +13,7 @@ hero:
       link: /api/core-sdk
     - theme: alt
       text: GitHub →
-      link: https://github.com/cinagroup/cinaconnect
+      link: https://github.com/cinagroup/cinacoin
 features:
   - icon: 🔗
     title: 钱包连接

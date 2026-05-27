@@ -262,7 +262,7 @@ export async function sendPhoneOTP(
   });
 
   // Build and send SMS
-  const message = `Your CinaConnect verification code is: ${otp}\n\nThis code expires in ${Math.floor(ttlSeconds / 60)} minutes. Do not share this code with anyone.`;
+  const message = `Your Cinacoin verification code is: ${otp}\n\nThis code expires in ${Math.floor(ttlSeconds / 60)} minutes. Do not share this code with anyone.`;
 
   try {
     await smsProvider.send(params.phone, message);
@@ -532,7 +532,7 @@ function deriveAddressFromPhone(
   derivationKey?: string
 ): { address: string; publicKey: string } {
   const normalizedPhone = phone.trim().replace(/[\s\-()]/g, '');
-  const salt = derivationKey || 'cinaconnect-phone-v1';
+  const salt = derivationKey || 'cinacoin-phone-v1';
 
   const seed = createHash('sha256')
     .update(`${salt}:${normalizedPhone}`)

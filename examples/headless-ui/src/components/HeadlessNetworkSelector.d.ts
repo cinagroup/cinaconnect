@@ -1,4 +1,4 @@
-import type { HeadlessClient } from '@cinaconnect/config';
+import type { HeadlessClient } from '@cinacoin/config';
 interface NetworkOption {
     chainId: number;
     name: string;

@@ -1,7 +1,7 @@
 {
-  "name": "@cinaconnect/react-native",
+  "name": "@cinacoin/react-native",
   "version": "0.2.0",
-  "description": "React Native adapter for CinaConnect white-label UI toolkit",
+  "description": "React Native adapter for Cinacoin white-label UI toolkit",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -19,8 +19,8 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*",
-    "@cinaconnect/walletconnect-v2": "workspace:*",
+    "@cinacoin/core-sdk": "workspace:*",
+    "@cinacoin/walletconnect-v2": "workspace:*",
     "react": "^18.3.0",
     "react-native": "^0.76.0"
   },

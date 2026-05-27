@@ -4,11 +4,12 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 
-RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m' NC='\033[0m'
+RED='\033[0;31m' GREEN='\033[0;32m' YELLOW='\033[1;33m' CYAN='\033[0;36m' NC='\033[0m'
 
 log()  { echo -e "${GREEN}[✓]${NC} $*"; }
 warn() { echo -e "${YELLOW}[!]${NC} $*"; }
 err()  { echo -e "${RED}[✗]${NC} $*" >&2; }
+info() { echo -e "${CYAN}[i]${NC} $*"; }
 
 ENVIRONMENT="production"
 DRY_RUN=false
@@ -22,7 +23,7 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-info "Deploying cinaconnect-push-server ($ENVIRONMENT)"
+info "Deploying cinacoin-push-server ($ENVIRONMENT)"
 if [[ "$DRY_RUN" == true ]]; then
   warn "Dry run mode — no actual deployment"
   exit 0
@@ -42,4 +43,4 @@ else
   wrangler deploy
 fi
 
-log "cinaconnect-push-server deployed successfully!"
+log "cinacoin-push-server deployed successfully!"

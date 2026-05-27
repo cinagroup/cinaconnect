@@ -7,7 +7,7 @@
  * - useAtomicBatch: build and execute atomic batch transactions
  * - useCallsStatus: poll the status of async call batches
  *
- * All hooks require being used within `<CinaConnectProvider>`.
+ * All hooks require being used within `<CinacoinProvider>`.
  *
  * @see https://eips.ethereum.org/EIPS/eip-5792
  */
@@ -23,7 +23,7 @@ import type {
   GetCallsStatusResult,
   AtomicBatchConfig,
   AtomicBatchResult,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 import {
   walletGetCapabilities,
   walletSendCalls,
@@ -35,7 +35,7 @@ import {
   getChainCapabilities,
   getSupportedChains,
   filterByCapability,
-} from '@cinaconnect/core-sdk';
+} from '@cinacoin/core-sdk';
 
 /** Minimal EIP-1193 provider shape sufficient for EIP-5792 calls. */
 interface EIP1193Provider {
@@ -132,10 +132,12 @@ export function useWalletCapabilities(): UseWalletCapabilitiesReturn {
       setCapabilities(caps);
     } catch (err) {
       const e = err instanceof Error ? err : new Error(String(err));
-      setError(e);
-      // Method not supported — treat as empty capabilities
+      // Method not supported — treat as empty capabilities, no error
       if (e.message.includes('-32601')) {
+        setError(null);
         setCapabilities({});
+      } else {
+        setError(e);
       }
     } finally {
       setIsLoading(false);
@@ -550,7 +552,7 @@ function getFailedReceiptsHelper(result: GetCallsStatusResult | null) {
 }
 
 // ---------------------------------------------------------------------------
-// Internal: read EIP-5792 context from CinaConnectProvider
+// Internal: read EIP-5792 context from CinacoinProvider
 // ---------------------------------------------------------------------------
 
 function useEIP5792Context(): EIP5792Context {
@@ -558,7 +560,7 @@ function useEIP5792Context(): EIP5792Context {
   const getter = win.__ocx_eip5792_context as (() => EIP5792Context) | undefined;
   if (!getter) {
     throw new Error(
-      'useEIP5792Context requires <CinaConnectProvider> with EIP-5792 support. ' +
+      'useEIP5792Context requires <CinacoinProvider> with EIP-5792 support. ' +
       'Make sure you are rendering the provider.',
     );
   }
@@ -567,4 +569,4 @@ function useEIP5792Context(): EIP5792Context {
 
 // Call, WalletCapabilities, ChainCapabilities, SendCallsParams, SendCallsResult,
 // CallsStatus, GetCallsStatusResult, AtomicBatchConfig, AtomicBatchResult
-// are available directly from @cinaconnect/core-sdk.
+// are available directly from @cinacoin/core-sdk.

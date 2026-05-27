@@ -1,9 +1,9 @@
 {
-  "name": "@cinaconnect/codemod",
+  "name": "@cinacoin/codemod",
   "version": "0.2.0",
-  "description": "Codemods for migrating from Web3Modal/AppKit and WalletConnect v1 to CinaConnect",
+  "description": "Codemods for migrating from Web3Modal/AppKit and WalletConnect v1 to Cinacoin",
   "bin": {
-    "cinaconnect-codemod": "./dist/cli.js"
+    "cinacoin-codemod": "./dist/cli.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -17,7 +17,7 @@
     "clean": "rm -rf dist"
   },
   "keywords": [
-    "cinaconnect",
+    "cinacoin",
     "codemod",
     "migration",
     "web3modal",
@@ -39,5 +39,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   }
 }

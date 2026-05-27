@@ -1,17 +1,17 @@
-# @cinaconnect/deposit
+# @cinacoin/deposit
 
-Deposit with Exchange feature for CinaConnect.
+Deposit with Exchange feature for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/deposit
+npm install @cinacoin/deposit
 ```
 
 ## Usage
 
 ```ts
-import { DepositService, DepositModal } from '@cinaconnect/deposit';
+import { DepositService, DepositModal } from '@cinacoin/deposit';
 
 const depositUrl = await depositService.getDepositUrl({ exchange: 'binance', asset: 'USDT' });
 ```

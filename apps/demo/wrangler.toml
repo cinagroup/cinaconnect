@@ -1,8 +1,8 @@
-name = "cinaconnect-demo"
+name = "cinacoin-demo"
 compatibility_date = "2024-01-01"
 
 [build]
-command = "cd ../.. && pnpm install && pnpm run build --filter=@cinaconnect/core-sdk --filter=@cinaconnect/react && cd apps/demo && pnpm run build"
+command = "cd ../.. && pnpm install && pnpm run build --filter=@cinacoin/core-sdk --filter=@cinacoin/react && cd apps/demo && pnpm run build"
 output_directory = ".next"
 
 [vars]

@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/rpc-proxy",
+  "name": "@cinacoin/rpc-proxy",
   "version": "0.2.0",
-  "description": "RPC proxy server for CinaConnect — chain routing, caching, rate limiting",
+  "description": "RPC proxy server for Cinacoin — chain routing, caching, rate limiting",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -31,5 +31,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

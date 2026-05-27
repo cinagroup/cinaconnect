@@ -2,15 +2,15 @@
  * Starknet Chain Adapter — provides Starknet-specific wallet connection and transaction operations.
  *
  * Supports Argent X and Braavos wallets with native Starknet account abstraction.
- * Implements the ChainAdapter interface from @cinaconnect/core-sdk.
+ * Implements the ChainAdapter interface from @cinacoin/core-sdk.
  */
-import type { ChainAdapter } from '@cinaconnect/core-sdk';
-import type { Connector } from '@cinaconnect/core-sdk';
-import type { Chain } from '@cinaconnect/core-sdk';
+import type { ChainAdapter } from '@cinacoin/core-sdk';
+import type { Connector } from '@cinacoin/core-sdk';
+import type { Chain } from '@cinacoin/core-sdk';
 import type { StarknetWalletConnector } from './types.js';
 import { type StarknetCall } from './types.js';
 /**
- * Starknet chain adapter implementing ChainAdapter from @cinaconnect/core-sdk.
+ * Starknet chain adapter implementing ChainAdapter from @cinacoin/core-sdk.
  *
  * Provides a unified interface for Starknet wallet operations:
  * - Wallet connection (Argent X, Braavos)

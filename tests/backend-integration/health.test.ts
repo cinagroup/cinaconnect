@@ -10,11 +10,11 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import http from 'node:http';
 
 // ── Service classes ──────────────────────────────────────────
-import { RpcProxy } from '@cinaconnect/rpc-proxy';
-import { KeyManager } from '@cinaconnect/keys-server';
-import { RelayServer } from '@cinaconnect/relay-server';
-import { NotifyServer } from '@cinaconnect/notify-server';
-import { PushServer } from '@cinaconnect/push-server';
+import { RpcProxy } from '@cinacoin/rpc-proxy';
+import { KeyManager } from '@cinacoin/keys-server';
+import { RelayServer } from '@cinacoin/relay-server';
+import { NotifyServer } from '@cinacoin/notify-server';
+import { PushServer } from '@cinacoin/push-server';
 
 /** Helper: GET a URL and return parsed JSON. */
 async function getJson(url: string): Promise<unknown> {

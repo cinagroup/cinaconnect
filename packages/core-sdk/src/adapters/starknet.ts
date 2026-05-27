@@ -210,7 +210,7 @@ export function formatStarknetBalance(raw: string | bigint | number, decimals: n
  */
 export function parseStarknetAmount(amount: string, decimals: number = STRK_DECIMALS): bigint {
   const parts = amount.split('.');
-  const intPart = BigInt(parts[0]);
+  const intPart = BigInt(parts[0] || '0');
   let fracPart = 0n;
   if (parts.length > 1) {
     const frac = parts[1].padEnd(decimals, '0').slice(0, decimals);
@@ -749,7 +749,7 @@ export class StarknetChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }
@@ -1061,7 +1061,7 @@ export class StarknetChainAdapter {
           {
             message: message,
             domain: {
-              name: 'CinaConnect',
+              name: 'Cinacoin',
               version: '1',
               chainId: await this.getChainId(),
             },

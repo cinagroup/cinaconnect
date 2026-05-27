@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-hedera
+# @cinacoin/adapter-hedera
 
-Hedera Hashgraph chain adapter for CinaConnect — Blade Wallet, HashPack, Kantara Wallet.
+Hedera Hashgraph chain adapter for Cinacoin — Blade Wallet, HashPack, Kantara Wallet.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-hedera
+npm install @cinacoin/adapter-hedera
 ```
 
 ## Usage
 
 ```ts
-import { HederaAdapter } from '@cinaconnect/adapter-hedera';
+import { HederaAdapter } from '@cinacoin/adapter-hedera';
 
 const adapter = new HederaAdapter();
 await adapter.connect({ connectorId: 'hashpack' });

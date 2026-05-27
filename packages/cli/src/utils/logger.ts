@@ -1,5 +1,5 @@
 // ============================================================
-// Colored logger with spinner for @cinaconnect/cli
+// Colored logger with spinner for @cinacoin/cli
 // ============================================================
 
 // ANSI color codes (no external dependency needed for basic colors)

@@ -7,11 +7,11 @@
  * Outputs:
  *   {
  *     "latest": {
- *       "url": "/v1/cinaconnect.js",
+ *       "url": "/v1/cinacoin.js",
  *       "sri": "sha384-..."
  *     },
  *     "pinned": {
- *       "url": "/v0.2.0/cinaconnect.js",
+ *       "url": "/v0.2.0/cinacoin.js",
  *       "sri": "sha384-..."
  *     }
  *   }
@@ -49,8 +49,8 @@ function main() {
 
   // Copy files to versioned paths
   const files = [
-    { src: cdnJs, name: "cinaconnect.js" },
-    { src: cdnMjs, name: "cinaconnect.mjs" },
+    { src: cdnJs, name: "cinacoin.js" },
+    { src: cdnMjs, name: "cinacoin.mjs" },
   ];
 
   const manifest = {};
@@ -122,15 +122,15 @@ function main() {
   // Generate _redirects for latest symlink
   const redirectsContent = `
 # Latest version redirects
-/v1/cinaconnect.js  /v${CDN_VERSION}/cinaconnect.js 200
-/v1/cinaconnect.mjs  /v${CDN_VERSION}/cinaconnect.mjs 200
+/v1/cinacoin.js  /v${CDN_VERSION}/cinacoin.js 200
+/v1/cinacoin.mjs  /v${CDN_VERSION}/cinacoin.mjs 200
 `.trim();
 
   writeFileSync(join(OUTPUT_DIR, "_redirects"), redirectsContent);
 
   console.log("✅ Versioned URLs generated:");
-  console.log(`   Latest: /v1/cinaconnect.js`);
-  console.log(`   Pinned: /v${CDN_VERSION}/cinaconnect.js`);
+  console.log(`   Latest: /v1/cinacoin.js`);
+  console.log(`   Pinned: /v${CDN_VERSION}/cinacoin.js`);
   console.log(`   Output: ${OUTPUT_DIR}/`);
   console.log(`   Manifest: ${manifestPath}`);
 }

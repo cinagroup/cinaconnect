@@ -1,20 +1,20 @@
 #if UNITY_EDITOR
 using NUnit.Framework;
 using UnityEditor;
-using CinaConnect.Editor;
-using CinaConnect;
+using Cinacoin.Editor;
+using Cinacoin;
 
-namespace CinaConnect.Tests.Runtime
+namespace Cinacoin.Tests.Runtime
 {
     /// <summary>
-    /// Tests for CinaConnect Editor configuration.
+    /// Tests for Cinacoin Editor configuration.
     /// </summary>
-    public class CinaConnectEditorTests
+    public class CinacoinEditorTests
     {
         [Test]
-        public void CinaConnectVersion_ReturnsExpectedVersion()
+        public void CinacoinVersion_ReturnsExpectedVersion()
         {
-            Assert.AreEqual("0.1.0", CinaConnectVersion.Value);
+            Assert.AreEqual("0.1.0", CinacoinVersion.Value);
         }
 
         [Test]

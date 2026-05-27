@@ -103,7 +103,7 @@ jobs:
             DRY_RUN_FLAG="--dry-run --outdir=/tmp/rpc-proxy-build"
           fi
 
-          echo "Deploying cinaconnect-rpc-proxy..."
+          echo "Deploying cinacoin-rpc-proxy..."
           wrangler deploy $ENV_FLAG $DRY_RUN_FLAG
 
       - name: Post-deploy health check
@@ -111,7 +111,7 @@ jobs:
           echo "Waiting for worker to stabilize..."
           sleep 5
 
-          WORKER_URL="https://cinaconnect-rpc-proxy.workers.dev"
+          WORKER_URL="https://cinacoin-rpc-proxy.workers.dev"
 
           echo "Running health check against $WORKER_URL/health..."
           HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 15 "$WORKER_URL/health" || echo "000")
@@ -161,7 +161,7 @@ jobs:
             DRY_RUN_FLAG="--dry-run --outdir=/tmp/keys-server-build"
           fi
 
-          echo "Deploying cinaconnect-keys-server..."
+          echo "Deploying cinacoin-keys-server..."
           wrangler deploy $ENV_FLAG $DRY_RUN_FLAG
 
       - name: Post-deploy health check
@@ -169,7 +169,7 @@ jobs:
           echo "Waiting for worker to stabilize..."
           sleep 5
 
-          WORKER_URL="https://cinaconnect-keys-server.workers.dev"
+          WORKER_URL="https://cinacoin-keys-server.workers.dev"
 
           echo "Running health check against $WORKER_URL/health..."
           HTTP_CODE=$(curl -sf -o /dev/null -w "%{http_code}" --connect-timeout 10 --max-time 15 "$WORKER_URL/health" || echo "000")

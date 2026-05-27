@@ -18,7 +18,7 @@ const DEFAULT_POLLING_INTERVAL_MS = 5 * 60 * 1000;
 function resolveConfigUrl(projectId) {
     const baseUrl = typeof process !== "undefined" && process.env?.CINA_CONNECT_CONFIG_BASE_URL
         ? process.env.CINA_CONNECT_CONFIG_BASE_URL
-        : "https://config.cinaconnect.io";
+        : "https://config.cinacoin.io";
     return `${baseUrl}/v1/projects/${projectId}/features`;
 }
 /**

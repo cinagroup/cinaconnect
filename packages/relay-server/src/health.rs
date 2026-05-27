@@ -150,13 +150,32 @@ async fn check_redis(redis_url: &str) -> DependencyHealth {
 
 async fn check_nats(nats_url: &str) -> DependencyHealth {
     let start = std::time::Instant::now();
-    let _ = nats_url;
-    let latency = start.elapsed().as_secs_f64() * 1000.0;
-
-    DependencyHealth {
-        status: "healthy".to_string(),
-        latency_ms: Some(latency),
-        details: None,
+    match async_nats::ConnectOptions::new()
+        .connect(nats_url)
+        .await
+    {
+        Ok(client) => {
+            let latency = start.elapsed().as_secs_f64() * 1000.0;
+            // Verify the connection is actually usable
+            if client.is_connected() {
+                DependencyHealth {
+                    status: "healthy".to_string(),
+                    latency_ms: Some(latency),
+                    details: None,
+                }
+            } else {
+                DependencyHealth {
+                    status: "degraded".to_string(),
+                    latency_ms: Some(latency),
+                    details: Some("NATS connected but not ready".to_string()),
+                }
+            }
+        }
+        Err(e) => DependencyHealth {
+            status: "unhealthy".to_string(),
+            latency_ms: None,
+            details: Some(format!("NATS connection failed: {}", e)),
+        },
     }
 }
 

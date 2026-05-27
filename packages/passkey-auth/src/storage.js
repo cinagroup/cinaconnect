@@ -26,7 +26,7 @@ export class MemoryStorage {
  * localStorage-based passkey storage for browser environments.
  */
 export class BrowserStorage {
-    constructor(prefix = 'cinaconnect:passkey:') {
+    constructor(prefix = 'cinacoin:passkey:') {
         this.prefix = prefix;
     }
     async save(credential) {

@@ -1,11 +1,11 @@
 # WalletConnect V2
 
-> `@cinaconnect/walletconnect-v2` — WalletConnect V2 protocol integration for CinaConnect.
+> `@cinacoin/walletconnect-v2` — WalletConnect V2 protocol integration for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/walletconnect-v2
+npm install @cinacoin/walletconnect-v2
 ```
 
 ## Overview

@@ -8,7 +8,7 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import http from 'node:http';
 import WebSocket from 'ws';
-import { RelayServer, type RelayMessage } from '@cinaconnect/relay-server';
+import { RelayServer, type RelayMessage } from '@cinacoin/relay-server';
 
 const TEST_PORT = 18082;
 

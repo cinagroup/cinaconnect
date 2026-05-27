@@ -1,4 +1,4 @@
-# CinaConnect Notify Server
+# Cinacoin Notify Server
 
 A notification push system for dApp notifications, wallet alerts, and transaction status updates.
 

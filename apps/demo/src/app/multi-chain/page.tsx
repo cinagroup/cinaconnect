@@ -270,7 +270,7 @@ function CrossChainFlow() {
   const steps = [
     { label: 'Initiate', detail: 'User selects chain A', icon: '🔗' },
     { label: 'Lock', detail: 'Assets locked on source', icon: '🔒' },
-    { label: 'Relay', detail: 'CinaConnect Relay', icon: '⚡' },
+    { label: 'Relay', detail: 'CinaCoin Relay', icon: '⚡' },
     { label: 'Mint/Release', detail: 'Assets on chain B', icon: '🔓' },
     { label: 'Complete', detail: 'Cross-chain transfer', icon: '✅' },
   ];
@@ -285,7 +285,7 @@ function CrossChainFlow() {
   return (
     <div className="bg-gray-800/40 backdrop-blur rounded-2xl border border-gray-700/60 p-8 overflow-hidden">
       <h2 className="text-xl font-semibold text-white mb-2">Cross-Chain Flow</h2>
-      <p className="text-sm text-gray-400 mb-8">Atomic cross-chain transfers powered by CinaConnect Relay protocol</p>
+      <p className="text-sm text-gray-400 mb-8">Atomic cross-chain transfers powered by CinaCoin Relay protocol</p>
 
       <div className="relative">
         <div className="absolute top-10 left-10 right-10 h-0.5 bg-gray-700">
@@ -326,12 +326,12 @@ function CrossChainFlow() {
 function UnifiedApiExample() {
   const [copied, setCopied] = useState(false);
 
-  const code = `// CinaConnect — Unified Multi-Chain API
+  const code = `// CinaCoin — Unified Multi-Chain API
 // One interface. Every chain. Zero complexity.
 
-import { CinaConnect } from '@cinaconnect/sdk';
+import { CinaCoin } from '@cinacoin/sdk';
 
-const client = new CinaConnect();
+const client = new CinaCoin();
 
 // 🔗 Connect to ANY chain with the same API
 const eth = await client.connect('ethereum', 'MetaMask');
@@ -682,7 +682,7 @@ export default function MultiChainPage() {
         <div className="text-center py-4">
           <p className="text-sm text-gray-600">
             Powered by{' '}
-            <span className="text-gray-400 font-semibold">CinaConnect SDK</span>
+            <span className="text-gray-400 font-semibold">CinaCoin SDK</span>
             {' '}— one interface, every chain.
           </p>
         </div>

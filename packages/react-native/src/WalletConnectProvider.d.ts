@@ -1,18 +1,18 @@
 /**
  * WalletConnectProvider — Real WalletConnect v2 session management for React Native.
  *
- * Wraps @walletconnect/react-native-dapp (or the cinaconnect core wrapper) to provide:
+ * Wraps @walletconnect/react-native-dapp (or the cinacoin core wrapper) to provide:
  * - Real pairing URI creation and QR display
  * - Deep-link wallet connection flow (MetaMask, Rainbow, Trust, Coinbase)
  * - Session lifecycle management (connect / disconnect / events)
  * - Balance fetching via on-chain RPC
  * - Transaction signing via WC v2 personal_sign / eth_sendTransaction
  *
- * This provider bridges the low-level WC v2 SDK with CinaConnect React Native components.
+ * This provider bridges the low-level WC v2 SDK with Cinacoin React Native components.
  */
 import { type ReactNode } from 'react';
-import type { Session } from '@cinaconnect/walletconnect-v2';
-import type { AppMetadata } from '@cinaconnect/core-sdk';
+import type { Session } from '@cinacoin/walletconnect-v2';
+import type { AppMetadata } from '@cinacoin/core-sdk';
 export interface WalletConnectConfig {
     projectId: string;
     relayUrl?: string;

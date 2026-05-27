@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/kyc — KYC/AML compliance screening for transactions and payments.
+ * @cinacoin/kyc — KYC/AML compliance screening for transactions and payments.
  *
  * @packageDocumentation
  */

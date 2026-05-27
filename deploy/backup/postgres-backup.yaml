@@ -1,4 +1,4 @@
-# CinaConnect — PostgreSQL Backup CronJob
+# Cinacoin — PostgreSQL Backup CronJob
 # Automated daily backups with 30-day retention
 ---
 apiVersion: batch/v1
@@ -7,7 +7,7 @@ metadata:
   name: postgres-backup
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "cinaconnect.labels" . | nindent 4 }}
+    {{- include "cinacoin.labels" . | nindent 4 }}
     component: backup
 spec:
   schedule: "0 2 * * *"  # Daily at 2:00 AM UTC
@@ -21,7 +21,7 @@ spec:
       template:
         metadata:
           labels:
-            {{- include "cinaconnect.labels" . | nindent 12 }}
+            {{- include "cinacoin.labels" . | nindent 12 }}
             component: postgres-backup
         spec:
           restartPolicy: Never
@@ -86,7 +86,7 @@ spec:
                       name: postgres-credentials
                       key: password
                 - name: POSTGRES_DB
-                  value: "cinaconnect"
+                  value: "cinacoin"
                 - name: BACKUP_BUCKET
                   valueFrom:
                     configMapKeyRef:
@@ -114,6 +114,6 @@ metadata:
   name: backup-sa
   namespace: {{ .Release.Namespace }}
   annotations:
-    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/cinaconnect-backup-role
+    eks.amazonaws.com/role-arn: arn:aws:iam::ACCOUNT_ID:role/cinacoin-backup-role
   labels:
-    {{- include "cinaconnect.labels" . | nindent 4 }}
+    {{- include "cinacoin.labels" . | nindent 4 }}

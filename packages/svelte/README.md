@@ -1,36 +1,36 @@
-# @cinaconnect/svelte
+# @cinacoin/svelte
 
-Svelte support for CinaConnect wallet connection.
+Svelte support for Cinacoin wallet connection.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/svelte
+npm install @cinacoin/svelte
 ```
 
 ## Usage
 
 ```svelte
 <script>
-  import { CinaConnectProvider, ConnectButton, useCinaConnect } from '@cinaconnect/svelte';
-  const { address, isConnected } = useCinaConnect();
+  import { CinacoinProvider, ConnectButton, useCinacoin } from '@cinacoin/svelte';
+  const { address, isConnected } = useCinacoin();
 </script>
 
-<CinaConnectProvider projectId="YOUR_PROJECT_ID">
+<CinacoinProvider projectId="YOUR_PROJECT_ID">
   <ConnectButton />
   {#if $isConnected}
     <p>Connected: {$address}</p>
   {/if}
-</CinaConnectProvider>
+</CinacoinProvider>
 ```
 
 ## API Reference
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `CinaConnectProvider` | component | Provider wrapper |
+| `CinacoinProvider` | component | Provider wrapper |
 | `ConnectButton` | component | Connect wallet button |
 | `AccountButton` | component | Account display |
-| `useCinaConnect` | function | Svelte store getter |
+| `useCinacoin` | function | Svelte store getter |
 | `cinaConnectStore` | store | Svelte writable store |
-| `CinaConnectOptions` | type | Options type |
+| `CinacoinOptions` | type | Options type |

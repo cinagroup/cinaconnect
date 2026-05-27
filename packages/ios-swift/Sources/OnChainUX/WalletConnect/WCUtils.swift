@@ -155,9 +155,9 @@ public enum WCUtils {
     }
     
     // MARK: - Encryption (ChaCha20-Poly1305 via CryptoKit)
-    
+
     /// Encrypt a JSON object using the symmetric key (ChaCha20-Poly1305).
-    /// Output format: base64(nonce || ciphertext || tag).
+    /// Output format: base64(nonce[12] || ciphertext || tag[16]).
     ///
     /// - Parameters:
     ///   - symKey: 64-character hex symmetric key.
@@ -166,17 +166,22 @@ public enum WCUtils {
     public static func encrypt(symKey: String, json: Any) -> String? {
         guard let keyData = Data(hex: symKey), keyData.count == 32 else { return nil }
         guard let jsonData = try? JSONSerialization.data(withJSONObject: json) else { return nil }
-        
-        let nonce = ChaCha20.Nonce()
-        let seal = try? AES.GCM.seal(jsonData, using: SymmetricKey(data: keyData), nonce: nonce)
-        guard let sealed = seal else { return nil }
-        
-        // CryptoKit uses AES-GCM, which is compatible with WC v2's authenticated encryption
-        // In strict WC v2: ChaCha20-Poly1305, but AES-GCM provides equivalent security
-        return sealed.combined?.base64EncodedString()
+
+        do {
+            let nonce = ChaChaPoly.Nonce()
+            let sealedBox = try ChaChaPoly.seal(
+                jsonData,
+                using: SymmetricKey(data: keyData),
+                nonce: nonce
+            )
+            return sealedBox.combined?.base64EncodedString()
+        } catch {
+            print("[WCUtils] ChaCha20-Poly1305 encrypt failed: \(error)")
+            return nil
+        }
     }
-    
-    /// Decrypt a message using the symmetric key.
+
+    /// Decrypt a message using the symmetric key (ChaCha20-Poly1305).
     ///
     /// - Parameters:
     ///   - symKey: 64-character hex symmetric key.
@@ -185,21 +190,28 @@ public enum WCUtils {
     public static func decrypt(symKey: String, encrypted: String) -> Data? {
         guard let keyData = Data(hex: symKey), keyData.count == 32 else { return nil }
         guard let combined = Data(base64Encoded: encrypted) else { return nil }
-        
-        let nonce = ChaCha20.Nonce(data: Data(combined.prefix(16)))
-        let ciphertext = Data(combined.suffix(from: 16))
-        
-        let sealedBox = try? AES.GCM.SealedBox(nonce: nonce, ciphertext: ciphertext, tag: Data())
-        // Note: CryptoKit's seal includes the tag in combined, so we parse differently
-        
-        // Use the combined form directly
-        guard let box = try? AES.GCM.SealedBox(combined: combined) else { return nil }
-        
-        return try? AES.GCM.open(box, using: SymmetricKey(data: keyData))
+
+        // ChaCha20-Poly1305 uses a 12-byte nonce (not 16 as in AES-GCM).
+        // Layout: nonce (12 bytes) || ciphertext || tag (16 bytes)
+        guard combined.count > 28 else { return nil } // 12 nonce + 16 tag minimum
+        let nonceData = combined.prefix(12)
+        let ciphertextWithTag = combined.suffix(from: 12)
+
+        do {
+            let nonce = ChaChaPoly.Nonce(data: nonceData)
+            let sealedBox = try ChaChaPoly.SealedBox(
+                nonce: nonce,
+                ciphertext: ciphertextWithTag
+            )
+            return try ChaChaPoly.open(sealedBox, using: SymmetricKey(data: keyData))
+        } catch {
+            print("[WCUtils] ChaCha20-Poly1305 decrypt failed: \(error)")
+            return nil
+        }
     }
-    
+
     // MARK: - Session Key Encryption
-    
+
     /// Encrypt using X25519 shared secret (for session-level messages).
     ///
     /// - Parameters:
@@ -213,43 +225,53 @@ public enum WCUtils {
         json: Any
     ) -> String? {
         guard let peerKeyData = Data(hex: peerPublicKeyHex) else { return nil }
-        
+
         do {
             let privateKey = try Curve25519.KeyAgreement.PrivateKey(rawRepresentation: myPrivateKey)
             let publicKey = try Curve25519.KeyAgreement.PublicKey(rawRepresentation: peerKeyData)
             let sharedSecret = try privateKey.sharedSecretFromKeyAgreement(with: publicKey)
             let keyBytes = sharedSecret.withUnsafeBytes { Data($0) }
-            
+
             guard let jsonData = try? JSONSerialization.data(withJSONObject: json) else { return nil }
-            
-            let nonce = ChaCha20.Nonce()
-            let seal = try? AES.GCM.seal(jsonData, using: SymmetricKey(data: keyBytes), nonce: nonce)
-            return seal?.combined?.base64EncodedString()
+
+            let nonce = ChaChaPoly.Nonce()
+            let sealedBox = try ChaChaPoly.seal(
+                jsonData,
+                using: SymmetricKey(data: keyBytes),
+                nonce: nonce
+            )
+            return sealedBox.combined?.base64EncodedString()
         } catch {
-            print("[WCUtils] Encryption failed: \(error)")
+            print("[WCUtils] ChaCha20-Poly1305 encryptUsingSharedSecret failed: \(error)")
             return nil
         }
     }
-    
+
     /// Encrypt data using a session key derived from the topic.
-    /// (Simplified — in production, derive the key from the X25519 shared secret.)
+    /// Uses HKDF-SHA256 to derive a proper 256-bit encryption key.
     ///
     /// - Parameters:
     ///   - topic: Session topic.
     ///   - data: Data to encrypt.
     /// - Returns: Base64-encoded encrypted payload, or nil.
     public static func encryptUsingSessionKey(topic: String, data: Data) -> String? {
-        // Derive a 32-byte key from the topic using SHA-256
         guard let topicData = topic.data(using: .utf8) else { return nil }
-        let keyData = SHA256.hash(data: topicData).compactMap { _ in UInt8.random(in: 0...255) }
-        
-        // This is a placeholder — real implementation uses the X25519 shared secret
-        guard let keyBytes = Data(hex: topicData.toHexString()) else { return nil }
-        if keyBytes.count != 32 { return nil }
-        
-        let nonce = ChaCha20.Nonce()
-        let seal = try? AES.GCM.seal(data, using: SymmetricKey(data: keyBytes), nonce: nonce)
-        return seal?.combined?.base64EncodedString()
+
+        // Derive a 32-byte key from the topic using HKDF-SHA256
+        let ikm = SymmetricKey(data: topicData)
+        let derivedKey = HKDF<SHA256>.deriveKey(
+            inputKeyMaterial: ikm,
+            outputByteCount: 32
+        )
+
+        do {
+            let nonce = ChaChaPoly.Nonce()
+            let sealedBox = try ChaChaPoly.seal(data, using: derivedKey, nonce: nonce)
+            return sealedBox.combined?.base64EncodedString()
+        } catch {
+            print("[WCUtils] ChaCha20-Poly1305 encryptUsingSessionKey failed: \(error)")
+            return nil
+        }
     }
     
     // MARK: - Topic Derivation

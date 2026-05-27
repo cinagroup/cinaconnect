@@ -74,7 +74,7 @@ class MockSIWEConnector extends Connector {
   }
 }
 
-// ── SIWE helpers (inline, mirroring @cinaconnect/siwe) ──────────────
+// ── SIWE helpers (inline, mirroring @cinacoin/siwe) ──────────────
 
 function generateNonce(): string {
   return Array.from(crypto.getRandomValues(new Uint8Array(16)),

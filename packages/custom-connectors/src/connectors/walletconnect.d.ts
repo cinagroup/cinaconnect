@@ -18,7 +18,7 @@ interface WCConnectorOptions {
     optionalMethods?: string[];
 }
 /**
- * Full WalletConnect v2 connector using @cinaconnect/core-sdk SignClient.
+ * Full WalletConnect v2 connector using @cinacoin/core-sdk SignClient.
  *
  * Supports pairing via QR code URI, deep links, and direct session management.
  */

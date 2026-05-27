@@ -2,19 +2,19 @@
  * Hook: useWalletButtons
  *
  * Provides pre-configured wallet button data for 40+ wallets and
- * connection-state helpers backed by @cinaconnect/core-sdk.
+ * connection-state helpers backed by @cinacoin/core-sdk.
  */
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { getWalletById } from '@cinaconnect/explorer';
+import { getWalletById } from '@cinacoin/explorer';
 // ---------------------------------------------------------------------------
-// Wallet icon source — uses @cinaconnect/explorer registry icons by default.
+// Wallet icon source — uses @cinacoin/explorer registry icons by default.
 // Fallback CDN icons are provided for wallets not yet in the registry.
 // ---------------------------------------------------------------------------
-const ICON_CDN = 'https://assets.cinaconnect.dev/wallets';
+const ICON_CDN = 'https://assets.cinacoin.dev/wallets';
 /**
  * Master list of supported wallets with icon and brand-color overrides.
  *
- * When a wallet is registered in @cinaconnect/explorer its metadata
+ * When a wallet is registered in @cinacoin/explorer its metadata
  * (name, icon) takes precedence. The entries below serve two purposes:
  *
  * 1. Provide a fallback icon URL when the explorer doesn't have the wallet yet.

@@ -1,10 +1,10 @@
-# AGENTS.md — CinaConnect AI Agent Instructions
+# AGENTS.md — Cinacoin AI Agent Instructions
 
-This file contains instructions for AI agents working on the CinaConnect project.
+This file contains instructions for AI agents working on the Cinacoin project.
 
 ## Project Overview
 
-CinaConnect is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It provides:
+Cinacoin is a self-hosted wallet connection toolkit — a complete replacement for Reown/WalletConnect infrastructure. It provides:
 
 - **Core SDK** (`packages/core-sdk/`) — TypeScript client library for WalletConnect-compatible wallet connections
 - **Relay Server** (`packages/relay-server/`) — Rust WebSocket relay with E2E encryption

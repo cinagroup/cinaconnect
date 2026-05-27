@@ -1,11 +1,11 @@
-# @cinaconnect/gas-estimator
+# @cinacoin/gas-estimator
 
 Gas estimation for EVM (EIP-1559 + legacy) and Solana compute budget transactions. Includes caching, fee history analysis, and price prediction.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/gas-estimator
+npm install @cinacoin/gas-estimator
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/gas-estimator
 ### EVM Gas Estimation
 
 ```ts
-import { GasEstimator } from '@cinaconnect/gas-estimator';
+import { GasEstimator } from '@cinacoin/gas-estimator';
 
 const estimator = new GasEstimator();
 

@@ -1,11 +1,11 @@
 /**
- * @cinaconnect/dotnet
- * TypeScript type definitions matching the CinaConnect .NET client API surface.
+ * @cinacoin/dotnet
+ * TypeScript type definitions matching the Cinacoin .NET client API surface.
  *
  * Mirrors the full C# API from:
- *   - CinaConnectClient
- *   - CinaConnect.Models.* (17 model types)
- *   - CinaConnect.Services.* (WalletService, RelayClient, CryptoUtils)
+ *   - CinacoinClient
+ *   - Cinacoin.Models.* (17 model types)
+ *   - Cinacoin.Services.* (WalletService, RelayClient, CryptoUtils)
  */
 
 // ═══════════════════════════════════════════════════════════
@@ -14,7 +14,7 @@
 
 /**
  * Supported blockchain network namespaces (CAIP-2 format).
- * Matches CinaConnect.Models.ChainNamespace
+ * Matches Cinacoin.Models.ChainNamespace
  */
 export enum ChainNamespace {
   Eip155 = "Eip155",
@@ -32,7 +32,7 @@ export enum ChainNamespace {
 
 /**
  * Represents a blockchain account.
- * Matches CinaConnect.Models.Account
+ * Matches Cinacoin.Models.Account
  */
 export interface Account {
   /** The wallet address. */
@@ -47,7 +47,7 @@ export interface Account {
 
 /**
  * Application metadata for wallet pairing.
- * Matches CinaConnect.Models.AppMetadata
+ * Matches Cinacoin.Models.AppMetadata
  */
 export interface AppMetadata {
   /** Application name. */
@@ -62,7 +62,7 @@ export interface AppMetadata {
 
 /**
  * Native currency metadata for a chain.
- * Matches CinaConnect.Models.NativeCurrency
+ * Matches Cinacoin.Models.NativeCurrency
  */
 export interface NativeCurrency {
   /** Currency name (e.g., "Ether"). */
@@ -75,7 +75,7 @@ export interface NativeCurrency {
 
 /**
  * Full chain definition with metadata.
- * Matches CinaConnect.Models.Chain
+ * Matches Cinacoin.Models.Chain
  */
 export interface Chain {
   /** Unique chain ID. */
@@ -94,7 +94,7 @@ export interface Chain {
 
 /**
  * Chain reference in CAIP-2 format (namespace:reference).
- * Matches CinaConnect.Models.ChainReference
+ * Matches Cinacoin.Models.ChainReference
  */
 export interface ChainReference {
   /** Chain namespace (e.g., 'eip155'). */
@@ -105,7 +105,7 @@ export interface ChainReference {
 
 /**
  * Represents a blockchain network.
- * Matches CinaConnect.Models.Network
+ * Matches Cinacoin.Models.Network
  */
 export interface Network {
   /** Unique network identifier. */
@@ -126,7 +126,7 @@ export interface Network {
 
 /**
  * Pairing data structure for wallet connection.
- * Matches CinaConnect.Models.PairingData
+ * Matches Cinacoin.Models.PairingData
  */
 export interface PairingData {
   /** Pairing topic. */
@@ -143,7 +143,7 @@ export interface PairingData {
 
 /**
  * Proposer metadata within a session proposal.
- * Matches CinaConnect.Models.ProposerInfo
+ * Matches Cinacoin.Models.ProposerInfo
  */
 export interface ProposerInfo {
   /** Proposer's public key. */
@@ -154,7 +154,7 @@ export interface ProposerInfo {
 
 /**
  * Relayer protocol specification for session proposals.
- * Matches CinaConnect.Models.RelayInfo
+ * Matches Cinacoin.Models.RelayInfo
  */
 export interface RelayInfo {
   /** Protocol name (e.g., "irn"). */
@@ -165,7 +165,7 @@ export interface RelayInfo {
 
 /**
  * Required namespace specification for session proposals.
- * Matches CinaConnect.Models.RequiredNamespace
+ * Matches Cinacoin.Models.RequiredNamespace
  */
 export interface RequiredNamespace {
   /** Required chains in CAIP-2 format. */
@@ -178,7 +178,7 @@ export interface RequiredNamespace {
 
 /**
  * Session proposal data from a wallet connection attempt.
- * Matches CinaConnect.Models.SessionProposal
+ * Matches Cinacoin.Models.SessionProposal
  */
 export interface SessionProposal {
   /** Unique proposal ID. */
@@ -195,7 +195,7 @@ export interface SessionProposal {
 
 /**
  * Result of a wallet session creation.
- * Matches CinaConnect.Models.SessionResult
+ * Matches Cinacoin.Models.SessionResult
  */
 export interface SessionResult {
   /** Session identifier. */
@@ -206,7 +206,7 @@ export interface SessionResult {
 
 /**
  * Connection parameters for establishing a wallet connection.
- * Matches CinaConnect.Models.ConnectParams
+ * Matches Cinacoin.Models.ConnectParams
  */
 export interface ConnectParams {
   /** Optional topic for an existing session. */
@@ -223,7 +223,7 @@ export interface ConnectParams {
 
 /**
  * Result of a successful wallet connection.
- * Matches CinaConnect.Models.ConnectionResult
+ * Matches Cinacoin.Models.ConnectionResult
  */
 export interface ConnectionResult {
   /** Session ID for the established connection. */
@@ -238,7 +238,7 @@ export interface ConnectionResult {
 
 /**
  * Represents a blockchain transaction.
- * Matches CinaConnect.Models.Transaction
+ * Matches Cinacoin.Models.Transaction
  */
 export interface Transaction {
   /** Transaction hash. */
@@ -267,7 +267,7 @@ export interface Transaction {
 
 /**
  * Transaction request to be signed by a connected wallet.
- * Matches CinaConnect.Models.TransactionRequest
+ * Matches Cinacoin.Models.TransactionRequest
  */
 export interface TransactionRequest {
   /** From address. */
@@ -314,10 +314,10 @@ export interface RelayEnvelope<T = unknown> {
 // ═══════════════════════════════════════════════════════════
 
 /**
- * Interface for the main CinaConnect client.
- * Mirrors CinaConnect.CinaConnectClient
+ * Interface for the main Cinacoin client.
+ * Mirrors Cinacoin.CinacoinClient
  */
-export interface ICinaConnectClient {
+export interface ICinacoinClient {
   /**
    * Gets account information for the connected wallet.
    * @param walletId - Wallet connector identifier (e.g., "metamask", "walletconnect", "coinbase").
@@ -420,7 +420,7 @@ export interface ICinaConnectClient {
 
 /**
  * Interface for the WalletService.
- * Mirrors CinaConnect.Services.WalletService
+ * Mirrors Cinacoin.Services.WalletService
  */
 export interface IWalletService {
   /**
@@ -525,7 +525,7 @@ export interface IWalletService {
 
 /**
  * Interface for the RelayClient.
- * Mirrors CinaConnect.Services.RelayClient
+ * Mirrors Cinacoin.Services.RelayClient
  */
 export interface IRelayClient {
   /** Whether the relay client has an active connection. */
@@ -582,7 +582,7 @@ export interface IRelayClient {
 
 /**
  * Interface for CryptoUtils static helpers.
- * Mirrors CinaConnect.Services.CryptoUtils
+ * Mirrors Cinacoin.Services.CryptoUtils
  */
 export interface ICryptoUtils {
   /**
@@ -673,14 +673,14 @@ export interface ICryptoUtils {
 // ═══════════════════════════════════════════════════════════
 
 /**
- * Stub implementation of ICinaConnectClient.
+ * Stub implementation of ICinacoinClient.
  * Extend or replace with a real HTTP-based implementation.
  */
-export class CinaConnectClient implements ICinaConnectClient {
+export class CinacoinClient implements ICinacoinClient {
   protected projectId: string;
   protected baseUrl: string;
 
-  constructor(projectId: string, baseUrl: string = "https://api.cinaconnect.com") {
+  constructor(projectId: string, baseUrl: string = "https://api.cinacoin.com") {
     this.projectId = projectId;
     this.baseUrl = baseUrl;
   }
@@ -767,9 +767,9 @@ export class CinaConnectClient implements ICinaConnectClient {
  * Stub implementation of IWalletService.
  */
 export class WalletService implements IWalletService {
-  protected client: ICinaConnectClient;
+  protected client: ICinacoinClient;
 
-  constructor(client: ICinaConnectClient) {
+  constructor(client: ICinacoinClient) {
     this.client = client;
   }
 

@@ -2,13 +2,13 @@ import { join } from 'node:path';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { spinner } from '../utils/logger.js';
 // ============================================================
-// ocx init — Scaffold a new CinaConnect project
+// ocx init — Scaffold a new Cinacoin project
 // ============================================================
 export function initCommand(cli) {
     cli
         .command('init')
-        .description('Initialize a new CinaConnect project')
-        .argument('[directory]', 'Project directory name', 'my-cinaconnect-app')
+        .description('Initialize a new Cinacoin project')
+        .argument('[directory]', 'Project directory name', 'my-cinacoin-app')
         .option('--template <name>', 'Template to use (web | react | vue | next)', 'web')
         .option('--package-manager <pm>', 'Package manager (npm | yarn | pnpm)', 'pnpm')
         .option('--dry-run', 'Show what would be created without writing files')
@@ -16,7 +16,7 @@ export function initCommand(cli) {
         const { template, packageManager, dryRun } = opts;
         const targetDir = join(process.cwd(), directory);
         if (dryRun) {
-            console.log(`\n  [dry-run] Would create CinaConnect project in ${targetDir}`);
+            console.log(`\n  [dry-run] Would create Cinacoin project in ${targetDir}`);
             console.log(`  Template:   ${template}`);
             console.log(`  Package mgr: ${packageManager}\n`);
             return;
@@ -25,7 +25,7 @@ export function initCommand(cli) {
             console.error(`\n  error: directory '${directory}' already exists\n`);
             process.exit(1);
         }
-        const s = spinner('Scaffolding CinaConnect project...');
+        const s = spinner('Scaffolding Cinacoin project...');
         try {
             // Create directory structure
             mkdirSync(join(targetDir, 'src'), { recursive: true });
@@ -71,9 +71,9 @@ function generatePackageJson(name, pm) {
             typecheck: 'tsc --noEmit',
         },
         dependencies: {
-            '@cinaconnect/core-sdk': '^0.1.0',
-            '@cinaconnect/react': '^0.1.0',
-            '@cinaconnect/ui': '^0.1.0',
+            '@cinacoin/core-sdk': '^0.1.0',
+            '@cinacoin/react': '^0.1.0',
+            '@cinacoin/ui': '^0.1.0',
         },
         devDependencies: {
             typescript: '^5.7.0',
@@ -101,7 +101,7 @@ function generateMainFile(template) {
     if (template === 'react' || template === 'next') {
         return `import React from 'react';
 import { createRoot } from 'react-dom/client';
-import { CinaConnectProvider } from '@cinaconnect/react';
+import { CinacoinProvider } from '@cinacoin/react';
 import App from './App.js';
 
 const config = {
@@ -115,23 +115,23 @@ const config = {
   ],
   theme: { mode: 'dark' },
   metadata: {
-    name: '${template === 'next' ? 'Next.js App' : 'CinaConnect App'}',
-    description: 'Built with CinaConnect',
+    name: '${template === 'next' ? 'Next.js App' : 'Cinacoin App'}',
+    description: 'Built with Cinacoin',
     url: 'https://example.com',
   },
 };
 
 const root = createRoot(document.getElementById('root')!);
 root.render(
-  <CinaConnectProvider config={config}>
+  <CinacoinProvider config={config}>
     <App />
-  </CinaConnectProvider>
+  </CinacoinProvider>
 );
 `;
     }
-    return `import { CinaConnect } from '@cinaconnect/core-sdk';
+    return `import { Cinacoin } from '@cinacoin/core-sdk';
 
-const cinaconnect = new CinaConnect({
+const cinacoin = new Cinacoin({
   chains: [
     {
       id: 1,
@@ -142,26 +142,26 @@ const cinaconnect = new CinaConnect({
   ],
 });
 
-console.log('CinaConnect initialized:', cinaconnect);
+console.log('Cinacoin initialized:', cinacoin);
 `;
 }
 function generateComponent(template) {
     if (template === 'react' || template === 'next') {
         return `import React from 'react';
-import { ConnectButton } from '@cinaconnect/react';
+import { ConnectButton } from '@cinacoin/react';
 
 export default function App() {
   return (
     <div>
-      <h1>CinaConnect App</h1>
+      <h1>Cinacoin App</h1>
       <ConnectButton />
     </div>
   );
 }
 `;
     }
-    return `// CinaConnect vanilla JS app
-// See docs: https://cinaconnect.dev/guide/quick-start
+    return `// Cinacoin vanilla JS app
+// See docs: https://cinacoin.dev/guide/quick-start
 `;
 }
 //# sourceMappingURL=init.js.map

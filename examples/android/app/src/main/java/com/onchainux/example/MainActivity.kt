@@ -1,7 +1,7 @@
 // MainActivity.kt
 // 主 Activity — Jetpack Compose UI
 
-package com.cinaconnect.example
+package com.cinacoin.example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -21,30 +21,30 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.cinaconnect.core.CinaConnect
-import com.cinaconnect.core.config.CinaConnectConfig
-import com.cinaconnect.core.model.Chain
+import com.cinacoin.core.Cinacoin
+import com.cinacoin.core.config.CinacoinConfig
+import com.cinacoin.core.model.Chain
 
 class MainActivity : ComponentActivity() {
-    private lateinit var cinaconnect: CinaConnect
+    private lateinit var cinacoin: Cinacoin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // 初始化 CinaConnect
-        val config = CinaConnectConfig(
+        // 初始化 Cinacoin
+        val config = CinacoinConfig(
             projectId = "demo-project-id",
-            relayUrl = "wss://relay.cinaconnect.com/v1",
+            relayUrl = "wss://relay.cinacoin.com/v1",
             chains = listOf(
                 Chain(id = 1, name = "Ethereum", symbol = "ETH"),
                 Chain(id = 137, name = "Polygon", symbol = "MATIC"),
                 Chain(id = 42161, name = "Arbitrum", symbol = "ETH"),
             ),
         )
-        cinaconnect = CinaConnect(config, applicationContext)
+        cinacoin = Cinacoin(config, applicationContext)
 
         setContent {
-            CinaConnectTheme {
+            CinacoinTheme {
                 val navController = rememberNavController()
 
                 Scaffold(
@@ -76,9 +76,9 @@ class MainActivity : ComponentActivity() {
                         startDestination = "connect",
                         modifier = Modifier.padding(padding)
                     ) {
-                        composable("connect") { ConnectScreen(cinaconnect) }
-                        composable("swap") { SwapScreen(cinaconnect) }
-                        composable("multichain") { MultiChainScreen(cinaconnect) }
+                        composable("connect") { ConnectScreen(cinacoin) }
+                        composable("swap") { SwapScreen(cinacoin) }
+                        composable("multichain") { MultiChainScreen(cinacoin) }
                     }
                 }
             }
@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CinaConnectTheme(content: @Composable () -> Unit) {
+fun CinacoinTheme(content: @Composable () -> Unit) {
     MaterialTheme(
         colorScheme = darkColorScheme(
             primary = Color(0xFF3B82F6),

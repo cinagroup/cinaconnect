@@ -1,7 +1,7 @@
 /**
  * Sui Chain Adapter — provides Sui-specific blockchain operations.
  *
- * Implements the {@link ChainAdapter} interface from @cinaconnect/core-sdk
+ * Implements the {@link ChainAdapter} interface from @cinacoin/core-sdk
  * and adds Sui-native methods for object queries, SUI balance lookups,
  * and transaction execution on the Sui network.
  *
@@ -9,7 +9,7 @@
  *
  * @example
  * ```ts
- * import { SuiChainAdapter, SUI_CHAINS } from '@cinaconnect/adapter-sui';
+ * import { SuiChainAdapter, SUI_CHAINS } from '@cinacoin/adapter-sui';
  *
  * const adapter = new SuiChainAdapter();
  * adapter.registerChains(SUI_CHAINS);

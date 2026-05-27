@@ -1,6 +1,6 @@
 # Security Best Practices
 
-> Protect your users' assets and data when building with CinaConnect.
+> Protect your users' assets and data when building with Cinacoin.
 
 ---
 
@@ -101,7 +101,7 @@ export async function POST(req: Request) {
 | RPC provider keys | Quarterly | Provider dashboard |
 | DEX aggregator keys | Quarterly | Provider dashboard |
 | Magic.link API keys | Semi-annually | Magic dashboard |
-| Project IDs | Annually | CinaConnect dashboard |
+| Project IDs | Annually | Cinacoin dashboard |
 | Signing keys (SIWE nonces) | Per session | Auto-generated |
 
 ---
@@ -110,13 +110,13 @@ export async function POST(req: Request) {
 
 ### Cloudflare Workers
 
-When deploying CinaConnect relay or API proxies to Cloudflare Workers:
+When deploying Cinacoin relay or API proxies to Cloudflare Workers:
 
 ```typescript
 // wrangler.toml — define secrets at deploy time
 [vars]
 PROJECT_ID = "your-project-id"
-RELAY_URL = "wss://relay.cinaconnect.com/v1"
+RELAY_URL = "wss://relay.cinacoin.com/v1"
 
 # Set secrets via wrangler CLI (NOT in wrangler.toml)
 # wrangler secret put SWAP_API_KEY
@@ -358,7 +358,7 @@ export function middleware(request: NextRequest) {
     script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
     style-src 'self' 'nonce-${nonce}';
     img-src 'self' data: https: blob:;
-    connect-src 'self' wss://relay.cinaconnect.com https://*.cinaconnect.com;
+    connect-src 'self' wss://relay.cinacoin.com https://*.cinacoin.com;
     frame-src 'none';
     base-uri 'self';
     form-action 'self';
@@ -459,11 +459,11 @@ server {
   # ...
   add_header Content-Security-Policy "
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://*.cinaconnect.com;
+    script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://*.cinacoin.com;
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: https: blob:;
-    connect-src 'self' wss://relay.cinaconnect.com https://*.cinaconnect.com https://*.magic.link;
-    frame-src 'self' https://*.magic.link https://pay.cinaconnect.com;
+    connect-src 'self' wss://relay.cinacoin.com https://*.cinacoin.com https://*.magic.link;
+    frame-src 'self' https://*.magic.link https://pay.cinacoin.com;
     worker-src 'self' blob:;
     base-uri 'self';
     form-action 'self';
@@ -481,16 +481,16 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", 'https://*.cinaconnect.com'],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'wasm-unsafe-eval'", 'https://*.cinacoin.com'],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:', 'https:', 'blob:'],
       connectSrc: [
         "'self'",
-        'wss://relay.cinaconnect.com',
-        'https://*.cinaconnect.com',
+        'wss://relay.cinacoin.com',
+        'https://*.cinacoin.com',
         'https://*.magic.link',
       ],
-      frameSrc: ["'self'", 'https://*.magic.link', 'https://pay.cinaconnect.com'],
+      frameSrc: ["'self'", 'https://*.magic.link', 'https://pay.cinacoin.com'],
       workerSrc: ["'self'", 'blob:'],
       baseUri: ["'self'"],
       formAction: ["'self'"],
@@ -505,11 +505,11 @@ app.use(
 ```typescript
 const cspHeader = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://*.cinaconnect.com",
+  "script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://*.cinacoin.com",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: https: blob:",
-  "connect-src 'self' wss://relay.cinaconnect.com https://*.cinaconnect.com https://*.magic.link",
-  "frame-src 'self' https://*.magic.link https://pay.cinaconnect.com",
+  "connect-src 'self' wss://relay.cinacoin.com https://*.cinacoin.com https://*.magic.link",
+  "frame-src 'self' https://*.magic.link https://pay.cinacoin.com",
   "worker-src 'self' blob:",
   "base-uri 'self'",
   "form-action 'self'",
@@ -545,10 +545,10 @@ All WebSocket connections **must** use TLS (`wss://`). Plain WebSocket (`ws://`)
 
 ```typescript
 // ✅ Correct
-const relayUrl = 'wss://relay.cinaconnect.com/v1'
+const relayUrl = 'wss://relay.cinacoin.com/v1'
 
 // ❌ Never do this
-const relayUrl = 'ws://relay.cinaconnect.com/v1'
+const relayUrl = 'ws://relay.cinacoin.com/v1'
 ```
 
 ### Verify WebSocket Connection
@@ -573,10 +573,10 @@ function validateRelayUrl(url: string): boolean {
 ```nginx
 server {
   listen 443 ssl http2;
-  server_name relay.cinaconnect.com;
+  server_name relay.cinacoin.com;
 
-  ssl_certificate /etc/letsencrypt/live/relay.cinaconnect.com/fullchain.pem;
-  ssl_certificate_key /etc/letsencrypt/live/relay.cinaconnect.com/privkey.pem;
+  ssl_certificate /etc/letsencrypt/live/relay.cinacoin.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/relay.cinacoin.com/privkey.pem;
 
   # TLS 1.3 only
   ssl_protocols TLSv1.3;
@@ -624,7 +624,7 @@ Cipher: ChaCha20-Poly1305 AEAD
 ### Implementation Reference
 
 ```typescript
-import { generateKeyPair, deriveSharedSecret, encrypt, decrypt } from '@cinaconnect/core/crypto'
+import { generateKeyPair, deriveSharedSecret, encrypt, decrypt } from '@cinacoin/core/crypto'
 
 // 1. Generate ephemeral key pair
 const keyPair = generateKeyPair()
@@ -672,7 +672,7 @@ const plaintext = decrypt(sharedSecret, receivedCiphertext)
 ```bash
 # .env.production (never commit this file)
 CINA_PROJECT_ID=your-production-id
-CINA_RELAY_URL=wss://relay.cinaconnect.com/v1
+CINA_RELAY_URL=wss://relay.cinacoin.com/v1
 CINA_ANALYTICS_KEY=your-analytics-key
 MAGIC_API_KEY=pk_live_xxxx
 SENTRY_DSN=https://xxxx@yyyy.ingest.sentry.io/zzzz
@@ -694,25 +694,25 @@ for (const key of required) {
 
 ### Domain Verification (Verify API)
 
-CinaConnect's Verify API helps users identify legitimate dApps:
+Cinacoin's Verify API helps users identify legitimate dApps:
 
 ```typescript
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet],
   metadata: {
     name: 'MyDeFi App',
     description: 'A trusted DeFi platform',
     url: 'https://mydefi.app',
     icons: ['https://mydefi.app/logo.png'],
-    verifyUrl: 'https://verify.cinaconnect.com/v1',
+    verifyUrl: 'https://verify.cinacoin.com/v1',
   },
 }
 ```
 
 **How Verify works:**
-1. CinaConnect scans registered domains and verifies metadata
+1. Cinacoin scans registered domains and verifies metadata
 2. Verified dApps show a green badge in the connect modal
 3. Unverified or suspicious dApps show warnings to users
 
@@ -720,7 +720,7 @@ const config = {
 
 ```bash
 # Register with Verify API
-curl -X POST https://verify.cinaconnect.com/v1/register \
+curl -X POST https://verify.cinacoin.com/v1/register \
   -H "Authorization: Bearer $VERIFY_API_KEY" \
   -H "Content-Type: application/json" \
   -d '{
@@ -762,7 +762,7 @@ When loading external scripts, use SRI hashes:
 
 ```html
 <script
-  src="https://cdn.cinaconnect.com/sdk/v1.0.0/cinaconnect.min.js"
+  src="https://cdn.cinacoin.com/sdk/v1.0.0/cinacoin.min.js"
   integrity="sha384-xxxxxxx"
   crossorigin="anonymous"
 ></script>
@@ -771,7 +771,7 @@ When loading external scripts, use SRI hashes:
 Generate SRI hashes:
 
 ```bash
-curl -s https://cdn.cinaconnect.com/sdk/v1.0.0/cinaconnect.min.js | openssl dgst -sha384 -binary | openssl base64 -A
+curl -s https://cdn.cinacoin.com/sdk/v1.0.0/cinacoin.min.js | openssl dgst -sha384 -binary | openssl base64 -A
 ```
 
 ### Input Validation
@@ -821,7 +821,7 @@ app.use('/api/auth/siwe', siweLimiter)
 Log security-relevant events:
 
 ```typescript
-cinaconnect.on('connect', (session) => {
+cinacoin.on('connect', (session) => {
   logger.info('wallet_connected', {
     timestamp: new Date().toISOString(),
     wallet: session.wallet.name,
@@ -830,7 +830,7 @@ cinaconnect.on('connect', (session) => {
   })
 })
 
-cinaconnect.on('disconnect', (session) => {
+cinacoin.on('disconnect', (session) => {
   logger.info('wallet_disconnected', {
     timestamp: new Date().toISOString(),
     sessionId: session.topic,
@@ -874,7 +874,7 @@ const wallet = new Wallet(privateKey) // NEVER in frontend
 
 ### Mnemonic / Seed Phrase UI Guidelines
 
-If your application includes wallet creation features (e.g., a wallet app built on CinaConnect SDK):
+If your application includes wallet creation features (e.g., a wallet app built on Cinacoin SDK):
 
 ```tsx
 // Seed phrase display — critical UX considerations
@@ -886,7 +886,7 @@ function SeedPhraseDisplay({ mnemonic }: { mnemonic: string }) {
     <div>
       <div className="warning-banner">
         ⚠️ Never share these words. Anyone with this phrase can access your funds.
-        CinaConnect support will NEVER ask for this.
+        Cinacoin support will NEVER ask for this.
       </div>
 
       {!revealed ? (
@@ -925,7 +925,7 @@ import { SecretsManager } from '@aws-sdk/client-secrets-manager'
 async function getPaymasterSigner() {
   const client = new SecretsManager()
   const { SecretString } = await client.getSecretValue({
-    SecretId: 'cinaconnect/paymaster-signer-key',
+    SecretId: 'cinacoin/paymaster-signer-key',
   })
 
   if (!SecretString) {
@@ -949,7 +949,7 @@ import { Vault } from 'node-vault'
 
 const vault = Vault({ endpoint: process.env.VAULT_ADDR })
 await vault.unseal(process.env.VAULT_UNSEAL_KEYS)
-const { data } = await vault.read('secret/cinaconnect/paymaster-key')
+const { data } = await vault.read('secret/cinacoin/paymaster-key')
 ```
 
 ### Browser Storage Security
@@ -1047,7 +1047,7 @@ Use this checklist before deploying to production:
 | 32 | Incident response plan documented | High | ☐ |
 | 33 | Security contact email published | Medium | ☐ |
 | 34 | Dependency audit (pnpm audit) clean | High | ☐ |
-| 35 | Domain verified with CinaConnect Verify API | High | ☐ |
+| 35 | Domain verified with Cinacoin Verify API | High | ☐ |
 
 ### Post-Launch Audit
 
@@ -1103,4 +1103,4 @@ jobs:
 
 ---
 
-*Security Best Practices — CinaConnect Documentation*
+*Security Best Practices — Cinacoin Documentation*

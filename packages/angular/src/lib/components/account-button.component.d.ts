@@ -1,5 +1,5 @@
 import { OnInit, OnDestroy } from '@angular/core';
-import { CinaConnectService, type Account } from '../cinaconnect.service.js';
+import { CinacoinService, type Account } from '../cinacoin.service.js';
 /**
  * Button component showing the current account with disconnect capability.
  *
@@ -14,7 +14,7 @@ export declare class AccountButtonComponent implements OnInit, OnDestroy {
     size: 'sm' | 'md' | 'lg';
     account: Account | null;
     private _subscription?;
-    constructor(_service: CinaConnectService);
+    constructor(_service: CinacoinService);
     ngOnInit(): void;
     ngOnDestroy(): void;
     toggleDropdown(): void;

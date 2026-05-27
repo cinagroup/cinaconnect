@@ -1,17 +1,17 @@
-# @cinaconnect/gas-sponsorship
+# @cinacoin/gas-sponsorship
 
 Enterprise gas sponsorship for smart accounts via paymaster integration.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/gas-sponsorship
+npm install @cinacoin/gas-sponsorship
 ```
 
 ## Usage
 
 ```ts
-import { GasSponsor } from '@cinaconnect/gas-sponsorship';
+import { GasSponsor } from '@cinacoin/gas-sponsorship';
 
 const sponsor = new GasSponsor({ provider: 'pimlico' });
 const result = await sponsor.sponsorTransaction(tx);

@@ -1,17 +1,17 @@
-# @cinaconnect/design-tokens
+# @cinacoin/design-tokens
 
-Design tokens for CinaConnect white-label UI toolkit.
+Design tokens for Cinacoin white-label UI toolkit.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/design-tokens
+npm install @cinacoin/design-tokens
 ```
 
 ## Usage
 
 ```ts
-import { tokens, cssVariables } from '@cinaconnect/design-tokens';
+import { tokens, cssVariables } from '@cinacoin/design-tokens';
 
 const primaryColor = tokens.colors.primary;
 document.documentElement.style.cssText = cssVariables;

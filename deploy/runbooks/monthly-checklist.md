@@ -1,4 +1,4 @@
-# Monthly Ops Checklist — CinaConnect
+# Monthly Ops Checklist — Cinacoin
 
 ---
 

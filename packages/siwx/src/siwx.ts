@@ -1,14 +1,17 @@
 /**
  * SIWX (Sign-In with Cross-chain) — Cross-chain authentication abstraction.
  *
- * Unified interface for sign-in across EVM (EIP-4361), Solana, and Bitcoin (BIP-322).
+ * Unified interface for sign-in across EVM (EIP-4361), Solana (ed25519),
+ * Bitcoin (BIP-322), TON (SIWT), and TRON (SIWTR).
  */
 
 import type { SIWXParams, SIWXResult, SIWXVerifyInput, ChainType } from './types.js';
 import { createEvmSignInMessage, verifyEvmSignature } from './chains/evm.js';
 import { createSolanaSignInMessage, verifySolanaSignature } from './chains/solana.js';
 import { createBitcoinSignInMessage, verifyBitcoinSignature } from './chains/bitcoin.js';
-import { generateTimestamp } from '@cinaconnect/siwe';
+import { createTonSignInMessage, verifyTonSignature } from './chains/ton.js';
+import { createTronSignInMessage, verifyTronSignature } from './chains/tron.js';
+import { generateTimestamp } from '@cinacoin/siwe';
 import { randomBytes } from 'crypto';
 
 /**
@@ -27,7 +30,7 @@ function generateNonce(byteLength: number = 16): string {
  * Automatically enriches params with defaults (nonce, issuedAt) if not provided.
  *
  * @param params - SIWX parameters.
- * @param chainType - Target chain type ('evm' | 'solana' | 'bitcoin').
+ * @param chainType - Target chain type ('evm' | 'solana' | 'bitcoin' | 'ton' | 'tron').
  * @returns Formatted sign-in message string.
  */
 export function createSignInMessage(
@@ -49,6 +52,10 @@ export function createSignInMessage(
       return createSolanaSignInMessage(enriched);
     case 'bitcoin':
       return createBitcoinSignInMessage(enriched);
+    case 'ton':
+      return createTonSignInMessage(enriched);
+    case 'tron':
+      return createTronSignInMessage(enriched);
     default:
       throw new Error(`Unsupported chain type: ${chainType}`);
   }
@@ -77,6 +84,10 @@ export async function verifySignIn(
       return verifySolanaSignature(input);
     case 'bitcoin':
       return verifyBitcoinSignature(input);
+    case 'ton':
+      return verifyTonSignature(input);
+    case 'tron':
+      return verifyTronSignature(input);
     default:
       throw new Error(`Unsupported chain type for verification: ${input.chainType}`);
   }

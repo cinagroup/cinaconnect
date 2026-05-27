@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# monitoring-health-check.sh — JSON health check for all 5 CinaConnect Cloudflare Workers
+# monitoring-health-check.sh — JSON health check for all 5 CinaCoin Cloudflare Workers
 # Outputs a structured JSON report suitable for CI/CD, cron, or alerting scripts.
 # Usage: bash monitoring-health-check.sh [--json] [--timeout SECS] [--retries N]
 
@@ -26,11 +26,11 @@ done
 # ── Service definitions ─────────────────────────────────────────
 # Name|URL|Protocol
 SERVICES=(
-  "rpc-proxy|https://rpc-proxy.cinaconnect.com/health|https"
-  "keys-server|https://keys-server.cinaconnect.com/health|https"
-  "relay-server|https://relay.cinaconnect.com/health|https"
-  "notify-server|https://notify.cinaconnect.com/health|https"
-  "push-server|https://push.cinaconnect.com/health|https"
+  "rpc-proxy|https://rpc-proxy.cinacoin.com/health|https"
+  "keys-server|https://keys-server.cinacoin.com/health|https"
+  "relay-server|https://relay.cinacoin.com/health|https"
+  "notify-server|https://notify.cinacoin.com/health|https"
+  "push-server|https://push.cinacoin.com/health|https"
 )
 
 # ── Health check function ───────────────────────────────────────
@@ -140,7 +140,7 @@ if [[ "$JSON_OUTPUT" == true ]]; then
 else
   echo ""
   echo "═══════════════════════════════════════════════════════"
-  echo " CinaConnect Health Check Report"
+  echo " CinaCoin Health Check Report"
   echo "═══════════════════════════════════════════════════════"
   echo " Timestamp:  $TIMESTAMP"
   echo " Overall:    $OVERALL_STATUS"

@@ -2,7 +2,7 @@
  * ConnectButton — Native React Native button with real WC v2 connection state.
  *
  * Uses native RN components and reads real connection state from
- * both CinaConnectProvider and WalletConnectProvider for accurate
+ * both CinaCoinProvider and WalletConnectProvider for accurate
  * account display, balance fetching, and disconnect handling.
  */
 
@@ -16,7 +16,7 @@ import {
   type ViewStyle,
   type TextStyle,
 } from 'react-native';
-import { useCinaConnectContext } from './CinaConnectProvider.js';
+import { useCinaCoinContext } from './CinaCoinProvider.js';
 import { useWalletConnect, type BalanceState } from './WalletConnectProvider.js';
 
 /** Props for the native ConnectButton. */
@@ -70,7 +70,7 @@ function chainName(chainId: number): string {
  * Native ConnectButton for React Native with real WC v2 state.
  *
  * Reads connection state from WalletConnectProvider (if available) and
- * CinaConnectProvider. Supports balance fetching, network badge, avatar,
+ * CinaCoinProvider. Supports balance fetching, network badge, avatar,
  * and real disconnect via WC session cleanup.
  */
 export function ConnectButton({
@@ -85,7 +85,7 @@ export function ConnectButton({
   onPress,
   onDisconnect,
 }: ConnectButtonProps): JSX.Element {
-  const { account, status, connect, disconnect, themeColors } = useCinaConnectContext();
+  const { account, status, connect, disconnect, themeColors } = useCinaCoinContext();
 
   // Try to get real WC v2 state (may not be available if not wrapped)
   let wcBalance: BalanceState | null = null;
@@ -100,7 +100,7 @@ export function ConnectButton({
     wcDisconnect = wc.disconnect;
     wcFetching = wc.connecting;
   } catch {
-    // WalletConnectProvider not in tree — use CinaConnectProvider only
+    // WalletConnectProvider not in tree — use CinaCoinProvider only
   }
 
   const [fetchingBalance, setFetchingBalance] = useState(false);
@@ -114,7 +114,7 @@ export function ConnectButton({
     if (isConnecting) return;
 
     if (isConnected) {
-      // Toggle: disconnect via WC or CinaConnect
+      // Toggle: disconnect via WC or CinaCoin
       if (wcDisconnect) {
         wcDisconnect().then(() => onDisconnect?.()).catch(() => {});
       } else {

@@ -1,11 +1,11 @@
-# @cinaconnect/token-list
+# @cinacoin/token-list
 
-Token discovery, metadata management, and validation for the CinaConnect ecosystem.
+Token discovery, metadata management, and validation for the Cinacoin ecosystem.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/token-list
+npm install @cinacoin/token-list
 ```
 
 ## Usage
@@ -13,7 +13,7 @@ npm install @cinaconnect/token-list
 ### Basic Token List
 
 ```ts
-import { TokenList, CoinGeckoSource, TrustWalletSource, LocalSource } from '@cinaconnect/token-list';
+import { TokenList, CoinGeckoSource, TrustWalletSource, LocalSource } from '@cinacoin/token-list';
 
 // Create a token list with multiple sources
 const list = new TokenList({
@@ -50,7 +50,7 @@ const validation = list.validateToken(tokens[0]);
 ### Custom Token Source
 
 ```ts
-import type { TokenSource } from '@cinaconnect/token-list';
+import type { TokenSource } from '@cinacoin/token-list';
 
 const mySource: TokenSource = {
   name: 'my-source',

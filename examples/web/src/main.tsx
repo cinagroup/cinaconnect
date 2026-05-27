@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinaCoinProvider } from '@cinacoin/react'
 import { ConnectDemo } from './components/ConnectDemo'
 import { SwapDemo } from './components/SwapDemo'
 import { MultiChainDemo } from './components/MultiChainDemo'
@@ -9,30 +9,30 @@ import './index.css'
 
 const config = {
   projectId: import.meta.env.VITE_PROJECT_ID || 'demo-project-id',
-  relayUrl: import.meta.env.VITE_RELAY_URL || 'wss://relay.cinaconnect.com/v1',
+  relayUrl: import.meta.env.VITE_RELAY_URL || 'wss://relay.cinacoin.com/v1',
   chains: [
     {
       id: 1,
       name: 'Ethereum',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://rpc.cinaconnect.com/eth',
+      rpcUrl: 'https://rpc.cinacoin.com/eth',
     },
     {
       id: 137,
       name: 'Polygon',
       nativeCurrency: { name: 'MATIC', symbol: 'MATIC', decimals: 18 },
-      rpcUrl: 'https://rpc.cinaconnect.com/polygon',
+      rpcUrl: 'https://rpc.cinacoin.com/polygon',
     },
     {
       id: 42161,
       name: 'Arbitrum',
       nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
-      rpcUrl: 'https://rpc.cinaconnect.com/arbitrum',
+      rpcUrl: 'https://rpc.cinacoin.com/arbitrum',
     },
   ],
   metadata: {
-    name: 'CinaConnect Demo',
-    description: 'CinaConnect Web Example — 完整功能演示',
+    name: 'CinaCoin Demo',
+    description: 'CinaCoin Web Example — 完整功能演示',
     url: window.location.origin,
     icons: [],
   },
@@ -45,10 +45,10 @@ const config = {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider config={config}>
+    <CinaCoinProvider config={config}>
       <div className="app">
         <header className="app-header">
-          <h1>🔢 CinaConnect Web Demo</h1>
+          <h1>🔢 CinaCoin Web Demo</h1>
           <p>自有品牌链上 UX 工具包 — 完整功能演示</p>
         </header>
 
@@ -75,9 +75,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </main>
 
         <footer className="app-footer">
-          <p>CinaConnect v0.1.0 — MIT License</p>
+          <p>CinaCoin v0.1.0 — MIT License</p>
         </footer>
       </div>
-    </CinaConnectProvider>
+    </CinaCoinProvider>
   </React.StrictMode>,
 )

@@ -1,17 +1,17 @@
-# @cinaconnect/siwe
+# @cinacoin/siwe
 
-Sign-In with Ethereum (SIWE) integration for CinaConnect.
+Sign-In with Ethereum (SIWE) integration for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/siwe
+npm install @cinacoin/siwe
 ```
 
 ## Usage
 
 ```ts
-import { createSiweMessage, verifySiweSignature } from '@cinaconnect/siwe';
+import { createSiweMessage, verifySiweSignature } from '@cinacoin/siwe';
 
 const message = createSiweMessage({
   domain: 'example.com',

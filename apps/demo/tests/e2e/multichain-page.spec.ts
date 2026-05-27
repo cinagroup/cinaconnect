@@ -66,7 +66,7 @@ test.describe('Multi-Chain Page', () => {
 
   test('unified API code example is present', async ({ page }) => {
     await expect(page.locator('text="unified-api.ts"').first()).toBeVisible();
-    await expect(page.locator('text="import { CinaConnect }"').first()).toBeVisible();
+    await expect(page.locator('text="import { Cinacoin }"').first()).toBeVisible();
     await expect(page.locator('text="Copy"').first()).toBeVisible();
   });
 

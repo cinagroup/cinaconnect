@@ -1,4 +1,4 @@
-# CinaConnect Bundler Configuration
+# Cinacoin Bundler Configuration
 # All environment variables from config.rs are also supported as fallbacks.
 
 # --- Network ---

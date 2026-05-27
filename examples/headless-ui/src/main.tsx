@@ -7,7 +7,7 @@ import HeadlessNetworkSelector from './components/HeadlessNetworkSelector';
 function App() {
   return (
     <div style={{ maxWidth: 800, margin: '0 auto', padding: 40, fontFamily: 'system-ui' }}>
-      <h1>CinaConnect Headless UI Examples</h1>
+      <h1>CinaCoin Headless UI Examples</h1>
       <p>Build your own UI using the headless SDK.</p>
 
       <section>

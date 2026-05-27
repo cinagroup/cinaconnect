@@ -1,19 +1,19 @@
-# @cinaconnect/core-sdk
+# @cinacoin/core-sdk
 
-CinaConnect Core SDK — Self-hosted wallet connection toolkit.
+Cinacoin Core SDK — Self-hosted wallet connection toolkit.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk
+npm install @cinacoin/core-sdk
 ```
 
 ## Usage
 
 ```ts
-import { Connector, SessionManager, createCinaConnectStore } from '@cinaconnect/core-sdk';
+import { Connector, SessionManager, createCinacoinStore } from '@cinacoin/core-sdk';
 
-const store = createCinaConnectStore({ projectId: 'YOUR_PROJECT_ID' });
+const store = createCinacoinStore({ projectId: 'YOUR_PROJECT_ID' });
 const connector = new Connector({ namespace: 'eip155' });
 ```
 
@@ -23,7 +23,7 @@ const connector = new Connector({ namespace: 'eip155' });
 |--------|------|-------------|
 | `Connector` | class | Base connector class |
 | `SessionManager` | class | Session state management |
-| `createCinaConnectStore` | function | Create global state store |
+| `createCinacoinStore` | function | Create global state store |
 | `initializeStore` | function | Initialize the store |
 | `EventEmitter` | class | Event emitter utility |
 | `discoverWallets` | function | Discover EIP-6963 wallets |

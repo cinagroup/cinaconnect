@@ -1,4 +1,4 @@
-namespace CinaConnect.Models;
+namespace Cinacoin.Models;
 
 /// <summary>
 /// Supported blockchain network namespaces (CAIP-2 format).

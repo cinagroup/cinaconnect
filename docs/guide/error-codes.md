@@ -1,6 +1,6 @@
 # Error Code Reference
 
-> Complete error code reference for CinaConnect. Every error includes code, message, cause, and solution.
+> Complete error code reference for Cinacoin. Every error includes code, message, cause, and solution.
 
 ---
 
@@ -20,13 +20,13 @@ Errors related to wallet pairing, session establishment, and relay connectivity.
 | **Solution** | Verify that the relay URL is correct and reachable. Check WebSocket connectivity with `wscat -c wss://relay.yourdomain.com/v1`. Ensure the wallet supports the Iridium relay protocol. Enable debug mode to inspect the key exchange: |
 
 ```typescript
-const cinaconnect = new CinaConnect({
+const cinacoin = new Cinacoin({
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   debug: true, // enables detailed pairing logs
 })
 
-cinaconnect.on('pairing_failed', (error) => {
+cinacoin.on('pairing_failed', (error) => {
   console.error('Pairing error:', error)
 })
 ```
@@ -44,7 +44,7 @@ cinaconnect.on('pairing_failed', (error) => {
 
 ```typescript
 // Correct: only request what the wallet supports
-const session = await cinaconnect.connect({
+const session = await cinacoin.connect({
   requiredNamespaces: {
     eip155: {
       chains: ['eip155:1', 'eip155:8453'],
@@ -68,7 +68,7 @@ const session = await cinaconnect.connect({
 
 ```typescript
 try {
-  await cinaconnect.connect({ chains: ['eip155:1'] })
+  await cinacoin.connect({ chains: ['eip155:1'] })
 } catch (error) {
   if (error.code === 'WC_1003') {
     showToast('Connection cancelled. Try again when ready.')
@@ -89,11 +89,11 @@ try {
 
 ```typescript
 // Regenerate pairing URI
-const uri = await cinaconnect.core.pairing.create()
+const uri = await cinacoin.core.pairing.create()
 
 // Auto-refresh QR code every 250 seconds
 const refreshInterval = setInterval(async () => {
-  const newUri = await cinaconnect.core.pairing.create()
+  const newUri = await cinacoin.core.pairing.create()
   updateQRCode(newUri)
 }, 250_000)
 
@@ -132,7 +132,7 @@ Errors related to JSON-RPC method execution, chain operations, and request valid
 | **Solution** | Check the session's `approvedNamespaces` to see which methods the wallet granted. Use only those methods, or prompt the user to connect a wallet that supports the required methods. |
 
 ```typescript
-const session = cinaconnect.getActiveSession()
+const session = cinacoin.getActiveSession()
 const methods = session.namespaces.eip155.methods
 
 if (!methods.includes('eth_sendTransaction')) {
@@ -152,18 +152,18 @@ if (!methods.includes('eth_sendTransaction')) {
 | **Solution** | Include the chain in `requiredNamespaces` or `optionalNamespaces` during session proposal, then call `switchChain` after connection. |
 
 ```typescript
-import { polygon, mainnet } from '@cinaconnect/chains'
+import { polygon, mainnet } from '@cinacoin/chains'
 
 // Include optional chains in config
 const config = {
   projectId: 'your-project-id',
-  relayUrl: 'wss://relay.cinaconnect.com/v1',
+  relayUrl: 'wss://relay.cinacoin.com/v1',
   chains: [mainnet, polygon],
   // ...
 }
 
 // Switch after connection
-await cinaconnect.switchChain('eip155:137')
+await cinacoin.switchChain('eip155:137')
 ```
 
 ---
@@ -178,7 +178,7 @@ await cinaconnect.switchChain('eip155:137')
 | **Solution** | Verify session permissions before making the request. Re-connect with the required permissions if needed. |
 
 ```typescript
-const session = cinaconnect.getActiveSession()
+const session = cinacoin.getActiveSession()
 
 if (!session.namespaces.eip155.methods.includes('eth_signTypedData_v4')) {
   console.warn('Session lacks typed data signing permission')
@@ -207,7 +207,7 @@ function validateTransaction(tx: any) {
 }
 
 const validTx = validateTransaction(rawTransaction)
-await cinaconnect.sendTransaction(validTx)
+await cinacoin.sendTransaction(validTx)
 ```
 
 ---
@@ -269,7 +269,7 @@ if (balance.wei < requiredAmount + estimatedGas) {
 | **Solution** | Check the swap quote validity period and slippage tolerance. Request a fresh quote if expired. Increase slippage tolerance for volatile pairs. |
 
 ```typescript
-import { SwapSDK } from '@cinaconnect/swap-sdk'
+import { SwapSDK } from '@cinacoin/swap-sdk'
 
 const swap = new SwapSDK({ chainId: 1 })
 
@@ -303,7 +303,7 @@ try {
 | **Solution** | Check the on-ramp provider's status. Verify that the user's region is supported. Ensure the purchase amount is within provider limits. |
 
 ```typescript
-import { OnRampSDK } from '@cinaconnect/onramp-sdk'
+import { OnRampSDK } from '@cinacoin/onramp-sdk'
 
 const onramp = new OnRampSDK({
   provider: 'meld', // or 'coinbase'
@@ -354,7 +354,7 @@ Errors related to SIWE, SIWX, and social login authentication flows.
 | **Solution** | Verify the domain matches the request origin, ensure the nonce is unique and not reused, check the message expiration time, and validate the signature against the expected address. |
 
 ```typescript
-import { generateSIWEMessage, verifySIWE } from '@cinaconnect/siwe'
+import { generateSIWEMessage, verifySIWE } from '@cinacoin/siwe'
 
 // Generate a SIWE message
 const message = generateSIWEMessage({
@@ -385,7 +385,7 @@ if (!result.success) {
 | **Solution** | Ensure the wallet supports CAIP-122 multi-chain signing. Verify that each chain's namespace is properly configured. Check that the wallet can sign messages for all requested chains. |
 
 ```typescript
-import { generateSIWXMessage } from '@cinaconnect/siwx'
+import { generateSIWXMessage } from '@cinacoin/siwx'
 
 const message = generateSIWXMessage({
   domain: 'mydapp.com',
@@ -397,7 +397,7 @@ const message = generateSIWXMessage({
 // Request signature for each chain
 const signatures = await Promise.all(
   message.chains.map(chain =>
-    cinaconnect.signMessage(chain, message.getMessageForChain(chain))
+    cinacoin.signMessage(chain, message.getMessageForChain(chain))
   )
 )
 ```
@@ -414,7 +414,7 @@ const signatures = await Promise.all(
 | **Solution** | Verify the Magic.link API key is correctly configured. Ensure popup blockers are disabled. Check OAuth provider credentials. Implement fallback error handling. |
 
 ```typescript
-import { SocialLogin } from '@cinaconnect/social-login'
+import { SocialLogin } from '@cinacoin/social-login'
 
 const socialLogin = new SocialLogin({
   apiKey: process.env.MAGIC_API_KEY,
@@ -454,7 +454,7 @@ try {
 ### Global Error Handler
 
 ```typescript
-cinaconnect.on('error', (error) => {
+cinacoin.on('error', (error) => {
   switch (error.code) {
     case 'WC_1003': // user_rejected
       // Expected — no action needed
@@ -463,7 +463,7 @@ cinaconnect.on('error', (error) => {
     case 'WC_1001': // pairing_failed
     case 'WC_1005': // relay_unreachable
       // Retry with backoff
-      retryWithBackoff(() => cinaconnect.connect())
+      retryWithBackoff(() => cinacoin.connect())
       break
 
     case 'WC_3001': // insufficient_funds
@@ -507,4 +507,4 @@ async function retryWithBackoff(
 
 ---
 
-*Error Code Reference — CinaConnect Documentation*
+*Error Code Reference — Cinacoin Documentation*

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# verify-install.sh — Verify all CinaConnect packages install correctly
+# verify-install.sh — Verify all CinaCoin packages install correctly
 # Usage: ./scripts/verify-install.sh [--verbose]
 # Checks: npm install, TypeScript types, broken imports
 
@@ -31,7 +31,7 @@ MONOREPO_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$MONOREPO_ROOT"
 
 echo "╔══════════════════════════════════════════════════════╗"
-echo "║   CinaConnect — Install & Type Verification         ║"
+echo "║   CinaCoin — Install & Type Verification         ║"
 echo "║   $(date -u '+%Y-%m-%d %H:%M:%S UTC')                          ║"
 echo "╚══════════════════════════════════════════════════════╝"
 echo ""
@@ -153,12 +153,12 @@ for pkg_dir in packages/*/; do
 
   PKG_SCOPE=$(node -e "console.log(require('$pkg_dir/package.json').name)" 2>/dev/null || echo "$PKG_NAME")
 
-  # Check that internal @cinaconnect imports reference actual packages
+  # Check that internal @cinacoin imports reference actual packages
   if [ -d "$pkg_dir/src" ]; then
-    INTERNAL_IMPORTS=$(grep -roh '@cinaconnect/[a-z0-9_-]*' "$pkg_dir/src" 2>/dev/null | sort -u || true)
+    INTERNAL_IMPORTS=$(grep -roh '@cinacoin/[a-z0-9_-]*' "$pkg_dir/src" 2>/dev/null | sort -u || true)
 
     for import in $INTERNAL_IMPORTS; do
-      IMPORT_PKG=$(echo "$import" | sed 's/@cinaconnect\///')
+      IMPORT_PKG=$(echo "$import" | sed 's/@cinacoin\///')
       if [ -d "packages/$IMPORT_PKG" ]; then
         log_info "$PKG_SCOPE → imports $import (package exists)"
       else

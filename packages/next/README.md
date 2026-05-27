@@ -1,18 +1,18 @@
-# @cinaconnect/next
+# @cinacoin/next
 
-Next.js SSR-optimized support for CinaConnect — App Router & Pages Router integration.
+Next.js SSR-optimized support for Cinacoin — App Router & Pages Router integration.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/next
+npm install @cinacoin/next
 ```
 
 ## Usage
 
 ```tsx
 // app/layout.tsx
-import { OnuxProvider } from '@cinaconnect/next';
+import { OnuxProvider } from '@cinacoin/next';
 
 export default function RootLayout({ children }) {
   return (

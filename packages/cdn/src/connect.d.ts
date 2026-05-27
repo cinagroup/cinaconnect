@@ -3,9 +3,9 @@
  *
  * For script-tag usage:
  * ```html
- * <script src="https://cdn.cinaconnect.dev/connect.js"></script>
+ * <script src="https://cdn.cinacoin.dev/connect.js"></script>
  * <script>
- *   CinaConnect.renderConnectButton('#my-button', {
+ *   Cinacoin.renderConnectButton('#my-button', {
  *     projectId: 'your-project-id',
  *     theme: 'dark',
  *   });

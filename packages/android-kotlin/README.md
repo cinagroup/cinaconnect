@@ -1,19 +1,19 @@
-# @cinaconnect/android-kotlin
+# @cinacoin/android-kotlin
 
-Android SDK TypeScript types for CinaConnect — Kotlin interop interfaces.
+Android SDK TypeScript types for Cinacoin — Kotlin interop interfaces.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/android-kotlin
+npm install @cinacoin/android-kotlin
 ```
 
 ## Usage
 
 ```ts
-import { CinaConnectAndroid } from '@cinaconnect/android-kotlin';
+import { CinacoinAndroid } from '@cinacoin/android-kotlin';
 
-const android = new CinaConnectAndroid();
+const android = new CinacoinAndroid();
 await android.init({ projectId: 'YOUR_PROJECT_ID' });
 ```
 
@@ -21,6 +21,6 @@ await android.init({ projectId: 'YOUR_PROJECT_ID' });
 
 | Export | Type | Description |
 |--------|------|-------------|
-| `CinaConnectAndroid` | class | Android SDK bridge |
+| `CinacoinAndroid` | class | Android SDK bridge |
 | `AndroidWalletConfig` | type | Android wallet configuration |
 | `AndroidConnectionResult` | type | Connection result |

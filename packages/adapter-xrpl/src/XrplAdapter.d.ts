@@ -1,7 +1,7 @@
-import type { Connector } from '@cinaconnect/core-sdk';
+import type { Connector } from '@cinacoin/core-sdk';
 import type { XrplConnector, XrplPlatform, XrplFeature, XrplConnectionResult, XrplConnectorEvents, XrplNetwork, XrpSendParams, AccountSettingsParams, TrustLineParams, NftMintParams, NftBurnParams } from './types';
 /**
- * XRP Ledger chain adapter for CinaConnect.
+ * XRP Ledger chain adapter for Cinacoin.
  *
  * Supports Xaman (formerly Xumm), Fireblocks, and Ledger.
  * Provides XRP transfers, account settings, trust lines,
@@ -9,7 +9,7 @@ import type { XrplConnector, XrplPlatform, XrplFeature, XrplConnectionResult, Xr
  *
  * @example
  * ```ts
- * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinaconnect/adapter-xrpl';
+ * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinacoin/adapter-xrpl';
  *
  * // Announce providers for EIP-6963 discovery
  * announceXrplProviders();
@@ -61,7 +61,7 @@ export declare class XrplAdapter implements XrplConnector {
      */
     getRecommendedConnectors(): XrplConnector[];
     /**
-     * Set the underlying CinaConnect core connector.
+     * Set the underlying Cinacoin core connector.
      */
     setConnector(connector: Connector): void;
     get supportedFeatures(): XrplFeature[];

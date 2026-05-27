@@ -1,6 +1,6 @@
 import { XamanConnector, announceXamanEIP6963 } from './connectors/xaman';
 /**
- * XRP Ledger chain adapter for CinaConnect.
+ * XRP Ledger chain adapter for Cinacoin.
  *
  * Supports Xaman (formerly Xumm), Fireblocks, and Ledger.
  * Provides XRP transfers, account settings, trust lines,
@@ -8,7 +8,7 @@ import { XamanConnector, announceXamanEIP6963 } from './connectors/xaman';
  *
  * @example
  * ```ts
- * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinaconnect/adapter-xrpl';
+ * import { XrplAdapter, XamanConnector, announceXrplProviders } from '@cinacoin/adapter-xrpl';
  *
  * // Announce providers for EIP-6963 discovery
  * announceXrplProviders();
@@ -83,7 +83,7 @@ export class XrplAdapter {
             .filter((c) => c !== undefined);
     }
     /**
-     * Set the underlying CinaConnect core connector.
+     * Set the underlying Cinacoin core connector.
      */
     setConnector(connector) {
         this._coreConnector = connector;

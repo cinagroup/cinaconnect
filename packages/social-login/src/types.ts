@@ -59,6 +59,16 @@ export interface TwitterLoginParams extends SocialLoginParams {
 }
 
 /**
+ * GitHub OAuth2 parameters.
+ */
+export interface GitHubLoginParams extends SocialLoginParams {
+  /** GitHub OAuth App client ID. */
+  clientId: string;
+  /** GitHub OAuth App client secret. */
+  clientSecret: string;
+}
+
+/**
  * Email-based login parameters.
  */
 export interface EmailLoginParams {

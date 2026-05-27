@@ -636,7 +636,7 @@ export class HederaChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }

@@ -1,5 +1,5 @@
 /**
- * Tests for @cinaconnect/vue components.
+ * Tests for @cinacoin/vue components.
  * Tests OcxConnectButton, OcxConnectModal, OcxChainSwitcher rendering.
  */
 export {};

@@ -1,5 +1,5 @@
 /**
- * framer-motion animation primitives for @cinaconnect/ui-theme.
+ * framer-motion animation primitives for @cinacoin/ui-theme.
  *
  * Provides ready-to-use animated wrappers and standalone motion components.
  */

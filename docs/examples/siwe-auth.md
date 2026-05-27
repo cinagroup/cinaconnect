@@ -6,18 +6,18 @@
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react @cinaconnect/siwe
+npm install @cinacoin/core-sdk @cinacoin/react @cinacoin/siwe
 ```
 
 ## Quick Start
 
 ```tsx
-import { generateMessage, verifyMessage, generateNonce } from '@cinaconnect/siwe'
+import { generateMessage, verifyMessage, generateNonce } from '@cinacoin/siwe'
 
 // Generate SIWE message
 const message = generateMessage({
@@ -41,13 +41,13 @@ console.log('Valid:', result.valid)
 ```tsx
 // src/components/SIWELogin.tsx
 import { useState } from 'react'
-import { useAccount, useCinaConnect } from '@cinaconnect/react'
-import { generateMessage, generateNonce } from '@cinaconnect/siwe'
-import { Connector } from '@cinaconnect/core-sdk'
+import { useAccount, useCinacoin } from '@cinacoin/react'
+import { generateMessage, generateNonce } from '@cinacoin/siwe'
+import { Connector } from '@cinacoin/core-sdk'
 
 function SIWELogin() {
   const account = useAccount()
-  const { connect, disconnect } = useCinaConnect()
+  const { connect, disconnect } = useCinacoin()
   const [siweMessage, setSiweMessage] = useState('')
   const [verified, setVerified] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -167,7 +167,7 @@ export default SIWELogin
 ```ts
 // server/verify-siwe.ts
 import express from 'express'
-import { verifyMessage, parseMessage } from '@cinaconnect/siwe'
+import { verifyMessage, parseMessage } from '@cinacoin/siwe'
 
 const router = express.Router()
 
@@ -251,7 +251,7 @@ import {
   generateTimestamp,
   fullValidation,
   validateSIWEParams,
-} from '@cinaconnect/siwe'
+} from '@cinacoin/siwe'
 
 // --- Generate a SIWE message ---
 const message = generateMessage({
@@ -324,7 +324,7 @@ const fullResult = fullValidation({
 
 ```ts
 // server/siwe-middleware.ts
-import { parseMessage, verifyMessage } from '@cinaconnect/siwe'
+import { parseMessage, verifyMessage } from '@cinacoin/siwe'
 
 // Middleware to verify SIWE auth on protected routes
 export function siweAuthMiddleware(req: any, res: any, next: any) {

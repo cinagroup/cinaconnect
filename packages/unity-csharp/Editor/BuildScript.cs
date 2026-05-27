@@ -2,16 +2,16 @@ using UnityEditor;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
 
-namespace CinaConnect.Editor
+namespace Cinacoin.Editor
 {
     /// <summary>
-    /// Build pipeline integration for CinaConnect.
+    /// Build pipeline integration for Cinacoin.
     /// Handles deep link scheme registration for mobile builds (iOS/Android).
     /// </summary>
-    public static class CinaConnectBuildScript
+    public static class CinacoinBuildScript
     {
         /// URL schemes for deep linking on iOS.
-        private static string[] UrlSchemes => new[] { "wc", "cinaconnect" };
+        private static string[] UrlSchemes => new[] { "wc", "cinacoin" };
 
         /// Associated domains for Universal Links on iOS.
         private static string[] AssociatedDomains => new[]
@@ -24,13 +24,13 @@ namespace CinaConnect.Editor
         /// Intent filters for Android deep links.
         private static string[][] AndroidIntentFilters => new[]
         {
-            new[] { "wc", "cinaconnect" }
+            new[] { "wc", "cinacoin" }
         };
 
-        /// Run the CinaConnect pre-build step.
+        /// Run the Cinacoin pre-build step.
         public static void PreBuild()
         {
-            Debug.Log("[CinaConnect] Running pre-build configuration...");
+            Debug.Log("[Cinacoin] Running pre-build configuration...");
 
 #if UNITY_IOS
             ConfigureIosBuild();
@@ -38,7 +38,7 @@ namespace CinaConnect.Editor
             ConfigureAndroidBuild();
 #endif
 
-            Debug.Log("[CinaConnect] Pre-build configuration complete.");
+            Debug.Log("[Cinacoin] Pre-build configuration complete.");
         }
 
         /// Configure iOS build settings for deep linking.
@@ -55,7 +55,7 @@ namespace CinaConnect.Editor
             // Add URL types
             var urlTypesArray = rootDict.CreateArray("CFBundleURLTypes");
             var urlTypeDict = urlTypesArray.AddDict();
-            urlTypeDict.SetString("CFBundleURLName", "CinaConnect");
+            urlTypeDict.SetString("CFBundleURLName", "Cinacoin");
 
             var schemesArray = urlTypeDict.CreateArray("CFBundleURLSchemes");
             foreach (var scheme in UrlSchemes)
@@ -71,7 +71,7 @@ namespace CinaConnect.Editor
             }
 
             plist.WriteToFile(plistPath);
-            Debug.Log("[CinaConnect] iOS deep link configuration applied.");
+            Debug.Log("[Cinacoin] iOS deep link configuration applied.");
 #endif
         }
 
@@ -81,11 +81,11 @@ namespace CinaConnect.Editor
 #if UNITY_ANDROID
             // Android deep link configuration would go in AndroidManifest.xml
             // This is typically handled via Unity's AndroidManifest merging
-            Debug.Log("[CinaConnect] Android deep link configuration noted. Configure AndroidManifest.xml manually.");
+            Debug.Log("[Cinacoin] Android deep link configuration noted. Configure AndroidManifest.xml manually.");
 #endif
         }
 
-        /// Build the project with CinaConnect configuration.
+        /// Build the project with Cinacoin configuration.
         public static BuildReport BuildProject(BuildTarget target, string buildPath)
         {
             PreBuild();

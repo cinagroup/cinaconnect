@@ -1,37 +1,37 @@
 # React Hooks Integration
 
-> Deep dive into all CinaConnect React hooks — `useCinaConnect`, `useAccount`, `useConnect`, `useDisconnect`, `useChainId`, and EIP-5792 hooks.
+> Deep dive into all Cinacoin React hooks — `useCinacoin`, `useAccount`, `useConnect`, `useDisconnect`, `useChainId`, and EIP-5792 hooks.
 
 ## Prerequisites
 
 - Node.js ≥ 18
 - npm ≥ 9 / pnpm ≥ 8
 - A React project (Vite, CRA, or Next.js)
-- A project ID from your CinaConnect dashboard
+- A project ID from your Cinacoin dashboard
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/core-sdk @cinaconnect/react viem
+npm install @cinacoin/core-sdk @cinacoin/react viem
 ```
 
 ## Provider Setup
 
-All hooks must be used inside `<CinaConnectProvider>`:
+All hooks must be used inside `<CinacoinProvider>`:
 
 ```tsx
 // src/main.tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { CinaConnectProvider } from '@cinaconnect/react'
+import { CinacoinProvider } from '@cinacoin/react'
 import App from './App'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <CinaConnectProvider
+    <CinacoinProvider
       config={{
         projectId: 'your-project-id',
-        relayUrl: 'wss://relay.cinaconnect.com/v1',
+        relayUrl: 'wss://relay.cinacoin.com/v1',
         chains: [
           {
             id: 1,
@@ -55,19 +55,19 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       }}
     >
       <App />
-    </CinaConnectProvider>
+    </CinacoinProvider>
   </React.StrictMode>,
 )
 ```
 
 ## Hook Reference
 
-### `useCinaConnect()`
+### `useCinacoin()`
 
-Access the full CinaConnect context:
+Access the full Cinacoin context:
 
 ```tsx
-import { useCinaConnect } from '@cinaconnect/react'
+import { useCinacoin } from '@cinacoin/react'
 
 function FullAccess() {
   const {
@@ -79,7 +79,7 @@ function FullAccess() {
     disconnect,      // () => Promise<void>
     switchChain,     // (chainId) => Promise<void>
     isSwitchingChain // boolean
-  } = useCinaConnect()
+  } = useCinacoin()
 
   return (
     <div>
@@ -97,7 +97,7 @@ function FullAccess() {
 Convenient access to the current account:
 
 ```tsx
-import { useAccount } from '@cinaconnect/react'
+import { useAccount } from '@cinacoin/react'
 
 function AccountInfo() {
   const { address, balance, chainId, chainName, chainSymbol } = useAccount()
@@ -119,7 +119,7 @@ function AccountInfo() {
 Connect to a wallet:
 
 ```tsx
-import { useConnect } from '@cinaconnect/react'
+import { useConnect } from '@cinacoin/react'
 
 function ConnectButtons() {
   const { connect, status, isSwitchingChain } = useConnect()
@@ -154,7 +154,7 @@ function ConnectButtons() {
 Disconnect from the current wallet:
 
 ```tsx
-import { useDisconnect } from '@cinaconnect/react'
+import { useDisconnect } from '@cinacoin/react'
 
 function DisconnectButton() {
   const { disconnect } = useDisconnect()
@@ -172,7 +172,7 @@ function DisconnectButton() {
 Get the current chain ID:
 
 ```tsx
-import { useChainId } from '@cinaconnect/react'
+import { useChainId } from '@cinacoin/react'
 
 function ChainDisplay() {
   const chainId = useChainId()
@@ -196,7 +196,7 @@ import {
   useSendCalls,
   useAtomicBatch,
   useCallsStatus,
-} from '@cinaconnect/react'
+} from '@cinacoin/react'
 
 function EIP5792Demo() {
   // Discover wallet capabilities
@@ -220,26 +220,26 @@ function EIP5792Demo() {
 ```tsx
 // src/App.tsx
 import {
-  useCinaConnect,
+  useCinacoin,
   useAccount,
   useConnect,
   useDisconnect,
   useChainId,
   ChainSwitcher,
   ConnectButton,
-} from '@cinaconnect/react'
+} from '@cinacoin/react'
 
 function App() {
   const account = useAccount()
   const chainId = useChainId()
-  const { connect, status, switchChain, isSwitchingChain } = useCinaConnect()
+  const { connect, status, switchChain, isSwitchingChain } = useCinacoin()
   const { disconnect } = useDisconnect()
 
   // ─── Disconnected State ───
   if (!account.address) {
     return (
       <div style={{ maxWidth: 400, margin: '40px auto', padding: 24 }}>
-        <h1>🔢 CinaConnect React Demo</h1>
+        <h1>🔢 Cinacoin React Demo</h1>
         <p>Status: <strong>{status}</strong></p>
         <ConnectButton />
         <hr />
@@ -309,10 +309,10 @@ export default App
 
 ```tsx
 import { useEffect } from 'react'
-import { useCinaConnect } from '@cinaconnect/react'
+import { useCinacoin } from '@cinacoin/react'
 
 function EventDemo() {
-  const { account } = useCinaConnect()
+  const { account } = useCinacoin()
 
   useEffect(() => {
     // Listen for account changes
@@ -337,7 +337,7 @@ function EventDemo() {
 ```tsx
 // src/hooks/useBalance.ts
 import { useState, useEffect } from 'react'
-import { useAccount } from '@cinaconnect/react'
+import { useAccount } from '@cinacoin/react'
 
 /**
  * Custom hook that fetches and formats balance.
@@ -361,7 +361,7 @@ export function useFormattedBalance() {
 ## UI Components
 
 ```tsx
-import { ConnectButton, ChainSwitcher } from '@cinaconnect/react'
+import { ConnectButton, ChainSwitcher } from '@cinacoin/react'
 
 // ConnectButton renders a styled connect/disconnect button
 <ConnectButton />

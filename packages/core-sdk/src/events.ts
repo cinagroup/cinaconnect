@@ -56,7 +56,7 @@ export class EventEmitter {
         try {
           handler(...args);
         } catch (err) {
-          console.error(`[CinaConnect] Event handler error for "${event}":`, err);
+          console.error(`[Cinacoin] Event handler error for "${event}":`, err);
         }
       }
     }

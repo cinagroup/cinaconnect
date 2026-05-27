@@ -1,15 +1,15 @@
 # 安装
 
-> 在各类项目中使用 CinaConnect。
+> 在各类项目中使用 Cinacoin。
 
 ## 支持的环境
 
 | 环境 | 包名 | 最低版本 |
 |------|------|---------|
-| Web (通用) | `@cinaconnect/core` | 0.1.0+ |
-| React | `@cinaconnect/react` | 0.1.0+ |
-| Vue | `@cinaconnect/vue` | 0.1.0+ |
-| React Native | `@cinaconnect/react-native` | 0.1.0+ |
+| Web (通用) | `@cinacoin/core` | 0.1.0+ |
+| React | `@cinacoin/react` | 0.1.0+ |
+| Vue | `@cinacoin/vue` | 0.1.0+ |
+| React Native | `@cinacoin/react-native` | 0.1.0+ |
 
 ## npm / yarn / pnpm
 
@@ -17,31 +17,31 @@
 
 ```bash
 # npm
-npm install @cinaconnect/core
+npm install @cinacoin/core
 
 # yarn
-yarn add @cinaconnect/core
+yarn add @cinacoin/core
 
 # pnpm
-pnpm add @cinaconnect/core
+pnpm add @cinacoin/core
 ```
 
 ### React 项目
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/react
+npm install @cinacoin/core @cinacoin/react
 ```
 
 ### Vue 项目
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/vue
+npm install @cinacoin/core @cinacoin/vue
 ```
 
 ### React Native 项目
 
 ```bash
-npm install @cinaconnect/core @cinaconnect/react-native
+npm install @cinacoin/core @cinacoin/react-native
 # 如果未安装 react-native-camera 等依赖
 npx pod-install  # iOS
 ```
@@ -52,7 +52,7 @@ npx pod-install  # iOS
 
 ```html
 <script type="module">
-  import { CinaConnect } from 'https://esm.sh/@cinaconnect/core'
+  import { Cinacoin } from 'https://esm.sh/@cinacoin/core'
   // ...
 </script>
 ```
@@ -73,8 +73,8 @@ npx pod-install  # iOS
 ```json
 {
   "dependencies": {
-    "@cinaconnect/core": "workspace:*",
-    "@cinaconnect/react": "workspace:*"
+    "@cinacoin/core": "workspace:*",
+    "@cinacoin/react": "workspace:*"
   }
 }
 ```
@@ -84,16 +84,16 @@ npx pod-install  # iOS
 | 依赖 | 最低版本 | 说明 |
 |------|---------|------|
 | TypeScript | 5.0+ | 推荐启用 |
-| React (React 适配器) | 18.0+ | 如使用 @cinaconnect/react |
+| React (React 适配器) | 18.0+ | 如使用 @cinacoin/react |
 | Node.js (开发时) | 18.0+ | 构建工具要求 |
 
 ## 验证安装
 
 ```bash
 # 检查包是否正确安装
-npm ls @cinaconnect/core
+npm ls @cinacoin/core
 
 # 应该看到类似输出：
 # my-project@1.0.0
-# └── @cinaconnect/core@0.1.0
+# └── @cinacoin/core@0.1.0
 ```

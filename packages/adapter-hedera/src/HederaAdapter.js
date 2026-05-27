@@ -2,7 +2,7 @@ import { HashPackConnector, announceHashPackEIP6963 } from './connectors/hashpac
 import { BladeWalletConnector, announceBladeEIP6963 } from './connectors/blade-wallet';
 import { KantaraWalletConnector, announceKantaraEIP6963 } from './connectors/kantara-wallet';
 /**
- * Hedera Hashgraph chain adapter for CinaConnect.
+ * Hedera Hashgraph chain adapter for Cinacoin.
  *
  * Supports Blade Wallet, HashPack, and Kantara Wallet.
  * Provides HBAR transfers, token transfers, smart contract calls,
@@ -10,7 +10,7 @@ import { KantaraWalletConnector, announceKantaraEIP6963 } from './connectors/kan
  *
  * @example
  * ```ts
- * import { HederaAdapter } from '@cinaconnect/adapter-hedera';
+ * import { HederaAdapter } from '@cinacoin/adapter-hedera';
  *
  * const adapter = new HederaAdapter();
  * adapter.registerConnector(new HashPackConnector());
@@ -78,7 +78,7 @@ export class HederaAdapter {
             .filter((c) => c !== undefined);
     }
     /**
-     * Set the underlying CinaConnect core connector.
+     * Set the underlying Cinacoin core connector.
      */
     setConnector(connector) {
         this._coreConnector = connector;

@@ -3,7 +3,7 @@
  *
  * Stores analytics events in browser localStorage (or memory fallback).
  */
-const STORAGE_KEY = "cinaconnect-analytics-events";
+const STORAGE_KEY = "cinacoin-analytics-events";
 const MAX_EVENTS = 1000;
 export class LocalStorageProvider {
     constructor() {

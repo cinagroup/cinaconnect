@@ -1,9 +1,9 @@
 #!/bin/bash
-echo "Checking @cinaconnect NPM packages..."
+echo "Checking @cinacoin NPM packages..."
 echo ""
 
 # Get all published packages
-PACKAGES=$(npm search @cinaconnect --json 2>/dev/null | jq -r '.[].name')
+PACKAGES=$(npm search @cinacoin --json 2>/dev/null | jq -r '.[].name')
 
 echo "Published packages on NPM:"
 echo "$PACKAGES" | while read pkg; do
@@ -27,7 +27,7 @@ cd /home/cina/.openclaw/workspace/onux/packages
 for dir in */; do
     name=${dir%/}
     if [ -f "$name/package.json" ]; then
-        pkg_name="@cinaconnect/$name"
+        pkg_name="@cinacoin/$name"
         published=$(echo "$PACKAGES" | grep -c "^$pkg_name$" || echo 0)
         if [ "$published" -eq 0 ]; then
             echo "⊗ $name (not published)"

@@ -17,7 +17,7 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "paths": {
-      "@cinaconnect/adapter-hedera": ["./src/index.ts"]
+      "@cinacoin/adapter-hedera": ["./src/index.ts"]
     }
   },
   "include": ["src"],

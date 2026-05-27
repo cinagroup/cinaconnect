@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/core-sdk",
+  "name": "@cinacoin/core-sdk",
   "version": "0.2.0",
-  "description": "CinaConnect Core SDK — Self-hosted wallet connection toolkit",
+  "description": "Cinacoin Core SDK — Self-hosted wallet connection toolkit",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/siwe": "workspace:*",
+    "@cinacoin/siwe": "workspace:*",
     "@noble/ciphers": "^2.2.0",
     "@noble/curves": "^2.2.0",
     "@noble/hashes": "^2.2.0",

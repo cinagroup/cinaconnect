@@ -1,4 +1,4 @@
-appId: com.cinaconnect.demo
+appId: com.cinacoin.demo
 ---
 - runFlow: subflows/launch.yaml
 - tapOn: { id: "connect_button" }

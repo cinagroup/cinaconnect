@@ -268,7 +268,7 @@ const HomePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-xl">🔢</span>
-              <span className="font-semibold">CinaConnect</span>
+              <span className="font-semibold">CinaCoin</span>
               <span className="text-gray-500 text-sm">v1.0.0</span>
             </div>
             <div className="flex items-center gap-6">

@@ -1,10 +1,10 @@
 # Keys Server
 
-> `@cinaconnect/keys-server` — Key management server for CinaConnect.
+> `@cinacoin/keys-server` — Key management server for Cinacoin.
 
 ## Overview
 
-The Keys Server manages cryptographic keys for the CinaConnect ecosystem, including relay key pairs, session keys, and signing keys.
+The Keys Server manages cryptographic keys for the Cinacoin ecosystem, including relay key pairs, session keys, and signing keys.
 
 ## Features
 

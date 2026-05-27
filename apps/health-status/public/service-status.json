@@ -3,27 +3,27 @@
   "services": [
     {
       "name": "Core SDK",
-      "url": "https://core.cinaconnect.dev/health",
+      "url": "https://core.cinacoin.dev/health",
       "description": "Core SDK relay and RPC services"
     },
     {
       "name": "SIWE Auth",
-      "url": "https://siwe.cinaconnect.dev/health",
+      "url": "https://siwe.cinacoin.dev/health",
       "description": "Sign-In With Ethereum authentication"
     },
     {
       "name": "React UI",
-      "url": "https://react.cinaconnect.dev/health",
+      "url": "https://react.cinacoin.dev/health",
       "description": "React component library and wallet connection"
     },
     {
       "name": "Smart Account",
-      "url": "https://smart-account.cinaconnect.dev/health",
+      "url": "https://smart-account.cinacoin.dev/health",
       "description": "Smart account and contract wallet services"
     },
     {
       "name": "Core UI",
-      "url": "https://ui.cinaconnect.dev/health",
+      "url": "https://ui.cinacoin.dev/health",
       "description": "Core UI component library"
     }
   ]

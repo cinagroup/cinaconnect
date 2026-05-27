@@ -1,7 +1,7 @@
 # 03 — Mobile SDK & Multi-Platform Comparison
 
 **Date:** 2026-05-17
-**Scope:** CinaAuth/CinaConnect vs Reown — all 5 mobile SDKs
+**Scope:** CinaAuth/Cinacoin vs Reown — all 5 mobile SDKs
 
 ---
 
@@ -74,7 +74,7 @@
 ### 3.2 Architecture Quality
 
 **iOS Swift — ⭐⭐⭐⭐ (Excellent)**
-- Clean singleton pattern (`CinaConnect.shared`)
+- Clean singleton pattern (`Cinacoin.shared`)
 - Combine-based reactive state (`@Published`)
 - Full WC v2 via WalletConnectSwiftV2 SPM dependency
 - Proper SwiftUI architecture with `@EnvironmentObject`
@@ -121,7 +121,7 @@
 - Editor inspector support with `[SerializeField]` attributes
 - Session persistence via `PlayerPrefs`
 - Event-driven architecture (delegates matching core-sdk patterns)
-- `CinaConnectTypes.cs` with full CAIP-2 types (ChainNamespace, ChainReference, Chain)
+- `CinacoinTypes.cs` with full CAIP-2 types (ChainNamespace, ChainReference, Chain)
 - `DeepLinkHandler` with 7 wallet configs
 - `EvmAdapter` and `SolanaAdapter` exist
 - `Siwe.cs` for EIP-4361
@@ -131,8 +131,8 @@
 - **⚠️ Critical gaps:** `WalletManager.cs` is ALL mock/TODO — no real WC v2 integration. Every method has `// TODO:` comments and returns placeholder data. This is the biggest quality gap across all packages.
 
 **React Native TypeScript — ⭐⭐⭐⭐ (Very Good)**
-- Context-based architecture (`CinaConnectProvider` + `useCinaConnectContext`)
-- Real WC v2 via `@cinaconnect/walletconnect-v2` package
+- Context-based architecture (`CinacoinProvider` + `useCinacoinContext`)
+- Real WC v2 via `@cinacoin/walletconnect-v2` package
 - `WalletConnectProvider` with balance state, session management
 - `ConnectModal` with deep linking, fallback timers, app store alerts
 - `ConnectButton` with real WC v2 connection state reading
@@ -207,15 +207,15 @@ WalletManager: ALL METHODS ARE MOCK
 
 ### React Native TypeScript
 ```
-Dependency: @cinaconnect/walletconnect-v2 (internal package)
-CinaConnectProvider → WcSessionManager
+Dependency: @cinacoin/walletconnect-v2 (internal package)
+CinacoinProvider → WcSessionManager
 - initiatePairing ✅
 - connectWithUri ✅
 - Session events (connected/disconnected/error) ✅
 - request() for arbitrary JSON-RPC ✅
 - wallet_switchEthereumChain ✅
 - Deep link integration via react-native Linking ✅
-- WALLET_REGISTRY from @cinaconnect/walletconnect-v2 ✅
+- WALLET_REGISTRY from @cinacoin/walletconnect-v2 ✅
 ```
 
 ---
@@ -322,7 +322,7 @@ CinaConnectProvider → WcSessionManager
 |---------|-----------|----------|---------------|
 | iOS Swift | 6 | 1,394 | Theme (3 modes), chain presets, SIWE msg build/parse/verify, deep links, EVM hex-to-eth, Solana address validation, WC URI parse/format, X25519 keypairs, encrypt/decrypt |
 | Android Kotlin | 6 | 548 | Theme colors, connect button rendering, deep link generation, EVM adapter errors, SIWE message, Solana adapter |
-| Flutter Dart | 9 | 948 | Most comprehensive: adapters, SIWE, deep links, push handler, wallet manager, connect button, cinaconnect core, solana adapter |
+| Flutter Dart | 9 | 948 | Most comprehensive: adapters, SIWE, deep links, push handler, wallet manager, connect button, cinacoin core, solana adapter |
 | Unity C# | 7 | 646 | Deep links, EVM adapter, editor tests, core manager, SIWE, Solana adapter, wallet manager |
 | React Native TS | 3 | 615 | Connect modal rendering, deep links, WalletConnectProvider |
 
@@ -352,7 +352,7 @@ CinaConnectProvider → WcSessionManager
 
 ## 9. Bottom Line
 
-**CinaAuth/CinaConnect mobile SDKs are architecturally sound and feature-rich for core wallet connectivity**, with real WC v2 protocol integration on iOS, Android, Flutter, and React Native. The code quality is high with good test coverage and consistent API surfaces across platforms.
+**CinaAuth/Cinacoin mobile SDKs are architecturally sound and feature-rich for core wallet connectivity**, with real WC v2 protocol integration on iOS, Android, Flutter, and React Native. The code quality is high with good test coverage and consistent API surfaces across platforms.
 
 **The critical gap is Unity C#** — it's a well-structured shell with zero real WC integration. Fixing this would bring all 5 platforms to parity.
 

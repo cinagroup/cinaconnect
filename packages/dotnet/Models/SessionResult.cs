@@ -1,10 +1,10 @@
 using System.Text.Json.Serialization;
 
-namespace CinaConnect.Models;
+namespace Cinacoin.Models;
 
 /// <summary>
 /// Result of a wallet session creation.
-/// Matches <c>CinaConnect.SessionResult</c> in the TypeScript type definitions.
+/// Matches <c>Cinacoin.SessionResult</c> in the TypeScript type definitions.
 /// </summary>
 public record SessionResult
 {

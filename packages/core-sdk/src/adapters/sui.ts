@@ -255,7 +255,7 @@ export function formatSuiBalance(mist: string | bigint | number): string {
  */
 export function parseSuiAmount(sui: string): bigint {
   const parts = sui.split('.');
-  const intPart = BigInt(parts[0]);
+  const intPart = BigInt(parts[0] || '0');
   let fracPart = 0n;
   if (parts.length > 1) {
     const frac = parts[1].padEnd(9, '0').slice(0, 9);
@@ -1098,7 +1098,7 @@ export class SuiChainAdapter {
 
   /* ---- Configuration ---- */
 
-  /** Set the CinaConnect connector. */
+  /** Set the Cinacoin connector. */
   setConnector(connector: Connector): void {
     this._connector = connector;
   }

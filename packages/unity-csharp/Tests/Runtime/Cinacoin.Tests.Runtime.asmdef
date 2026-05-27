@@ -1,0 +1,21 @@
+{
+  "name": "CinaConnect.Tests.Runtime",
+  "rootNamespace": "CinaConnect.Tests.Runtime",
+  "references": [
+    "CinaConnect.Runtime",
+    "com.unity.nuget.newtonsoft-json",
+    "UnityEditor.TestRunner",
+    "UnityEngine.TestRunner"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [
+    "UNITY_INCLUDE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

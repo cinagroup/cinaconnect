@@ -1,0 +1,22 @@
+{
+  "name": "CinaConnect.Runtime",
+  "rootNamespace": "CinaConnect",
+  "references": [
+    "com.unity.nuget.newtonsoft-json"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [
+    {
+      "name": "com.unity.modules.unitywebrequest",
+      "expression": "1.0.0",
+      "define": "CINACONNECT_WEBREQUEST"
+    }
+  ],
+  "noEngineReferences": false
+}

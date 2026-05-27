@@ -1,20 +1,20 @@
 # Svelte
 
-> `@cinaconnect/svelte` — Svelte adapter for CinaConnect.
+> `@cinacoin/svelte` — Svelte adapter for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/svelte @cinaconnect/core-sdk
+npm install @cinacoin/svelte @cinacoin/core-sdk
 ```
 
 ## Usage
 
 ```svelte
 <script>
-import { useCinaConnect } from '@cinaconnect/svelte'
+import { useCinacoin } from '@cinacoin/svelte'
 
-const { connect, account } = useCinaConnect()
+const { connect, account } = useCinacoin()
 </script>
 
 <button on:click={connect}>Connect</button>

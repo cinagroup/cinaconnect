@@ -2,8 +2,8 @@
   "dashboard": {
     "id": null,
     "uid": "relay-metrics",
-    "title": "Relay Metrics — CinaConnect",
-    "tags": ["cinaconnect", "relay"],
+    "title": "Relay Metrics — Cinacoin",
+    "tags": ["cinacoin", "relay"],
     "timezone": "browser",
     "refresh": "10s",
     "time": {

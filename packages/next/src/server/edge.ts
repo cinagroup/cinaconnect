@@ -1,5 +1,5 @@
 /**
- * @cinaconnect/next/server — Edge Runtime auth helpers.
+ * @cinacoin/next/server — Edge Runtime auth helpers.
  *
  * Provides Edge-compatible middleware and auth utilities that work on
  * Vercel Edge Runtime, Cloudflare Workers, and other edge environments.
@@ -13,9 +13,9 @@
  * // middleware.ts (edge runtime)
  * export const config = { runtime: 'edge', matcher: ['/api/:path*'] };
  *
- * import { withCinaConnectAuthEdge } from '@cinaconnect/next/server/edge';
+ * import { withCinacoinAuthEdge } from '@cinacoin/next/server/edge';
  *
- * export const GET = withCinaConnectAuthEdge(async (req, session) => {
+ * export const GET = withCinacoinAuthEdge(async (req, session) => {
  *   return Response.json({ address: session.address });
  * });
  * ```
@@ -43,7 +43,7 @@ export interface EdgeServerSession {
 
 /** Options for edge auth middleware. */
 export interface EdgeAuthOptions {
-  /** Cookie name for the session token. @default 'cinaconnect-session' */
+  /** Cookie name for the session token. @default 'cinacoin-session' */
   cookieName?: string;
   /** SIWE domain for message verification. */
   domain?: string;
@@ -100,20 +100,20 @@ function decodeEdgeSessionToken(token: string): EdgeServerSession | null {
 }
 
 /**
- * Extract a CinaConnect session from an edge request.
+ * Extract a Cinacoin session from an edge request.
  *
  * Works on Vercel Edge Runtime, Cloudflare Workers, and other edge
  * environments that support the Web API.
  *
  * ```ts
- * const session = await getEdgeSession(req, { cookieName: 'cinaconnect-session' });
+ * const session = await getEdgeSession(req, { cookieName: 'cinacoin-session' });
  * ```
  */
 export async function getEdgeSession(
   req: NextRequest,
   options: { cookieName?: string; secret?: string } = {},
 ): Promise<EdgeServerSession | null> {
-  const cookieName = options.cookieName ?? 'cinaconnect-session';
+  const cookieName = options.cookieName ?? 'cinacoin-session';
   const cookieValue = parseSessionCookie(req, cookieName);
 
   if (!cookieValue) return null;
@@ -137,9 +137,9 @@ export async function getEdgeSession(
  * // app/api/profile/route.ts
  * export const runtime = 'edge';
  *
- * import { withCinaConnectAuthEdge } from '@cinaconnect/next/server/edge';
+ * import { withCinacoinAuthEdge } from '@cinacoin/next/server/edge';
  *
- * export const GET = withCinaConnectAuthEdge(async (req, session) => {
+ * export const GET = withCinacoinAuthEdge(async (req, session) => {
  *   return Response.json({ address: session.address });
  * });
  * ```
@@ -148,14 +148,14 @@ export async function getEdgeSession(
  * @param options - Optional auth configuration.
  * @returns A wrapped handler that enforces authentication.
  */
-export function withCinaConnectAuthEdge<
+export function withCinacoinAuthEdge<
   T extends NextRequest,
   R extends Response,
 >(
   handler: (req: T, session: EdgeServerSession) => Promise<R>,
   options?: EdgeAuthOptions,
 ): (req: T) => Promise<R> {
-  const cookieName = options?.cookieName ?? 'cinaconnect-session';
+  const cookieName = options?.cookieName ?? 'cinacoin-session';
 
   return async (req: T): Promise<R> => {
     const session = await getEdgeSession(req, { cookieName });
@@ -182,7 +182,7 @@ export function withCinaConnectAuthEdge<
  * // middleware.ts
  * export const runtime = 'edge';
  *
- * import { requireAuthEdge } from '@cinaconnect/next/server/edge';
+ * import { requireAuthEdge } from '@cinacoin/next/server/edge';
  *
  * export const middleware = requireAuthEdge({
  *   loginUrl: '/login',
@@ -197,7 +197,7 @@ export function withCinaConnectAuthEdge<
 export function requireAuthEdge(options?: EdgeAuthOptions) {
   const loginUrl = options?.loginUrl ?? '/login';
   const publicPaths = options?.publicPaths ?? [];
-  const cookieName = options?.cookieName ?? 'cinaconnect-session';
+  const cookieName = options?.cookieName ?? 'cinacoin-session';
 
   return async function edgeMiddleware(req: NextRequest) {
     const { NextResponse } = await import('next/server');
@@ -249,7 +249,7 @@ export function createSessionCookieHeader(
     path?: string;
   } = {},
 ): string {
-  const name = options.cookieName ?? 'cinaconnect-session';
+  const name = options.cookieName ?? 'cinacoin-session';
   const maxAge = options.maxAge ?? 86400; // 24 hours
   const secure = options.secure ?? true;
   const httpOnly = options.httpOnly ?? true;

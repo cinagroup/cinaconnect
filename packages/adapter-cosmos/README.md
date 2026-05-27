@@ -1,17 +1,17 @@
-# @cinaconnect/adapter-cosmos
+# @cinacoin/adapter-cosmos
 
-Cosmos ecosystem chain adapter for CinaConnect — Keplr, Leap, Cosmos SDK chains.
+Cosmos ecosystem chain adapter for Cinacoin — Keplr, Leap, Cosmos SDK chains.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/adapter-cosmos
+npm install @cinacoin/adapter-cosmos
 ```
 
 ## Usage
 
 ```ts
-import { CosmosAdapter } from '@cinaconnect/adapter-cosmos';
+import { CosmosAdapter } from '@cinacoin/adapter-cosmos';
 
 const adapter = new CosmosAdapter({
   projectId: 'YOUR_PROJECT_ID',

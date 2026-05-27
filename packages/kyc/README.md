@@ -1,17 +1,17 @@
-# @cinaconnect/kyc
+# @cinacoin/kyc
 
 KYC/AML compliance screening for transactions and payments.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/kyc
+npm install @cinacoin/kyc
 ```
 
 ## Usage
 
 ```ts
-import { screenAddress, KycBadge } from '@cinaconnect/kyc';
+import { screenAddress, KycBadge } from '@cinacoin/kyc';
 
 const result = await screenAddress('0x...');
 if (result.riskLevel === 'high') { /* block */ }

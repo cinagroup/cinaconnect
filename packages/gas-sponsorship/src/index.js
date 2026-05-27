@@ -1,5 +1,5 @@
 /**
- * @module @cinaconnect/gas-sponsorship
+ * @module @cinacoin/gas-sponsorship
  * Enterprise gas sponsorship for smart accounts via paymaster integration.
  *
  * Supports Pimlico, Alchemy, and Candle paymasters.

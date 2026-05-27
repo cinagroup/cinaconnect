@@ -1,7 +1,7 @@
 /**
  * BundlerClient — Real HTTP JSON-RPC client for ERC-4337 bundlers.
  *
- * Communicates with the cinaconnect bundler (or any ERC-4337 compliant
+ * Communicates with the cinacoin bundler (or any ERC-4337 compliant
  * bundler) over HTTP POST using the standard RPC methods:
  *   - eth_sendUserOperation
  *   - eth_estimateUserOperationGas

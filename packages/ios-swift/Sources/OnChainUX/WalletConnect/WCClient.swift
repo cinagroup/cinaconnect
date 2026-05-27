@@ -468,10 +468,10 @@ public struct WCAppMetadata: Sendable {
     }
     
     public static let `default` = WCAppMetadata(
-        name: "CinaConnect dApp",
-        description: "Connected via CinaConnect",
-        url: "https://cinaconnect.io",
-        icons: ["https://cinaconnect.io/icon.png"]
+        name: "Cinacoin dApp",
+        description: "Connected via Cinacoin",
+        url: "https://cinacoin.io",
+        icons: ["https://cinacoin.io/icon.png"]
     )
 }
 

@@ -1,5 +1,5 @@
 /**
- * CinaConnect Telegram Mini App SDK.
+ * Cinacoin Telegram Mini App SDK.
  *
  * Wallet connectivity and user identity for Telegram Mini Apps.
  *

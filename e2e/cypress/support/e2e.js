@@ -1,5 +1,5 @@
 // ***************************************************************
-// CinaConnect E2E Support File
+// Cinacoin E2E Support File
 // ***************************************************************
 // This file is processed and bundled when tests run.
 // It imports custom commands so they are available in all tests.

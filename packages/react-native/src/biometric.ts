@@ -24,7 +24,7 @@
  *
  * ## Usage
  * ```tsx
- * import { useBiometricAuth } from '@cinaconnect/react-native/biometric';
+ * import { useBiometricAuth } from '@cinacoin/react-native/biometric';
  *
  * function SignTransaction() {
  *   const { authenticate, isSupported, isEnrolled } = useBiometricAuth();
@@ -130,7 +130,7 @@ export class BiometricKeyStore {
   private _accessControl: string;
 
   constructor(options: BiometricKeyStoreOptions = {}) {
-    this._service = options.service ?? 'cinaconnect-wallet';
+    this._service = options.service ?? 'cinacoin-wallet';
     this._requireBiometry = options.requireBiometry ?? true;
     this._accessControl = options.accessControl ?? 'biometryCurrentSet';
   }
@@ -184,11 +184,11 @@ export class BiometricKeyStore {
         prompt: biometricPrompt ?? 'Authenticate to access wallet key',
       });
 
-      if (!credentials || !credentials.password) {
+      if (!credentials || typeof credentials === 'boolean' || !credentials.password) {
         throw new Error('Key not found in secure store');
       }
 
-      return credentials.password;
+      return (credentials as { password: string }).password;
     } catch (error) {
       throw new Error(
         `BiometricKeyStore.getKey failed: ${error instanceof Error ? error.message : 'react-native-keychain not available'}`,
@@ -253,7 +253,7 @@ export class BiometricKeyStore {
         service: `${this._service}:__index__`,
         accessControl: 'NO_AUTHENTICATION_REQUIRED',
       });
-      if (credentials?.password) {
+      if (credentials && typeof credentials === 'object' && credentials.password) {
         return JSON.parse(credentials.password) as string[];
       }
     } catch {
@@ -405,7 +405,7 @@ export function useBiometricAuth(): UseBiometricAuthReturn {
         // Use a dummy credential lookup to trigger the biometric prompt
         // The prompt will appear and the user must authenticate
         await getGenericPassword({
-          service: 'cinaconnect-biometric-check',
+          service: 'cinacoin-biometric-check',
           accessControl: 'BIOMETRY_CURRENT_SET',
           prompt: {
             title: options.promptTitle ?? 'Authentication Required',

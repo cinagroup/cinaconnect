@@ -6,7 +6,7 @@
  */
 
 import type { SIWXParams, SIWXResult, SIWXVerifyInput } from '../types.js';
-import { generateMessage as generateSIWEMessage, parseMessage, verifyMessage } from '@cinaconnect/siwe';
+import { generateMessage as generateSIWEMessage, parseMessage, verifyMessage } from '@cinacoin/siwe';
 
 /**
  * Create a sign-in message for EVM chains using EIP-4361 format.

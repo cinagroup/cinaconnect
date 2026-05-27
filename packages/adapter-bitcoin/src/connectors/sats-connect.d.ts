@@ -11,7 +11,7 @@ export type { AddressPurpose, RpcError, RpcMethod, GetAddressResponse, SignMessa
  *
  * @example
  * ```ts
- * import { SatsConnectConnector } from '@cinaconnect/adapter-bitcoin';
+ * import { SatsConnectConnector } from '@cinacoin/adapter-bitcoin';
  *
  * const connector = new SatsConnectConnector();
  * if (connector.isAvailable()) {

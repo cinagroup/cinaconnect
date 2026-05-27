@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-# CinaConnect Full Functionality Test Script
+# CinaCoin Full Functionality Test Script
 # Tests all deployed applications and Workers
 
 CLOUDFLARE_API_TOKEN="${CLOUDFLARE_API_TOKEN:-}"  # Set via environment or .env
@@ -55,7 +55,7 @@ test_endpoint() {
 
 # Main
 echo "=================================================="
-echo "  CinaConnect Complete Functionality Test"
+echo "  CinaCoin Complete Functionality Test"
 echo "=================================================="
 echo ""
 
@@ -68,27 +68,27 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 test_endpoint "RPC Proxy - Health" \
-    "https://cinaconnect-rpc-proxy.cinagroup.workers.dev/health" \
+    "https://cinacoin-rpc-proxy.cinagroup.workers.dev/health" \
     200 \
     "\"status\":\"ok\""
 
 test_endpoint "Keys Server - Health" \
-    "https://cinaconnect-keys-server.cinagroup.workers.dev/health" \
+    "https://cinacoin-keys-server.cinagroup.workers.dev/health" \
     200 \
     "\"status\":\"ok\""
 
 test_endpoint "Relay Server - Health" \
-    "https://cinaconnect-relay-server.cinagroup.workers.dev/health" \
+    "https://cinacoin-relay-server.cinagroup.workers.dev/health" \
     200 \
     "\"status\":\"ok\""
 
 test_endpoint "Notify Server - Health" \
-    "https://cinaconnect-notify-server.cinagroup.workers.dev/health" \
+    "https://cinacoin-notify-server.cinagroup.workers.dev/health" \
     200 \
     "\"status\":\"ok\""
 
 test_endpoint "Push Server - Health" \
-    "https://cinaconnect-push-server.cinagroup.workers.dev/health" \
+    "https://cinacoin-push-server.cinagroup.workers.dev/health" \
     200 \
     "\"status\":\"ok\""
 
@@ -102,23 +102,23 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 test_endpoint "RPC Proxy - Metrics" \
-    "https://cinaconnect-rpc-proxy.cinagroup.workers.dev/metrics" \
+    "https://cinacoin-rpc-proxy.cinagroup.workers.dev/metrics" \
     200
 
 test_endpoint "Keys Server - Metrics" \
-    "https://cinaconnect-keys-server.cinagroup.workers.dev/metrics" \
+    "https://cinacoin-keys-server.cinagroup.workers.dev/metrics" \
     200
 
 test_endpoint "Relay Server - Metrics" \
-    "https://cinaconnect-relay-server.cinagroup.workers.dev/metrics" \
+    "https://cinacoin-relay-server.cinagroup.workers.dev/metrics" \
     200
 
 test_endpoint "Notify Server - Metrics" \
-    "https://cinaconnect-notify-server.cinagroup.workers.dev/metrics" \
+    "https://cinacoin-notify-server.cinagroup.workers.dev/metrics" \
     200
 
 test_endpoint "Push Server - Metrics" \
-    "https://cinaconnect-push-server.cinagroup.workers.dev/metrics" \
+    "https://cinacoin-push-server.cinagroup.workers.dev/metrics" \
     200
 
 # ============================================================================
@@ -131,9 +131,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 test_endpoint "Demo App - Homepage" \
-    "https://cinaconnect-demo.pages.dev/" \
+    "https://cinacoin-demo.pages.dev/" \
     200 \
-    "CinaConnect"
+    "CinaCoin"
 
 test_endpoint "Backend Dashboard - Homepage" \
     "https://backend-dashboard.pages.dev/" \
@@ -141,14 +141,14 @@ test_endpoint "Backend Dashboard - Homepage" \
     "Dashboard"
 
 test_endpoint "Health Status Page - Homepage" \
-    "https://cinaconnect-health-status.pages.dev/" \
+    "https://cinacoin-health-status.pages.dev/" \
     200 \
     "Service Status"
 
 test_endpoint "API Documentation Site - Homepage" \
-    "https://cinaconnect-docs.pages.dev/" \
+    "https://cinacoin-docs.pages.dev/" \
     200 \
-    "CinaConnect"
+    "CinaCoin"
 
 # ============================================================================
 # SECTION 4: Backend Dashboard Pages
@@ -193,19 +193,19 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo ""
 
 test_endpoint "API Docs - Quick Start" \
-    "https://cinaconnect-docs.pages.dev/guide/quick-start" \
+    "https://cinacoin-docs.pages.dev/guide/quick-start" \
     200
 
 test_endpoint "API Docs - Installation" \
-    "https://cinaconnect-docs.pages.dev/guide/installation" \
+    "https://cinacoin-docs.pages.dev/guide/installation" \
     200
 
 test_endpoint "API Docs - Core SDK" \
-    "https://cinaconnect-docs.pages.dev/api/core-sdk" \
+    "https://cinacoin-docs.pages.dev/api/core-sdk" \
     200
 
 test_endpoint "API Docs - React SDK" \
-    "https://cinaconnect-docs.pages.dev/api/react" \
+    "https://cinacoin-docs.pages.dev/api/react" \
     200
 
 # ============================================================================

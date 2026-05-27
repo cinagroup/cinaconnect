@@ -1,6 +1,6 @@
 # Analytics API Documentation
 
-> Generated API reference for `@cinaconnect/analytics`.
+> Generated API reference for `@cinacoin/analytics`.
 
 ## Overview
 
@@ -9,7 +9,7 @@ The Analytics SDK provides self-hosted, privacy-first analytics for tracking wal
 ## Installation
 
 ```bash
-npm install @cinaconnect/analytics
+npm install @cinacoin/analytics
 ```
 
 ## Core Classes
@@ -19,7 +19,7 @@ npm install @cinaconnect/analytics
 Main analytics tracking instance.
 
 ```typescript
-import { AnalyticsTracker } from '@cinaconnect/analytics'
+import { AnalyticsTracker } from '@cinacoin/analytics'
 
 const analytics = new AnalyticsTracker({
   endpoint: 'https://analytics.yourdomain.com/api/v1/track',
@@ -115,7 +115,7 @@ Pause all tracking (GDPR compliance).
 
 | Event | Triggered When | Properties |
 |-------|---------------|------------|
-| `app_initialized` | CinaConnect is initialized | `version`, `chains` |
+| `app_initialized` | Cinacoin is initialized | `version`, `chains` |
 | `connector_detected` | A wallet connector is discovered | `type`, `name`, `isAvailable` |
 | `connect_attempt` | User clicks connect | `connector`, `method` |
 | `wallet_connected` | Connection succeeds | `walletType`, `chainId`, `duration` |
@@ -193,7 +193,7 @@ interface TransactionData {
 ### Basic Setup with Auto-Track
 
 ```typescript
-import { AnalyticsTracker } from '@cinaconnect/analytics'
+import { AnalyticsTracker } from '@cinacoin/analytics'
 
 const analytics = new AnalyticsTracker({
   endpoint: 'https://analytics.yourdomain.com/api/v1/track',
@@ -207,7 +207,7 @@ const analytics = new AnalyticsTracker({
 ### Custom Tracking with Strict Privacy
 
 ```typescript
-import { AnalyticsTracker } from '@cinaconnect/analytics'
+import { AnalyticsTracker } from '@cinacoin/analytics'
 
 const analytics = new AnalyticsTracker({
   endpoint: '/api/analytics',
@@ -241,7 +241,7 @@ analytics.track({
 // User opts out of analytics
 function onUserOptOut() {
   analytics.disable()
-  localStorage.removeItem('cinaconnect_analytics_id')
+  localStorage.removeItem('cinacoin_analytics_id')
 }
 
 // User opts back in

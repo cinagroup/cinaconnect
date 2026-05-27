@@ -1,5 +1,5 @@
 /**
- * CinaConnect Notify Server — Cloudflare Worker
+ * Cinacoin Notify Server — Cloudflare Worker
  *
  * Notification delivery service supporting push, email, and webhook channels.
  */

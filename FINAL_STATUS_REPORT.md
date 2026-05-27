@@ -1,8 +1,8 @@
-# CinaConnect — Final Project Status Report
+# Cinacoin — Final Project Status Report
 
 > **Report Date:** 2026-05-18 09:46 UTC  
 > **Version:** 1.0.0  
-> **Project:** CinaConnect v1.0 — Self-hosted Wallet Connection Toolkit  
+> **Project:** Cinacoin v1.0 — Self-hosted Wallet Connection Toolkit  
 > **Author:** CinaGroup Engineering  
 > **Status:** 98.5% Complete — Ready for Stakeholder Review
 
@@ -10,7 +10,7 @@
 
 ## 📋 Executive Summary
 
-CinaConnect is a **complete, self-hosted, open-source Web3 SDK** designed as a full replacement for Reown AppKit (formerly WalletConnect/Web3Modal). It eliminates licensing restrictions, MAU caps, and infrastructure dependencies while providing equivalent — and in many areas superior — functionality.
+Cinacoin is a **complete, self-hosted, open-source Web3 SDK** designed as a full replacement for Reown AppKit (formerly WalletConnect/Web3Modal). It eliminates licensing restrictions, MAU caps, and infrastructure dependencies while providing equivalent — and in many areas superior — functionality.
 
 ### What Was Delivered
 
@@ -21,7 +21,7 @@ CinaConnect is a **complete, self-hosted, open-source Web3 SDK** designed as a f
 | **2 apps** (demo + demo-react) with real wallet logic | ✅ Complete |
 | **119 unit test files** across packages | ✅ Complete |
 | **35 E2E test specs** (Cypress + Playwright) | ✅ Complete |
-| **1 package published** to npm (`@cinaconnect/core-sdk`) | ✅ Live |
+| **1 package published** to npm (`@cinacoin/core-sdk`) | ✅ Live |
 | **2 Cloudflare Workers** deployed (RPC Proxy, Keys Server) | ✅ Live |
 | **132,450 lines** of TypeScript source code | ✅ Complete |
 | **MIT Licensed** — no commercial restrictions | ✅ Verified |
@@ -38,129 +38,129 @@ The remaining 1.5% covers: publishing remaining 62 packages to npm, enabling com
 
 | Package | Version | Built | Published | Notes |
 |---------|---------|-------|-----------|-------|
-| `@cinaconnect/core-sdk` | 0.2.0 | ✅ | ✅ npm | Core SDK — wallet connections, encryption, sessions |
-| `@cinaconnect/walletconnect-v2` | 0.2.0 | ✅ | — | WC v2 adapter (exports partially commented) |
-| `@cinaconnect/relay-server` | 0.2.0 | ✅ | — | WebSocket relay (Rust + Cloudflare Workers) |
-| `@cinaconnect/rpc-proxy` | 0.2.0 | ✅ | — | RPC proxy with caching |
-| `@cinaconnect/keys-server` | 0.2.0 | ✅ | — | Key management service |
-| `@cinaconnect/blockchain-api` | 0.2.0 | ✅ | — | Blockchain API layer |
-| `@cinaconnect/cli` | 0.2.0 | ✅ | — | CLI tooling |
+| `@cinacoin/core-sdk` | 0.2.0 | ✅ | ✅ npm | Core SDK — wallet connections, encryption, sessions |
+| `@cinacoin/walletconnect-v2` | 0.2.0 | ✅ | — | WC v2 adapter (exports partially commented) |
+| `@cinacoin/relay-server` | 0.2.0 | ✅ | — | WebSocket relay (Rust + Cloudflare Workers) |
+| `@cinacoin/rpc-proxy` | 0.2.0 | ✅ | — | RPC proxy with caching |
+| `@cinacoin/keys-server` | 0.2.0 | ✅ | — | Key management service |
+| `@cinacoin/blockchain-api` | 0.2.0 | ✅ | — | Blockchain API layer |
+| `@cinacoin/cli` | 0.2.0 | ✅ | — | CLI tooling |
 
 ### Chain Adapters (8 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/adapter-bitcoin` | 1.0.0 | ✅ | Bitcoin (BIP-32/39/44) |
-| `@cinaconnect/adapter-cosmos` | 1.0.0 | ✅ | Cosmos SDK chains |
-| `@cinaconnect/adapter-hedera` | 1.0.0 | ✅ | Hedera Hashgraph |
-| `@cinaconnect/adapter-near` | 1.0.0 | ✅ | NEAR Protocol |
-| `@cinaconnect/adapter-starknet` | 1.0.0 | ✅ | Starknet L2 |
-| `@cinaconnect/adapter-sui` | 1.0.0 | ✅ | Sui Network |
-| `@cinaconnect/adapter-xrpl` | 1.0.0 | ✅ | XRP Ledger |
-| `@cinaconnect/erc6492` | 0.2.0 | ✅ | ERC-6492 signature validation |
+| `@cinacoin/adapter-bitcoin` | 1.0.0 | ✅ | Bitcoin (BIP-32/39/44) |
+| `@cinacoin/adapter-cosmos` | 1.0.0 | ✅ | Cosmos SDK chains |
+| `@cinacoin/adapter-hedera` | 1.0.0 | ✅ | Hedera Hashgraph |
+| `@cinacoin/adapter-near` | 1.0.0 | ✅ | NEAR Protocol |
+| `@cinacoin/adapter-starknet` | 1.0.0 | ✅ | Starknet L2 |
+| `@cinacoin/adapter-sui` | 1.0.0 | ✅ | Sui Network |
+| `@cinacoin/adapter-xrpl` | 1.0.0 | ✅ | XRP Ledger |
+| `@cinacoin/erc6492` | 0.2.0 | ✅ | ERC-6492 signature validation |
 
 ### Framework SDKs (8 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/react` | 0.2.0 | ✅ | React hooks + EIP-5792 support |
-| `@cinaconnect/next` | 0.2.0 | ✅ | Next.js integration |
-| `@cinaconnect/vue` | 0.2.0 | ✅ | Vue 3 Composition API |
-| `@cinaconnect/svelte` | 0.2.0 | ✅ | Svelte integration |
-| `@cinaconnect/angular` | 0.2.0 | ✅ | Angular integration |
-| `@cinaconnect/nuxt` | 1.0.0 | ✅ | Nuxt.js integration |
-| `@cinaconnect/react-native` | 0.2.0 | ✅ | Type definitions + SDK |
-| `@cinaconnect/testing` | 0.2.0 | ✅ | Shared test utilities |
+| `@cinacoin/react` | 0.2.0 | ✅ | React hooks + EIP-5792 support |
+| `@cinacoin/next` | 0.2.0 | ✅ | Next.js integration |
+| `@cinacoin/vue` | 0.2.0 | ✅ | Vue 3 Composition API |
+| `@cinacoin/svelte` | 0.2.0 | ✅ | Svelte integration |
+| `@cinacoin/angular` | 0.2.0 | ✅ | Angular integration |
+| `@cinacoin/nuxt` | 1.0.0 | ✅ | Nuxt.js integration |
+| `@cinacoin/react-native` | 0.2.0 | ✅ | Type definitions + SDK |
+| `@cinacoin/testing` | 0.2.0 | ✅ | Shared test utilities |
 
 ### Mobile & Game Engine SDKs (6 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/android-kotlin` | 0.2.0 | ✅ | Android SDK (Kotlin) |
-| `@cinaconnect/ios-swift` | 0.2.0 | ✅ | iOS SDK (Swift) |
-| `@cinaconnect/flutter-dart` | 0.2.0 | ✅ | Flutter/Dart SDK |
-| `@cinaconnect/unity-csharp` | 0.2.0 | ✅ | Unity/C# — **21 C# files** |
-| `@cinaconnect/dotnet` | 0.2.0 | ⏳ | .NET — **22 C# files** (source complete, build pending) |
-| `@cinaconnect/react-native` | 0.2.0 | ✅ | (also listed in Framework SDKs) |
+| `@cinacoin/android-kotlin` | 0.2.0 | ✅ | Android SDK (Kotlin) |
+| `@cinacoin/ios-swift` | 0.2.0 | ✅ | iOS SDK (Swift) |
+| `@cinacoin/flutter-dart` | 0.2.0 | ✅ | Flutter/Dart SDK |
+| `@cinacoin/unity-csharp` | 0.2.0 | ✅ | Unity/C# — **21 C# files** |
+| `@cinacoin/dotnet` | 0.2.0 | ⏳ | .NET — **22 C# files** (source complete, build pending) |
+| `@cinacoin/react-native` | 0.2.0 | ✅ | (also listed in Framework SDKs) |
 
 ### UI & Theme (6 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/core-ui` | 0.2.0 | ✅ | Core UI components |
-| `@cinaconnect/ui-theme` | 0.2.0 | ✅ | Theme system |
-| `@cinaconnect/design-tokens` | 0.2.0 | ✅ | Design token definitions |
-| `@cinaconnect/cinaconnect-ui-theme` | 0.2.0 | ✅ | Branded UI theme |
-| `@cinaconnect/pay-ui` | 0.2.0 | ✅ | Payment UI components |
-| `@cinaconnect/wallet-buttons` | 0.2.0 | ✅ | Wallet connect buttons |
+| `@cinacoin/core-ui` | 0.2.0 | ✅ | Core UI components |
+| `@cinacoin/ui-theme` | 0.2.0 | ✅ | Theme system |
+| `@cinacoin/design-tokens` | 0.2.0 | ✅ | Design token definitions |
+| `@cinacoin/cinacoin-ui-theme` | 0.2.0 | ✅ | Branded UI theme |
+| `@cinacoin/pay-ui` | 0.2.0 | ✅ | Payment UI components |
+| `@cinacoin/wallet-buttons` | 0.2.0 | ✅ | Wallet connect buttons |
 
 ### Payments & DeFi (7 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/swap-sdk` | 0.2.0 | ✅ | DEX swap SDK 🔌 |
-| `@cinaconnect/onramp-sdk` | 0.2.0 | ✅ | Fiat on-ramp 🔌 |
-| `@cinaconnect/payment-flow` | 0.2.0 | ✅ | Payment orchestration |
-| `@cinaconnect/deposit` | 0.2.0 | ✅ | Deposit management |
-| `@cinaconnect/gas-estimator` | 0.2.0 | ✅ | Gas price estimation |
-| `@cinaconnect/gas-sponsorship` | 0.2.0 | ✅ | ERC-4337 gas sponsorship |
-| `@cinaconnect/batch-transaction` | 0.2.0 | ✅ | Batch transaction builder |
+| `@cinacoin/swap-sdk` | 0.2.0 | ✅ | DEX swap SDK 🔌 |
+| `@cinacoin/onramp-sdk` | 0.2.0 | ✅ | Fiat on-ramp 🔌 |
+| `@cinacoin/payment-flow` | 0.2.0 | ✅ | Payment orchestration |
+| `@cinacoin/deposit` | 0.2.0 | ✅ | Deposit management |
+| `@cinacoin/gas-estimator` | 0.2.0 | ✅ | Gas price estimation |
+| `@cinacoin/gas-sponsorship` | 0.2.0 | ✅ | ERC-4337 gas sponsorship |
+| `@cinacoin/batch-transaction` | 0.2.0 | ✅ | Batch transaction builder |
 
 ### Authentication & Security (6 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/siwe` | 0.2.0 | ✅ | Sign-In With Ethereum (EIP-4361) |
-| `@cinaconnect/siwx` | 0.2.0 | ✅ | Sign-In With X (CAIP-122) |
-| `@cinaconnect/passkey-auth` | 0.2.0 | ✅ | Passkey/biometric auth |
-| `@cinaconnect/social-login` | 0.2.0 | ✅ | OAuth social login |
-| `@cinaconnect/embedded-wallet` | 0.2.0 | ✅ | Embedded wallet management |
-| `@cinaconnect/session-keys` | 0.2.0 | ✅ | Session key management |
+| `@cinacoin/siwe` | 0.2.0 | ✅ | Sign-In With Ethereum (EIP-4361) |
+| `@cinacoin/siwx` | 0.2.0 | ✅ | Sign-In With X (CAIP-122) |
+| `@cinacoin/passkey-auth` | 0.2.0 | ✅ | Passkey/biometric auth |
+| `@cinacoin/social-login` | 0.2.0 | ✅ | OAuth social login |
+| `@cinacoin/embedded-wallet` | 0.2.0 | ✅ | Embedded wallet management |
+| `@cinacoin/session-keys` | 0.2.0 | ✅ | Session key management |
 
 ### Advanced Features (8 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/aa-sdk` | 0.2.0 | ✅ | Account Abstraction (ERC-4337) |
-| `@cinaconnect/bundler` | 0.2.0 | ✅ | ERC-4337 Bundler |
-| `@cinaconnect/paymaster` | 0.2.0 | ✅ | ERC-4337 Paymaster |
-| `@cinaconnect/cross-chain-sync` | 0.2.0 | ✅ | Cross-chain session sync |
-| `@cinaconnect/multiwallet` | 0.2.0 | ✅ | Multi-wallet management |
-| `@cinaconnect/wallet-recovery` | 0.2.0 | ✅ | Wallet recovery utilities |
-| `@cinaconnect/wallet-recommender` | 0.2.0 | ✅ | Wallet recommendation engine |
-| `@cinaconnect/safe-decoder` | 0.2.0 | ✅ | Safe transaction decoder |
+| `@cinacoin/aa-sdk` | 0.2.0 | ✅ | Account Abstraction (ERC-4337) |
+| `@cinacoin/bundler` | 0.2.0 | ✅ | ERC-4337 Bundler |
+| `@cinacoin/paymaster` | 0.2.0 | ✅ | ERC-4337 Paymaster |
+| `@cinacoin/cross-chain-sync` | 0.2.0 | ✅ | Cross-chain session sync |
+| `@cinacoin/multiwallet` | 0.2.0 | ✅ | Multi-wallet management |
+| `@cinacoin/wallet-recovery` | 0.2.0 | ✅ | Wallet recovery utilities |
+| `@cinacoin/wallet-recommender` | 0.2.0 | ✅ | Wallet recommendation engine |
+| `@cinacoin/safe-decoder` | 0.2.0 | ✅ | Safe transaction decoder |
 
 ### Platform Integrations (4 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/telegram-miniapp` | 0.2.0 | ✅ | Telegram Mini Apps |
-| `@cinaconnect/farcaster-miniapp` | 0.2.0 | ✅ | Farcaster Frames/Mini Apps |
-| `@cinaconnect/ens-resolver` | 0.2.0 | ✅ | ENS resolution |
-| `@cinaconnect/kyc` | 0.2.0 | ✅ | KYC integration layer |
+| `@cinacoin/telegram-miniapp` | 0.2.0 | ✅ | Telegram Mini Apps |
+| `@cinacoin/farcaster-miniapp` | 0.2.0 | ✅ | Farcaster Frames/Mini Apps |
+| `@cinacoin/ens-resolver` | 0.2.0 | ✅ | ENS resolution |
+| `@cinacoin/kyc` | 0.2.0 | ✅ | KYC integration layer |
 
 ### Developer Tools & Utilities (8 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/codemod` | 0.2.0 | ✅ | Migration codemods |
-| `@cinaconnect/analytics` | 0.2.0 | ✅ | Analytics SDK |
-| `@cinaconnect/config` | 0.2.0 | ✅ | Shared config & types |
-| `@cinaconnect/token-list` | 0.2.0 | ✅ | Token list management |
-| `@cinaconnect/explorer` | 0.2.0 | ✅ | Block explorer integration |
-| `@cinaconnect/cdn` | 0.2.0 | ✅ | CDN asset serving |
-| `@cinaconnect/custom-connectors` | 0.2.0 | ✅ | Custom wallet connectors |
-| `@cinaconnect/i18n` | 2.0.0 | ✅ | Internationalization |
+| `@cinacoin/codemod` | 0.2.0 | ✅ | Migration codemods |
+| `@cinacoin/analytics` | 0.2.0 | ✅ | Analytics SDK |
+| `@cinacoin/config` | 0.2.0 | ✅ | Shared config & types |
+| `@cinacoin/token-list` | 0.2.0 | ✅ | Token list management |
+| `@cinacoin/explorer` | 0.2.0 | ✅ | Block explorer integration |
+| `@cinacoin/cdn` | 0.2.0 | ✅ | CDN asset serving |
+| `@cinacoin/custom-connectors` | 0.2.0 | ✅ | Custom wallet connectors |
+| `@cinacoin/i18n` | 2.0.0 | ✅ | Internationalization |
 
 ### Specialized Packages (4 packages)
 
 | Package | Version | Built | Notes |
 |---------|---------|-------|-------|
-| `@cinaconnect/performance-utils` | 0.1.0 | ✅ | Performance monitoring & bundle analysis |
-| `@cinaconnect/cinaconnect-i18n` | 0.2.0 | ✅ | Branded i18n layer |
-| `@cinaconnect/push-server` | 0.2.0 | ✅ | Push notification server |
-| `@cinaconnect/notify-server` | 0.2.0 | ✅ | Notification server |
-| `@cinaconnect/travel-rule-demo` | 0.2.0 | ✅ | Travel Rule compliance demo |
+| `@cinacoin/performance-utils` | 0.1.0 | ✅ | Performance monitoring & bundle analysis |
+| `@cinacoin/cinacoin-i18n` | 0.2.0 | ✅ | Branded i18n layer |
+| `@cinacoin/push-server` | 0.2.0 | ✅ | Push notification server |
+| `@cinacoin/notify-server` | 0.2.0 | ✅ | Notification server |
+| `@cinacoin/travel-rule-demo` | 0.2.0 | ✅ | Travel Rule compliance demo |
 
 ---
 
@@ -208,7 +208,7 @@ The remaining 1.5% covers: publishing remaining 62 packages to npm, enabling com
 
 | Package | Status | Version |
 |---------|--------|---------|
-| `@cinaconnect/core-sdk` | ✅ Published | 0.2.0 |
+| `@cinacoin/core-sdk` | ✅ Published | 0.2.0 |
 | Remaining 62 packages | ⏳ Changesets prepared, ready to publish | 0.2.0 |
 
 **Publish command:** `pnpm run changeset:publish`
@@ -217,8 +217,8 @@ The remaining 1.5% covers: publishing remaining 62 packages to npm, enabling com
 
 | Service | URL | Status |
 |---------|-----|--------|
-| RPC Proxy | `rpc-proxy.cinaconnect.workers.dev` | ✅ Deployed & live |
-| Keys Server | `keys-server.cinaconnect.workers.dev` | ✅ Deployed & live |
+| RPC Proxy | `rpc-proxy.cinacoin.workers.dev` | ✅ Deployed & live |
+| Keys Server | `keys-server.cinacoin.workers.dev` | ✅ Deployed & live |
 
 **Deploy script:** `./deploy-cloudflare.sh`
 

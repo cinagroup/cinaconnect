@@ -1,13 +1,13 @@
 {
-  "name": "@cinaconnect/push-server",
+  "name": "@cinacoin/push-server",
   "version": "0.2.0",
-  "description": "Push notification server for CinaConnect — APNs and FCM delivery",
+  "description": "Push notification server for Cinacoin — APNs and FCM delivery",
   "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "module": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import": "./dist/index.js",
       "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
@@ -23,7 +23,7 @@
   },
   "license": "MIT",
   "dependencies": {
-    "@cinaconnect/core-sdk": "workspace:*"
+    "@cinacoin/core-sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",
@@ -31,5 +31,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "type": "module"
 }

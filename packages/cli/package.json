@@ -1,10 +1,10 @@
 {
-  "name": "@cinaconnect/cli",
+  "name": "@cinacoin/cli",
   "version": "0.2.0",
-  "description": "CLI tool for CinaConnect SDK — init, add, build, test",
+  "description": "CLI tool for Cinacoin SDK — init, add, build, test",
   "type": "module",
   "bin": {
-    "cinaconnect": "dist/index.js"
+    "cinacoin": "dist/index.js"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

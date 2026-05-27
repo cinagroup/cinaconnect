@@ -6,7 +6,7 @@
 
 import type { AnalyticsEvent, AnalyticsProvider } from "./types.js";
 
-const STORAGE_KEY = "cinaconnect-analytics-events";
+const STORAGE_KEY = "cinacoin-analytics-events";
 const MAX_EVENTS = 1000;
 
 export class LocalStorageProvider implements AnalyticsProvider {

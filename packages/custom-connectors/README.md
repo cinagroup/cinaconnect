@@ -1,17 +1,17 @@
-# @cinaconnect/custom-connectors
+# @cinacoin/custom-connectors
 
-Custom wallet connector interface and built-in connectors for CinaConnect.
+Custom wallet connector interface and built-in connectors for Cinacoin.
 
 ## Installation
 
 ```bash
-npm install @cinaconnect/custom-connectors
+npm install @cinacoin/custom-connectors
 ```
 
 ## Usage
 
 ```ts
-import { ConnectorFactory, InjectedConnector } from '@cinaconnect/custom-connectors';
+import { ConnectorFactory, InjectedConnector } from '@cinacoin/custom-connectors';
 
 const factory = new ConnectorFactory();
 const connector = factory.create('injected');
