@@ -225,6 +225,6 @@ export interface PolicyParams {
 
 function generatePolicyId(): string {
   const timestamp = Date.now().toString(36);
-  const random = Math.random().toString(36).slice(2, 8);
+  const random = crypto.randomUUID().slice(0, 8);
   return `policy-${timestamp}-${random}`;
 }

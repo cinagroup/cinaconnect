@@ -82,7 +82,7 @@ export function renderConnectModal(
   const modal = document.createElement("div");
   modal.className = "ocx-connect-modal";
   modal.style.cssText = getModalStyles(config.theme, config.primaryColor);
-  modal.innerHTML = getModalContent(config, _currentView);
+  renderModalView(modal, config, _currentView, options);
 
   (element as HTMLElement).innerHTML = "";
   element.appendChild(modal);
@@ -162,67 +162,223 @@ function handleWalletSelect(
   options: ConnectModalOptions
 ): void {
   _currentView = "connecting";
-  modal.innerHTML = getModalContent(config, "connecting");
+  renderModalView(modal, config, "connecting", options);
 
   // Simulate connection
   setTimeout(() => {
     _currentView = "connected";
     _address = "0x1234...5678";
-    modal.innerHTML = getModalContent(config, "connected");
+    renderModalView(modal, config, "connected", options);
 
     // Bind disconnect button
     const disconnectBtn = modal.querySelector(".ocx-disconnect-btn");
     disconnectBtn?.addEventListener("click", () => {
       _address = null;
       _currentView = "connect";
-      modal.innerHTML = getModalContent(config, "connect");
+      renderModalView(modal, config, "connect", options);
     });
 
     options.onConnect?.(_address!);
   }, 800);
 }
 
-function getModalContent(config: CinacoinConfig & ConnectModalOptions, view: ModalView): string {
+// ── Safe DOM rendering helpers ───────────────────────────────────────
+
+/**
+ * Render a modal view into the given container using safe DOM APIs (no innerHTML).
+ */
+function renderModalView(
+  container: HTMLElement,
+  config: CinacoinConfig & ConnectModalOptions,
+  view: ModalView,
+  options: ConnectModalOptions
+): void {
+  // Clear existing children safely
+  while (container.firstChild) {
+    container.removeChild(container.firstChild);
+  }
+
   if (view === "connecting") {
-    return `
-      <div style="text-align:center;padding:40px 24px;">
-        <div style="font-size:32px;margin-bottom:16px;">⏳</div>
-        <h3 style="margin:0 0 8px;color:${getTextColor(config.theme)};">Connecting...</h3>
-        <p style="margin:0;color:${getTextSecondary(config.theme)};font-size:14px;">Confirm in your wallet</p>
-      </div>
-    `;
+    renderConnectingView(container, config);
+  } else if (view === "connected") {
+    renderConnectedView(container, config, options);
+  } else {
+    renderConnectView(container, config, options);
   }
+}
 
-  if (view === "connected") {
-    return `
-      <div style="text-align:center;padding:40px 24px;">
-        <div style="font-size:32px;margin-bottom:16px;">✅</div>
-        <h3 style="margin:0 0 8px;color:${getTextColor(config.theme)};">Connected</h3>
-        <p style="margin:0 0 16px;color:${getTextSecondary(config.theme)};font-size:14px;">${escapeHtml(_address)}</p>
-        <button class="ocx-disconnect-btn" style="padding:8px 16px;background:transparent;border:1px solid ${getBorderColor(config.theme)};border-radius:8px;color:${getTextColor(config.theme)};cursor:pointer;">Disconnect</button>
-      </div>
-    `;
-  }
+function renderConnectingView(container: HTMLElement, config: CinacoinConfig & ConnectModalOptions): void {
+  const wrapper = document.createElement("div");
+  wrapper.style.textAlign = "center";
+  wrapper.style.padding = "40px 24px";
 
-  // Default: connect view
+  const icon = document.createElement("div");
+  icon.style.fontSize = "32px";
+  icon.style.marginBottom = "16px";
+  icon.textContent = "⏳";
+
+  const heading = document.createElement("h3");
+  heading.style.margin = "0 0 8px";
+  heading.style.color = getTextColor(config.theme);
+  heading.textContent = "Connecting...";
+
+  const text = document.createElement("p");
+  text.style.margin = "0";
+  text.style.color = getTextSecondary(config.theme);
+  text.style.fontSize = "14px";
+  text.textContent = "Confirm in your wallet";
+
+  wrapper.appendChild(icon);
+  wrapper.appendChild(heading);
+  wrapper.appendChild(text);
+  container.appendChild(wrapper);
+}
+
+function renderConnectedView(
+  container: HTMLElement,
+  config: CinacoinConfig & ConnectModalOptions,
+  options: ConnectModalOptions
+): void {
+  const wrapper = document.createElement("div");
+  wrapper.style.textAlign = "center";
+  wrapper.style.padding = "40px 24px";
+
+  const icon = document.createElement("div");
+  icon.style.fontSize = "32px";
+  icon.style.marginBottom = "16px";
+  icon.textContent = "✅";
+
+  const heading = document.createElement("h3");
+  heading.style.margin = "0 0 8px";
+  heading.style.color = getTextColor(config.theme);
+  heading.textContent = "Connected";
+
+  const addressText = document.createElement("p");
+  addressText.style.margin = "0 0 16px";
+  addressText.style.color = getTextSecondary(config.theme);
+  addressText.style.fontSize = "14px";
+  addressText.textContent = _address ?? "";
+
+  const disconnectBtn = document.createElement("button");
+  disconnectBtn.className = "ocx-disconnect-btn";
+  disconnectBtn.style.padding = "8px 16px";
+  disconnectBtn.style.background = "transparent";
+  disconnectBtn.style.border = `1px solid ${getBorderColor(config.theme)}`;
+  disconnectBtn.style.borderRadius = "8px";
+  disconnectBtn.style.color = getTextColor(config.theme);
+  disconnectBtn.style.cursor = "pointer";
+  disconnectBtn.textContent = "Disconnect";
+  disconnectBtn.addEventListener("click", () => {
+    _address = null;
+    _currentView = "connect";
+    renderModalView(container, config, "connect", options);
+  });
+
+  wrapper.appendChild(icon);
+  wrapper.appendChild(heading);
+  wrapper.appendChild(addressText);
+  wrapper.appendChild(disconnectBtn);
+  container.appendChild(wrapper);
+}
+
+function renderConnectView(
+  container: HTMLElement,
+  config: CinacoinConfig & ConnectModalOptions,
+  options: ConnectModalOptions
+): void {
+  const wrapper = document.createElement("div");
+  wrapper.style.padding = "24px";
+
+  // Header row
+  const headerRow = document.createElement("div");
+  headerRow.style.display = "flex";
+  headerRow.style.justifyContent = "space-between";
+  headerRow.style.alignItems = "center";
+  headerRow.style.marginBottom = "20px";
+
+  const heading = document.createElement("h3");
+  heading.style.margin = "0";
+  heading.style.fontSize = "18px";
+  heading.style.color = getTextColor(config.theme);
+  heading.textContent = "Connect Wallet";
+
+  const closeBtn = document.createElement("button");
+  closeBtn.className = "ocx-modal-close";
+  closeBtn.style.background = "none";
+  closeBtn.style.border = "none";
+  closeBtn.style.fontSize = "20px";
+  closeBtn.style.cursor = "pointer";
+  closeBtn.style.color = getTextSecondary(config.theme);
+  closeBtn.textContent = "✕";
+  closeBtn.addEventListener("click", () => {
+    _isOpen = false;
+    container.style.display = "none";
+    options.onClose?.();
+  });
+
+  headerRow.appendChild(heading);
+  headerRow.appendChild(closeBtn);
+  wrapper.appendChild(headerRow);
+
+  // Wallet list
   const wallets = config.wallets ?? defaultWallets();
-  return `
-    <div style="padding:24px;">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h3 style="margin:0;font-size:18px;color:${getTextColor(config.theme)};">Connect Wallet</h3>
-        <button class="ocx-modal-close" style="background:none;border:none;font-size:20px;cursor:pointer;color:${getTextSecondary(config.theme)};">✕</button>
-      </div>
-      ${wallets.map((w) => `
-        <button class="ocx-wallet-btn" data-wallet-id="${escapeHtml(w.id)}" style="display:flex;align-items:center;gap:12px;width:100%;padding:12px;border:1px solid ${getBorderColor(config.theme)};border-radius:12px;background:${getSurfaceColor(config.theme)};cursor:pointer;margin-bottom:8px;">
-          <div style="width:32px;height:32px;border-radius:8px;background:${config.primaryColor || "#6366F1"};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:bold;">${escapeHtml(w.name[0])}</div>
-          <div style="text-align:left;">
-            <div style="font-weight:600;font-size:14px;color:${getTextColor(config.theme)};">${escapeHtml(w.name)}</div>
-            <div style="font-size:12px;color:${getTextSecondary(config.theme)};">${w.installed ? "Detected" : "Browser extension"}</div>
-          </div>
-        </button>
-      `).join("")}
-    </div>
-  `;
+  for (const w of wallets) {
+    const btn = document.createElement("button");
+    btn.className = "ocx-wallet-btn";
+    btn.dataset.walletId = w.id;
+    btn.style.display = "flex";
+    btn.style.alignItems = "center";
+    btn.style.gap = "12px";
+    btn.style.width = "100%";
+    btn.style.padding = "12px";
+    btn.style.border = `1px solid ${getBorderColor(config.theme)}`;
+    btn.style.borderRadius = "12px";
+    btn.style.background = getSurfaceColor(config.theme);
+    btn.style.cursor = "pointer";
+    btn.style.marginBottom = "8px";
+
+    // Avatar circle
+    const avatar = document.createElement("div");
+    avatar.style.width = "32px";
+    avatar.style.height = "32px";
+    avatar.style.borderRadius = "8px";
+    avatar.style.background = config.primaryColor || "#6366F1";
+    avatar.style.display = "flex";
+    avatar.style.alignItems = "center";
+    avatar.style.justifyContent = "center";
+    avatar.style.color = "white";
+    avatar.style.fontSize = "14px";
+    avatar.style.fontWeight = "bold";
+    avatar.textContent = w.name[0];
+
+    // Text container
+    const textContainer = document.createElement("div");
+    textContainer.style.textAlign = "left";
+
+    const walletName = document.createElement("div");
+    walletName.style.fontWeight = "600";
+    walletName.style.fontSize = "14px";
+    walletName.style.color = getTextColor(config.theme);
+    walletName.textContent = w.name;
+
+    const walletStatus = document.createElement("div");
+    walletStatus.style.fontSize = "12px";
+    walletStatus.style.color = getTextSecondary(config.theme);
+    walletStatus.textContent = w.installed ? "Detected" : "Browser extension";
+
+    textContainer.appendChild(walletName);
+    textContainer.appendChild(walletStatus);
+    btn.appendChild(avatar);
+    btn.appendChild(textContainer);
+
+    btn.addEventListener("click", () => {
+      handleWalletSelect(w.id, config, container, options);
+    });
+
+    wrapper.appendChild(btn);
+  }
+
+  container.appendChild(wrapper);
 }
 
 function defaultWallets() {

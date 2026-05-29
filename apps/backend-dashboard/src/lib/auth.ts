@@ -48,10 +48,10 @@ export function generateNonce(): string {
   if (typeof crypto !== "undefined" && crypto.getRandomValues) {
     crypto.getRandomValues(bytes);
   } else {
-    // Fallback for non-secure contexts (shouldn't happen in modern browsers)
-    for (let i = 0; i < 16; i++) {
-      bytes[i] = Math.floor(Math.random() * 256);
-    }
+    // Node.js environment: use crypto.randomBytes
+    const nodeCrypto = require("node:crypto");
+    const randomBytes = nodeCrypto.randomBytes(16);
+    return Array.from(randomBytes, (b: number) => b.toString(16).padStart(2, "0")).join("");
   }
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
 }
@@ -125,6 +125,68 @@ export async function signAndVerify(message: string, address: string): Promise<s
   }
 
   return signature;
+}
+
+// ---------- CSRF Protection ----------
+
+const CSRF_COOKIE_NAME = "cinacoin_csrf_token";
+const CSRF_HEADER_NAME = "X-CSRF-Token";
+
+/**
+ * Generate a cryptographically secure CSRF token using crypto.getRandomValues.
+ */
+export function generateCsrfToken(): string {
+  const bytes = new Uint8Array(32);
+  if (typeof crypto !== "undefined" && crypto.getRandomValues) {
+    crypto.getRandomValues(bytes);
+  } else {
+    const nodeCrypto = require("node:crypto");
+    const randomBytes = nodeCrypto.randomBytes(32);
+    return randomBytes.toString("hex");
+  }
+  return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+/**
+ * Store a CSRF token in a cookie (for browser environments).
+ */
+export function setCsrfCookie(token: string): void {
+  if (typeof document === "undefined") return;
+  document.cookie = `${CSRF_COOKIE_NAME}=${token}; Path=/; SameSite=Strict; Secure; Max-Age=3600`;
+}
+
+/**
+ * Read the CSRF token from the cookie.
+ */
+export function getCsrfCookie(): string | null {
+  if (typeof document === "undefined") return null;
+  const match = document.cookie.match(
+    new RegExp(`(?:^|; )${CSRF_COOKIE_NAME}=([^;]*)`)
+  );
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+/**
+ * Verify that a submitted CSRF token matches the cookie value.
+ * Returns true if valid, false otherwise.
+ */
+export function verifyCsrfToken(submitted: string | null): boolean {
+  if (!submitted) return false;
+  const cookieToken = getCsrfCookie();
+  return cookieToken !== null && submitted === cookieToken;
+}
+
+/**
+ * Initialize CSRF token — generate one if not present and store it in a cookie.
+ * Call this on page load before any form submission.
+ */
+export function initCsrfToken(): string {
+  let token = getCsrfCookie();
+  if (!token) {
+    token = generateCsrfToken();
+    setCsrfCookie(token);
+  }
+  return token;
 }
 
 // ---------- Session management ----------

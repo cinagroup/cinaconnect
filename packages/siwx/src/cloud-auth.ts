@@ -630,10 +630,10 @@ export class CloudAuth {
     if (crypto?.getRandomValues) {
       crypto.getRandomValues(bytes);
     } else {
-      // Fallback for Node.js environments
-      for (let i = 0; i < 16; i++) {
-        bytes[i] = Math.floor(Math.random() * 256);
-      }
+      // Node.js environment: use crypto.randomBytes
+      const nodeCrypto = require('node:crypto');
+      const randomBytes = nodeCrypto.randomBytes(16);
+      return Array.from(randomBytes, (b: number) => b.toString(16).padStart(2, '0')).join('');
     }
     return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('');
   }

@@ -32,6 +32,22 @@ import type {
 import { ERC20_TRANSFER_ABI, UNISWAP_V2_SWAP_ABI, BRIDGE_DEPOSIT_ABI, BRIDGE_WITHDRAWAL_ABI } from './types.js';
 
 // ---------------------------------------------------------------------------
+// Structured logger
+// ---------------------------------------------------------------------------
+
+const logger = {
+  info: (msg: string, ctx?: Record<string, unknown>) => {
+    console.log(JSON.stringify({ level: 'info', msg, ts: new Date().toISOString(), component: 'tx-indexer', ...ctx }));
+  },
+  warn: (msg: string, ctx?: Record<string, unknown>) => {
+    console.log(JSON.stringify({ level: 'warn', msg, ts: new Date().toISOString(), component: 'tx-indexer', ...ctx }));
+  },
+  error: (msg: string, ctx?: Record<string, unknown>) => {
+    console.log(JSON.stringify({ level: 'error', msg, ts: new Date().toISOString(), component: 'tx-indexer', ...ctx }));
+  },
+};
+
+// ---------------------------------------------------------------------------
 // Event signatures
 // ---------------------------------------------------------------------------
 
@@ -156,7 +172,7 @@ export class TxIndexer {
     if (this.polling) return;
     this.polling = true;
     this._startTime = Date.now();
-    console.log('[TxIndexer] Starting indexer for', this.config.chains.length, 'chain(s)');
+    logger.info('Starting indexer', { chainCount: this.config.chains.length });
 
     for (const chain of this.config.chains) {
       const client = this.clients.get(chain.chainId);
@@ -180,7 +196,7 @@ export class TxIndexer {
       clearTimeout(this.pollTimer);
       this.pollTimer = null;
     }
-    console.log('[TxIndexer] Stopped');
+    logger.info('Stopped');
   }
 
   /** Check if indexer is running. */
@@ -202,7 +218,7 @@ export class TxIndexer {
     try {
       await this.indexChain(chainId);
     } catch (err) {
-      console.error(`[TxIndexer] Error indexing chain ${chainId}:`, err);
+      logger.error(`Error indexing chain ${chainId}`, { error: err instanceof Error ? err.message : String(err) });
     }
 
     // Schedule next poll
@@ -256,9 +272,13 @@ export class TxIndexer {
     this.store.updateChainState(chainId, latestBlock);
 
     if (totalIndexed > 0) {
-      console.log(
-        `[TxIndexer] Chain ${chainId} (${chainConfig.name}): indexed ${totalIndexed} events (blocks ${storedBlock}→${latestBlock})`,
-      );
+      logger.info(`Chain ${chainId} indexed events`, {
+        chainId,
+        chainName: chainConfig.name,
+        eventsIndexed: totalIndexed,
+        fromBlock: storedBlock,
+        toBlock: latestBlock,
+      });
     }
 
     return totalIndexed;

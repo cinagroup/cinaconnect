@@ -103,8 +103,8 @@ export class PrivacyManager {
       if (raw) {
         this.consent = JSON.parse(raw) as ConsentRecord;
       }
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.warn('[analytics/privacy] Failed to load consent:', err);
     }
   }
 
@@ -114,8 +114,8 @@ export class PrivacyManager {
       if (this.consent) {
         this.getStorage()?.setItem(CONSENT_KEY, JSON.stringify(this.consent));
       }
-    } catch {
-      // Ignore
+    } catch (err) {
+      console.warn('[analytics/privacy] Failed to persist consent:', err);
     }
   }
 

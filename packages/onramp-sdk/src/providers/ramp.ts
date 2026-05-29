@@ -79,7 +79,8 @@ export class RampProvider implements OnRampProviderAdapter {
         regions: info.regions,
         expiresAt: Date.now() + 60_000,
       };
-    } catch {
+    } catch (err) {
+      console.warn('[onramp-sdk/ramp] Quote API failed, falling back to estimate:', err);
       return this.estimateQuote(params, info);
     }
   }

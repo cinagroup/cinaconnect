@@ -19,8 +19,9 @@ export class LocalStorageProvider implements AnalyticsProvider {
       if (raw) {
         this.events = JSON.parse(raw);
       }
-    } catch {
+    } catch (err) {
       // localStorage not available (SSR), use in-memory
+      console.warn('[analytics/local] Failed to load events from localStorage:', err);
     }
   }
 
@@ -45,8 +46,9 @@ export class LocalStorageProvider implements AnalyticsProvider {
   private persist(): void {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.events));
-    } catch {
+    } catch (err) {
       // localStorage not available
+      console.warn('[analytics/local] Failed to persist events:', err);
     }
   }
 }

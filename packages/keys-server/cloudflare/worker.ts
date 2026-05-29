@@ -8,6 +8,7 @@
 import { validateCsrf, CSRF_ALLOWED_ORIGINS, createLogger, extractRequestId } from '@cinacoin/config';
 
 const logger = createLogger('keys-server');
+const START_TIME = Date.now();
 
 // ---------------------------------------------------------------------------
 // Security Utilities
@@ -204,8 +205,10 @@ export default {
 
     try {
       switch (url.pathname) {
-        case '/health':
-          return jsonResponse({ status: 'ok', timestamp: Date.now() }, 200, origin);
+        case '/health': {
+          const uptimeSec = Math.floor((Date.now() - START_TIME) / 1000);
+          return jsonResponse({ status: 'ok', uptime: uptimeSec, version: '1.0.0', timestamp: new Date().toISOString() }, 200, origin);
+        }
 
         case '/metrics':
           return jsonResponse(handleMetrics(), 200, origin);

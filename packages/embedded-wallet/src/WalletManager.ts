@@ -306,7 +306,7 @@ export class WalletManager {
 
   private _generateWalletId(authMethod: AuthMethod, identifier: string): string {
     const ts = Date.now().toString(36);
-    const rand = Math.random().toString(36).slice(2, 8);
+    const rand = crypto.randomUUID().slice(0, 8);
     return `ew_${authMethod}_${ts}_${rand}`;
   }
 }

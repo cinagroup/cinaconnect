@@ -11,6 +11,10 @@ export interface RpcProxyConfig {
   cacheTtlMs?: number;
   /** Max requests per IP per minute (0 = disabled) */
   rateLimitPerMinute?: number;
+  /** Maximum request body size in bytes (default 1 MB) */
+  maxBodySize?: number;
+  /** Allowed request origin patterns (empty = all allowed) */
+  allowedOrigins?: string[] | RegExp;
 }
 
 interface CacheEntry {
@@ -23,6 +27,21 @@ interface RateEntry {
   resetAt: number;
 }
 
+/** Check whether the given Origin header matches the allowed patterns. */
+function isOriginAllowed(origin: string | undefined, allowed: string[] | RegExp): boolean {
+  if (!origin) return false;
+  if (Array.isArray(allowed)) {
+    return allowed.some((pattern) => {
+      if (pattern.startsWith('*')) {
+        const suffix = pattern.slice(1);
+        return origin.endsWith(suffix);
+      }
+      return origin === pattern;
+    });
+  }
+  return allowed.test(origin);
+}
+
 /**
  * RpcProxy — Multi-chain RPC proxy with routing, caching, and rate limiting.
  * Forwards JSON-RPC requests to the appropriate chain backend.
@@ -31,7 +50,9 @@ export class RpcProxy {
   private server: Server | null = null;
   private cache: Map<string, CacheEntry> = new Map();
   private rateLimits: Map<string, RateEntry> = new Map();
-  private readonly config: Required<Omit<RpcProxyConfig, 'host'>> & Pick<RpcProxyConfig, 'host'>;
+  private startTime: number = Date.now();
+  private readonly config: Required<Omit<RpcProxyConfig, 'host' | 'allowedOrigins'>> &
+    Pick<RpcProxyConfig, 'host' | 'allowedOrigins'>;
 
   constructor(config: RpcProxyConfig) {
     this.config = {
@@ -41,6 +62,8 @@ export class RpcProxy {
       defaultChain: config.defaultChain ?? Object.keys(config.chains)[0] ?? 'mainnet',
       cacheTtlMs: config.cacheTtlMs ?? 0,
       rateLimitPerMinute: config.rateLimitPerMinute ?? 0,
+      maxBodySize: config.maxBodySize ?? 1_048_576, // 1 MB
+      allowedOrigins: config.allowedOrigins,
     };
   }
 
@@ -138,7 +161,53 @@ export class RpcProxy {
     return true;
   }
 
+  /** Send a JSON error response */
+  private sendError(res: ServerResponse, status: number, message: string, id: unknown = null): void {
+    res.writeHead(status, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: { message }, id }));
+  }
+
   private handleRequest(req: IncomingMessage, res: ServerResponse): void {
+    // Security headers
+    res.setHeader('Content-Security-Policy', "default-src 'none'");
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-XSS-Protection', '0');
+    res.setHeader('Referrer-Policy', 'no-referrer');
+
+    // Health check endpoint
+    if (req.method === 'GET' && req.url === '/health') {
+      const uptimeSec = Math.floor((Date.now() - this.startTime) / 1000);
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({
+        status: 'ok',
+        uptime: uptimeSec,
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+      }));
+      return;
+    }
+
+    // Origin validation (CORS preflight + regular requests)
+    const allowed = this.config.allowedOrigins;
+    const origin = req.headers.origin;
+    if (allowed && !isOriginAllowed(origin, allowed)) {
+      this.sendError(res, 403, 'Forbidden: origin not allowed');
+      return;
+    }
+
+    // Handle CORS preflight
+    if (req.method === 'OPTIONS') {
+      if (origin) {
+        res.setHeader('Access-Control-Allow-Origin', origin);
+      }
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Chain-Id');
+      res.writeHead(204);
+      res.end();
+      return;
+    }
+
     if (req.method !== 'POST') {
       res.writeHead(405);
       res.end('Method Not Allowed');
@@ -147,24 +216,48 @@ export class RpcProxy {
 
     const ip = req.socket.remoteAddress ?? 'unknown';
     if (!this.checkRateLimit(ip)) {
-      res.writeHead(429, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ error: { message: 'Rate limit exceeded' }, id: null }));
+      this.sendError(res, 429, 'Rate limit exceeded');
       return;
     }
 
+    let bodyBytes = 0;
     let body = '';
-    req.on('data', (chunk: Buffer) => (body += chunk));
+
+    req.on('data', (chunk: Buffer) => {
+      bodyBytes += chunk.byteLength;
+      if (bodyBytes > this.config.maxBodySize) {
+        req.destroy();
+        this.sendError(res, 413, 'Request body too large');
+        return;
+      }
+      body += chunk;
+    });
+
     req.on('end', async () => {
+      if (res.writableEnded) return; // already errored
+
       try {
         const chain = this.resolveChain(req);
         const parsed = JSON.parse(body);
         const result = await this.forwardRpc(chain, parsed);
         res.writeHead(200, { 'Content-Type': 'application/json' });
+        if (origin && allowed) {
+          res.setHeader('Access-Control-Allow-Origin', origin);
+        }
         res.end(JSON.stringify(result));
       } catch (err) {
-        res.writeHead(502, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: { message: (err as Error).message }, id: null }));
+        const errMsg = (err as Error).message;
+        const isJsonErr = errMsg.startsWith('Unexpected token') || errMsg.startsWith('Unexpected end');
+        if (isJsonErr || errMsg.includes('JSON')) {
+          this.sendError(res, 400, 'Invalid JSON');
+        } else {
+          this.sendError(res, 502, errMsg);
+        }
       }
+    });
+
+    req.on('error', () => {
+      // Connection error — nothing to respond
     });
   }
 

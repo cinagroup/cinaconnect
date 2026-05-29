@@ -33,6 +33,7 @@ export class NotifyServer {
   private subscriptions: Map<string, Subscription> = new Map();
   private deliveryLog: NotificationResult[] = [];
   private idCounter = 0;
+  private startTime: number = Date.now();
 
   /**
    * Send a notification to all subscribed channels for a given address.
@@ -143,6 +144,19 @@ export class NotifyServer {
       subscriptions_count: this.subscriptions.size,
       delivery_log_size: this.deliveryLog.length,
       timestamp: Date.now(),
+    };
+  }
+
+  /**
+   * Health check.
+   */
+  getHealth(): { status: string; uptime: number; version: string; timestamp: string } {
+    const uptimeSec = Math.floor((Date.now() - this.startTime) / 1000);
+    return {
+      status: 'ok',
+      uptime: uptimeSec,
+      version: '1.0.0',
+      timestamp: new Date().toISOString(),
     };
   }
 

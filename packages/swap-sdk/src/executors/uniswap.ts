@@ -191,7 +191,7 @@ export class UniswapExecutor implements SwapExecutor {
     ];
 
     return {
-      id: `uniswap-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `uniswap-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
       fromToken: params.fromToken,
       toToken: params.toToken,
       fromAmount: params.fromAmount,
@@ -243,6 +243,18 @@ export class UniswapExecutor implements SwapExecutor {
         const amountOut = result[0] as bigint;
         const gasEstimate = result[3] as bigint;
 
+        // Validate on-chain quoter response
+        if (typeof amountOut !== "bigint" || amountOut < 0n) {
+          throw new Error(
+            `Uniswap V3: quoter returned invalid amountOut for fee tier ${fee}`
+          );
+        }
+        if (typeof gasEstimate !== "bigint" || gasEstimate < 0n) {
+          throw new Error(
+            `Uniswap V3: quoter returned invalid gasEstimate for fee tier ${fee}`
+          );
+        }
+
         if (amountOut > bestAmountOut) {
           bestAmountOut = amountOut;
           bestFee = fee;
@@ -270,7 +282,7 @@ export class UniswapExecutor implements SwapExecutor {
     ];
 
     return {
-      id: `uniswap-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `uniswap-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
       fromToken: params.fromToken,
       toToken: params.toToken,
       fromAmount: params.fromAmount,

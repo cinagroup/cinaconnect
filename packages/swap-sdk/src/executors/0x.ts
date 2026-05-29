@@ -46,6 +46,121 @@ interface ZeroxQuoteResponse {
 }
 
 // ============================================================
+// Response Validation
+// ============================================================
+
+const HEX_ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
+
+function isValidHexAddress(addr: unknown): addr is string {
+  return typeof addr === "string" && HEX_ADDRESS_RE.test(addr);
+}
+
+function isPositiveBigIntString(val: unknown): val is string {
+  if (typeof val !== "string") return false;
+  try {
+    const n = BigInt(val);
+    return n > 0n;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validate a 0x API quote response.
+ * Throws a descriptive error on invalid or missing fields.
+ */
+function validateQuoteResponse(data: unknown): ZeroxQuoteResponse {
+  if (!data || typeof data !== "object") {
+    throw new Error("0x API: expected object response for quote, got " + typeof data);
+  }
+  const d = data as Record<string, unknown>;
+
+  // Required: buyAmount must be a positive numeric string
+  if (!isPositiveBigIntString(d.buyAmount)) {
+    throw new Error(
+      "0x API: invalid or missing buyAmount in quote response (expected positive numeric string)"
+    );
+  }
+
+  // Required: sellAmount must be a positive numeric string
+  if (!isPositiveBigIntString(d.sellAmount)) {
+    throw new Error(
+      "0x API: invalid or missing sellAmount in quote response (expected positive numeric string)"
+    );
+  }
+
+  // Required: estimatedGas must be a positive numeric string
+  if (!isPositiveBigIntString(d.estimatedGas)) {
+    throw new Error(
+      "0x API: invalid or missing estimatedGas in quote response (expected positive numeric string)"
+    );
+  }
+
+  // Required: to must be a valid hex address
+  if (!isValidHexAddress(d.to)) {
+    throw new Error("0x API: missing or invalid 'to' address in quote response");
+  }
+
+  // Required: data must be a hex string
+  if (typeof d.data !== "string" || !d.data.startsWith("0x")) {
+    throw new Error("0x API: missing or invalid 'data' field in quote response (expected hex string)");
+  }
+
+  // Required: value must be a string (may be "0")
+  if (typeof d.value !== "string") {
+    throw new Error("0x API: missing or invalid 'value' field in quote response");
+  }
+
+  // Optional but validate if present
+  if (d.allowanceTarget !== undefined && !isValidHexAddress(d.allowanceTarget)) {
+    throw new Error("0x API: allowanceTarget is present but not a valid hex address");
+  }
+
+  if (d.buyTokenAddress !== undefined && !isValidHexAddress(d.buyTokenAddress)) {
+    throw new Error("0x API: buyTokenAddress is present but not a valid hex address");
+  }
+
+  if (d.sellTokenAddress !== undefined && !isValidHexAddress(d.sellTokenAddress)) {
+    throw new Error("0x API: sellTokenAddress is present but not a valid hex address");
+  }
+
+  // Validate sources array if present
+  const sources: ZeroxQuoteResponse["sources"] = [];
+  if (Array.isArray(d.sources)) {
+    for (let i = 0; i < d.sources.length; i++) {
+      const s = d.sources[i];
+      if (!s || typeof s !== "object") {
+        throw new Error(`0x API: sources[${i}] is not an object`);
+      }
+      const ss = s as Record<string, unknown>;
+      if (typeof ss.name !== "string") {
+        throw new Error(`0x API: sources[${i}].name is missing or not a string`);
+      }
+      if (typeof ss.proportion !== "string") {
+        throw new Error(`0x API: sources[${i}].proportion is missing or not a string`);
+      }
+      sources.push({ name: ss.name, proportion: ss.proportion });
+    }
+  }
+
+  return {
+    sellAmount: d.sellAmount as string,
+    buyAmount: d.buyAmount as string,
+    allowanceTarget: (d.allowanceTarget as string) ?? "",
+    to: d.to as string,
+    data: d.data as string,
+    value: d.value as string,
+    estimatedGas: d.estimatedGas as string,
+    gasPrice: (d.gasPrice as string) ?? "0",
+    price: (d.price as string) ?? "0",
+    guaranteedPrice: (d.guaranteedPrice as string) ?? "0",
+    sources,
+    buyTokenAddress: (d.buyTokenAddress as string) ?? "",
+    sellTokenAddress: (d.sellTokenAddress as string) ?? "",
+  };
+}
+
+// ============================================================
 // ZeroxExecutor
 // ============================================================
 
@@ -106,7 +221,8 @@ export class ZeroxExecutor implements SwapExecutor {
           throw new Error(`0x quote failed: ${res.status} ${res.statusText} — ${body}`);
         }
 
-        const data: ZeroxQuoteResponse = await res.json();
+        const raw = await res.json();
+        const data = validateQuoteResponse(raw);
         return this.buildQuoteFromResponse(params, data);
       } catch (err) {
         lastError = err instanceof Error ? err : new Error(String(err));
@@ -150,7 +266,7 @@ export class ZeroxExecutor implements SwapExecutor {
     }
 
     return {
-      id: `0x-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `0x-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
       fromToken: params.fromToken,
       toToken: params.toToken,
       fromAmount: params.fromAmount,
@@ -193,7 +309,8 @@ export class ZeroxExecutor implements SwapExecutor {
           throw new Error(`0x transaction failed: ${res.status} ${res.statusText} — ${body}`);
         }
 
-        const data: ZeroxQuoteResponse = await res.json();
+        const raw = await res.json();
+        const data = validateQuoteResponse(raw);
 
         return {
           to: data.to as `0x${string}`,

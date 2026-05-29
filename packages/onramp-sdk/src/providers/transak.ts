@@ -57,8 +57,8 @@ export class TransakProvider implements OnRampProviderAdapter {
       if (res.ok) {
         // In production, parse response for token-specific pricing
       }
-    } catch {
-      // Continue to estimate
+    } catch (err) {
+      console.warn('[onramp-sdk/transak] API fetch failed, continuing to estimate:', err);
     }
 
     return this.estimateQuote(params, info);

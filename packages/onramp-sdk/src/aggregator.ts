@@ -49,6 +49,84 @@ const DEFAULT_CONFIG: AggregatorConfig = {
 };
 
 // ============================================================
+// Response Validation
+// ============================================================
+
+/**
+ * Validate an on-ramp quote returned by a provider adapter.
+ * Throws a descriptive error on invalid or missing fields.
+ */
+function validateOnRampQuote(data: unknown, providerId: string): OnRampQuote {
+  if (!data || typeof data !== "object") {
+    throw new Error(
+      `onramp-sdk (${providerId}): expected object response for quote, got ${typeof data}`
+    );
+  }
+  const d = data as Record<string, unknown>;
+
+  // Required fields
+  if (typeof d.provider !== "string") {
+    throw new Error(`onramp-sdk (${providerId}): missing or invalid 'provider' field`);
+  }
+  if (typeof d.providerName !== "string") {
+    throw new Error(`onramp-sdk (${providerId}): missing or invalid 'providerName' field`);
+  }
+  if (typeof d.fiatAmount !== "number" || d.fiatAmount <= 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid fiatAmount (expected positive number, got ${d.fiatAmount})`
+    );
+  }
+  if (typeof d.fiatCurrency !== "string") {
+    throw new Error(`onramp-sdk (${providerId}): missing or invalid 'fiatCurrency' field`);
+  }
+  if (typeof d.cryptoAmount !== "number" || d.cryptoAmount <= 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid cryptoAmount (expected positive number, got ${d.cryptoAmount})`
+    );
+  }
+  if (typeof d.cryptoToken !== "string") {
+    throw new Error(`onramp-sdk (${providerId}): missing or invalid 'cryptoToken' field`);
+  }
+  if (typeof d.exchangeRate !== "number" || d.exchangeRate <= 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid exchangeRate (expected positive number, got ${d.exchangeRate})`
+    );
+  }
+  if (typeof d.totalCost !== "number" || d.totalCost < 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid totalCost (expected non-negative number, got ${d.totalCost})`
+    );
+  }
+
+  // Validate fees object
+  if (!d.fees || typeof d.fees !== "object") {
+    throw new Error(`onramp-sdk (${providerId}): missing or invalid 'fees' object`);
+  }
+  const fees = d.fees as Record<string, unknown>;
+  if (typeof fees.totalFeePercent !== "number" || fees.totalFeePercent < 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): fees.totalFeePercent is invalid (expected non-negative number)`
+    );
+  }
+
+  // Validate estimatedTime
+  if (typeof d.estimatedTime !== "number" || d.estimatedTime < 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid estimatedTime (expected non-negative number, got ${d.estimatedTime})`
+    );
+  }
+
+  // Validate expiresAt
+  if (typeof d.expiresAt !== "number" || d.expiresAt <= 0) {
+    throw new Error(
+      `onramp-sdk (${providerId}): invalid expiresAt (expected positive timestamp)`
+    );
+  }
+
+  return d as unknown as OnRampQuote;
+}
+
+// ============================================================
 // OnRampAggregator
 // ============================================================
 
@@ -88,8 +166,8 @@ export class OnRampAggregator {
           continue;
         }
         results.push(info);
-      } catch {
-        // Skip providers that fail to return info
+      } catch (err) {
+        console.warn('[onramp-sdk/aggregator] Provider info failed:', err);
       }
     }
 
@@ -108,9 +186,10 @@ export class OnRampAggregator {
           this.config.quoteTimeoutMs,
         );
 
-        const quote = await provider.getQuote(params);
+        const rawQuote = await provider.getQuote(params);
         clearTimeout(timeout);
-        return quote;
+        const validated = validateOnRampQuote(rawQuote, provider.id);
+        return validated;
       } catch (err) {
         console.warn(`Quote failed for ${provider.id}:`, err);
         return null;
@@ -189,8 +268,8 @@ export class OnRampAggregator {
     for (const adapter of this.providers.values()) {
       try {
         return adapter.getWidgetUrl(params);
-      } catch {
-        // Continue to next provider
+      } catch (err) {
+        console.warn('[onramp-sdk/aggregator] getWidgetUrl failed for provider:', err);
       }
     }
 

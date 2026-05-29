@@ -191,7 +191,14 @@ export class NearWalletConnector implements NearWalletConnector {
     if (!this.provider) throw new Error('NEAR Wallet not connected');
 
     // NEAR Wallet uses a specific message signing protocol
-    const nonce = Buffer.from(Math.random().toString(36).slice(2), 'utf8');
+    // Generate a cryptographically secure random nonce
+    const nonceBytes = new Uint8Array(16);
+    if (typeof globalThis.crypto !== 'undefined' && globalThis.crypto.getRandomValues) {
+      globalThis.crypto.getRandomValues(nonceBytes);
+    } else {
+      throw new Error('Cryptographically secure random number generation is not available in this environment');
+    }
+    const nonce = Buffer.from(nonceBytes);
     const recipientDomain = recipient ?? window.location.host;
 
     // Construct NEAR message signing payload

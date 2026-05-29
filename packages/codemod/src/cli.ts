@@ -106,8 +106,8 @@ function main(): void {
     let source: string;
     try {
       source = readFileSync(filePath, "utf-8");
-    } catch {
-      console.warn(`⚠ Skipping unreadable: ${filePath}`);
+    } catch (err) {
+      console.warn(`⚠ Skipping unreadable: ${filePath}`, err);
       continue;
     }
 

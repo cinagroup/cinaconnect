@@ -8,6 +8,7 @@ import { PushServer } from '../dist/PushServer.js';
 import { validateCsrf, CSRF_ALLOWED_ORIGINS, createLogger, extractRequestId } from '@cinacoin/config';
 
 const logger = createLogger('push-server');
+const START_TIME = Date.now();
 
 // ---------------------------------------------------------------------------
 // Security Utilities
@@ -114,7 +115,8 @@ export default {
     try {
       // Health check (no auth)
       if (path === '/health') {
-        return jsonOk({ status: 'ok', timestamp: Date.now() }, origin);
+        const uptimeSec = Math.floor((Date.now() - START_TIME) / 1000);
+        return jsonOk({ status: 'ok', uptime: uptimeSec, version: '1.0.0', timestamp: new Date().toISOString() }, origin);
       }
 
       // Metrics (no auth)
@@ -136,7 +138,8 @@ export default {
         let body: unknown;
         try {
           body = await request.json();
-        } catch {
+        } catch (err) {
+          logger.error('Failed to parse request body', { error: String(err) });
           return jsonError('Invalid JSON', 400, origin);
         }
         if (!body || typeof body !== 'object' || Array.isArray(body)) {
@@ -194,7 +197,8 @@ export default {
         let body: unknown;
         try {
           body = await request.json();
-        } catch {
+        } catch (err) {
+          logger.error('Failed to parse batch request body', { error: String(err) });
           return jsonError('Invalid JSON', 400, origin);
         }
         if (!body || typeof body !== 'object' || Array.isArray(body)) {
@@ -252,7 +256,8 @@ export default {
         let body: unknown;
         try {
           body = await request.json();
-        } catch {
+        } catch (err) {
+          logger.error('Failed to parse register request body', { error: String(err) });
           return jsonError('Invalid JSON', 400, origin);
         }
         if (!body || typeof body !== 'object' || Array.isArray(body)) {
@@ -279,7 +284,8 @@ export default {
         let body: unknown;
         try {
           body = await request.json();
-        } catch {
+        } catch (err) {
+          logger.error('Failed to parse unregister request body', { error: String(err) });
           return jsonError('Invalid JSON', 400, origin);
         }
         if (!body || typeof body !== 'object' || Array.isArray(body)) {

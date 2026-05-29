@@ -271,8 +271,8 @@ export class SwapWidgetCore {
     for (const listener of this._listeners) {
       try {
         listener();
-      } catch {
-        // swallow
+      } catch (err) {
+        console.warn('[pay-ui/swap] Listener callback threw:', err);
       }
     }
   }

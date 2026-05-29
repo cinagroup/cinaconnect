@@ -8,6 +8,7 @@ import { NotifyServer } from '../dist/NotifyServer.js';
 import { validateCsrf, CSRF_ALLOWED_ORIGINS, createLogger, extractRequestId } from '@cinacoin/config';
 
 const logger = createLogger('notify-server');
+const START_TIME = Date.now();
 
 // ---------------------------------------------------------------------------
 // Security Utilities
@@ -105,7 +106,8 @@ export default {
     try {
       // Health check (no auth)
       if (path === '/health') {
-        return jsonOk({ status: 'ok', timestamp: Date.now() }, origin);
+        const uptimeSec = Math.floor((Date.now() - START_TIME) / 1000);
+        return jsonOk({ status: 'ok', uptime: uptimeSec, version: '1.0.0', timestamp: new Date().toISOString() }, origin);
       }
 
       // Metrics (no auth)

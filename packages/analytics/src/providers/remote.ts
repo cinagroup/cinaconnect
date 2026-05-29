@@ -66,7 +66,8 @@ export class RemoteProvider implements AnalyticsProvider {
         // Re-queue on failure
         this.queue.unshift(...events);
       }
-    } catch {
+    } catch (err) {
+      console.error('[analytics/remote] Flush failed, re-queuing events:', err);
       // Re-queue on network failure
       this.queue.unshift(...events);
     }

@@ -52,6 +52,118 @@ interface OneInchSwapResponse {
 }
 
 // ============================================================
+// Response Validation
+// ============================================================
+
+const HEX_ADDRESS_RE = /^0x[0-9a-fA-F]{40}$/;
+
+function isValidHexAddress(addr: unknown): addr is string {
+  return typeof addr === "string" && HEX_ADDRESS_RE.test(addr);
+}
+
+function isPositiveBigIntString(val: unknown): val is string {
+  if (typeof val !== "string") return false;
+  try {
+    const n = BigInt(val);
+    return n > 0n;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validate a 1inch quote API response.
+ * Throws a descriptive error on invalid or missing fields.
+ */
+function validateQuoteResponse(data: unknown): OneInchQuoteResponse {
+  if (!data || typeof data !== "object") {
+    throw new Error("1inch API: expected object response for quote, got " + typeof data);
+  }
+  const d = data as Record<string, unknown>;
+
+  if (!isPositiveBigIntString(d.dstAmount)) {
+    throw new Error(
+      "1inch API: invalid or missing dstAmount in quote response (expected positive numeric string)"
+    );
+  }
+
+  if (!Array.isArray(d.protocols)) {
+    // protocols may legitimately be empty array — that's ok
+    return { dstAmount: d.dstAmount as string, protocols: [] };
+  }
+
+  const protocols = d.protocols.map((p: unknown, i: number) => {
+    if (!p || typeof p !== "object") {
+      throw new Error(`1inch API: protocols[${i}] is not an object`);
+    }
+    const pp = p as Record<string, unknown>;
+    if (typeof pp.name !== "string") {
+      throw new Error(`1inch API: protocols[${i}].name is missing or not a string`);
+    }
+    if (typeof pp.part !== "number" || pp.part < 0 || pp.part > 100) {
+      throw new Error(`1inch API: protocols[${i}].part is invalid (expected 0-100)`);
+    }
+    if (!isValidHexAddress(pp.fromTokenAddress)) {
+      throw new Error(`1inch API: protocols[${i}].fromTokenAddress is not a valid hex address`);
+    }
+    if (!isValidHexAddress(pp.toTokenAddress)) {
+      throw new Error(`1inch API: protocols[${i}].toTokenAddress is not a valid hex address`);
+    }
+    return pp as OneInchQuoteResponse["protocols"][number];
+  });
+
+  return { dstAmount: d.dstAmount as string, protocols };
+}
+
+/**
+ * Validate a 1inch swap API response.
+ * Throws a descriptive error on invalid or missing fields.
+ */
+function validateSwapResponse(data: unknown): OneInchSwapResponse {
+  if (!data || typeof data !== "object") {
+    throw new Error("1inch API: expected object response for swap, got " + typeof data);
+  }
+  const d = data as Record<string, unknown>;
+
+  // Validate tx object
+  if (!d.tx || typeof d.tx !== "object") {
+    throw new Error("1inch API: missing or invalid tx object in swap response");
+  }
+  const tx = d.tx as Record<string, unknown>;
+
+  if (!isValidHexAddress(tx.to)) {
+    throw new Error("1inch API: tx.to is not a valid hex address");
+  }
+  if (typeof tx.data !== "string" || !tx.data.startsWith("0x")) {
+    throw new Error("1inch API: tx.data is missing or not a valid hex string");
+  }
+  if (typeof tx.value !== "string") {
+    throw new Error("1inch API: tx.value is missing or not a string");
+  }
+  if (typeof tx.gas !== "number" || tx.gas <= 0) {
+    throw new Error("1inch API: tx.gas is invalid (expected positive number)");
+  }
+
+  if (!isPositiveBigIntString(d.dstAmount)) {
+    throw new Error(
+      "1inch API: invalid or missing dstAmount in swap response (expected positive numeric string)"
+    );
+  }
+
+  return {
+    tx: {
+      from: (tx.from as string) ?? "",
+      to: tx.to as string,
+      data: tx.data as string,
+      value: tx.value as string,
+      gas: tx.gas as number,
+      gasPrice: (tx.gasPrice as string) ?? "0",
+    },
+    dstAmount: d.dstAmount as string,
+  };
+}
+
+// ============================================================
 // OneInchExecutor
 // ============================================================
 
@@ -110,7 +222,8 @@ export class OneInchExecutor implements SwapExecutor {
           throw new Error(`1inch quote failed: ${res.status} ${res.statusText} — ${body}`);
         }
 
-        const data: OneInchQuoteResponse = await res.json();
+        const raw = await res.json();
+        const data = validateQuoteResponse(raw);
         return this.buildQuoteFromResponse(params, data);
       } catch (err) {
         lastError = err instanceof Error ? err : new Error(String(err));
@@ -157,7 +270,7 @@ export class OneInchExecutor implements SwapExecutor {
     }
 
     return {
-      id: `1inch-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      id: `1inch-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`,
       fromToken: params.fromToken,
       toToken: params.toToken,
       fromAmount: params.fromAmount,
@@ -202,7 +315,8 @@ export class OneInchExecutor implements SwapExecutor {
           throw new Error(`1inch swap failed: ${res.status} ${res.statusText} — ${body}`);
         }
 
-        const data: OneInchSwapResponse = await res.json();
+        const raw = await res.json();
+        const data = validateSwapResponse(raw);
 
         return {
           to: data.tx.to as `0x${string}`,

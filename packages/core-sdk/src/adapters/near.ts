@@ -1848,7 +1848,7 @@ export class NearChainAdapter {
     if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
       crypto.getRandomValues(nonce);
     } else {
-      for (let i = 0; i < 32; i++) nonce[i] = Math.floor(Math.random() * 256);
+      throw new Error('Cryptographically secure random number generation is not available; cannot generate nonce');
     }
 
     const result = await this.provider.signMessage({
