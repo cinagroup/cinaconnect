@@ -15,6 +15,7 @@ import { SimulatedBadge } from '@/components/DemoDisclaimer';
 
 /* ── mock token prices & history ── */
 
+/* DEMO ONLY — mock data, not production logic */
 // TODO: Replace with real prices from a price API (e.g., CoinGecko, DexScreener)
 // In production, fetch live prices via:
 //   GET https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd
@@ -36,6 +37,7 @@ const MOCK_PRICES: Record<string, { usd: number; change24h: number; volume24h: s
   SUI: { usd: 2.80, change24h: 6.5, volume24h: '$1.1B', marketCap: '$7.5B' },
 };
 
+/* DEMO ONLY — mock data, not production logic */
 /* Generate a sparkline of price changes */
 function generateSparkline(basePrice: number, points = 24): number[] {
   const data: number[] = [];

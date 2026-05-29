@@ -99,6 +99,7 @@ export default function AADemoPage() {
     connect(connectors.find((c) => c.id === 'io.metamask')?.id ?? 'io.metamask');
   }, [connect, connectors]);
 
+  /* DEMO ONLY — mock data, not production logic */
   const handleCreateSmartAccount = useCallback(async () => {
     if (!isConnected || !account.address) return;
     setCreatingAccount(true);
@@ -113,6 +114,7 @@ export default function AADemoPage() {
     success('Smart Account Created', `0x${account.address.slice(2, 6)}...${account.address.slice(-4)} deployed`);
   }, [isConnected, account.address, success]);
 
+  /* DEMO ONLY — mock data, not production logic */
   const handleCreateSessionKey = useCallback(() => {
     if (!newKeyName.trim()) {
       toastError('Validation Error', 'Please enter a name for the session key');

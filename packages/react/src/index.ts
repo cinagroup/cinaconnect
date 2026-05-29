@@ -39,3 +39,6 @@ export type {
   SendCallsOptions,
   AtomicBatchOptions,
 } from './hooks.js';
+
+// Error boundary
+export { ErrorBoundary } from './components/ErrorBoundary.js';
