@@ -108,7 +108,8 @@ export class ViemChainAdapter implements ChainAdapter {
       try {
         const id = parseInt(c.id, 16) || parseInt(c.id, 10);
         return id === chainId;
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:findChain] error:`, err);
         return false;
       }
     });
@@ -199,7 +200,8 @@ export class ViemChainAdapter implements ChainAdapter {
         method: 'wallet_switchEthereumChain',
         params: [{ chainId: hexChainId }],
       });
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:switchChain] error:`, err);
       // Fallback to connector switchChain
       if (this.connector) {
         return this.connector.switchChain(chainId);

@@ -245,7 +245,8 @@ async function fetchMetadata(uri: string): Promise<Record<string, unknown> | nul
       const data = (await res.json()) as Record<string, unknown>;
       _metadataCache.set(uri, { data, ts: Date.now() });
       return data;
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:fetchMetadata] error:`, err);
       return null;
     }
   }
@@ -260,7 +261,8 @@ async function fetchMetadata(uri: string): Promise<Record<string, unknown> | nul
       const data = (await res.json()) as Record<string, unknown>;
       _metadataCache.set(uri, { data, ts: Date.now() });
       return data;
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:fetchMetadata] gateway error:`, err);
       // Gateway unreachable — try the next one
       continue;
     }
@@ -454,8 +456,8 @@ export class BlockchainApiClient {
     try {
       const nativeBalance = await this.getBalance(address, cid);
       results.unshift(nativeBalance);
-    } catch {
-      // ignore native balance failure
+    } catch (err) {
+      console.warn(`[blockchain-api:getTokenBalances] native balance error:`, err);
     }
 
     return results;
@@ -489,7 +491,8 @@ export class BlockchainApiClient {
     if (this.config.alchemyApiKey) {
       try {
         return await this._getTxsViaAlchemy(address, cid, limit, cursor);
-      } catch {
+      } catch (err) {
+        console.warn(`[blockchain-api:getTransactionHistory] Alchemy error:`, err);
         // Fall through to on-chain scan
       }
     }
@@ -498,7 +501,8 @@ export class BlockchainApiClient {
     if (this.config.covalentApiKey) {
       try {
         return await this._getTxsViaCovalent(address, cid, limit, cursor);
-      } catch {
+      } catch (err) {
+        console.warn(`[blockchain-api:getTransactionHistory] Covalent error:`, err);
         // Fall through to on-chain scan
       }
     }
@@ -624,7 +628,8 @@ export class BlockchainApiClient {
     if (this.config.alchemyApiKey) {
       try {
         return await this._getTxsViaAlchemy(address, chainId, limit, cursor, filters);
-      } catch {
+      } catch (err) {
+        console.warn(`[blockchain-api:_getSingleChainTransactions] Alchemy error:`, err);
         // Fall through
       }
     }
@@ -632,7 +637,8 @@ export class BlockchainApiClient {
     if (this.config.covalentApiKey) {
       try {
         return await this._getTxsViaCovalent(address, chainId, limit, cursor, filters);
-      } catch {
+      } catch (err) {
+        console.warn(`[blockchain-api:_getSingleChainTransactions] Covalent error:`, err);
         // Fall through
       }
     }
@@ -875,7 +881,8 @@ export class BlockchainApiClient {
     try {
       const block = await client.getBlockNumber();
       startBlock = Number(block);
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:_getTxsOnChain] getBlockNumber error:`, err);
       return { items: [], hasMore: false };
     }
 
@@ -910,8 +917,8 @@ export class BlockchainApiClient {
               const receipt = await client.getTransactionReceipt({ hash: tx.hash });
               status = receipt?.status === "success" ? "success" : "failed";
               gasUsed = receipt?.gasUsed;
-            } catch {
-              // Receipt not available
+            } catch (err) {
+              console.warn(`[blockchain-api:_getTxsOnChain] receipt error:`, err);
             }
 
             // Apply status filter
@@ -932,8 +939,8 @@ export class BlockchainApiClient {
             });
           }
         }
-      } catch {
-        // Block not available or RPC error
+      } catch (err) {
+        console.warn(`[blockchain-api:_getTxsOnChain] block error:`, err);
       }
     }
 
@@ -1006,7 +1013,8 @@ export class BlockchainApiClient {
     try {
       const address = await client.getEnsAddress({ name });
       return address ?? null;
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:resolveENS] error:`, err);
       return null;
     }
   }
@@ -1026,7 +1034,8 @@ export class BlockchainApiClient {
     try {
       const name = await client.getEnsName({ address: address as Address });
       return name ?? null;
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:reverseENS] error:`, err);
       return null;
     }
   }
@@ -1189,8 +1198,8 @@ export class BlockchainApiClient {
               );
               items.push({ ...meta, contractAddress: contract, tokenId: tid, tokenType: "ERC721" });
             }
-          } catch {
-            // Token may not exist or ownerOf not available
+          } catch (err) {
+            console.warn(`[blockchain-api:_scanErc721] ownerOf error:`, err);
           }
         }
       } else {
@@ -1212,13 +1221,13 @@ export class BlockchainApiClient {
               );
               items.push({ ...meta, contractAddress: contract, tokenId: String(tid), tokenType: "ERC721" });
             }
-          } catch {
-            // Skip
+          } catch (err) {
+            console.warn(`[blockchain-api:_scanErc721] scan error:`, err);
           }
         }
       }
-    } catch {
-      // Contract may not be ERC-721
+    } catch (err) {
+      console.warn(`[blockchain-api:_scanErc721] contract error:`, err);
     }
     return items;
   }
@@ -1261,12 +1270,12 @@ export class BlockchainApiClient {
               balance: bal,
             });
           }
-        } catch {
-          // Skip
+        } catch (err) {
+          console.warn(`[blockchain-api:_scanErc1155] balanceOf error:`, err);
         }
       }
-    } catch {
-      // Not ERC-1155
+    } catch (err) {
+      console.warn(`[blockchain-api:_scanErc1155] contract error:`, err);
     }
     return items;
   }
@@ -1285,7 +1294,8 @@ export class BlockchainApiClient {
         args: [interfaceId as `0x${string}`],
       });
       return result as boolean;
-    } catch {
+    } catch (err) {
+      console.warn(`[blockchain-api:_supportsInterface] error:`, err);
       return false;
     }
   }
@@ -1315,8 +1325,8 @@ export class BlockchainApiClient {
           args: [BigInt(tokenId)],
         }) as string;
       }
-    } catch {
-      // URI not available
+    } catch (err) {
+      console.warn(`[blockchain-api:_fetchNftMetadata] URI error:`, err);
     }
 
     if (!uri) {
@@ -1328,7 +1338,8 @@ export class BlockchainApiClient {
           functionName: "name",
         }) as string;
         return { name };
-      } catch {
+      } catch (err) {
+        console.warn(`[blockchain-api:_fetchNftMetadata] name error:`, err);
         return {};
       }
     }

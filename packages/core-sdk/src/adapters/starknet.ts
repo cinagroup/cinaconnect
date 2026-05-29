@@ -35,7 +35,8 @@ export function isValidFelt(value: string): boolean {
   try {
     const n = BigInt(value);
     return n >= 0n && n < Felt252_MAX;
-  } catch {
+  } catch (err) {
+    console.warn(`[core-sdk:isValidFelt] error:`, err);
     return false;
   }
 }
@@ -806,7 +807,8 @@ export class StarknetChainAdapter {
     try {
       const addresses = await this.provider.enable();
       this._accounts = addresses.map((a) => normalizeStarknetAddress(a));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:connect] error:`, err);
       // Some wallets may throw; try to get account from provider
       if (this.provider.account?.address) {
         this._accounts = [normalizeStarknetAddress(this.provider.account.address)];
@@ -825,8 +827,8 @@ export class StarknetChainAdapter {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
-        // Some wallets may not implement disconnect
+      } catch (err) {
+        console.warn(`[core-sdk:disconnect] error:`, err);
       }
     }
     this.provider = null;
@@ -875,7 +877,8 @@ export class StarknetChainAdapter {
       return await this._getRpcClient().getBalance(
         normalizeStarknetAddress(address),
       );
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getBalance] error:`, err);
       return '0x0';
     }
   }
@@ -924,7 +927,8 @@ export class StarknetChainAdapter {
       }
 
       return result.result?.[0] ?? '0x0';
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTokenBalance] error:`, err);
       return '0x0';
     }
   }
@@ -958,7 +962,8 @@ export class StarknetChainAdapter {
           params: [txPayload],
         });
         return (result as { transaction_hash: string }).transaction_hash;
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:sendTransaction] error:`, err);
         // Try alternative method names
         try {
           const result = await this.provider.request({
@@ -978,7 +983,8 @@ export class StarknetChainAdapter {
     try {
       const result = await this._getRpcClient().addInvokeTransaction(txPayload);
       return result.transaction_hash;
-    } catch {
+    } catch (err) {
+      console.error(`[core-sdk:sendTransaction] error:`, err);
       throw new Error('Failed to broadcast signed transaction');
     }
   }
@@ -1076,7 +1082,8 @@ export class StarknetChainAdapter {
       const sig = result as Record<string, unknown>;
       if (sig.r && sig.s) return JSON.stringify({ r: sig.r, s: sig.s });
       return JSON.stringify(result);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:signMessage] error:`, err);
       // Try starknet_signMessage (alternative)
       try {
         const result = await this.provider.request({
@@ -1116,7 +1123,8 @@ export class StarknetChainAdapter {
       const sig = result as { signature?: string[] };
       if (sig.signature) return sig.signature.map(String);
       return [JSON.stringify(result)];
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:signTransaction] error:`, err);
       // Try starknet_signTransaction (alternative)
       try {
         const result = await this.provider.request({
@@ -1224,7 +1232,8 @@ export class StarknetChainAdapter {
     try {
       await this._getRpcClient().getClassHashAt(normalizeStarknetAddress(address));
       return true;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:isDeployedAccount] error:`, err);
       return false;
     }
   }
@@ -1239,7 +1248,8 @@ export class StarknetChainAdapter {
       return await this._getRpcClient().getClassHashAt(
         normalizeStarknetAddress(address),
       );
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getAccountClassHash] error:`, err);
       return null;
     }
   }
@@ -1337,7 +1347,8 @@ export class StarknetChainAdapter {
         version: tx.version ?? '0x1',
       });
       return result.overall_fee;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:estimateGas] error:`, err);
       // Return a default estimate
       return '0x2386f26fc10000'; // ~0.001 STRK
     }

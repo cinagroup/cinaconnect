@@ -364,7 +364,8 @@ export class Ethers6Adapter extends EventEmitter implements Connector {
       try {
         const id = parseInt(c.id, 16) || parseInt(c.id, 10);
         return id === chainId;
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:findChain] error:`, err);
         return false;
       }
     });

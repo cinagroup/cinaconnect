@@ -411,7 +411,8 @@ export class TRONChainAdapter {
         const contract = this.provider.tronWeb.trc20(contractAddress);
         const result = await contract.methods.balanceOf(address).call();
         return String(result);
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:getTokenBalance] error:`, err);
         // Fallback to API
       }
     }

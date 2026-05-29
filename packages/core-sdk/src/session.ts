@@ -126,7 +126,8 @@ export class SessionManager extends EventEmitter {
         };
         this.emit('stateChange', this.state);
       }
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:restore] error:`, err);
       // Corrupted storage — ignore
     }
 
@@ -197,8 +198,8 @@ export class SessionManager extends EventEmitter {
     if (this._connector) {
       try {
         await this._connector.disconnect();
-      } catch {
-        // Ignore disconnect errors
+      } catch (err) {
+        console.warn(`[core-sdk:terminate] error:`, err);
       }
       this._connector = null;
     }

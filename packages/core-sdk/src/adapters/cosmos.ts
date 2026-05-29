@@ -702,7 +702,8 @@ export class CosmosChainAdapter {
 
     try {
       return await this._getRpcClient().getBalance(address, targetDenom);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getBalance] error:`, err);
       return '0';
     }
   }
@@ -731,7 +732,8 @@ export class CosmosChainAdapter {
 
     try {
       return await this._getRpcClient().getAllBalances(address);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getAllBalances] error:`, err);
       return [];
     }
   }

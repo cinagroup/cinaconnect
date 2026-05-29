@@ -603,7 +603,8 @@ export function decodeString(hex: string): string {
   const nonNull = bytes.filter((b) => b !== 0);
   try {
     return new TextDecoder().decode(new Uint8Array(nonNull));
-  } catch {
+  } catch (err) {
+    console.warn(`[core-sdk:decodeString] error:`, err);
     return hex;
   }
 }
@@ -719,7 +720,8 @@ export class HederaChainAdapter {
           throw new Error('Failed to get account from wallet');
         }
       }
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:connect] error:`, err);
       const acc = await target.getAccountNum();
       if (acc) {
         this._accounts = [acc];
@@ -736,8 +738,8 @@ export class HederaChainAdapter {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
-        // Some wallets may not implement disconnect
+      } catch (err) {
+        console.warn(`[core-sdk:disconnect] error:`, err);
       }
     }
     this.provider = null;
@@ -791,12 +793,14 @@ export class HederaChainAdapter {
     try {
       const info = await this._getMirrorNode().getAccountInfo(normalized);
       return String(info.balance.balance);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getBalance] error:`, err);
       // Fallback: try balance endpoint
       try {
         const bal = await this._getMirrorNode().getAccountBalance(normalized);
         return String(bal.balance);
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:getBalance] fallback error:`, err);
         return '0';
       }
     }
@@ -822,7 +826,8 @@ export class HederaChainAdapter {
     try {
       const result = await this._getMirrorNode().getAccountTokens(normalized);
       return result.tokens;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getAllBalances] error:`, err);
       return [];
     }
   }
@@ -840,7 +845,8 @@ export class HederaChainAdapter {
     }
     try {
       return await this._getMirrorNode().getTokenInfo(tokenId);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTokenInfo] error:`, err);
       return null;
     }
   }
@@ -857,7 +863,8 @@ export class HederaChainAdapter {
       const tokens = await this._getMirrorNode().getAccountTokens(normalized);
       const match = tokens.tokens.find((t) => t.token_id === tokenId);
       return match ? String(match.balance) : '0';
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTokenBalance] error:`, err);
       return '0';
     }
   }
@@ -872,7 +879,8 @@ export class HederaChainAdapter {
     try {
       const result = await this._getMirrorNode().getAccountNfts(normalized);
       return result.nfts;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getNfts] error:`, err);
       return [];
     }
   }
@@ -886,7 +894,8 @@ export class HederaChainAdapter {
   async getNftInfo(tokenId: string, serial: number): Promise<HederaNftInfo | null> {
     try {
       return await this._getMirrorNode().getNftInfo(tokenId, serial);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getNftInfo] error:`, err);
       return null;
     }
   }
@@ -1122,7 +1131,8 @@ export class HederaChainAdapter {
     try {
       const result = await this.provider.signMessage(msgStr, account);
       return result.signature;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:signMessage] error:`, err);
       // Fallback: try EIP-1193 personal_sign
       if (this.provider.request) {
         return this.provider.request({
@@ -1171,7 +1181,8 @@ export class HederaChainAdapter {
     try {
       const result = await this._getMirrorNode().getAccountTransactions(normalized, limit);
       return result.transactions;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTransactions] error:`, err);
       return [];
     }
   }
@@ -1185,7 +1196,8 @@ export class HederaChainAdapter {
     try {
       const result = await this._getMirrorNode().getTransaction(transactionId);
       return result.transactions[0] ?? null;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTransaction] error:`, err);
       return null;
     }
   }
@@ -1199,7 +1211,8 @@ export class HederaChainAdapter {
       const rate = await this._getMirrorNode().getExchangeRate();
       const hbarUsd = rate.current_rate.cent_equivalent / rate.current_rate.hbar_equivalent / 100;
       return { hbarUsd };
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getExchangeRate] error:`, err);
       return null;
     }
   }
@@ -1259,7 +1272,8 @@ export class HederaChainAdapter {
         const id = (args.params?.[0] ?? '') as string;
         try {
           return await this._getMirrorNode().getAccountInfo(id);
-        } catch {
+        } catch (err) {
+          console.warn(`[core-sdk:request] error:`, err);
           return null;
         }
       }

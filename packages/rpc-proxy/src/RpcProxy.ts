@@ -61,7 +61,7 @@ export class RpcProxy {
       chains: config.chains,
       defaultChain: config.defaultChain ?? Object.keys(config.chains)[0] ?? 'mainnet',
       cacheTtlMs: config.cacheTtlMs ?? 0,
-      rateLimitPerMinute: config.rateLimitPerMinute ?? 0,
+      rateLimitPerMinute: config.rateLimitPerMinute ?? 100,
       maxBodySize: config.maxBodySize ?? 1_048_576, // 1 MB
       allowedOrigins: config.allowedOrigins,
     };

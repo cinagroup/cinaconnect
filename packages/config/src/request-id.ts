@@ -18,9 +18,14 @@ export function generateRequestId(): string {
   if (typeof crypto !== 'undefined' && typeof crypto.getRandomValues === 'function') {
     crypto.getRandomValues(bytes);
   } else {
-    // Non-cryptographic fallback (dev only)
+    // Non-cryptographic fallback (dev only) — deterministic hash to avoid Math.random()
+    const ts = Date.now().toString(36).padStart(8, '0');
+    const pid = typeof process !== 'undefined' && process.pid ? process.pid.toString(36).slice(0, 4) : '0000';
     for (let i = 0; i < 16; i++) {
-      bytes[i] = Math.floor(Math.random() * 256);
+      const seed = `${ts}${pid}${i}`;
+      let hash = 0;
+      for (let j = 0; j < seed.length; j++) hash = ((hash << 5) - hash + seed.charCodeAt(j)) | 0;
+      bytes[i] = (hash & 0xff);
     }
   }
   return (

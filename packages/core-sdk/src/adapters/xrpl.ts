@@ -1103,7 +1103,8 @@ export class XrplChainAdapter {
     try {
       const result = await this.provider.connect();
       this._accounts = result.accounts.map((a) => normalizeXrplAddress(a.address));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:connect] error:`, err);
       // Fallback: try getAccounts directly
       const accounts = await this.provider.getAccounts();
       this._accounts = accounts.map((a) => normalizeXrplAddress(a.address));
@@ -1117,8 +1118,8 @@ export class XrplChainAdapter {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
-        // Some wallets may not implement disconnect
+      } catch (err) {
+        console.warn(`[core-sdk:disconnect] error:`, err);
       }
     }
     this.provider = null;
@@ -1172,7 +1173,8 @@ export class XrplChainAdapter {
       return await this._getRpcClient().getBalance(
         normalizeXrplAddress(address),
       );
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getBalance] error:`, err);
       return '0';
     }
   }
@@ -1211,7 +1213,8 @@ export class XrplChainAdapter {
         regularKey: result.account_data.RegularKey,
         ledgerIndex: Number(result.ledger_index ?? result.ledger_current_index ?? 0),
       };
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getAccountInfo] error:`, err);
       return null;
     }
   }
@@ -1243,7 +1246,8 @@ export class XrplChainAdapter {
         authorized: line.authorized ?? false,
         frozen: line.frozen ?? false,
       }));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTrustLines] error:`, err);
       return [];
     }
   }
@@ -1300,7 +1304,8 @@ export class XrplChainAdapter {
       try {
         const result = await this.provider.signAndSubmit(txObj);
         return result.hash;
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:sendTransaction] error:`, err);
         // Fall through to manual sign + submit
       }
     }
@@ -1415,7 +1420,8 @@ export class XrplChainAdapter {
         quality: offer.quality,
         expiration: offer.Expiration,
       }));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getOffers] error:`, err);
       return [];
     }
   }
@@ -1549,7 +1555,8 @@ export class XrplChainAdapter {
         owner: address,
         ledgerIndex: result.ledger_index,
       }));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getNfts] error:`, err);
       return [];
     }
   }
@@ -1740,7 +1747,8 @@ export class XrplChainAdapter {
         meta: t.meta,
         date: t.date,
       }));
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTransactions] error:`, err);
       return [];
     }
   }
@@ -1762,7 +1770,8 @@ export class XrplChainAdapter {
         meta: result.meta,
         date: result.date,
       };
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getTransaction] error:`, err);
       return null;
     }
   }

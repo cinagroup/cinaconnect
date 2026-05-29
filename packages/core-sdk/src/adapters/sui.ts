@@ -1173,7 +1173,8 @@ export class SuiChainAdapter {
         permissions: ['viewAccount', 'suggestTransaction'],
       });
       this._accounts = result.accounts.map((a) => a.address);
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:connect] error:`, err);
       // Fallback: try getAccounts directly
       const accounts = await this.provider.getAccounts();
       this._accounts = accounts.map((a) => a.address);
@@ -1187,8 +1188,8 @@ export class SuiChainAdapter {
     if (this.provider) {
       try {
         await this.provider.disconnect();
-      } catch {
-        // Some wallets may not implement disconnect
+      } catch (err) {
+        console.warn(`[core-sdk:disconnect] error:`, err);
       }
     }
     this.provider = null;
@@ -1244,7 +1245,8 @@ export class SuiChainAdapter {
         '0x2::sui::SUI',
       );
       return result.totalBalance;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getBalance] error:`, err);
       // Fallback: query coins and sum
       try {
         const coins = await this._getRpcClient().getCoins(
@@ -1257,7 +1259,8 @@ export class SuiChainAdapter {
           total += BigInt(coin.balance ?? 0);
         }
         return total.toString();
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:getBalance] fallback error:`, err);
         return '0';
       }
     }
@@ -1287,7 +1290,8 @@ export class SuiChainAdapter {
       return await this._getRpcClient().getAllBalances(
         normalizeSuiAddress(address),
       );
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getAllBalances] error:`, err);
       return [];
     }
   }
@@ -1312,7 +1316,8 @@ export class SuiChainAdapter {
         coinType,
       );
       return result.data;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getCoins] error:`, err);
       return [];
     }
   }
@@ -1357,7 +1362,8 @@ export class SuiChainAdapter {
         // Fallback: get digest from effects
         const effects = result.effects;
         if (effects?.transactionDigest) return effects.transactionDigest;
-      } catch {
+      } catch (err) {
+        console.warn(`[core-sdk:sendTransaction] error:`, err);
         // Fall through to manual sign + execute
       }
     }
@@ -1498,7 +1504,8 @@ export class SuiChainAdapter {
           : JSON.stringify(result.data.owner),
         previousTransaction: result.data.previousTransaction,
       };
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getObject] error:`, err);
       return null;
     }
   }
@@ -1520,7 +1527,8 @@ export class SuiChainAdapter {
         { limit },
       );
       return result.data;
-    } catch {
+    } catch (err) {
+      console.warn(`[core-sdk:getOwnedObjects] error:`, err);
       return [];
     }
   }

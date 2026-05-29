@@ -159,7 +159,8 @@ export function parseTONAddress(address: TONAddress): {
         testOnly: (tag & 0x80) === 0x80,
       },
     };
-  } catch {
+  } catch (err) {
+    console.warn(`[core-sdk:parseTONAddress] error:`, err);
     return null;
   }
 }

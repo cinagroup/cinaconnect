@@ -20,7 +20,11 @@ export type {
 export { EmbeddedWallet } from './EmbeddedWallet';
 
 // ─── Lifecycle manager ───────────────────────────────────────────────────────
-export { WalletManager } from './WalletManager';
+export {
+  WalletManager,
+  type WalletManagerConfig,
+  type StorageMode,
+} from './WalletManager';
 
 // ─── Backup / recovery ───────────────────────────────────────────────────────
 export { backupWallet, recoverWallet } from './backup';

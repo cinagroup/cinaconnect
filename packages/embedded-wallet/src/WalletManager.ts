@@ -8,6 +8,93 @@ import {
   WalletSession,
 } from './types';
 
+// ─── Storage mode ────────────────────────────────────────────────────────────
+
+export type StorageMode = 'localStorage' | 'indexedDB';
+
+const DEFAULT_PREFIX = '@cinacoin/embedded-wallet';
+const IDB_NAME = 'cinacoin-wallets';
+const IDB_VERSION = 1;
+const IDB_STORE = 'records';
+
+/**
+ * Check whether IndexedDB is available in the current environment.
+ * Returns `false` in SSR / node / disabled-browser contexts.
+ */
+function isIndexedDBAvailable(): boolean {
+  try {
+    return typeof indexedDB !== 'undefined' && indexedDB !== null;
+  } catch {
+    return false;
+  }
+}
+
+/** Open (or reuse) the shared IndexedDB database connection. */
+function _openDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(IDB_NAME, IDB_VERSION);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(IDB_STORE)) {
+        db.createObjectStore(IDB_STORE);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+/**
+ * IndexedDB helpers — thin wrappers over the key-value object store.
+ *
+ * Each record is stored under a composite key:
+ *   `${storagePrefix}:${walletId}`  — wallet metadata
+ *   `${storagePrefix}:index`        — array of walletIds
+ */
+async function idbGet<T>(key: string): Promise<T | null> {
+  const db = await _openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readonly');
+    const store = tx.objectStore(IDB_STORE);
+    const req = store.get(key);
+    req.onsuccess = () => resolve(req.result ?? null);
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbSet(key: string, value: unknown): Promise<void> {
+  const db = await _openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    const req = store.put(value, key);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbRemove(key: string): Promise<void> {
+  const db = await _openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    const req = store.delete(key);
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
+async function idbClear(): Promise<void> {
+  const db = await _openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(IDB_STORE, 'readwrite');
+    const store = tx.objectStore(IDB_STORE);
+    const req = store.clear();
+    req.onsuccess = () => resolve();
+    req.onerror = () => reject(req.error);
+  });
+}
+
 // ─── Internal persisted record ───────────────────────────────────────────────
 
 interface WalletRecord {
@@ -28,26 +115,29 @@ interface ActiveSession {
   session: WalletSession;
 }
 
-// ─── Default storage prefix ──────────────────────────────────────────────────
-
-const DEFAULT_PREFIX = '@cinacoin/embedded-wallet';
-
 /**
  * High-level wallet lifecycle manager.
  *
  * - Creates / recovers wallets via deterministic key derivation.
- * - Persists metadata (salt, linked providers) to localStorage or IndexedDB.
+ * - Persists metadata (salt, linked providers) to IndexedDB (default) or localStorage.
  * - **Never** stores raw private keys on disk — only the derivation salt.
  */
+export interface WalletManagerConfig {
+  /** Storage backend — `'indexedDB'` (default) or `'localStorage'`. */
+  storageMode?: StorageMode;
+}
+
 export class WalletManager {
   private readonly _storagePrefix: string;
-  private readonly _useIndexedDB: boolean;
+  private readonly _storageMode: StorageMode;
   private readonly _sessions: Map<string, ActiveSession> = new Map();
 
-  constructor(config: EmbeddedWalletConfig) {
+  constructor(config: EmbeddedWalletConfig, managerConfig?: WalletManagerConfig) {
     this._storagePrefix = `wallet:${config.id}`;
-    // Storage mode can be toggled; default is localStorage
-    this._useIndexedDB = false; // extend when needed
+    // Default to IndexedDB when available; fall back to localStorage for SSR / unsupported envs.
+    this._storageMode =
+      managerConfig?.storageMode ??
+      (isIndexedDBAvailable() ? 'indexedDB' : 'localStorage');
   }
 
   // ─── Create ───────────────────────────────────────────────────────────────
@@ -258,16 +348,34 @@ export class WalletManager {
     return `${this._storagePrefix}:index`;
   }
 
+  /** Save a wallet record via the active storage backend. */
   private async _saveRecord(record: WalletRecord): Promise<void> {
-    localStorage.setItem(this._keyFor(record.walletId), JSON.stringify(record));
+    const key = this._keyFor(record.walletId);
+    const value = JSON.stringify(record);
+
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      await idbSet(key, value);
+    } else {
+      localStorage.setItem(key, value);
+    }
     await this._indexAdd(record.walletId);
   }
 
+  /** Load a single wallet record via the active storage backend. */
   private async _loadRecord(walletId: string): Promise<WalletRecord | null> {
-    const raw = localStorage.getItem(this._keyFor(walletId));
-    return raw ? JSON.parse(raw) as WalletRecord : null;
+    const key = this._keyFor(walletId);
+    let raw: string | null;
+
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      raw = await idbGet<string>(key);
+    } else {
+      raw = localStorage.getItem(key);
+    }
+
+    return raw ? (JSON.parse(raw) as WalletRecord) : null;
   }
 
+  /** Load all wallet records. */
   private async _loadAllRecords(): Promise<WalletRecord[]> {
     const index = await this._indexGet();
     const records: WalletRecord[] = [];
@@ -278,6 +386,7 @@ export class WalletManager {
     return records;
   }
 
+  /** Find a record by user identifier. */
   private async _findRecordByIdentifier(identifier: string): Promise<WalletRecord | null> {
     const records = await this._loadAllRecords();
     return records.find((r) => r.identifier === identifier) ?? null;
@@ -286,12 +395,27 @@ export class WalletManager {
   // ─── Index (wallet id list) ───────────────────────────────────────────────
 
   private async _indexGet(): Promise<string[]> {
-    const raw = localStorage.getItem(this._indexKey());
-    return raw ? JSON.parse(raw) as string[] : [];
+    const key = this._indexKey();
+    let raw: string | null;
+
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      raw = await idbGet<string>(key);
+    } else {
+      raw = localStorage.getItem(key);
+    }
+
+    return raw ? (JSON.parse(raw) as string[]) : [];
   }
 
   private async _indexSet(index: string[]): Promise<void> {
-    localStorage.setItem(this._indexKey(), JSON.stringify(index));
+    const key = this._indexKey();
+    const value = JSON.stringify(index);
+
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      await idbSet(key, value);
+    } else {
+      localStorage.setItem(key, value);
+    }
   }
 
   private async _indexAdd(walletId: string): Promise<void> {
@@ -299,6 +423,53 @@ export class WalletManager {
     if (!index.includes(walletId)) {
       index.push(walletId);
       await this._indexSet(index);
+    }
+  }
+
+  // ─── Public storage API ───────────────────────────────────────────────────
+
+  /** Returns the active storage mode for this manager instance. */
+  get storageMode(): StorageMode {
+    return this._storageMode;
+  }
+
+  /**
+   * Remove a single wallet record from persistent storage.
+   * Does NOT touch the in-memory session — call `logout()` separately if needed.
+   */
+  async deleteRecord(walletId: string): Promise<void> {
+    const key = this._keyFor(walletId);
+
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      await idbRemove(key);
+    } else {
+      localStorage.removeItem(key);
+    }
+
+    // Update index
+    const index = await this._indexGet();
+    const filtered = index.filter((id) => id !== walletId);
+    await this._indexSet(filtered);
+  }
+
+  /**
+   * Wipe all persisted wallet data for this manager's prefix.
+   * Does NOT touch in-memory sessions.
+   */
+  async clearAll(): Promise<void> {
+    if (this._storageMode === 'indexedDB' && isIndexedDBAvailable()) {
+      // Clear records belonging to this prefix
+      const index = await this._indexGet();
+      for (const id of index) {
+        await idbRemove(this._keyFor(id));
+      }
+      await idbRemove(this._indexKey());
+    } else {
+      const index = await this._indexGet();
+      for (const id of index) {
+        localStorage.removeItem(this._keyFor(id));
+      }
+      localStorage.removeItem(this._indexKey());
     }
   }
 

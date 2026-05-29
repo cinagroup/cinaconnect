@@ -10,6 +10,33 @@ import { validateCsrf, CSRF_ALLOWED_ORIGINS, createLogger, extractRequestId } fr
 const logger = createLogger('relay-server');
 
 // ---------------------------------------------------------------------------
+// Rate Limiting
+// ---------------------------------------------------------------------------
+
+interface RateEntry { count: number; resetAt: number }
+const rateLimits = new Map<string, RateEntry>();
+
+function getClientIp(request: Request): string {
+  return request.headers.get('cf-connecting-ip')
+    ?? request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
+    ?? 'unknown';
+}
+
+function checkRate(ip: string, limit: number): boolean {
+  const now = Date.now();
+  const entry = rateLimits.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimits.set(ip, { count: 1, resetAt: now + 60000 });
+    return true;
+  }
+  if (entry.count >= limit) return false;
+  entry.count++;
+  return true;
+}
+
+const DEFAULT_RATE_LIMIT = 100; // requests per minute
+
+// ---------------------------------------------------------------------------
 // Security Utilities
 // ---------------------------------------------------------------------------
 
@@ -135,6 +162,14 @@ export default {
     const url = new URL(request.url);
     metrics.requestCount++;
     const origin = request.headers.get('Origin');
+
+    // Rate limiting (skip health check)
+    if (url.pathname !== '/health') {
+      const ip = getClientIp(request);
+      if (!checkRate(ip, DEFAULT_RATE_LIMIT)) {
+        return jsonResponse({ error: 'rate_limit_exceeded' }, 429, origin);
+      }
+    }
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
