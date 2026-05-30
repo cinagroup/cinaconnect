@@ -24,7 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "@cinacoin/core-sdk": "workspace:*",
-    "viem": "^2.9.0"
+    "viem": "^2.51.3"
   },
   "devDependencies": {
     "@types/node": "^20.11.0",

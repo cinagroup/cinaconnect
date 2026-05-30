@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@cinacoin/core-sdk": "workspace:*",
-    "viem": "^2.21.0"
+    "viem": "^2.51.3"
   },
   "devDependencies": {
     "tsup": "^8.3.0",
