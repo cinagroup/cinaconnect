@@ -20,7 +20,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "vue": "^3.5.0",
+    "vue": "^3.5.35",
     "@cinacoin/core-sdk": "^0.2.0"
   },
   "peerDependencies": {

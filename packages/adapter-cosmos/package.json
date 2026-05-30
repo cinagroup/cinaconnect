@@ -17,8 +17,8 @@
     "@cinacoin/core-sdk": "workspace:*"
   },
   "dependencies": {
-    "@cosmjs/stargate": "^0.32.0",
-    "@cosmjs/proto-signing": "^0.32.0"
+    "@cosmjs/stargate": "^0.39.0",
+    "@cosmjs/proto-signing": "^0.39.0"
   },
   "devDependencies": {
     "tsup": "^8.0.0",

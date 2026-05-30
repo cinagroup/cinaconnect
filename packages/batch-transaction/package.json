@@ -19,7 +19,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "viem": "^2.21.0"
+    "viem": "^2.51.3"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",

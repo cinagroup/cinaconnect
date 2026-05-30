@@ -27,7 +27,7 @@
     "@noble/ciphers": "^2.2.0",
     "@noble/curves": "^2.2.0",
     "@noble/hashes": "^2.2.0",
-    "viem": "^2.9.0",
+    "viem": "^2.51.3",
     "zustand": "^4.5.0"
   },
   "devDependencies": {
