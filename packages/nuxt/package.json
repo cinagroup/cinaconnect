@@ -31,7 +31,7 @@
     "@cinacoin/core-sdk": "workspace:*",
     "@cinacoin/vue": "workspace:*",
     "@nuxt/kit": "^3.15.0",
-    "nuxt": "^3.15.0"
+    "nuxt": "^4.4.6"
   },
   "devDependencies": {
     "@nuxt/devtools": "^2.0.0",
@@ -41,7 +41,7 @@
   },
   "peerDependencies": {
     "@cinacoin/core-sdk": "workspace:*",
-    "nuxt": "^3.15.0"
+    "nuxt": "^4.4.6"
   },
   "packageManager": "pnpm@9.15.0",
   "publishConfig": {
