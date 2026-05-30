@@ -13,7 +13,7 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc --skipLibCheck",
     "check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest"

@@ -11,7 +11,7 @@ export const WORKER_URLS = {
   keysServer: 'https://cinacoin-keys-server.cinagroup.workers.dev',
   relayServer: 'https://cinacoin-relay-server.cinagroup.workers.dev',
   notifyServer: 'https://cinacoin-notify-server.cinagroup.workers.dev',
-  pushServer: 'https://cinacoin-push-server.cinagroup.workers.dev',
+  pushServer: 'https://push.cinacoin.com',
 } as const;
 
 export type WorkerName = keyof typeof WORKER_URLS;

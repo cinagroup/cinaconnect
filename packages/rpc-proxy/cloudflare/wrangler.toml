@@ -3,44 +3,16 @@ main = "worker.ts"
 compatibility_date = "2024-01-01"
 account_id = "7ea8e46d8210bad342fa7595f7935fea"
 
-# ── Production variables ───────────────────────────────────────
-# Secrets (set via wrangler secret put, NOT in this file):
-#   RPC_API_KEYS      — comma-separated list of allowed API keys
-#   RATE_LIMIT_TOKEN  — Cloudflare Rate Limiting API token
-#   WEBHOOK_SECRET    — secret for outbound webhook signatures
+routes = [
+  { pattern = "rpc.cinacoin.com/*", zone_name = "cinacoin.com" }
+]
 
 [vars]
-CACHE_TTL = 300
+CACHE_TTL = "300"
 LOG_LEVEL = "info"
 MAX_RETRIES = "3"
 REQUEST_TIMEOUT_MS = "30000"
 
-# ── KV Namespaces ──────────────────────────────────────────────
 [[kv_namespaces]]
 binding = "RPC_CACHE"
 id = "f91dde2603b44c2f830d42330be9778a"
-preview_id = "f91dde2603b44c2f830d42330be9778a"
-
-# ── Durable Objects (optional future use) ──────────────────────
-# [[durable_objects.bindings]]
-# name = "RATE_LIMITER"
-# class_name = "RateLimiter"
-
-# ── Routes ─────────────────────────────────────────────────────
-# routes = [
-#   { pattern = "rpc.cinacoin.com/*", zone_name = "cinacoin.com" }
-# ]
-
-# ── Staging environment ────────────────────────────────────────
-[env.staging]
-name = "cinacoin-rpc-proxy-staging"
-
-[env.staging.vars]
-CACHE_TTL = 60
-LOG_LEVEL = "debug"
-MAX_RETRIES = "5"
-REQUEST_TIMEOUT_MS = "45000"
-
-# [[env.staging.kv_namespaces]]
-# binding = "RPC_CACHE"
-# id = ""                       # ← staging KV namespace ID

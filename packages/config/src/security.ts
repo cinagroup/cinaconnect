@@ -14,7 +14,7 @@ export const CORS_CONFIG = {
   allowedOrigins: [
     'https://cinacoin.com',
     'https://www.cinacoin.com',
-    'https://dashboard.cinacoin.com',
+    'https://dash.cinacoin.com',
     'https://docs.cinacoin.com',
     // Development origins (remove in production)
     'http://localhost:3000',

@@ -2,48 +2,20 @@ name = "cinacoin-keys-server"
 main = "worker.ts"
 compatibility_date = "2024-01-01"
 
-# ── Production variables ───────────────────────────────────────
-# Secrets (set via wrangler secret put, NOT in this file):
-#   ENCRYPTION_KEY    — master encryption key for key storage
-#   ADMIN_API_KEY     — admin-level API access key
-#   JWT_SECRET        — secret for JWT token signing/verification
-#   WEBHOOK_SECRET    — secret for outbound webhook signatures
+routes = [
+  { pattern = "keys.cinacoin.com/*", zone_name = "cinacoin.com" }
+]
 
 [vars]
 LOG_LEVEL = "info"
 SESSION_TTL = "86400"
 MAX_KEYS_PER_USER = "100"
 
-# ── D1 Database ────────────────────────────────────────────────
 [[d1_databases]]
 binding = "DB"
 database_name = "cinacoin-keys"
-database_id = "1f24922a-19d9-451f-9125-11736d54ec3c"
+database_id = "67d98935-9d34-4e3d-b357-af745fa47596"
 
-# ── KV Namespaces ──────────────────────────────────────────────
 [[kv_namespaces]]
 binding = "SESSIONS"
 id = "b60edcfb4052452780701cbf7a06aeb9"
-
-# ── Routes ─────────────────────────────────────────────────────
-# routes = [
-#   { pattern = "keys.cinacoin.com/*", zone_name = "cinacoin.com" }
-# ]
-
-# ── Staging environment ────────────────────────────────────────
-[env.staging]
-name = "cinacoin-keys-server-staging"
-
-[env.staging.vars]
-LOG_LEVEL = "debug"
-SESSION_TTL = "3600"
-MAX_KEYS_PER_USER = "50"
-
-# [[env.staging.d1_databases]]
-# binding = "DB"
-# database_name = "cinacoin-keys-staging"
-# database_id = ""                    # ← staging D1 database ID
-
-# [[env.staging.kv_namespaces]]
-# binding = "SESSIONS"
-# id = ""                             # ← staging KV namespace ID

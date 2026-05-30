@@ -17,7 +17,7 @@ import type { IndexerConfig, ApiHealthStatus, RestApiConfig } from './types.js';
 const ALLOWED_ORIGINS = [
   'https://cinacoin.com',
   'https://www.cinacoin.com',
-  'https://dashboard.cinacoin.com',
+  'https://dash.cinacoin.com',
   'http://localhost:3000',    // dev only
   'http://localhost:5173',    // dev only
 ];

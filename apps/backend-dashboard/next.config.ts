@@ -7,9 +7,8 @@ import type { NextConfig } from "next";
  * For SSR mode (remove `output: 'export'` if you want dynamic API routes).
  */
 const nextConfig: NextConfig = {
-  // Note: Remove `output: 'export'` to enable SSR API routes (/api/auth/*).
-  // Static export mode cannot use cookies() or API routes.
-  // output: "export",
+  // Static export mode (API routes disabled in _auth_disabled)
+  output: "export",
 
   async headers() {
     return [

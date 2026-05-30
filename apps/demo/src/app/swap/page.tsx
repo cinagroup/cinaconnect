@@ -22,6 +22,9 @@ import {
   type PriceQuote,
   type SwapHistoryEntry,
 } from '@/lib/swap';
+import Card from '@/components/Card';
+import Button from '@/components/Button';
+import ChainSelector from '@/components/ChainSelector';
 
 // ─── Token Selector Dropdown ──────────────────────────────────────────────
 

@@ -5,7 +5,26 @@
  * for WebSocket session management.
  */
 
-import { validateCsrf, CSRF_ALLOWED_ORIGINS, createLogger, extractRequestId } from '@cinacoin/config';
+// --- Inlined from @cinacoin/config ---
+function createLogger(serviceName: string) {
+  return {
+    debug: (msg: string, ctx?: Record<string, unknown>) => console.debug(`[${serviceName}] ${msg}`, ctx ? JSON.stringify(ctx) : ''),
+    info: (msg: string, ctx?: Record<string, unknown>) => console.log(`[${serviceName}] ${msg}`, ctx ? JSON.stringify(ctx) : ''),
+    warn: (msg: string, ctx?: Record<string, unknown>) => console.warn(`[${serviceName}] ${msg}`, ctx ? JSON.stringify(ctx) : ''),
+    error: (msg: string, ctx?: Record<string, unknown>) => console.error(`[${serviceName}] ${msg}`, ctx ? JSON.stringify(ctx) : ''),
+  };
+}
+function extractRequestId(request: Request): string {
+  return request.headers.get('x-request-id') || request.headers.get('x-correlation-id') || request.headers.get('cf-ray') || crypto.randomUUID();
+}
+const CSRF_ALLOWED_ORIGINS: string[] = [];
+function validateCsrf(request: Request): boolean {
+  if (request.method === 'GET' || request.method === 'HEAD' || request.method === 'OPTIONS') return true;
+  if (CSRF_ALLOWED_ORIGINS.length === 0) return true;
+  const origin = request.headers.get('origin');
+  return origin ? CSRF_ALLOWED_ORIGINS.includes(origin) : false;
+}
+// ------------------------------------
 
 const logger = createLogger('relay-server');
 
@@ -83,7 +102,8 @@ let metrics: Metrics = {
 
 const ALLOWED_ORIGINS = [
   'https://cinacoin.com',
-  'https://dashboard.cinacoin.com',
+  'https://dash.cinacoin.com',
+  'https://demo.cinacoin.com',
   'http://localhost:3000',
   'http://localhost:5173',
 ];

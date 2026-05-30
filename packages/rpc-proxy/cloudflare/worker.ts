@@ -2,7 +2,22 @@
 // Routes: POST /rpc/:chainId, GET /health, GET /metrics
 // Caches read-only JSON-RPC calls in KV with configurable TTL.
 
-import { createLogger, extractRequestId } from '@cinacoin/config';
+// --- Inlined from @cinacoin/config ---
+function createLogger(serviceName: string) {
+  return {
+    debug: (msg: string, ctx?: Record<string, unknown>) => console.debug(`[${serviceName}] ${msg}`, JSON.stringify(ctx)),
+    info: (msg: string, ctx?: Record<string, unknown>) => console.log(`[${serviceName}] ${msg}`, JSON.stringify(ctx)),
+    warn: (msg: string, ctx?: Record<string, unknown>) => console.warn(`[${serviceName}] ${msg}`, JSON.stringify(ctx)),
+    error: (msg: string, ctx?: Record<string, unknown>) => console.error(`[${serviceName}] ${msg}`, JSON.stringify(ctx)),
+  };
+}
+function extractRequestId(request: Request): string {
+  return request.headers.get('x-request-id')
+    || request.headers.get('x-correlation-id')
+    || request.headers.get('cf-ray')
+    || crypto.randomUUID();
+}
+// ------------------------------------
 
 const logger = createLogger('rpc-proxy');
 
@@ -108,7 +123,8 @@ interface Env {
 
 const ALLOWED_ORIGINS = [
   'https://cinacoin.com',
-  'https://dashboard.cinacoin.com',
+  'https://dash.cinacoin.com',
+  'https://demo.cinacoin.com',
   'http://localhost:3000',
   'http://localhost:5173',
 ];

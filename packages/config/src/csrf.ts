@@ -91,7 +91,7 @@ export function validateCsrf(
 /** Shared origin whitelist for all Cinacoin services */
 export const CSRF_ALLOWED_ORIGINS = [
   'https://cinacoin.com',
-  'https://dashboard.cinacoin.com',
+  'https://dash.cinacoin.com',
   'http://localhost:3000',
   'http://localhost:5173',
 ] as const;

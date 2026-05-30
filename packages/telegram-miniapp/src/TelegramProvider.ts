@@ -447,20 +447,33 @@ export class TelegramProvider {
         platform: 'test',
         version: '1.0',
         themeParams: {},
+        colorScheme: 'light',
         isVersionAtLeast: () => true,
         expand: () => {},
         close: () => {},
         ready: () => {},
-      };
+        MainButton: { text: '', color: '', textColor: '', isVisible: false, isActive: false, isProgressVisible: false, setText: () => {}, show: () => {}, hide: () => {}, enable: () => {}, disable: () => {}, showProgress: () => {}, hideProgress: () => {}, onClick: () => {}, offClick: () => {}, onTap: () => {}, offTap: () => {} },
+        BackButton: { isVisible: false, show: () => {}, hide: () => {}, onClick: () => {}, offClick: () => {} },
+        HapticFeedback: { impactOccurred: () => {}, notificationOccurred: () => {}, selectionChanged: () => {} },
+        showAlert: () => {},
+        showConfirm: async () => true,
+        openTelegramLink: () => {},
+        openLink: () => {},
+        setHeaderColor: () => {},
+        setBackgroundColor: () => {},
+      } as TelegramWebApp;
     }
     if (initDataOverride && typeof initDataOverride === 'object') {
       return initDataOverride as TelegramWebApp;
     }
-    if (typeof window !== 'undefined' && (window as Window & { TelegramWebApp?: TelegramWebApp }).TelegramWebApp) {
-      return (window as Window & { TelegramWebApp?: TelegramWebApp }).TelegramWebApp;
+    const win = typeof window !== 'undefined' ? window : null;
+    const tgWebApp = win && (win as unknown as { TelegramWebApp?: TelegramWebApp }).TelegramWebApp;
+    if (tgWebApp) {
+      return tgWebApp;
     }
-    if (typeof window !== 'undefined' && (window as Window & { Telegram?: { WebApp?: TelegramWebApp } }).Telegram) {
-      return (window as Window & { Telegram?: { WebApp?: TelegramWebApp } }).Telegram.WebApp;
+    const telegram = win && (win as unknown as { Telegram?: { WebApp?: TelegramWebApp } }).Telegram;
+    if (telegram && telegram.WebApp) {
+      return telegram.WebApp;
     }
     return null;
   }

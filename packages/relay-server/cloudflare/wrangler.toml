@@ -1,6 +1,10 @@
 name = "cinacoin-relay-server"
-main = "cloudflare/worker.ts"
+main = "worker.ts"
 compatibility_date = "2024-01-01"
+
+routes = [
+  { pattern = "relay.cinacoin.com/*", zone_name = "cinacoin.com" }
+]
 
 [durable_objects]
 bindings = [
@@ -9,7 +13,7 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["RelaySession"]
+new_sqlite_classes = ["RelaySession"]
 
 [[kv_namespaces]]
 binding = "RELAY_CACHE"

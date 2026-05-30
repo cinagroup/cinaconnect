@@ -58,8 +58,8 @@ export class RpcProxy {
   private cache: Map<string, CacheEntry> = new Map();
   private rateLimits: Map<string, RateEntry> = new Map();
   private startTime: number = Date.now();
-  private readonly config: Required<Omit<RpcProxyConfig, 'host' | 'allowedOrigins'>> &
-    Pick<RpcProxyConfig, 'host' | 'allowedOrigins'>;
+  private readonly config: Required<Omit<RpcProxyConfig, 'allowedOrigins'>> &
+    Pick<RpcProxyConfig, 'allowedOrigins'>;
 
   constructor(config: RpcProxyConfig) {
     this.config = {
@@ -77,8 +77,9 @@ export class RpcProxy {
   /** Start the proxy server */
   async start(): Promise<void> {
     this.server = createServer(this.handleRequest.bind(this));
-    return new Promise((resolve, reject) => {
-      this.server!.listen(this.config.port, this.config.host, resolve);
+    const hostname = this.config.host;
+    return new Promise<void>((resolve, reject) => {
+      this.server!.listen(this.config.port, hostname, () => resolve());
       this.server!.on('error', reject);
     }).then(() => {
       allInstances.push(this);

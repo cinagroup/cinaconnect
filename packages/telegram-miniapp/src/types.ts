@@ -83,7 +83,7 @@ export interface TelegramWebApp {
   /** Show native alert. */
   showAlert: (message: string) => void;
   /** Show native confirm. */
-  showConfirm: (message: string) => Promise<boolean>;
+  showConfirm: (message: string) => boolean | Promise<boolean>;
   /** Open Telegram link. */
   openTelegramLink: (url: string) => void;
   /** Open external link. */
@@ -165,10 +165,16 @@ export interface TelegramProviderConfig {
   botToken?: string;
   /** Default chain ID. */
   defaultChainId?: number;
+  /** Supported chain IDs. */
+  chains?: number[];
+  /** Application display name. */
+  appName?: string;
   /** RPC endpoint URL. */
   rpcUrl?: string;
   /** Custom WebApp instance (for testing). */
   webApp?: TelegramWebApp;
+  /** Override initData for testing. */
+  initDataOverride?: string;
 }
 
 /** Telegram login result. */
