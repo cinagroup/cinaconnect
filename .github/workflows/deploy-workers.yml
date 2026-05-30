@@ -4,54 +4,55 @@ on:
   push:
     branches: [main]
     paths:
-      - 'packages/relay-server/**'
-      - 'packages/push-server/**'
-      - 'packages/keys-server/**'
-      - 'packages/notify-server/**'
-      - 'packages/rpc-proxy/**'
+      - 'packages/relay-server/cloudflare/**'
+      - 'packages/push-server/cloudflare/**'
+      - 'packages/keys-server/cloudflare/**'
+      - 'packages/notify-server/cloudflare/**'
+      - 'packages/rpc-proxy/cloudflare/**'
+      - '.github/workflows/deploy-workers.yml'
 
 jobs:
-  deploy-workers:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+      
       - uses: pnpm/action-setup@v4
         with:
           version: 9
-
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: 'pnpm'
-
+      
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
+      
       - name: Deploy relay-server
         working-directory: packages/relay-server
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
+      
       - name: Deploy push-server
         working-directory: packages/push-server
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
+      
       - name: Deploy keys-server
         working-directory: packages/keys-server
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
+      
       - name: Deploy notify-server
         working-directory: packages/notify-server
         run: npx wrangler deploy
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-
+      
       - name: Deploy rpc-proxy
         working-directory: packages/rpc-proxy
         run: npx wrangler deploy
