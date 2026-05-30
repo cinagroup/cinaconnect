@@ -1,8 +1,8 @@
 export default function Stats() {
   const stats = [
-    { value: '100M+', label: 'Connections' },
-    { value: '50+', label: 'Chains' },
-    { value: '10K+', label: 'Projects' },
+    { value: '100M+', label: 'Wallet Connections' },
+    { value: '50+', label: 'Chains Supported' },
+    { value: '10K+', label: 'Apps Built' },
     { value: '99.99%', label: 'Uptime' },
   ];
 
