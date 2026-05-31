@@ -50,3 +50,4 @@ apps/demo/
 - Cinacoin Web Components (`<ocx-connect-button>`, `<ocx-chain-switcher>`, etc.)
 - i18n support (10+ languages)
 # Update favicon
+# Favicon fix
