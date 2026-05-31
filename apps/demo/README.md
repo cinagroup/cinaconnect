@@ -49,3 +49,4 @@ apps/demo/
 - Tailwind CSS (via Next.js)
 - Cinacoin Web Components (`<ocx-connect-button>`, `<ocx-chain-switcher>`, etc.)
 - i18n support (10+ languages)
+# Update favicon
