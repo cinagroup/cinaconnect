@@ -55,3 +55,4 @@ See `wrangler.toml` for Cloudflare Pages build settings.
 
 The Cloudflare Pages project name is `backend-dashboard`.
 # Update favicon
+# Favicon fix
