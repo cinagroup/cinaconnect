@@ -9,6 +9,7 @@ import { useWorkerHealth } from '@/lib/WorkerHealthProvider';
 import { WORKER_URLS, type WorkerName } from '@/lib/workers';
 import { DemoDisclaimer } from '@/components/DemoDisclaimer';
 import { useInView } from '@/hooks/useInView';
+import ChainSelector, { type ChainOption } from '@/components/ChainSelector';
 
 /* ── chain data ── */
 const CHAINS = [
@@ -280,16 +281,72 @@ function ScrollToTop() {
   );
 }
 
+/* ── success celebration particles ── */
+function SuccessParticles() {
+  const particles = Array.from({ length: 12 }, (_, i) => ({
+    id: i,
+    left: 15 + (i * 6) % 70,
+    color: ['#3b82f6', '#8b5cf6', '#10b981', '#f59e0b', '#ec4899'][i % 5],
+    delay: (i * 0.08).toFixed(2),
+    size: 3 + (i % 3) * 2,
+  }));
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {particles.map((p) => (
+        <div
+          key={p.id}
+          className="absolute rounded-full animate-confetti-fall"
+          style={{
+            left: `${p.left}%`,
+            top: '30%',
+            width: p.size,
+            height: p.size,
+            backgroundColor: p.color,
+            animationDelay: `${p.delay}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+/* ── connecting overlay ── */
+function ConnectingOverlay() {
+  return (
+    <div className="flex flex-col items-center justify-center py-10 space-y-5 animate-status-transition">
+      {/* Pulsing ring animation */}
+      <div className="relative">
+        <div className="w-16 h-16 rounded-full border-2 border-blue-500/30 animate-ping-once" />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500/20 to-violet-500/20 border border-blue-500/40 flex items-center justify-center">
+            <svg className="animate-spin h-6 w-6 text-blue-400" viewBox="0 0 24 24" fill="none">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div className="text-center space-y-1">
+        <p className="text-sm font-semibold text-blue-400">Connecting to wallet...</p>
+        <p className="text-xs text-gray-500">Please approve the connection in your wallet</p>
+      </div>
+    </div>
+  );
+}
+
 /* ── main page ── */
 export default function HomePage() {
   const { account, status, error, connectors, connect, disconnect } = useWallet();
   const { success, error: toastError, info } = useToast();
   const isConnected = status === 'connected';
   const isConnecting = status === 'connecting';
+  const wasConnecting = status === 'connected' && account.address; // for success animation trigger
 
   // For the chain selector in the demo card, use a local state
   const [selectedChain, setSelectedChain] = useState('Ethereum');
   const [connectionHistory, setConnectionHistory] = useState<ConnectionRecord[]>([]);
+  const [showSuccessParticles, setShowSuccessParticles] = useState(false);
 
   // Section refs for scroll animations
   const statsSection = useInView(0.1);
@@ -323,6 +380,9 @@ export default function HomePage() {
       });
       setConnectionHistory(getConnectionHistory());
       success('Wallet Connected', `${shortenAddress(account.address)} on ${account.chainName}`);
+      // Trigger success celebration
+      setShowSuccessParticles(true);
+      setTimeout(() => setShowSuccessParticles(false), 2000);
     }
   }, [isConnected, account.address]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -476,6 +536,12 @@ export default function HomePage() {
 
           {/* Card body */}
           <div className="relative p-6 sm:p-8 space-y-6">
+            {/* Connecting overlay */}
+            {isConnecting && <ConnectingOverlay />}
+
+            {/* Success celebration particles */}
+            {showSuccessParticles && <SuccessParticles />}
+
             {/* Wallet connection options when not connected */}
             {!isConnected && !isConnecting && connectors.length > 0 && (
               <div className="space-y-3">
@@ -518,15 +584,24 @@ export default function HomePage() {
 
             {/* Connected state */}
             {isConnected && account.address && (
-              <div className="flex items-center gap-4 p-4 rounded-xl bg-gray-900/60 border border-gray-700/40 animate-in">
-                <div className="size-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-blue-500/20">
-                  {account.address.slice(2, 4).toUpperCase()}
+              <div className="relative flex items-center gap-4 p-4 rounded-xl bg-gray-900/60 border border-green-500/20 animate-status-transition overflow-hidden">
+                {/* Subtle green glow */}
+                <div className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-transparent pointer-events-none" />
+                {/* Avatar with ring */}
+                <div className="relative shrink-0">
+                  <div className="size-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-sm font-bold text-white shadow-lg shadow-blue-500/20">
+                    {account.address.slice(2, 4).toUpperCase()}
+                  </div>
+                  <span className="absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full bg-emerald-400 border-2 border-gray-900" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-mono text-gray-200 truncate">
                     {shortenAddress(account.address)}
                   </p>
-                  <p className="text-xs text-gray-500">{account.chainName} (Chain ID: {account.chainId})</p>
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <p className="text-xs text-gray-500">{account.chainName} · {account.chainId}</p>
+                  </div>
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-sm font-semibold text-gray-200">{account.balance} {account.chainSymbol}</p>
@@ -587,21 +662,17 @@ export default function HomePage() {
                 </button>
               )}
 
-              <div className="relative flex-1">
-                <select
+              <div className="flex-1">
+                <ChainSelector
                   value={isConnected && account.chainName ? account.chainName : selectedChain}
-                  onChange={(e) => setSelectedChain(e.target.value)}
-                  className="w-full px-4 py-3.5 bg-gray-800/80 border border-gray-700/50 rounded-xl text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500/50 appearance-none cursor-pointer transition-all"
-                >
-                  {CHAINS_FOR_SELECT.map((c) => (
-                    <option key={c.symbol} value={c.name}>
-                      {c.name}
-                    </option>
-                  ))}
-                </select>
-                <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs">
-                  ▾
-                </span>
+                  onChange={(v) => setSelectedChain(v)}
+                  chains={CHAINS_FOR_SELECT.map((c) => ({
+                    id: c.name,
+                    name: c.name,
+                    icon: c.initial,
+                    color: c.color,
+                  }))}
+                />
               </div>
             </div>
 
@@ -609,11 +680,16 @@ export default function HomePage() {
             <div className="grid grid-cols-3 gap-3">
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Status</p>
-                <p className={`text-sm font-semibold ${
-                  isConnected ? 'text-green-400' : isConnecting ? 'text-yellow-400' : 'text-gray-500'
-                }`}>
-                  {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : 'Not Connected'}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <span className={`size-2 rounded-full ${
+                    isConnected ? 'bg-green-400 animate-pulse' : isConnecting ? 'bg-yellow-400 animate-pulse' : 'bg-gray-500'
+                  }`} />
+                  <p className={`text-sm font-semibold ${
+                    isConnected ? 'text-green-400' : isConnecting ? 'text-yellow-400' : 'text-gray-500'
+                  }`}>
+                    {isConnected ? 'Connected' : isConnecting ? 'Connecting...' : 'Not Connected'}
+                  </p>
+                </div>
               </div>
               <div className="p-3 rounded-xl bg-gray-900/50 border border-gray-800/50">
                 <p className="text-[10px] uppercase tracking-wider text-gray-500 mb-1">Network</p>

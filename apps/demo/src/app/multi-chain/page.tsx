@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import DemoLayout from '@/components/DemoLayout';
 import { useWallet, shortenAddress } from '@/lib/useWallet';
 import {
@@ -51,15 +51,36 @@ interface ChainCardProps {
 function ChainCard({ chain, balance, health, isWalletConnected, isCurrentChain, onSwitchChain }: ChainCardProps) {
   const isHealthy = health?.healthy ?? false;
   const latency = health?.latencyMs;
+  const [justSwitched, setJustSwitched] = useState(false);
+  const prevChainRef = useRef(isCurrentChain);
+
+  // Trigger flash animation on chain switch
+  useEffect(() => {
+    if (prevChainRef.current !== isCurrentChain && isCurrentChain) {
+      setJustSwitched(true);
+      setTimeout(() => setJustSwitched(false), 600);
+    }
+    prevChainRef.current = isCurrentChain;
+  }, [isCurrentChain]);
 
   return (
     <div className={`group bg-gray-800/40 backdrop-blur rounded-2xl border ${
-      isCurrentChain ? 'border-blue-500/50 ring-1 ring-blue-500/20' : 'border-gray-700/60'
-    } overflow-hidden hover:border-gray-500/60 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5`}>
+      isCurrentChain
+        ? 'border-blue-500/50 ring-1 ring-blue-500/20'
+        : justSwitched
+        ? 'border-green-500/50 ring-1 ring-green-500/20'
+        : 'border-gray-700/60'
+    } overflow-hidden hover:border-gray-500/60 transition-all duration-300 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 ${
+      justSwitched ? 'animate-chain-switch-flash' : ''
+    }`}>
       {/* Top gradient bar */}
       <div className={`h-1 ${
-        isHealthy ? 'bg-emerald-400/70' : 'bg-red-500/70'
-      } group-hover:opacity-100 transition-opacity`} />
+        isCurrentChain
+          ? 'bg-gradient-to-r from-blue-500 to-violet-500'
+          : isHealthy
+          ? 'bg-emerald-400/70'
+          : 'bg-red-500/70'
+      } group-hover:opacity-100 transition-all duration-300`} />
 
       <div className="p-5 space-y-4">
         {/* Header */}
@@ -130,8 +151,11 @@ function ChainCard({ chain, balance, health, isWalletConnected, isCurrentChain, 
 
         {/* Connect / Switch */}
         {isWalletConnected && isCurrentChain ? (
-          <div className="w-full py-2.5 rounded-xl text-center font-semibold text-sm bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-            ✓ Active Chain
+          <div className="w-full py-2.5 rounded-xl text-center font-semibold text-sm bg-gradient-to-r from-blue-500/10 to-violet-500/10 text-blue-400 border border-blue-500/30 animate-status-transition">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="size-2 rounded-full bg-blue-400 animate-pulse" />
+              Active Chain
+            </span>
           </div>
         ) : isWalletConnected ? (
           <button

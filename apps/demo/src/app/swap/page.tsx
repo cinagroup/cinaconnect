@@ -25,6 +25,7 @@ import {
 import Card from '@/components/Card';
 import Button from '@/components/Button';
 import ChainSelector from '@/components/ChainSelector';
+import TxProgress, { type TxStep } from '@/components/TxProgress';
 
 // ─── Token Selector Dropdown ──────────────────────────────────────────────
 
@@ -147,6 +148,7 @@ export default function SwapPage() {
   const [swapRoute, setSwapRoute] = useState<string>('');
   const [swapHistory, setSwapHistory] = useState<SwapHistoryEntry[]>([]);
 
+  const [txSteps, setTxSteps] = useState<TxStep[]>([]);
   const quoteAbortRef = useRef<AbortController | null>(null);
 
   const isConnected = status === 'connected';
@@ -290,6 +292,12 @@ export default function SwapPage() {
     if (!canSwap || !account.address) return;
 
     setSwapState('swapping');
+    setTxSteps([
+      { label: 'Preparing transaction', icon: '📝', status: 'active' },
+      { label: 'Sending to wallet', icon: '📤', status: 'pending' },
+      { label: 'Confirming on-chain', icon: '⛓️', status: 'pending' },
+      { label: 'Swap complete', icon: '✅', status: 'pending' },
+    ]);
     info('Swap Initiated', `Swapping ${fromAmount} ${fromToken.symbol} → ${toToken.symbol}`);
 
     try {
@@ -331,6 +339,12 @@ export default function SwapPage() {
       // Check if we need to approve the token first (for ERC20, not native)
       if (fromToken.address !== 'native') {
         setSwapState('approving');
+        setTxSteps([
+          { label: 'Preparing transaction', icon: '📝', status: 'done' },
+          { label: 'Approving token spend', icon: '🔓', status: 'active' },
+          { label: 'Executing swap', icon: '🔄', status: 'pending' },
+          { label: 'Swap complete', icon: '✅', status: 'pending' },
+        ]);
         info('Approval Required', `Approving ${fromToken.symbol} for swap...`);
 
         const approvalTx = await getApprovalTransaction(fromToken.address, chainId);
@@ -370,6 +384,12 @@ export default function SwapPage() {
       }
 
       // Execute the swap
+      setTxSteps([
+        { label: 'Preparing transaction', icon: '📝', status: 'done' },
+        { label: 'Approving token spend', icon: '🔓', status: fromToken.address === 'native' ? 'done' : 'pending' },
+        { label: 'Executing swap', icon: '🔄', status: 'active' },
+        { label: 'Swap complete', icon: '✅', status: 'pending' },
+      ]);
       const txHash = await executeSwap(result.tx);
       info('Swap Sent', `Tx: ${shortenAddress(txHash)}`);
 
@@ -390,6 +410,12 @@ export default function SwapPage() {
       });
       setSwapHistory(getSwapHistory());
 
+      setTxSteps([
+        { label: 'Preparing transaction', icon: '📝', status: 'done' },
+        { label: 'Approving token spend', icon: '🔓', status: 'done' },
+        { label: 'Executing swap', icon: '🔄', status: 'done' },
+        { label: 'Swap complete', icon: '✅', status: 'done' },
+      ]);
       setSwapState('success');
       success('Swap Complete', `${fromAmount} ${fromToken.symbol} → ${quote?.toTokenAmountFormatted ?? displayToAmount} ${toToken.symbol}`);
 
@@ -401,6 +427,13 @@ export default function SwapPage() {
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Transaction failed';
       toastErr('Swap Failed', message);
+      setTxSteps((prev) =>
+        prev.map((s, i) =>
+          i === prev.findIndex((p) => p.status === 'active')
+            ? { ...s, status: 'error' as const }
+            : s,
+        ),
+      );
       setSwapState('idle');
     }
   }, [
@@ -616,6 +649,11 @@ export default function SwapPage() {
                 </div>
               )}
             </div>
+          )}
+
+          {/* ── Transaction Progress ─────────────────── */}
+          {txSteps.length > 0 && swapState !== 'idle' && (
+            <TxProgress steps={txSteps} />
           )}
 
           {/* ── Swap Button ────────────────────────────── */}
