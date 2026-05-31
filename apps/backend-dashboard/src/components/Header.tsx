@@ -11,9 +11,12 @@ export default function Header() {
 
   return (
     <header className="bg-dashboard-surface/80 backdrop-blur border-b border-dashboard-border px-6 py-4 flex items-center justify-between">
-      <div>
-        <h2 className="text-xl font-semibold text-white">CinaCoin Backend</h2>
-        <p className="text-sm text-dashboard-muted">Cloudflare Workers Management</p>
+      <div className="flex items-center gap-3">
+        <img src="/logo.png" alt="Cinacoin" className="h-8 w-8 rounded-lg" />
+        <div>
+          <h2 className="text-xl font-semibold text-white">CinaCoin Backend</h2>
+          <p className="text-sm text-dashboard-muted">Cloudflare Workers Management</p>
+        </div>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-dashboard-success/10 border border-dashboard-success/30">
